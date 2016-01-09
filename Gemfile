@@ -107,6 +107,9 @@ gem "gsm_encoder"
 gem 'delayed_job_active_record'
 gem 'daemons'
 
+# in place editing
+gem 'best_in_place', '~> 3.0.1'
+
 group :testing do
   # mock tests w/mocha
   gem "mocha", :require => false
