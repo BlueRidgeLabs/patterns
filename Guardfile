@@ -36,11 +36,9 @@ guard :rspec, cmd: "bundle exec rspec" do
   watch(rails.view_dirs)     { |m| rspec.spec.("features/#{m[1]}") }
   watch(rails.layouts)       { |m| rspec.spec.("features/#{m[1]}") }
 
-  # Turnip features and steps
-  watch(%r{^spec/acceptance/(.+)\.feature$})
-  watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$}) do |m|
-    Dir[File.join("**/#{m[1]}.feature")][0] || "spec/acceptance"
-  end
+  watch('spec/features/people_registration_spec.rb')
+  watch('app/controllers/public/people_controller.rb') { 'spec/features/people_registration_spec.rb' }
+  watch('app/views/public/people/new.html.erb') { 'spec/features/people_registration_spec.rb' }
 end
 
 guard :minitest do
