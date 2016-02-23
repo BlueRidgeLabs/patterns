@@ -1,12 +1,15 @@
 class V2::TimeWindow
+  include ActiveModel::Model
 
-  def initialize(date:, start_time:, end_time:, slot_length:)
-    @date       = date
-    @start_time = start_time
-    @end_time   = end_time
-    @slot_length = slot_length
-    @slots      = []
-  end
+  attr_accessor :date, :start_time, :end_time, :slot_length
+
+  # def initialize(date: Date.today, start_time: '09:00', end_time: '09:15', slot_length: '15 mins')
+  #   @date       = date
+  #   @start_time = start_time
+  #   @end_time   = end_time
+  #   @slot_length = slot_length
+  #   @slots      = []
+  # end
 
   def slots
     slot_start = start_time
@@ -22,21 +25,20 @@ class V2::TimeWindow
     @slots
   end
 
-  private
+  def date
+    Date.strptime(@date, '%m/%d/%Y')
+  end
 
-    def date
-      Date.strptime(@date, '%m/%d/%Y')
-    end
+  def start_time
+    Time.zone.parse("#{date} #{@start_time}")
+  end
 
-    def start_time
-      Time.zone.parse("#{date} #{@start_time}")
-    end
+  def end_time
+    Time.zone.parse("#{date} #{@end_time}")
+  end
 
-    def end_time
-      Time.zone.parse("#{date} #{@end_time}")
-    end
+  def slot_length
+    @slot_length.delete(' mins').to_i.minutes
+  end
 
-    def slot_length
-      @slot_length.delete(' mins').to_i.minutes
-    end
 end

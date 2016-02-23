@@ -19,27 +19,30 @@
     </div>
   </div>
 
-  <h2>Time window</h2>
+  <h2>Time windows</h2>
+
+  <%= f.fields_for :time_windows do |time_window_fields| %>
   <div class="control-group">
-    <%= f.label :date, :class => 'control-label' %>
+    <%= time_window_fields.label :date, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :date, :class => 'text_field' %>
+      <%= time_window_fields.text_field :date, :class => 'text_field' %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :start_time, :class => 'control-label' %>
+    <%= time_window_fields.label :start_time, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :start_time, simple_time_select_options, :class => 'text_field' %>
+      <%= time_window_fields.select :start_time, simple_time_select_options, :class => 'text_field' %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :end_time, :class => 'control-label' %>
+    <%= time_window_fields.label :end_time, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :end_time, simple_time_select_options, :class => 'text_field' %>
+      <%= time_window_fields.select :end_time, simple_time_select_options, :class => 'text_field' %>
     </div>
   </div>
+  <% end %>
 
   <div class="form-actions">
     <%= f.submit 'Send invitation', :class => 'btn btn-primary', :id => 'submit' %>

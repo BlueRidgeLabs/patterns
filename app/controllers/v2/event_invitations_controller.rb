@@ -1,6 +1,8 @@
 class V2::EventInvitationsController < ApplicationController
   def new
-    @event_invitation = V2::EventInvitation.new
+    time_windows = Array.new(2, V2::TimeWindow.new)
+
+    @event_invitation = V2::EventInvitation.new(time_windows: time_windows)
   end
 
   def create

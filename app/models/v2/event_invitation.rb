@@ -1,10 +1,10 @@
 class V2::EventInvitation
   include ActiveModel::Model
 
-  attr_accessor :email_addresses, :description, :slot_length, :date, :start_time, :end_time
+  attr_accessor :email_addresses, :description, :slot_length, :time_windows
   attr_reader   :event
 
-  validates :email_addresses, :description, :slot_length, :date, :start_time, :end_time, presence: true
+  validates :email_addresses, :description, :slot_length, :time_windows, presence: true
   validate :emails_are_registered
 
   def save
@@ -46,5 +46,13 @@ class V2::EventInvitation
         start_time: start_time,
         end_time: end_time
       ).slots
+    end
+
+    def time_windows_attributes=(attributes)
+      @time_windows ||= []
+      attributes.each do |i, time_window_params|
+        time_windows_params.merge!(slot_length: slot_length)
+        @time_windows.push(TimeWindow.new(time_window_params))
+      end
     end
 end
