@@ -37,9 +37,7 @@ class V2::EventInvitationsController < ApplicationController
           :email_addresses,
           :description,
           :slot_length,
-          :date,
-          :start_time,
-          :end_time
+          time_windows_attributes: [:date, :start_time, :end_time]
         )
     end
 end
