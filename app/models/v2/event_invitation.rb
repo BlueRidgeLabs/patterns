@@ -23,8 +23,8 @@ class V2::EventInvitation
   def time_windows_attributes=(attributes)
     @time_windows ||= []
     attributes.each do |i, time_window_params|
-      time_windows_params.merge!(slot_length: slot_length)
-      @time_windows.push(TimeWindow.new(time_window_params))
+      time_window_params.merge!(slot_length: slot_length)
+      @time_windows.push(V2::TimeWindow.new(time_window_params))
     end
   end
 
@@ -48,11 +48,6 @@ class V2::EventInvitation
     end
 
     def time_slots
-      V2::TimeWindow.new(
-        slot_length: slot_length,
-        date: date,
-        start_time: start_time,
-        end_time: end_time
-      ).slots
+      time_windows.collect(&:slots).flatten
     end
 end

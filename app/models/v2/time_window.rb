@@ -4,6 +4,7 @@ class V2::TimeWindow
   attr_accessor :date, :start_time, :end_time, :slot_length
 
   def slots
+    @slots = []
     slot_start = start_datetime
     slot_end   = slot_start + converted_slot_length
 

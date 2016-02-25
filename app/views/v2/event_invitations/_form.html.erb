@@ -22,24 +22,26 @@
   <h2>Time windows</h2>
 
   <%= f.fields_for :time_windows do |time_window_fields| %>
-  <div class="control-group">
-    <%= time_window_fields.label :date, :class => 'control-label' %>
-    <div class="controls">
-      <%= time_window_fields.text_field :date, :class => 'text_field' %>
+  <div id="time_window_<%= time_window_fields.index %>">
+    <div class="control-group">
+      <%= time_window_fields.label :date, :class => 'control-label' %>
+      <div class="controls">
+        <%= time_window_fields.text_field :date, :class => 'text_field' %>
+      </div>
     </div>
-  </div>
 
-  <div class="control-group">
-    <%= time_window_fields.label :start_time, :class => 'control-label' %>
-    <div class="controls">
-      <%= time_window_fields.select :start_time, simple_time_select_options, :class => 'text_field' %>
+    <div class="control-group">
+      <%= time_window_fields.label :start_time, :class => 'control-label' %>
+      <div class="controls">
+        <%= time_window_fields.select :start_time, simple_time_select_options, :class => 'text_field' %>
+      </div>
     </div>
-  </div>
 
-  <div class="control-group">
-    <%= time_window_fields.label :end_time, :class => 'control-label' %>
-    <div class="controls">
-      <%= time_window_fields.select :end_time, simple_time_select_options, :class => 'text_field' %>
+    <div class="control-group">
+      <%= time_window_fields.label :end_time, :class => 'control-label' %>
+      <div class="controls">
+        <%= time_window_fields.select :end_time, simple_time_select_options, :class => 'text_field' %>
+      </div>
     </div>
   </div>
   <% end %>

@@ -23,17 +23,18 @@ feature 'Invite people to a phone call' do
 
     select '30 mins', from: 'Call length'
 
-    fill_in 'Date', with: '02/02/2016'
-    select '12:00', from: 'Start time'
-    select '15:30', from: 'End time'
+    within('#time_window_0') do
+      fill_in 'Date', with: '02/02/2016'
+      select '12:00', from: 'Start time'
+      select '15:30', from: 'End time'
+    end
 
-    # TODO: implement multiple time windows after invitation for single time window works
-    #
-    # click_link 'Add another time window'
-    #
-    # fill_in 'Date', with: '02/03/2016'
-    # select '12:00', from: 'Start time'
-    # select '14:30', from: 'End time'
+    within('#time_window_1') do
+      # click_link 'Add another time window'
+      fill_in 'Date', with: '02/03/2016'
+      select '12:00', from: 'Start time'
+      select '14:30', from: 'End time'
+    end
 
     click_button 'Send invitation'
 
