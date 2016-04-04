@@ -53,7 +53,7 @@ class V2::SmsReservationsController < ApplicationController
     end
 
     def only_numbers_and_at_least_two_of_them?
-      message =~ /^\d\d+$/
+      message =~ /^\d(\d)+\s?$/
     end
 
     def reservation_params
