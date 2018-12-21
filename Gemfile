@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.5.3'
+ruby '2.6.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
 gem 'rails-i18n'
@@ -29,7 +29,7 @@ gem 'fuzzy_match' # for sms command fuzzy matching
 
 gem 'groupdate' # for graphing
 gem 'chartkick'
-gem 'nokogiri', '1.8.2'
+gem 'nokogiri'
 
 # csv files are TERRIBLE for importing. Excel messes with column formats
 gem 'axlsx'
