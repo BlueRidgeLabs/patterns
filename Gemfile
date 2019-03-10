@@ -220,7 +220,8 @@ group :test do
   gem 'mocha', require: false
 
   gem 'sqlite3', platform: %i[ruby mswin mingw]
-
+  gem 'phantomjs'
+  gem 'poltergeist'
   ## for JRuby
   # gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
@@ -232,7 +233,7 @@ group :test do
   gem 'rubocop', require: false
   gem 'simplecov', require: false
   # screenshots when capybara fails
-  #gem 'capybara-screenshot'
+  gem 'capybara-screenshot'
 
   # retry poltergeist specs. they are finicky
   gem 'rspec-retry'
@@ -243,13 +244,15 @@ group :test do
   # webrick is slow, capybara will use puma instead
   gem 'puma'
 
+  gem 'rails-controller-testing'
+
   # in memory redis for testing only
   gem 'mock_redis'
 end
 
 group :development, :test do
   gem 'capybara'
-  #gem 'capybara-email'
+  gem 'capybara-email'
   gem 'database_cleaner'
   gem 'factory_bot_rails', '4.10.0', require: false
   gem 'guard'

@@ -37,10 +37,11 @@ require 'faker'
 FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
-    password 'password'
-    password_confirmation 'password'
+    password 'password98798sa7df0998aschh*AS(*D(*&'
+    password_confirmation 'password98798sa7df0998aschh*AS(*D(*&'
     approved true
     name { Faker::Name.name }
+    team { Team.create(name:'foobar', finance_code:'BRL') }
     phone_number { Faker::PhoneNumber.cell_phone }
   end
 end
