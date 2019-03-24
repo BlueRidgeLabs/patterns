@@ -9,9 +9,9 @@ feature "people page" do
   let(:landline) { "6667772222" }
   let(:participation_type) { "remote" }
 
-  scenario 'create new person' do
+  def add_new_person(verified:)
     login_with_admin_user
-    visit '/people'
+    visit people_path
 
     click_link 'New Person'
     expect(page).to have_selector(:link_or_button, 'Create Person')
@@ -23,10 +23,15 @@ feature "people page" do
     fill_in 'Postal code', with: postal_code
     fill_in 'Landline', with: landline
     select participation_type, from: 'Participation type'
-    select Person::VERIFIED_TYPE, from: 'Verified'
+    select verified, from: 'Verified'
     click_button 'Create Person'
+
     expect(page).to have_selector(:link_or_button, 'Update Person')
 
+    visit people_path
+  end
+
+  def assert_person_created(verified:)
     new_person = Person.order(:id).last
     expect(new_person.first_name).to eq(first_name)
     expect(new_person.last_name).to eq(last_name)
@@ -35,9 +40,19 @@ feature "people page" do
     expect(new_person.postal_code).to eq(postal_code)
     expect(new_person.landline).to eq("+1#{landline}")
     expect(new_person.participation_type).to eq(participation_type)
-    expect(new_person.verified).to eq(Person::VERIFIED_TYPE)
+    expect(new_person.verified).to eq(verified)
+  end
 
-    visit people_path
+  scenario 'create new, verified person' do
+    add_new_person(verified: Person::VERIFIED_TYPE)
+    assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
   end
+
+  scenario 'create new, unverified person' do
+    add_new_person(verified: Person::NOT_VERIFIED_TYPE)
+    assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
+    # unverified people don't show up in list
+    expect(page).not_to have_content(email_address)
+  end  
 end
