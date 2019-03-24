@@ -52,6 +52,7 @@
 
 require 'faker'
 
+# this is unused....
 devices = Logan::Application.config.device_mappings
 connections = Logan::Application.config.connection_mappings
 
@@ -73,10 +74,15 @@ FactoryBot.define do
 
     secondary_device_id devices[:tablet]
     secondary_device_description 'nice'
-
+    verified 'Verified' # means we can get in touch
     primary_connection_id connections[:phone]
     primary_connection_description 'so so'
     secondary_connection_id connections[:public_wifi]
     secondary_connection_description 'worse'
+    trait :not_dig do 
+      # tagged with 'not dig' stops a whole bunch of things from happening
+      after(:create) { |person| person.update_attributes(tag_list: 'not_dig') }
+    end
+
   end
 end
