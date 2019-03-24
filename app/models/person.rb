@@ -59,6 +59,11 @@ class Person < ApplicationRecord
 
   acts_as_taggable
 
+  VERIFIED_TYPES = [
+    VERIFIED_TYPE = "Verified",
+    NOT_VERIFIED_TYPE = "No"
+  ]
+
   page 50
 
   # include Searchable
@@ -232,10 +237,6 @@ class Person < ApplicationRecord
       end # end cart update
       return { pid: id, old: old_level, new: new_level }
     end
-  end
-
-  def self.verified_types
-    Person.distinct.pluck(:verified).select(&:present?)
   end
 
   def signup_gc_sent
