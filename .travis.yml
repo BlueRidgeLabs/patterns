@@ -18,7 +18,8 @@ before_script:
   - sudo mv -f ~/chromedriver /usr/local/share/
   - sudo chmod +x /usr/local/share/chromedriver
   - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
-
+before_install:
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 addons:
   code_climate:
     repo_token: bc9e0fee3d10d7a24d762909e4fffe85dab761dfded5db6ffddf9d7b6e5b61f4
