@@ -6,7 +6,7 @@ require 'capybara/email/rspec'
 feature 'tag person'  do
   scenario 'add tag', js: :true  do
     person = FactoryBot.create(:person)
-    FactoryBot.create(:gift_card,person_id: person.id)
+
     login_with_admin_user
 
     tag_name = Faker::Company.buzzword.downcase
@@ -15,7 +15,7 @@ feature 'tag person'  do
 
     fill_in_autocomplete '#tag-typeahead', tag_name
 
-    find_button('Add').trigger('click')
+    find_button('Add').click
     wait_for_ajax
     sleep 1 # wait for our page to save
     # gotta reload so that we don't cache tags
@@ -30,7 +30,7 @@ feature 'tag person'  do
 
   scenario 'delete tag', js: :true  do
     person = FactoryBot.create(:person, preferred_contact_method: 'EMAIL')
-    FactoryBot.create(:gift_card, person_id: person.id)
+
     login_with_admin_user
 
     tag_name = Faker::Company.buzzword.downcase
@@ -41,7 +41,7 @@ feature 'tag person'  do
     fill_in_autocomplete '#tag-typeahead', tag_name
     wait_for_ajax
     sleep 1
-    find_button('Add').trigger('click')
+    find_button('Add').click
     wait_for_ajax
     sleep 1
     expect(page.evaluate_script("$('a.delete-link').length")).to eq(1)

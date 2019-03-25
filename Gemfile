@@ -257,7 +257,7 @@ group :development, :test do
   gem 'guard-minitest'
   gem 'guard-rspec', require: false
   gem 'guard-rubocop'
-  gem 'poltergeist'
+  gem 'selenium-webdriver'
   gem 'pry' # a console anywhere!
   gem 'rspec'
   gem 'rspec-rails'

@@ -1,25 +1,19 @@
-require 'capybara/poltergeist'
+# require 'capybara/selenium-webdriver'
 Capybara.save_path = 'tmp/capybara/'
-Capybara.register_driver :poltergeist do |app|
-  options = {
-    timeout: 30,
-    inspector: true,
-    window_size: [1280, 1440],
-    port: 44678+ENV['TEST_ENV_NUMBER'].to_i,
-    phantomjs_options: [
-      '--proxy-type=none',
-      '--load-images=no',
-      '--ignore-ssl-errors=yes',
-      '--ssl-protocol=any',
-      '--web-security=false'
-    ]
-  }
-  Capybara::Poltergeist::Driver.new(app, options)
+
+Capybara.register_driver(:headless_chrome) do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w[headless disable-gpu] }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+  )
 end
-
-Capybara.register_server :puma
-Capybara.javascript_driver = :poltergeist
-
+Capybara.default_driver = :headless_chrome
+Capybara.javascript_driver = :headless_chrome
 # rubocop:disable all
 class ActiveRecord::Base
   mattr_accessor :shared_connection
