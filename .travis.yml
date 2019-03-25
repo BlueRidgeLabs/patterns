@@ -1,10 +1,11 @@
 language: ruby
 cache: bundler
 sudo: required
-dist: precise
+dist: xenial
 bundler_args: "--jobs=4 --retry=3"
 services:
  - redis
+ - mysql
 before_script:
 - bundle exec rake db:migrate RAILS_ENV=test
 addons:
