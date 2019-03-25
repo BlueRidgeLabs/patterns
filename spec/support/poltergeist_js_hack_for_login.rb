@@ -12,7 +12,8 @@ Capybara.register_driver(:headless_chrome) do |app|
     desired_capabilities: capabilities
   )
 end
-Capybara.default_driver = :headless_chrome
+
+Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :headless_chrome
 # rubocop:disable all
 class ActiveRecord::Base
