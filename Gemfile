@@ -88,6 +88,8 @@ group :production do
   #gem 'newrelic_rpm'
   gem 'skylight' # perf
   gem 'lograge' # sane logs
+  
+  gem 'unicorn' # Use unicorn as the app server
 end
 
 # Gems used only for assets and not required
@@ -113,9 +115,6 @@ gem 'jbuilder'
 # To use ActiveModel has_secure_password
 gem 'bcrypt'
 
-# Use unicorn as the app server
-gem 'unicorn'
-
 # To use debugger
 # gem 'debugger'
 
@@ -134,9 +133,6 @@ gem 'will_paginate-bootstrap', '~> 0.2.5' # Bootstrap 2 support breaks at v1.0
 
 # include health_check, for system monitoring
 gem 'health_check'
-
-# use holder for placeholder images
-gem 'holder_rails'
 
 # use devise for auth/identity
 gem 'devise'
@@ -225,10 +221,12 @@ group :test do
   # gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
 
-  # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
+  
   #gem 'codeclimate-test-reporter'
   gem 'coveralls', require: false
-  gem 'faker'
+  
+  # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
+  gem 'faker' 
   gem 'rubocop', require: false
   gem 'simplecov', require: false
   # screenshots when capybara fails
@@ -248,6 +246,8 @@ group :test do
 end
 
 group :development, :test do
+  # use holder for placeholder images
+  gem 'holder_rails'
   gem 'capybara'
   gem 'capybara-email'
   gem 'concurrent-ruby'
