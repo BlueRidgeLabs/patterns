@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Unused. SHould be deprecated
 class ApplicationSms
   attr_reader :client, :application_number, :to

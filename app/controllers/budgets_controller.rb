@@ -30,7 +30,7 @@ class BudgetsController < ApplicationController
     when 'Transfer'
       from_type = 'Budget'
       recipient_id = transaction_log_params[:recipient_id]
-      from_id = transaction_log_params[:from_id].present? ? transaction_log_params[:from_id] : current_user.budget.id
+      from_id = transaction_log_params[:from_id].presence || current_user.budget.id
     end
 
     @transaction_log = TransactionLog.new(amount: transaction_log_params[:amount],
@@ -46,7 +46,7 @@ class BudgetsController < ApplicationController
         flash[:success] = 'Transaction Created'
         format.json { render json: @transaction_log }
       else
-        flash[:error] = "Transaction failed: #{@transaction_log.errors.full_messages.join(" ")}"
+        flash[:error] = "Transaction failed: #{@transaction_log.errors.full_messages.join(' ')}"
         format.json { render json: @transaction_log.errors, status: :unprocessable_entity }
       end
       format.js {}

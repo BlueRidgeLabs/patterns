@@ -69,12 +69,11 @@ class User < ApplicationRecord
 
   # for sanity's sake
   alias_attribute :email_address, :email
-  
 
   def title
     name
   end
-  
+
   def active_for_authentication?
     if super && approved?
       true

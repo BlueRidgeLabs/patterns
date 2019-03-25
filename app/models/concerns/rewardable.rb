@@ -16,7 +16,7 @@ module Rewardable
     monetize :amount_cents
     has_one :reward, as: :rewardable, dependent: :nullify
     belongs_to :user
-    belongs_to :person, required: false
+    belongs_to :person, optional: true
     default_scope { includes(:reward) }
     scope :unassigned, -> { where(reward_id: nil) }
     scope :assigned, -> { where.not(reward_id: nil) }

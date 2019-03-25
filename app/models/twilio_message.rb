@@ -28,7 +28,7 @@
 #  updated_at         :datetime
 #
 
-class TwilioMessage < ApplicationRecord #unused
+class TwilioMessage < ApplicationRecord # unused
 
   phony_normalize :to, default_country_code: 'US'
   phony_normalized_method :to, default_country_code: 'US'
