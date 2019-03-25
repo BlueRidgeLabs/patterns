@@ -52,7 +52,7 @@
 
 require 'rails_helper'
 
-describe Person do
+xdescribe Person do
   subject { FactoryBot.build(:person) }
 
   it { is_expected.to validate_presence_of(:first_name) }

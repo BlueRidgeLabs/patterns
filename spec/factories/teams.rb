@@ -10,8 +10,12 @@
 #  updated_at   :datetime         not null
 #
 
-require 'rails_helper'
+require 'faker'
 
-RSpec.describe Team, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+FactoryBot.define do
+  factory :team do
+    name { Faker::Name.name }
+    finance_code "BRL"
+    description { Faker::Lorem.sentence }
+  end
 end

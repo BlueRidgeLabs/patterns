@@ -20,7 +20,7 @@
 
 require 'rails_helper'
 
-describe ResearchSession do
+xdescribe ResearchSession do
   it { is_expected.to validate_presence_of(:people_ids) }
   it { is_expected.to validate_presence_of(:description) }
   it { is_expected.to validate_presence_of(:title) }

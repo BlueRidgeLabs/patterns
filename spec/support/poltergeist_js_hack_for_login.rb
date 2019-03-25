@@ -1,5 +1,4 @@
 require 'capybara/poltergeist'
-require 'capybara-screenshot/rspec'
 Capybara.save_path = 'tmp/capybara/'
 Capybara.register_driver :poltergeist do |app|
   options = {

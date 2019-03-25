@@ -17,16 +17,18 @@
 #  amount_currency  :string(255)      default("USD"), not null
 #  created_by       :integer
 #
-
+require 'faker'
 FactoryBot.define do
   factory :gift_card do
-    gift_card_number Faker::Number.number(4)
+    full_card_number {CreditCardValidations::Factory.random(:mastercard)}
     expiration_date '05/20'
-    person_id 1
-    notes 'MyString'
+    user_id 1
     created_by 1
-    reason 1
-    sequence_number Faker::Number.number(3)
-    batch_id Faker::Number.number(10)
+    status 'active'
+    amount_cents 2500
+    amount_currency "USD"
+    secure_code {Faker::Number.number(3)}
+    sequence_number {Faker::Number.number(3)}
+    batch_id {Faker::Number.number(8)}
   end
 end
