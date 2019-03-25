@@ -1,7 +1,7 @@
 language: ruby
 cache: bundler
 sudo: required
-dist: xenial
+dist: bionic
 bundler_args: "--jobs=4 --retry=3"
 addons: # get google-chrome-stable
   chrome: stable

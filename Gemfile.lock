@@ -586,6 +586,7 @@ DEPENDENCIES
   capybara-email
   chartkick
   coffee-rails
+  concurrent-ruby
   coveralls
   credit_card_validations
   database_cleaner
