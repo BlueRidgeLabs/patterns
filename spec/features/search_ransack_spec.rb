@@ -1,6 +1,6 @@
 require 'rails_helper'
 require 'faker'
-require 'support/poltergeist_js_hack_for_login'
+require 'support/chromedriver_setup'
 require 'capybara/email/rspec'
 
 feature 'search using ransack'  do
