@@ -37,8 +37,8 @@
   <div class="control-group">
     <%= f.label :verified, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :verified, 
-            options_for_select(Person.verified_types,'Verified') %> (Start with 'Verified' to save as verified)
+      <%= f.select :verified,
+            options_for_select(Person::VERIFIED_TYPES, Person::VERIFIED_TYPE) %> (Start with 'Verified' to save as verified)
     </div>
   </div>
   <div class="control-group">
