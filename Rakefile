@@ -12,5 +12,5 @@ if Rails.env != 'production' && Rails.env != 'staging'
   Coveralls::RakeTask.new
   task test_with_coveralls: [:spec, :features, 'coveralls:push']
 
-  task default: [:rubocop, :test, :spec, 'coveralls:push']
+  task default: [:spec, 'coveralls:push']
 end
