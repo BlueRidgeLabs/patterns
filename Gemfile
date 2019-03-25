@@ -249,6 +249,7 @@ group :development, :test do
   # use holder for placeholder images
   gem 'holder_rails'
   gem 'capybara'
+  gem "webdrivers", "~> 3.0"
   gem 'capybara-email'
   gem 'concurrent-ruby'
   gem 'database_cleaner'
