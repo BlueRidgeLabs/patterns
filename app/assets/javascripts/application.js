@@ -18,7 +18,6 @@
 //= require best_in_place
 //= require twitter/bootstrap
 //= require twitter/typeahead.min
-//= require holder
 //= require tokenfield/bootstrap-tokenfield.js
 //= require jquery.validate
 //= require jquery.validate.additional-methods
