@@ -252,7 +252,7 @@
                 data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
                 class: 'btn btn-danger' %>
       <% if @person.active %> <!-- active or inactive? -->
-      <%= link_to 'deactivate',
+      <%= link_to I18n.t('deactivate'),
                 deactivate_people_path(@person),
                 method: :post,
                 data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
