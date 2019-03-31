@@ -49,7 +49,6 @@ class PeopleController < ApplicationController
   def index
     Person.per_page = params[:per_page] if params[:per_page].present? # allow for larger pages
 
-    @verified_types = Person.distinct.pluck(:verified).select(&:present?)
     # this could be cleaner...
     search = if params[:tags].blank?
                Person.active.includes(:taggings).paginate(page: params[:page]).
@@ -80,7 +79,6 @@ class PeopleController < ApplicationController
 
     @last_gift_card = Reward.last # default scope is id: :desc
     @gift_card = Reward.new
-    @verified_types = Person.distinct.pluck(:verified).select(&:present?)
     @tags = @person.tags.pluck(:name)
     # @outgoingmessages = TwilioMessage.where(to: @person.normalized_phone_number).limit(10)
     # @twilio_wufoo_formids = @outgoingmessages.distinct.pluck(:wufoo_formid)
