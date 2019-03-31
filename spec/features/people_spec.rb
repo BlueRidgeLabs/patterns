@@ -184,10 +184,4 @@ feature "people page" do
     visit people_path
     expect(page).not_to have_content(email_address)
   end
-
-  scenario 'search people by tag' do
-  end
-
-  scenario "show person's details" do
-  end
 end
