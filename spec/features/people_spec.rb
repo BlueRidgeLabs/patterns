@@ -134,7 +134,14 @@ feature "people page" do
   scenario 'create new, unverified person' do
     add_new_person(verified: Person::NOT_VERIFIED_TYPE)
     assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
-    # unverified people don't show up in list
+
+    # admin users can see unverified people
+    visit people_path
+    expect(page).to have_content(email_address)
+
+    # non-admin users can't see unverified people
+    admin_user.update(new_person_notification: false)
+    visit people_path
     expect(page).not_to have_content(email_address)
   end
 
