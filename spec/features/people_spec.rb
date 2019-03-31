@@ -89,12 +89,22 @@ feature "people page" do
     # deactivate person
     expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
     find(:xpath, "//a[@href='#{deactivate_people_path(person.id)}']").click
-    expect(page).to have_content("#{person.first_name} #{person.last_name} deactivated")
+    expect(page).to have_content("#{person.full_name} deactivated")
     expect(page).not_to have_content(updated_email_address)
     person.reload
     expect(person.active).to eq(false)
     expect(person.deactivated_at).to be_truthy
     expect(person.deactivated_method).to eq('admin_interface')
+
+    # reactivate person
+    expect(RapidproUpdateJob).to receive(:perform_async).with(person.id)
+    visit person_path(person.id)
+    expect(page).to have_content("#{person.full_name} | Deactivated")
+    find(:xpath, "//a[@href='#{reactivate_people_path(person.id)}']").click
+    expect(page.current_path).to eq(people_path)
+    expect(page).to have_content("#{person.full_name} re-activated")
+    expect(page).to have_content(updated_email_address)
+    expect(person.reload.active).to eq(true)
   end
 
   scenario 'create new, unverified person' do
