@@ -105,6 +105,12 @@ feature "people page" do
     expect(page).to have_content("#{person.full_name} re-activated")
     expect(page).to have_content(updated_email_address)
     expect(person.reload.active).to eq(true)
+
+    # delete person
+    find(:xpath, "//a[@href='#{person_path(person.id)}' and @data-method='delete']").click
+    expect(page.current_path).to eq(people_path)
+    expect(page).not_to have_content(updated_email_address)
+    expect { person.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   scenario 'create new, unverified person' do
