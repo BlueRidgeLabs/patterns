@@ -73,8 +73,13 @@ feature "people page" do
     assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
 
-    # edit person's email
     person = Person.order(:id).last
+
+    # show person details page
+    click_link person.full_name
+    expect(page.current_path).to eq(person_path(person.id))
+
+    # edit person's email
     updated_email_address = "eugeneupdated@asdf.com"
     find(:xpath, "//a[@href='#{edit_person_path(person.id)}']").click
 
