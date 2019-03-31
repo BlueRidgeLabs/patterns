@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "people page" do
-  let(:admin_user) { FactoryBot.create(:user) }
+  let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:first_name) { "Doggo" }
   let(:last_name) { "Johnson" }
   let(:phone_number) { "6665551234" }
@@ -75,16 +75,26 @@ feature "people page" do
 
     # edit person's email
     person = Person.order(:id).last
-    updated_email = "eugeneupdated@asdf.com"
+    updated_email_address = "eugeneupdated@asdf.com"
     find(:xpath, "//a[@href='#{edit_person_path(person.id)}']").click
 
-    fill_in 'Email address', with: updated_email
+    fill_in 'Email address', with: updated_email_address
     click_button 'Update Person'
     expect(page).to have_content('Person was successfully updated.')
     expect(page.current_path).to eq(person_path(person.id))
-    expect(person.reload.email_address).to eq(updated_email)
-
+    expect(person.reload.email_address).to eq(updated_email_address)
     visit people_path
+    expect(page).to have_content(updated_email_address)
+
+    # deactivate person
+    expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
+    find(:xpath, "//a[@href='#{deactivate_people_path(person.id)}']").click
+    expect(page).to have_content("#{person.first_name} #{person.last_name} deactivated")
+    expect(page).not_to have_content(updated_email_address)
+    person.reload
+    expect(person.active).to eq(false)
+    expect(person.deactivated_at).to be_truthy
+    expect(person.deactivated_method).to eq('admin_interface')
   end
 
   scenario 'create new, unverified person' do
