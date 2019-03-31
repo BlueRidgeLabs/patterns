@@ -136,6 +136,41 @@ feature "people page" do
     expect { person.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
+  scenario "tagging", js: true do
+    add_new_person(verified: Person::VERIFIED_TYPE)
+    assert_person_created(verified: Person::VERIFIED_TYPE)
+    expect(page).to have_content(email_address)
+
+    person = Person.order(:id).last
+    # show person details page
+    click_link person.full_name
+    expect(page.current_path).to eq(person_path(person.id))
+
+    # add tag
+    new_tag = 'TeSt TaG'
+    normalized_new_tag = new_tag.downcase
+    fill_in with: new_tag, id: 'tag-typeahead'
+    find('.tag-form input[type="submit"]').click
+    wait_for_ajax
+    person.reload
+    expect(person.tag_list).to include(normalized_new_tag)
+    expect(page).to have_content(normalized_new_tag)
+
+    # look at search results by tag
+    click_link normalized_new_tag
+    expect(page).to have_content("Search Results")
+    expect(page).to have_content(email_address)
+
+    # delete tag
+    click_link person.full_name
+    created_tagging = person.taggings.order(:id).last
+    find(:xpath, "//a[@href='#{tagging_path(created_tagging.id)}' and @data-method='delete']").click
+    wait_for_ajax
+    person.reload
+    expect(person.tag_list).not_to include(normalized_new_tag)
+    expect(page).not_to have_content(normalized_new_tag)
+  end
+
   scenario 'create new, unverified person' do
     add_new_person(verified: Person::NOT_VERIFIED_TYPE)
     assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
