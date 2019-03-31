@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "people page" do
-  let(:admin_user) { FactoryBot.create(:user) }
+  let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:first_name) { "Doggo" }
   let(:last_name) { "Johnson" }
   let(:phone_number) { "6665551234" }
@@ -12,6 +12,7 @@ feature "people page" do
   let(:participation_type) { "remote" }
   let(:preferred_contact_method) { { value: "SMS", label: "Text Message" } }
   let(:low_income) { true }
+  let(:last_person) { }
 
   let(:now) { DateTime.current }
 
@@ -67,16 +68,120 @@ feature "people page" do
     expect(new_person.low_income).to eq(low_income)
   end
 
-  scenario 'create new, verified person' do
+  scenario 'create new, verified person, and edit their information' do
     add_new_person(verified: Person::VERIFIED_TYPE)
     assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
+
+    person = Person.order(:id).last
+
+    # show person details page
+    click_link person.full_name
+    expect(page.current_path).to eq(person_path(person.id))
+
+    # edit person's email
+    updated_email_address = "eugeneupdated@asdf.com"
+    find(:xpath, "//a[@href='#{edit_person_path(person.id)}']").click
+
+    fill_in 'Email address', with: updated_email_address
+    click_button 'Update Person'
+    expect(page).to have_content('Person was successfully updated.')
+    expect(page.current_path).to eq(person_path(person.id))
+    expect(person.reload.email_address).to eq(updated_email_address)
+    visit people_path
+    expect(page).to have_content(updated_email_address)
+
+    # non-admin can't reactivate/delete person
+    admin_user.update(new_person_notification: false)
+    visit people_path
+    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content("Delete")
+    visit person_path(person.id)
+    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content("Delete")
+
+    # admin can reactivate/delete person
+    admin_user.update(new_person_notification: true)
+    visit people_path
+    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content("Delete")
+    visit person_path(person.id)
+    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content("Delete")
+
+    # deactivate person
+    expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
+    find(:xpath, "//a[@href='#{deactivate_people_path(person.id)}']").click
+    expect(page).to have_content("#{person.full_name} deactivated")
+    expect(page).not_to have_content(updated_email_address)
+    person.reload
+    expect(person.active).to eq(false)
+    expect(person.deactivated_at).to be_truthy
+    expect(person.deactivated_method).to eq('admin_interface')
+
+    # reactivate person
+    expect(RapidproUpdateJob).to receive(:perform_async).with(person.id)
+    visit person_path(person.id)
+    expect(page).to have_content("#{person.full_name} | Deactivated")
+    find(:xpath, "//a[@href='#{reactivate_people_path(person.id)}']").click
+    expect(page.current_path).to eq(people_path)
+    expect(page).to have_content("#{person.full_name} re-activated")
+    expect(page).to have_content(updated_email_address)
+    expect(person.reload.active).to eq(true)
+
+    # delete person
+    find(:xpath, "//a[@href='#{person_path(person.id)}' and @data-method='delete']").click
+    expect(page.current_path).to eq(people_path)
+    expect(page).not_to have_content(updated_email_address)
+    expect { person.reload }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+
+  scenario "tagging", js: true do
+    add_new_person(verified: Person::VERIFIED_TYPE)
+    assert_person_created(verified: Person::VERIFIED_TYPE)
+    expect(page).to have_content(email_address)
+
+    person = Person.order(:id).last
+    # show person details page
+    click_link person.full_name
+    expect(page.current_path).to eq(person_path(person.id))
+
+    # add tag
+    new_tag = 'TeSt TaG'
+    normalized_new_tag = new_tag.downcase
+    fill_in with: new_tag, id: 'tag-typeahead'
+    find('.tag-form input[type="submit"]').click
+    wait_for_ajax
+    person.reload
+    expect(person.tag_list).to include(normalized_new_tag)
+    expect(page).to have_content(normalized_new_tag)
+
+    # look at search results by tag
+    click_link normalized_new_tag
+    expect(page).to have_content("Search Results")
+    expect(page).to have_content(email_address)
+
+    # delete tag
+    click_link person.full_name
+    created_tagging = person.taggings.order(:id).last
+    find(:xpath, "//a[@href='#{tagging_path(created_tagging.id)}' and @data-method='delete']").click
+    wait_for_ajax
+    person.reload
+    expect(person.tag_list).not_to include(normalized_new_tag)
+    expect(page).not_to have_content(normalized_new_tag)
   end
 
   scenario 'create new, unverified person' do
     add_new_person(verified: Person::NOT_VERIFIED_TYPE)
     assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
-    # unverified people don't show up in list
+
+    # admin users can see unverified people
+    visit people_path
+    expect(page).to have_content(email_address)
+
+    # non-admin users can't see unverified people
+    admin_user.update(new_person_notification: false)
+    visit people_path
     expect(page).not_to have_content(email_address)
   end
 end

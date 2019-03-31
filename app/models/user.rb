@@ -34,6 +34,8 @@
 #  invitations_count       :integer          default(0)
 #
 
+# TODO: (EL) rename new_person_notification to something like is_admin
+
 class User < ApplicationRecord
   has_paper_trail ignore: [:last_sign_in_at]
   # acts_as_tagger #if we want owned tags.
