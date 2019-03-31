@@ -86,6 +86,24 @@ feature "people page" do
     visit people_path
     expect(page).to have_content(updated_email_address)
 
+    # non-admin can't reactivate/delete person
+    admin_user.update(new_person_notification: false)
+    visit people_path
+    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content("Delete")
+    visit person_path(person.id)
+    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content("Delete")
+
+    # admin can reactivate/delete person
+    admin_user.update(new_person_notification: true)
+    visit people_path
+    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content("Delete")
+    visit person_path(person.id)
+    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content("Delete")
+
     # deactivate person
     expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
     find(:xpath, "//a[@href='#{deactivate_people_path(person.id)}']").click
@@ -120,15 +138,9 @@ feature "people page" do
     expect(page).not_to have_content(email_address)
   end
 
-  scenario 'delete person' do
-  end
-
-  scenario 'deactivate person' do
-  end
-
-  scenario 'edit person' do
-  end
-
   scenario 'search people by tag' do
+  end
+
+  scenario "show person's details" do
   end
 end
