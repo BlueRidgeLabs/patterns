@@ -12,6 +12,7 @@ feature "people page" do
   let(:participation_type) { "remote" }
   let(:preferred_contact_method) { { value: "SMS", label: "Text Message" } }
   let(:low_income) { true }
+  let(:last_person) { }
 
   let(:now) { DateTime.current }
 
@@ -67,10 +68,23 @@ feature "people page" do
     expect(new_person.low_income).to eq(low_income)
   end
 
-  scenario 'create new, verified person' do
+  scenario 'create new, verified person, and edit their information' do
     add_new_person(verified: Person::VERIFIED_TYPE)
     assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
+
+    # edit person's email
+    person = Person.order(:id).last
+    updated_email = "eugeneupdated@asdf.com"
+    find(:xpath, "//a[@href='#{edit_person_path(person.id)}']").click
+
+    fill_in 'Email address', with: updated_email
+    click_button 'Update Person'
+    expect(page).to have_content('Person was successfully updated.')
+    expect(page.current_path).to eq(person_path(person.id))
+    expect(person.reload.email_address).to eq(updated_email)
+
+    visit people_path
   end
 
   scenario 'create new, unverified person' do
@@ -78,5 +92,17 @@ feature "people page" do
     assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
     # unverified people don't show up in list
     expect(page).not_to have_content(email_address)
+  end
+
+  scenario 'delete person' do
+  end
+
+  scenario 'deactivate person' do
+  end
+
+  scenario 'edit person' do
+  end
+
+  scenario 'search people by tag' do
   end
 end
