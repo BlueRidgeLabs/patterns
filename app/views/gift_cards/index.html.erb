@@ -56,9 +56,10 @@ table tr {
         </thead>
         <tbody>
           <tr>
-      <%= form_for @new_card, url: {action: "create"}, html: {class: "navbar-form pull-left"} do |f| %>
+      <%= form_for @new_card, html: {class: "navbar-form pull-left"} do |f| %>
         <td>
           <%= f.text_field :full_card_number, 
+                class:'full-card-number',
                 placeholder:'Full Card Number',
                 'data-mask': '9999-9999-9999-9999'%>
         </td>

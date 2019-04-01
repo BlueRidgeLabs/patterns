@@ -7,7 +7,7 @@ class GiftCardsController < ApplicationController
   # GET /gift_cards.json
   def index
     @errored_cards = []
-    @new_card =GiftCard.new
+    @new_card = GiftCard.new
     @cards = if current_user.admin?
                GiftCard.unassigned
              else

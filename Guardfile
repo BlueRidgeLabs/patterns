@@ -38,62 +38,11 @@ group :red_green_refactor, halt_on_fail: true do
     watch(rails.view_dirs)     { |m| rspec.spec.call("features/#{m[1]}") }
     watch(rails.layouts)       { |m| rspec.spec.call("features/#{m[1]}") }
 
-    watch('app/models/v2/event.rb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/models/v2/event.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/models/v2/event.rb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/models/v2/event_invitation.rb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/models/v2/event_invitation.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/models/v2/event_invitation.rb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/models/v2/time_window.rb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/models/v2/time_window.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/models/v2/time_window.rb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/models/v2/time_slot.rb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/models/v2/time_slot.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/models/v2/time_slot.rb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/models/v2/reservation.rb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-
-    watch('app/mailers/event_invitation_mailer.rb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/mailers/event_invitation_mailer.rb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-
-    watch('app/sms/application_sms.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/sms/application_sms.rb') { 'spec/features/person_responds_to_interview_invitation_over_sms_spec.rb' }
-    watch('app/sms/event_invitation_sms.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/sms/reservation_sms.rb') { 'spec/controllers/v2/sms_reservations_controller_spec.rb' }
-    watch('app/sms/decline_invitation_sms.rb') { 'spec/controllers/v2/sms_reservations_controller_spec.rb' }
-    watch('app/sms/time_slot_not_available_sms.rb') { 'spec/controllers/v2/sms_reservations_controller_spec.rb' }
-    watch('app/controllers/v2/event_invitations_controller.rb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/controllers/v2/event_invitations_controller.rb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/controllers/v2/reservations_controller.rb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/controllers/public/people_controller.rb') { 'spec/features/people_registration_spec.rb' }
-
-    watch('app/views/v2/event_invitations/new.html.erb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/views/v2/event_invitations/new.html.erb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/views/v2/event_invitations/_form.html.erb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/views/v2/event_invitations/_form.html.erb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/views/v2/reservations/new.html.erb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/views/v2/reservations/_form.html.erb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/views/event_invitation_mailer/invite.html.erb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/views/event_invitation_mailer/invite.html.erb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/views/event_invitation_mailer/invite.html.erb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
-    watch('app/views/event_invitation_mailer/invite.text.erb') { 'spec/features/invite_person_to_phone_call_spec.rb' }
-    watch('app/views/event_invitation_mailer/invite.text.erb') { 'spec/features/person_responds_to_interview_invitation_over_email_spec.rb' }
-    watch('app/views/event_invitation_mailer/invite.text.erb') { 'spec/features/sms_invitation_to_phone_call_spec.rb' }
+    
     watch('app/views/public/people/new.html.erb') { 'spec/features/people_registration_spec.rb' }
     watch('app/views/public/people/_form.html.erb') { 'spec/features/people_registration_spec.rb' }
   end
 
-  guard :minitest, test_folders: ['test']  do
-    watch(%r{^test/(.*)\/?test_(.*)\.rb$})
-    watch(%r{^lib/(.*/)?([^/]+)\.rb$})     { |m| "test/#{m[1]}test_#{m[2]}.rb" }
-    watch(%r{^test/test_helper\.rb$})      { 'test' }
-
-    watch(%r{^app/controllers/application_controller\.rb$}) { 'test/controllers' }
-    watch(%r{^app/controllers/(.+)_controller\.rb$})        { |m| "test/integration/#{m[1]}_test.rb" }
-    watch(%r{^app/views/(.+)_mailer/.+})                   { |m| "test/mailers/#{m[1]}_mailer_test.rb" }
-    watch(%r{^test/.+_test\.rb$})
-    watch(%r{^test/test_helper\.rb$}) { 'test' }
-    watch(%r{^app/models/(.*)\.rb$})      { |m| "test/models/#{m[1]}_test.rb" }
-  end
 
   guard :rubocop do
     watch(/.+\.rb$/)

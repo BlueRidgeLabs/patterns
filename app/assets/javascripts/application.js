@@ -25,6 +25,7 @@
 //= require datepicker/bootstrap-datetimepicker.min
 //= require fullcalendar/fullcalendar.min
 //= require jquery-touchswipe/jquery.touchSwipe.min
+//= require jquery-creditcardvalidator/jquery.creditCardValidator.js
 //= require cable
 //= require_tree .
 //= require jquery.mask
