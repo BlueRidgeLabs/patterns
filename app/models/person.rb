@@ -60,9 +60,9 @@ class Person < ApplicationRecord
   acts_as_taggable
 
   VERIFIED_TYPES = [
-    VERIFIED_TYPE = "Verified",
-    NOT_VERIFIED_TYPE = "No"
-  ]
+    VERIFIED_TYPE = 'Verified',
+    NOT_VERIFIED_TYPE = 'No'
+  ].freeze
 
   page 50
 

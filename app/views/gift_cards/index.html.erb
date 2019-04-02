@@ -4,102 +4,100 @@ table tr {
   padding-bottom: 1em !important;
 }
 </style>
-<ul>
-<% if @errored_cards.present? %>
-    <% @errored_cards.each do |errored_card| %>
-      <% errored_card.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+<div id='errors'>
+  <% if @errored_cards.present? %>
+    <ul>
+      <% @errored_cards.each do |errored_card| %>
+        <% errored_card.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       <% end %>
-    <% end %>
+    </ul>
   <% end %>
-</ul>
+</div>
 <h1>Activate Cards</h1>
 <div class='container'>
   <div class='row'>
-    <div class='span2'>
-      <!-- button for modal uploader -->
-      <%= link_to "Upload Cards", "#modal-window", :class => "btn btn-default", "data-toggle" => "modal" %>
-    </div>
-    <div class='span2'>
-      <%= button_tag 'Manually Enter Card', 
-      onclick: '$("#manual_card").toggle()', 
-      class: 'btn'%>
-    </div>
-    <div class='span2'>
-      <%= link_to 'Download Signout Sheet', 
-          '/card_activations/signout_sheet.xlsx',
-          class: 'btn'%>
-    </div>
-    <div class='span6'>
+    <div class='span12'>
       <!-- form for single card -->
-      <table style='display: none;' id='manual_card' class='card_activations'>
+    <%= form_tag gift_cards_path do %>
+      <table style='' id='manual_card'>
         <thead>
           <tr>
+            <th>Sequence&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "It's a number that increments for each card, likely between 1 and 500. usually a bunch of leading zeros, and it's the first number in the upper right hand corner of the clear plastic window of the envelope.",
+          title: 'popover',
+          original_title:"Sequence Number"} %></th>
             <th>Full Card #</th>
             <th>Secure&nbsp;Code</th>
             <th>Exp Date</th>
             <th>Amount</th>
-            <th>Sequence&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
-          content: j("It's a number that increments for each card, likely between 1 and 500. usually a bunch of leading zeros, and it's the first number in the upper right hand corner of the clear plastic window of the envelope."),
-          title: 'popover',
-          original_title:"Sequence Number"} %></th>
+            
             <th>Batch ID&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
           toggle: "popover", 
           placement: "top", 
-          content: "It's a number that stays the same for the whole batch of cards, fairly long, and is the last number on the right in the plastic window above where it says 'Robin Hood Foundation'",
+          content: "It is a number that stays the same for the whole batch of cards, fairly long, and is the last number on the right in the plastic window above where it says -Robin Hood Foundation-",
           title: 'popover',
           original_title:"Sequence Number"} %></th>
-            <th></th>
+            <th><span class='badge badge-success' id='add-gift-card-row'>+</span></th>
           </tr>
         </thead>
+      
         <tbody>
-          <tr>
-      <%= form_for @new_card, html: {class: "navbar-form pull-left"} do |f| %>
-        <td>
-          <%= f.text_field :full_card_number, 
-                class:'full-card-number',
-                placeholder:'Full Card Number',
-                'data-mask': '9999-9999-9999-9999'%>
-        </td>
-        <td>
-          <%= f.text_field :secure_code, 
-                placeholder: 'Secure Code',
-                class: 'input-mini',
-                'data-mask': '999' %>
-        </td>
-        <td>
-          <%= f.text_field :expiration_date, 
-                placeholder: 'MM/YY', 
-                class: 'input-mini',
-                'data-mask': '00/00' %>
-        </td>
-        <td>
-          <%= f.text_field :amount, 
-                placeholder: '$25.00', 
-                class: 'input-mini',
-                'data-mask': '$999.99' %>
-        </td>
-        <td>
-          <%= f.text_field :sequence_number, 
-                placeholder:'Sequence',
-                class: 'input-mini',
-                'data-mask':'999' %>
-        </td>
-        <td>
-          <%= f.text_field :batch_id, 
-                placeholder: 'Batch ID',
-                class: 'input-mini',
-                'data-mask':'999999' %>
-        </td>
-        <td>
-          <%= f.submit "Activate", class: 'btn', data: { disable_with: false } %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-      <% end %>
+          <tr class='new_card'>
+            <td>
+              <%= text_field_tag 'new_gift_cards[][sequence_number]',
+                    '',
+                    {placeholder:'Sequence',
+                    class: 'input-mini',
+                    'data-mask':'999'} %>
+            </td>
+            <td>
+              <%= text_field_tag 'new_gift_cards[][full_card_number]',
+                    '',
+                    {class:'full-card-number',
+                    placeholder:'Full Card Number',
+                    'data-mask': '9999-9999-9999-9999'}%>
+            </td>
+            <td>
+              <%= text_field_tag 'new_gift_cards[][secure_code]', 
+                    '',
+                    {placeholder: 'Secure Code',
+                    class: 'input-mini',
+                    'data-mask': '999'} %>
+            </td>
+            <td>
+              <%= text_field_tag 'new_gift_cards[][expiration_date]',
+                    '', 
+                    placeholder: 'MM/YY', 
+                    class: 'input-mini',
+                    'data-mask': '00/00' %>
+            </td>
+            <td>
+              <%= text_field_tag 'new_gift_cards[][amount]','',  
+                    {placeholder: '$25.00', 
+                    class: 'input-mini',
+                    'data-mask': '$999.99'} %>
+            </td>
+            
+            <td>
+              <%= text_field_tag 'new_gift_cards[][batch_id]', '',
+                    {placeholder: 'Batch ID',
+                    class: 'input-mini',
+                    'data-mask':'999999'} %>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <%= submit_tag "Activate",{ 
+          id: 'activate-button',
+          class: 'btn',
+          disabled: true} %>
+    <% end %>
     </div>
   </div>
   <div class='row'>

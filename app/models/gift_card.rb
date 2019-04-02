@@ -56,8 +56,8 @@ class GiftCard < ApplicationRecord
   # IMMUTABLE = %w{gift_card_id}
   # validate :force_immutable
 
-  before_create :scrub_input
-  before_create :set_created_by
+  before_save :scrub_input
+  before_save :set_created_by
 
   # starts activation call process on create after commit happens
   # after_commit :create_activation_call, on: :create
@@ -223,7 +223,7 @@ class GiftCard < ApplicationRecord
     self.sequence_number = sequence_number&.to_i
     self.batch_id = batch_id&.to_i
     self.full_card_number = full_card_number&.delete('-')
-    self.secure_code = secure_code&.gsub('.0', '')
+    self.secure_code = secure_code&.delete('.0', '')
     secure_code.prepend('0') while secure_code.length < 3
   end
 

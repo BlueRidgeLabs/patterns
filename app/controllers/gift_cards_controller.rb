@@ -2,19 +2,17 @@
 
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy change_user check]
-
+  skip_before_action :verify_authenticity_token, only: [:create]
   # GET /gift_cards
   # GET /gift_cards.json
   def index
     @errored_cards = []
-    @new_card = GiftCard.new
     @cards = if current_user.admin?
-               GiftCard.unassigned
+               GiftCard.includes(:user).unassigned
              else
-               GiftCard.unassigned.where(user_id: current_user.id)
+               GiftCard.includes(:user).unassigned.where(user_id: current_user.id)
              end
     # busted ones first
-
     @gift_cards = @cards.sort_by(&:sort_helper)
     @cards = @cards.where(status: 'active')
   end
@@ -125,28 +123,38 @@ class GiftCardsController < ApplicationController
   # POST /gift_cards
   # POST /gift_cards.json
   def create
-    ca_params = gift_card_params
-    ca_params[:full_card_number] = ca_params[:full_card_number].delete('-')
-    @gift_card = GiftCard.new(ca_params)
-    @gift_card.user = current_user
-    if @gift_card.save
-      @gift_card.start_activate!
-    else
-      flash[:error]= "Card Error: #{@gift_card.errors.messages[:base]}"
+    @errors = []
+    
+    @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc| 
+      
+      GiftCard.new(ngc)
     end
 
+    @gift_cards.each  do |gc|
+      gc.user = current_user
+      gc.scrub_input
+      if gc.save
+        gc.start_activate!
+      else
+        err_msg = "Card Error: sequence: #{gc.sequence_number}, #{gc.full_card_number}, #{gc.errors[:base]}"
+        Airbrake.notify(err_msg)
+        @errors.push gc.errors.messages[:base]
+      end
+    end
+    unless @errors.blank?
+      flash[:error] = "Card Errors: #{@errors.length} \n #{@errors.to_s}"
+    end
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
     # use after_save_commit hook to do background task.
     #
     respond_to do |format|
-      if @gift_card.errors.empty?
+      if @errors.empty?
         format.html { redirect_to gift_cards_url, notice: 'Card Activation process started.' }
-        format.json { render :show, status: :created, location: @gift_card }
         format.js {}
       else
         format.html { redirect_to gift_cards_url }
-        format.json { render json: @gift_card.errors, status: :unprocessable_entity }
+        format.json { render json: @errors, status: :unprocessable_entity }
       end
     end
   end
@@ -206,6 +214,11 @@ class GiftCardsController < ApplicationController
               end
 
       @gift_card = GiftCard.find(ca_id)
+    end
+
+    def new_gift_card_params
+      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number state]
+      params.permit(new_gift_cards: allowed)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

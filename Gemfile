@@ -230,7 +230,7 @@ group :test do
   gem 'rubocop', require: false
   gem 'simplecov', require: false
   # screenshots when capybara fails
-  #gem 'capybara-screenshot'
+  gem 'capybara-screenshot'
 
   # retry poltergeist specs. they are finicky
   gem 'rspec-retry'
@@ -243,6 +243,8 @@ group :test do
 
   # in memory redis for testing only
   gem 'mock_redis'
+
+  gem 'vcr'
 end
 
 group :development, :test do

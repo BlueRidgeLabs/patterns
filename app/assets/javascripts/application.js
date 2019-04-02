@@ -27,10 +27,10 @@
 //= require jquery-touchswipe/jquery.touchSwipe.min
 //= require jquery-creditcardvalidator/jquery.creditCardValidator.js
 //= require cable
-//= require_tree .
 //= require jquery.mask
 //= require fuse/fuse.min
 //= require leaflet
+//= require_tree .
 
 $(document).on('turbolinks:load',function() {
   $.jMaskGlobals.watchDataMask = true;

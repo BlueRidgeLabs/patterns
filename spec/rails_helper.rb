@@ -15,10 +15,14 @@ require 'sms_spec'
 require 'timecop'
 require 'mock_redis'
 require 'simplecov'
+require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
+
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
 
-Redis.current = MockRedis.new # mocking out redis for our tests
+# mocking out redis for our tests
+Redis.current = MockRedis.new 
 
 # keeps out sql output hidden
 ActiveRecord::Base.logger = nil
