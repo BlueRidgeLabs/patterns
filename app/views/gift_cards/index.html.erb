@@ -16,10 +16,11 @@ table tr {
   <% end %>
 </div>
 <h1>Activate Cards</h1>
+<%= link_to "Upload Cards", "#modal-window", :class => "btn btn-default", "data-toggle" => "modal" %>
 <div class='container'>
   <div class='row'>
+    
     <div class='span12'>
-      <!-- form for single card -->
     <%= form_tag gift_cards_path do %>
       <table style='' id='manual_card'>
         <thead>

@@ -48,5 +48,10 @@ FactoryBot.define do
     trait :admin do
       new_person_notification  true
     end
+    
+    trait :unapproved do
+      approved false
+    end
+
   end
 end
