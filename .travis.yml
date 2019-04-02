@@ -12,7 +12,7 @@ addons: # get google-chrome-stable
   code_climate:
     repo_token: bc9e0fee3d10d7a24d762909e4fffe85dab761dfded5db6ffddf9d7b6e5b61f4
 services:
-  #- redis # using mock redis in tests
+  - redis # using mock redis in tests
   - mysql
 install:
   - bundle install -j 4 --without production

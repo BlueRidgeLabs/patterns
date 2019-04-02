@@ -86,7 +86,9 @@ feature "gift_cards page" do
     select other_user.name, from: "user_change_gift_card_#{gift_card.id}"
 
     wait_for_ajax
-    sleep 1
+    #FIXME 
+    #TODO
+    sleep 1 # hate this
     gift_card.reload
     expect(gift_card.user.id).to eq(other_user.id)
 
