@@ -15,10 +15,14 @@ require 'sms_spec'
 require 'timecop'
 require 'mock_redis'
 require 'simplecov'
+require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
+
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
 
-Redis.current = MockRedis.new # mocking out redis for our tests
+# mocking out redis for our tests
+Redis.current = MockRedis.new 
 
 # keeps out sql output hidden
 ActiveRecord::Base.logger = nil
@@ -50,6 +54,11 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
+# Capybara.configure do |config|
+#   config.server_port = 9887 + ENV['TEST_ENV_NUMBER'].to_i
+# end
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

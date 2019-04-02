@@ -230,7 +230,7 @@ group :test do
   gem 'rubocop', require: false
   gem 'simplecov', require: false
   # screenshots when capybara fails
-  #gem 'capybara-screenshot'
+  gem 'capybara-screenshot'
 
   # retry poltergeist specs. they are finicky
   gem 'rspec-retry'
@@ -243,10 +243,13 @@ group :test do
 
   # in memory redis for testing only
   gem 'mock_redis'
+
+  gem 'vcr'
 end
 
 group :development, :test do
   # use holder for placeholder images
+  gem 'parallel_tests' # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
   gem 'holder_rails'
   gem 'capybara'
   gem "webdrivers", "~> 3.0"

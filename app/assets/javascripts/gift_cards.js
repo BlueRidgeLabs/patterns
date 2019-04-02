@@ -1,4 +1,4 @@
-$(document).on('page:load turbolinks:load ready ajax:complete', function() {
+$(document).on('turbolinks:load', function() {
   assign_cards_to_user = function(){
     var user_id = document.getElementById('select_user_for_cards').value;
     var checked = $('input:checked[name="gift_card_id_change[]"]').map(function() {
@@ -16,7 +16,7 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
     $('#checkedcount').html(checked_count);
   }
   
-  $(':checkbox').on('click', update_checkbox_count)
+  
 
   $('#card-all').on('click',function(){
     $('#gift-cards-large tr input[type="checkbox"]:visible').prop('checked', this.checked);
@@ -47,6 +47,59 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
     }
       return 0;
   }
+  // validate the credit card
+  function addCardValidation(){
+    $('.full-card-number').on('blur',function(){
+      $(this).validateCreditCard(function(result)
+      {
+        if(!result.luhn_valid){
+          $(this).css('border-color', 'red');
+          $('#activate-button').attr('disabled', true);
+        }else{
+          $('#activate-button').attr('disabled', false);
+          $(this).css('border-color', '#cccccc');
+        }
+      });
+    });
+  }
+
+  addCardValidation();
+
+  $('#add-gift-card-row').on('click', function(){
+
+    var tableBody = $('#manual_card').find("tbody");
+    var trLast =  tableBody.find("tr:last");
+    if ($(trLast).find("td:first input[type='text']").val() === '') {
+      alert('Fill in the first card, then add more rows. it makes the rest faster!');
+    } else {
+      var trNew = trLast.clone();
+      var old_sequence = parseInt($(trNew).find("td:first input[type='text']").val());
+      if (old_sequence !== NaN) {
+        $(trNew).find("td:first input[type='text']").val(old_sequence + 1);
+      }
+
+      var old_card = $(trNew).find("td:eq(1) input[type='text']")
+      var old_card_result = $(old_card).validateCreditCard();
+      
+      if (old_card_result.luhn_valid) {
+        new_card_val = $(old_card).val().slice(0,-7); 
+      }else{
+        new_card_val = $(old_card).val();
+      }
+      $(trNew).find("td:eq(1) input[type='text']").val(new_card_val);
+      $(trNew).find('td:last').html("<span class='badge badge-important remove-ngcf-row'>X</span>");
+      $(trNew).appendTo(tableBody);
+      
+      addCardValidation();
+      
+      $('.remove-ngcf-row').on('click',function(){
+        var parent_tr = $(this).parent();
+        var parent_form = $(parent_tr).parent();
+        $(parent_form).remove();
+      });
+    }
+    
+  });
 
   $("#sequence-title").on('click', function(){
     cur_attr = 'sequence-number'
@@ -90,8 +143,6 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
     })
   }
   multiselect_setup();
-  $(document).ajaxComplete(function(event, request) {multiselect_setup();});
-
 
   // searches for workers. simple Fuse search.
   var filter = function() {
@@ -164,5 +215,12 @@ $(document).on('page:load turbolinks:load ready ajax:complete', function() {
     $(this).siblings('input[type="text"]').blur();
     $('.card-activation').each(function(i, v) { $(v).show(); });
     update_checkbox_count()
+  });
+
+  // after we have a new card added.
+  $(document).ajaxComplete(function(event, request) {
+    multiselect_setup();
+    $(':checkbox').on('click', update_checkbox_count)
+     update_checkbox_count();
   });
 });
