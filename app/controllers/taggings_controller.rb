@@ -23,6 +23,7 @@ class TaggingsController < ApplicationController
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   #
+  # TODO: (EL) more rigorously test tagging logic
   def create
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
     res = false

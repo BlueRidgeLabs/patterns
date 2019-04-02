@@ -70,7 +70,7 @@
             <td><%= address_fields_to_sentence(person) %></td>
             <td><%= best_in_place person, :email_address %></td>
             <td><%= best_in_place person, :phone_number, display_with: lambda {|p| number_to_phone(p,area_code: true) } %></td>
-            <td><%= best_in_place person, :verified, as: :select, collection: @verified_types.map{|p| [p,p]} %></td>
+            <td><%= best_in_place person, :verified, as: :select, collection: Person::VERIFIED_TYPES.map{|p| [p,p]} %></td>
             <td><%= person.low_income %></td>
             <td><%= person.created_at.to_s(:short) %></td>
             <td><%= best_in_place person, :preferred_contact_method,
@@ -97,7 +97,7 @@
                           :method => :delete,
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                           :class => 'btn btn-mini btn-danger btn-block' %>
-                <%= link_to 'Deactivate',
+                <%= link_to I18n.t('deactivate'),
                           deactivate_people_path(person),
                           remote: true,
                           method: :post,

@@ -24,7 +24,7 @@
           content: "This means that the name and contact info has been verified. We know this person is an actual person, and at one point the phone number/email address was correct.",
           title: 'popover',
           original_title:"Verification"} %></dt>
-          <dd><%= best_in_place @person, :verified, as: :select, collection: @verified_types.map{|p| [p,p]} %></dd>
+          <dd><%= best_in_place @person, :verified, as: :select, collection: Person::VERIFIED_TYPES.map{|p| [p,p]} %></dd>
 
           <dt>Low Income? <%= content_tag :span,'?',class: 'badge', data:{
           toggle: "popover", 
@@ -252,7 +252,7 @@
                 data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
                 class: 'btn btn-danger' %>
       <% if @person.active %> <!-- active or inactive? -->
-      <%= link_to 'deactivate',
+      <%= link_to I18n.t('deactivate'),
                 deactivate_people_path(@person),
                 method: :post,
                 data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },

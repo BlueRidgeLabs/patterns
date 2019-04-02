@@ -43,5 +43,10 @@ FactoryBot.define do
     name { Faker::Name.name }
     phone_number { Faker::PhoneNumber.cell_phone }
     team
+    new_person_notification false
+
+    trait :admin do
+      new_person_notification  true
+    end
   end
 end
