@@ -537,7 +537,7 @@ GEM
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.5.0)
-    unicorn (5.5.0)
+    unicorn (5.4.1)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     validates_overlap (0.8.6)
@@ -684,7 +684,7 @@ DEPENDENCIES
   twitter-bootstrap-rails (~> 2.2.0)
   twitter-typeahead-rails
   uglifier
-  unicorn
+  unicorn (= 5.4.1)
   validates_overlap
   validates_zipcode
   vcr

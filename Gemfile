@@ -89,7 +89,7 @@ group :production do
   gem 'skylight' # perf
   gem 'lograge' # sane logs
   
-  gem 'unicorn' # Use unicorn as the app server
+  gem 'unicorn', "5.4.1" # Use unicorn as the app server
 end
 
 # Gems used only for assets and not required
