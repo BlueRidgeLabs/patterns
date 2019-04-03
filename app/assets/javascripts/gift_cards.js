@@ -74,10 +74,13 @@ $(document).on('turbolinks:load', function() {
     } else {
       var trNew = trLast.clone();
       var old_sequence = parseInt($(trNew).find("td:first input[type='text']").val());
+      
       if (old_sequence !== NaN) {
         $(trNew).find("td:first input[type='text']").val(old_sequence + 1);
       }
-
+      // remove old cvv
+      $(trNew).find("td:eq(2) input[type='text']").val('');
+      
       var old_card = $(trNew).find("td:eq(1) input[type='text']")
       var old_card_result = $(old_card).validateCreditCard();
       
