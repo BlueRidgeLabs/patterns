@@ -55,5 +55,4 @@ cards.csv
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-#ingore byebug
 .byebug_history
