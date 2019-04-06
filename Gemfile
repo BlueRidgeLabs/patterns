@@ -241,6 +241,7 @@ group :test do
   # webrick is slow, capybara will use puma instead
   gem 'puma'
 
+  gem 'webmock'
   # in memory redis for testing only
   gem 'mock_redis'
 

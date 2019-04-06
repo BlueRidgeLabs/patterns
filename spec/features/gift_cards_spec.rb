@@ -78,6 +78,7 @@ feature "gift_cards page" do
   end
 
   scenario 'change card owner', js: :true do
+    
     gift_card = FactoryBot.create(:gift_card, user: admin_user)
     other_user = FactoryBot.create(:user)
     visit '/gift_cards'

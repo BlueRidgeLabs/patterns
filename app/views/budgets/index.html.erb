@@ -13,7 +13,7 @@
       <dd><%= form_tag("/budgets/transaction/create", method: 'post', remote: true ) do %>
 
         <%= label_tag(:top_up, 'Amount') %>
-        <%= text_field_tag(:amount) %>
+        <%= text_field_tag(:amount, 0,{ id:'topup-amount'}) %>
         <%= hidden_field_tag(:transaction_type, 'Topup') %>
         <%= submit_tag("Top Up") %>
       <% end %></dd>
@@ -21,7 +21,7 @@
       <dd><%= form_tag("/budgets/transaction/create", method: 'post', remote: true ) do %>
 
         <%= label_tag(:top_up, 'Amount') %>
-        <%= text_field_tag(:amount) %>
+        <%= text_field_tag(:amount,0, id:'transfer-amount') %>
         <%= label_tag(:from,'From') %>
         <%= select_tag(:from_id, options_from_collection_for_select(Budget.includes(:team).all, :id, :name)) %>
         <%= label_tag(:from,'Recipient') %>

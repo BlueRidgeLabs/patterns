@@ -17,6 +17,16 @@ require 'mock_redis'
 require 'simplecov'
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
+require 'webmock'
+require 'vcr'
+
+# stores http calls and plays them back
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
+  config.configure_rspec_metadata!
+  config.hook_into :webmock
+end
+
 
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
@@ -61,7 +71,7 @@ end
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  #config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # config.include Helpers
   config.extend ControllerMacros, type: :controller
