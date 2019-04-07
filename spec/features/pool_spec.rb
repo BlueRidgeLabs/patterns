@@ -39,6 +39,9 @@ feature "pools" do
 
     delete_btn = delete_person_btn_for(person)
     expect(delete_btn).to have_content("Remove")
+    cart_btn = page.find('.current_cart')
+    click_on(cart_btn)
+    expect(page.current_path).to eq(cart_path(current_pool))
 
     # go to pool page
       # size 1
