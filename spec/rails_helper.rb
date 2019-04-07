@@ -18,11 +18,14 @@ require 'simplecov'
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 
+# allows all elements to be seen by capybara, when js: true is set
+Capybara.ignore_hidden_elements = false
+
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
 
 # mocking out redis for our tests
-Redis.current = MockRedis.new 
+Redis.current = MockRedis.new
 
 # keeps out sql output hidden
 ActiveRecord::Base.logger = nil

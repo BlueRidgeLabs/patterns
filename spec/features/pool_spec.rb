@@ -12,7 +12,7 @@ feature "pools" do
     person = FactoryBot.create(:person)
     visit people_path
     expect(page).to have_content(person.email_address)
-    expect(page.find('.badge.cart-size', visible: false).text(:all)).to eq("0")
+    expect(page.find('.badge.cart-size').text).to have_content("0")
 
 
     # expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("0")
