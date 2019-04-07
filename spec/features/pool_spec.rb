@@ -37,7 +37,9 @@ feature "pools" do
     # TODO: the test below currently fails. it asserts that when a person is added
     # to a pool, the counts within the "Your Pools" dropdown would update along
     # with the count in the "Current Pool" nav link. this is not currently the case,
-    # but maybe in the future, we would care to build in that behavior.
+    # but maybe in the future, we would care to build in that behavior. the solution would
+    # just involve adding the .cart-size class to the links in #pool-list, so that
+    # add.js.erb can manage them.
     # expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
 
     cart_btn = page.find('.current_cart')
