@@ -19,9 +19,14 @@ feature "pools" do
     add_btn.click
     wait_for_ajax
     expect(page).to have_content("1 people added to #{current_pool.name}")
+    expect(page.find('.badge.cart-size')).to have_content("1")
 
-    # expect(page.find('.badge.cart-size')).to have_content("1")
+    # TODO: the test below currently fails. it asserts that when a person is added
+    # to a pool, the counts within the "Your Pools" dropdown would update along
+    # with the count in the "Current Pool" nav link. this is not currently the case,
+    # but maybe in the future, we would care to build in that behavior.
     # expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
+
     # delete_btn = page.find("#person-#{person.id}").find(:xpath, ".//a[@href='#{delete_person_cart_index_path(person_id: person.id)}']")
     # expect(delete_btn).to have_content("Remove")
 
