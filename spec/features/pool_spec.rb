@@ -65,5 +65,15 @@ feature "pools" do
     wait_for_ajax
     expect(page.find('.badge.cart-size')).to have_content("0")
     expect(page).to have_content(I18n.t('cart.delete_person_success', person_name: person.full_name, cart_name: current_pool.name))
+    add_btn = add_person_btn_for(person)
+    expect(add_btn).to have_content("Add")
+
+    cart_btn = page.find('.current_cart')
+    click_on(cart_btn)
+    expect(page.current_path).to eq(cart_path(current_pool))
+    expect(page).not_to have_content(person.email_address)
+    within('.well') do
+      expect(page.find('.cart-size')).to have_content("0")
+    end
   end
 end
