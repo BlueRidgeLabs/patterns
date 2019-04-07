@@ -16,6 +16,12 @@ feature "pools" do
     page.find("#person-#{person.id}").find(:xpath, ".//a[@href='#{delete_person_cart_index_path(person_id: person.id)}']")
   end
 
+  def go_to_current_pool
+    cart_btn = page.find('.current_cart')
+    click_on(cart_btn)
+    expect(page.current_path).to eq(cart_path(current_pool))
+  end
+
   scenario "add person to pool", js: true do
     person = FactoryBot.create(:person)
 
@@ -43,9 +49,7 @@ feature "pools" do
     # expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
 
     # current pool page reflects recent addition
-    cart_btn = page.find('.current_cart')
-    click_on(cart_btn)
-    expect(page.current_path).to eq(cart_path(current_pool))
+    go_to_current_pool
     expect(page).to have_content(person.email_address)
     within('.well') do
       expect(page.find('.cart-size')).to have_content("1")
@@ -73,12 +77,33 @@ feature "pools" do
     expect(add_btn).to have_content("Add")
 
     # current pool page reflects recent removal
-    cart_btn = page.find('.current_cart')
-    click_on(cart_btn)
-    expect(page.current_path).to eq(cart_path(current_pool))
+    go_to_current_pool
     expect(page).not_to have_content(person.email_address)
     within('.well') do
       expect(page.find('.cart-size')).to have_content("0")
     end
+  end
+
+  scenario "create new pool" do
+    visit people_path
+    go_to_current_pool
+
+    # go to current pool page
+    # click "new pool"
+      # name
+      # desc
+      # save
+    # pool initialized correctly
+    # confirm exists in dropdown
+    # confirm, updated current pool
+    # add user
+    # remove user
+    # add notes
+    # people search, add person
+    # remove person
+    # add multiple people
+    # remove all
+    # ? export csv
+    # can switch pool
   end
 end
