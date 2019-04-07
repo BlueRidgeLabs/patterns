@@ -18,18 +18,21 @@ feature "pools" do
 
   scenario "add person to pool", js: true do
     person = FactoryBot.create(:person)
+
     visit people_path
     expect(page).to have_content(person.email_address)
     expect(page.find('.badge.cart-size').text).to have_content("0")
     expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("0")
 
+    # add person to current pool
     add_btn = add_person_btn_for(person)
     expect(add_btn).to have_content("Add")
     add_btn.click
     wait_for_ajax
-
     expect(page).to have_content("1 people added to #{current_pool.name}")
     expect(page.find('.badge.cart-size')).to have_content("1")
+    delete_btn = delete_person_btn_for(person)
+    expect(delete_btn).to have_content("Remove")
 
     # TODO: the test below currently fails. it asserts that when a person is added
     # to a pool, the counts within the "Your Pools" dropdown would update along
@@ -37,8 +40,6 @@ feature "pools" do
     # but maybe in the future, we would care to build in that behavior.
     # expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
 
-    delete_btn = delete_person_btn_for(person)
-    expect(delete_btn).to have_content("Remove")
     cart_btn = page.find('.current_cart')
     click_on(cart_btn)
     expect(page.current_path).to eq(cart_path(current_pool))
@@ -46,21 +47,21 @@ feature "pools" do
     within('.well') do
       expect(page.find('.cart-size')).to have_content("1")
     end
+  end
 
-    # go to pool page
-      # size 1
-      # created by admin_user
-      # sync to radidpro no
-      # users
-        # contains admin
+  scenario "delete person from pool", js: true do
+    person = FactoryBot.create(:person)
+    current_pool.people << person
 
-    # click remove
-      # add btn shown
-      # flash message
-      # pool (0)
-    # go to pool page
-      # size 0
-      # email not present
-      # all the rest same
+    visit people_path
+    expect(page).to have_content(person.email_address)
+    expect(page.find('.badge.cart-size').text).to have_content("1")
+    expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
+    delete_btn = delete_person_btn_for(person)
+    expect(delete_btn).to have_content("Remove")
+    delete_btn.click
+    wait_for_ajax
+    expect(page.find('.badge.cart-size')).to have_content("0")
+    expect(page).to have_content(I18n.t('cart.delete_person_success', person_name: person.full_name, cart_name: current_pool.name))
   end
 end
