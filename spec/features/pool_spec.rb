@@ -42,6 +42,15 @@ feature "pools" do
     cart_btn = page.find('.current_cart')
     click_on(cart_btn)
     expect(page.current_path).to eq(cart_path(current_pool))
+    expect(page).to have_content(person.email_address)
+    within('.well') do
+      expect(page.find('.cart-size')).to have_content("1")
+      created_by_btn = page.find(:xpath, ".//a[@href='#{user_path(admin_user)}']")
+      expect(created_by_btn).to have_content(admin_user.name)
+    end
+    within('#users-list') do
+      expect(page.find("#user-#{admin_user.id}")).to have_content(admin_user.name)
+    end
 
     # go to pool page
       # size 1
@@ -49,7 +58,6 @@ feature "pools" do
       # sync to radidpro no
       # users
         # contains admin
-      # person email exists in list
 
     # click remove
       # add btn shown
