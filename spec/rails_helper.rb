@@ -18,9 +18,6 @@ require 'simplecov'
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 
-# allows all elements to be seen by capybara, when js: true is set
-Capybara.ignore_hidden_elements = false
-
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
 
