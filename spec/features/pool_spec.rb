@@ -19,6 +19,7 @@ feature "pools" do
   scenario "add person to pool", js: true do
     person = FactoryBot.create(:person)
 
+    # confirm that current pool is empty
     visit people_path
     expect(page).to have_content(person.email_address)
     expect(page.find('.badge.cart-size').text).to have_content("0")
@@ -33,7 +34,6 @@ feature "pools" do
     expect(page.find('.badge.cart-size')).to have_content("1")
     delete_btn = delete_person_btn_for(person)
     expect(delete_btn).to have_content("Remove")
-
     # TODO: the test below currently fails. it asserts that when a person is added
     # to a pool, the counts within the "Your Pools" dropdown would update along
     # with the count in the "Current Pool" nav link. this is not currently the case,
@@ -42,6 +42,7 @@ feature "pools" do
     # add.js.erb can manage them.
     # expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
 
+    # current pool page reflects recent addition
     cart_btn = page.find('.current_cart')
     click_on(cart_btn)
     expect(page.current_path).to eq(cart_path(current_pool))
@@ -55,10 +56,13 @@ feature "pools" do
     person = FactoryBot.create(:person)
     current_pool.people << person
 
+    # confirm that pool is initialized with one person
     visit people_path
     expect(page).to have_content(person.email_address)
     expect(page.find('.badge.cart-size').text).to have_content("1")
     expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
+
+    # remove person from pool
     delete_btn = delete_person_btn_for(person)
     expect(delete_btn).to have_content("Remove")
     delete_btn.click
@@ -68,6 +72,7 @@ feature "pools" do
     add_btn = add_person_btn_for(person)
     expect(add_btn).to have_content("Add")
 
+    # current pool page reflects recent removal
     cart_btn = page.find('.current_cart')
     click_on(cart_btn)
     expect(page.current_path).to eq(cart_path(current_pool))
