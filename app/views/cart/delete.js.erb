@@ -1,17 +1,17 @@
+<% @deleted.each do |delete| %>
+  $('#<%= delete %>-cart-delete').hide();
+  $('#<%= delete %>-cart-add').show();
+  $('#cart-<%= delete %>').remove();
+<% end %>
+
 <% if @deleted_all %>
-  $('#full-cart').html('<%= j render partial: 'cart/full_item', collection: current_cart.people, as: :person %>'); 
+  $('#full-cart').html('<%= j render partial: 'cart/full_item', collection: current_cart.people, as: :person %>');
   $('#best_in_place_cart_2_rapidpro_sync').html('No'); // no longer synced.
-<% else %>
-  <% @deleted.each do |delete| %>
-    $('#<%= delete %>-cart-delete').hide();
-    $('#<%= delete %>-cart-add').show();
-    $('#cart-<%= delete %>').remove();
-  <% end %>
 <% end %>
 
 if(typeof research_session_id !== "undefined")
 {
   Turbolinks.reload(); // horrible hack
-} 
+}
 
 $('.cart-size').html('<%= @cart.people_ids.size %>');

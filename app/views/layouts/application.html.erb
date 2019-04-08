@@ -20,7 +20,7 @@
   </script>
   <% end %>
 </head>
-<body>  
+<body>
     <div class="navbar navbar-inverse">
       <div class="navbar-inner">
         <div class="container">
@@ -40,10 +40,16 @@
               <li><%= link_to 'Rewards', rewards_path%></li>
               <li><%= link_to "New Session", new_research_session_path %></li>
               <li><%= link_to "Session List", research_sessions_path %></li>
-              <li><%= link_to "Pool: <span class='current_cart'>#{current_user.current_cart.name}</span>&nbsp;<span class='badge cart-size'>#{current_user.current_cart.people.size} </span>".html_safe, cart_path(current_user.current_cart) %></li>
+              <li>
+                <%= link_to cart_path(current_user.current_cart) do %>
+                  Pool:&nbsp;
+                  <span class='current_cart'><%= current_user.current_cart.name %></span>&nbsp;
+                  <span class='badge cart-size'><%= current_user.current_cart.people.size %></span>
+                <% end %>
+              </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your Pools<b class="caret"></b></a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" id="pool-list">
                 <% current_user.carts.each do |cart| %>
                   <li><%= link_to cart.name_and_count, cart_path(cart.id) %></li>
                 <% end %>

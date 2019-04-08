@@ -32,7 +32,7 @@ SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
 
 # mocking out redis for our tests
-Redis.current = MockRedis.new 
+Redis.current = MockRedis.new
 
 # keeps out sql output hidden
 ActiveRecord::Base.logger = nil

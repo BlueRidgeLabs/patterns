@@ -15,6 +15,8 @@ end
 
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :headless_chrome
+# allows all elements to be seen by capybara, when js: true is set
+Capybara.ignore_hidden_elements = false
 # rubocop:disable all
 class ActiveRecord::Base
   mattr_accessor :shared_connection

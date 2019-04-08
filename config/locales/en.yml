@@ -22,3 +22,5 @@
 en:
   hello: "Hello world"
   deactivate: "Deactivate"
+  cart:
+    delete_person_success: "Deleted %{person_name} from %{cart_name}"

@@ -25,4 +25,7 @@ module Helpers
     end
   end
 
+  def click_on(element)
+    element.execute_script('this.click()')
+  end
 end
