@@ -63,7 +63,7 @@ feature "digital gifts page" do
     expect(invitation.aasm_state).to eq('attended')
     find("#add-reward-#{invitation.id}").click
     wait_for_ajax
-    fill_in 'new-amount', with: 100
+    fill_in('new-amount', visible: true, with: 100) 
     accept_alert do
       click_button 'Add Digital Gift'
     end
