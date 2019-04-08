@@ -54,7 +54,6 @@ feature "digital gifts page" do
     fill_in 'topup-amount', with: 200
     click_button 'Top Up'
     wait_for_ajax
-    
 
     Timecop.travel(research_session.end_datetime + 24.hours)
     visit "/sessions/#{research_session.id}"
