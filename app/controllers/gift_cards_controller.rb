@@ -124,9 +124,8 @@ class GiftCardsController < ApplicationController
   # POST /gift_cards.json
   def create
     @errors = []
-    
-    @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc| 
-      
+
+    @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc|
       GiftCard.new(ngc)
     end
 
@@ -141,9 +140,7 @@ class GiftCardsController < ApplicationController
         @errors.push gc.errors.messages[:base]
       end
     end
-    unless @errors.blank?
-      flash[:error] = "Card Errors: #{@errors.length} \n #{@errors.to_s}"
-    end
+    flash[:error] = "Card Errors: #{@errors.length} \n #{@errors}" if @errors.present?
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
     # use after_save_commit hook to do background task.
