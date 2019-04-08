@@ -21,25 +21,22 @@
 require 'rails_helper'
 
 xdescribe ResearchSession do
-  it { is_expected.to validate_presence_of(:people_ids) }
   it { is_expected.to validate_presence_of(:description) }
   it { is_expected.to validate_presence_of(:title) }
-  it { is_expected.to validate_presence_of(:slot_length) }
-  it { is_expected.to validate_presence_of(:date) }
-  it { is_expected.to validate_presence_of(:start_time) }
-  it { is_expected.to validate_presence_of(:end_time) }
+  it { is_expected.to validate_presence_of(:user_id) }
+  it { is_expected.to validate_presence_of(:start_datetime) }
+  it { is_expected.to validate_presence_of(:end_datetime) }
 
   describe '#save' do
     let(:people) { FactoryBot.create_list(:person, 2) }
     let(:user) { FactoryBot.create(:user) }
     let(:valid_args) do
       {
-        people_ids: people.map(&:id).join(','),
         description: 'lorem',
         slot_length: '45 mins',
         date: '03/20/2016',
-        start_time: '15:00',
-        end_time: '16:30',
+        start_datetime: '15:00',
+        end_datetime: '16:30',
         title: 'title',
         user_id: user.id
       }
