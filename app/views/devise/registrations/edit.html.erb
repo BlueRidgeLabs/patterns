@@ -1,48 +1,43 @@
-<div class="row">
-  <div class="span6">
-    <h1>Edit profile</h1>
+<h2>Edit <%= resource_name.to_s.humanize %></h2>
 
-    <%= form_for(resource, :as => resource_name, :url => user_registration_path, :html => { :method => :put }) do |f| %>
-      <%= devise_error_messages! %>
-      <%= f.label :name %>
-      <%= f.text_field :name %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
 
-      <%= f.label :email %>
-      <%= f.email_field :email, :autofocus => true %>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
 
-      <%= f.label :phone_number %>
-      <%= f.text_field :phone_number %>
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+  <% end %>
 
-      <%= f.label :password %>
-      <%= f.password_field :password, :autocomplete => "off" %>
-
-      <%= f.label :password_confirmation %>
-      <%= f.password_field :password_confirmation %>
-
-      <%= f.label :current_password, "Current password (to validate changes)" %>
-      <%= f.password_field :current_password %>
-
-      <div class="form-actions">
-        <%= f.submit "Update", class: "btn btn-primary" %>
-        <%= link_to "Cancel", root_path , class: "btn" %>
-      </div>
-
-
+  <div class="field">
+    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
+    <%= f.password_field :password, autocomplete: "new-password" %>
+    <% if @minimum_password_length %>
+      <br />
+      <em><%= @minimum_password_length %> characters minimum</em>
     <% end %>
   </div>
-  <div class='span6'>
-    <h1>Details</h1>
-    <div class="well">
-      <dl>
-        <dt>Team</dt>
-        <dd><%= resource&.team&.name %></dd>
-        <dt>Personal Rewards Total</dt>
-        <dd><%= resource.rewards_total %></dd>
-        <dt>Current Team Gift Cards</dt>
-        <dd><%= resource&.team&.rewards_total || "$0.00" %></dd>
-        <dt><%= link_to "Research Sessions", research_sessions_path(q:{user_name_cont: resource.name}) %></dt>
-        <dd><%= link_to resource.research_sessions.size, research_sessions_path(q:{user_name_cont: resource.name}) %></dd>
-      </dl>
-    </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
-</div>
+
+  <div class="field">
+    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+    <%= f.password_field :current_password, autocomplete: "current-password" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Update" %>
+  </div>
+<% end %>
+
+<h3>Cancel my account</h3>
+
+<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+
+<%= link_to "Back", :back %>
