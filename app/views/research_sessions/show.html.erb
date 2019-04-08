@@ -29,10 +29,10 @@ research_session_id = <%= @research_session.id%>;
         <dd><%= best_in_place @research_session, :location %>
         <dt>Starts at</dt>
         <dd>
-          <%= best_in_place @research_session, :start_datetime, type: :input, :display_with => Proc.new { |f| f.to_s :short } %>
+          <%= best_in_place @research_session, :start_datetime, as: :input, :display_with => Proc.new { |f| f.to_s :short } %>
         </dd>
         <dt>Ends at</dt>
-        <dd><%= best_in_place @research_session, :end_datetime, type: :input, :display_with => Proc.new { |f| f.to_s :short } %></dd>
+        <dd><%= best_in_place @research_session, :end_datetime, as: :input, :display_with => Proc.new { |f| f.to_s :short } %></dd>
         <dt>Duration</dt>
         <dd><%= @research_session.duration %> minutes</dd>
         <dt>Creator</dt>

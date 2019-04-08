@@ -78,6 +78,7 @@ feature "gift_cards page" do
   end
 
   scenario 'change card owner', js: :true do
+    
     gift_card = FactoryBot.create(:gift_card, user: admin_user)
     other_user = FactoryBot.create(:user)
     visit '/gift_cards'
@@ -91,7 +92,9 @@ feature "gift_cards page" do
     sleep 1 # hate this
     gift_card.reload
     expect(gift_card.user.id).to eq(other_user.id)
-
   end
 
+  scenario 'assign to person', js: :true do
+
+  end
 end

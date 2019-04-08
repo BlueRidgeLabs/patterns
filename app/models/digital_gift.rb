@@ -55,6 +55,11 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.funding_sources
+    begin
+      
+    rescue Exception => e
+      
+    end
     Giftrocket::FundingSource.list
   end
 
