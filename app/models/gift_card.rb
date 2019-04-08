@@ -44,9 +44,9 @@ class GiftCard < ApplicationRecord
   validates :expiration_date,
     format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
-  validates :batch_id, format: { with: /[0-9]*/ }
-  validates :secure_code, format: { with: /[0-9]*/ }
-  validates :sequence_number, format: { with: /[0-9]*/ }
+  validates :batch_id, format: { with: /\A[0-9]*\z/ }
+  validates :secure_code, format: { with: /\A[0-9]*\z/ }
+  validates :sequence_number, format: { with: /\A[0-9]*\z/ }
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
   default_scope { order(sequence_number: :asc) }
