@@ -108,13 +108,19 @@ class Person < ApplicationRecord
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalize :landline, default_country_code: 'US'
 
-  # validates :phone_number, presence: true, length: { in: 9..15 },
-  #   unless: proc { |person| person.email_address.present? }
+  validates :phone_number, presence: true, length: { in: 9..15 },
+    unless: proc { |person| person.email_address.present? }
+  validates :email_address, presence: true,
+    unless: proc { |person| person.phone_number.present? }
+
+  validates_format_of :email_address, 
+    with: Devise::email_regexp,
+    if: proc {|person| person.email_address.present?}
+
   validates :phone_number, allow_blank: true, uniqueness: true
   validates :landline, allow_blank: true, uniqueness: true
 
-  # validates :email_address, presence: true,gc
-  #   unless: proc { |person| person.phone_number.present? }
+  
   validates :email_address, email: true, allow_blank: true, uniqueness: true
 
   # scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM rewards where rewards.reason = 1)') }
