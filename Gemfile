@@ -221,8 +221,6 @@ group :test do
   # gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
 
-  
-  #gem 'codeclimate-test-reporter'
   gem 'coveralls', require: false
   
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
