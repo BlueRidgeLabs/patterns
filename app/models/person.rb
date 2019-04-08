@@ -159,7 +159,7 @@ class Person < ApplicationRecord
     @results = []
     Person.active.all.find_each { |person| @results << person.update_participation_level }
     @results.compact!
-    if @results.length.positive?
+    if @results.present?
       User.approved.admin.all.find_each do |u|
         AdminMailer.participation_level_change(results: @results, to: u.email_address).deliver_later
       end

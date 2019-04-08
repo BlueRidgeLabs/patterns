@@ -17,15 +17,17 @@ class AdminMailer < ApplicationMailer
   end
 
   def participation_level_change(results:, to:)
-    msg = %(Hi!\n
-    Participation level changes:\n)
-    results.each do |r|
-      next if r[:id].nil?
+    if results.present?
+      msg = %(Hi!\n
+      Participation level changes:\n)
+      results.each do |r|
+        next if r[:id].nil?
 
-      person = Person.find r[:id]
-      msg += %(*   #{person.full_name} changed from #{r[:old]} to #{r[:new]}. link: https://#{HOSTNAME}/people/#{person.id} \n)
+        person = Person.find r[:id]
+        msg += %(*   #{person.full_name} changed from #{r[:old]} to #{r[:new]}. link: https://#{HOSTNAME}/people/#{person.id} \n)
+      end
+      msg += "\nthanks"
+      mail(to: to, from: ENV['MAIL_ADMIN'], subject: 'Participation level changes', body: msg)
     end
-    msg += "\nthanks"
-    mail(to: to, from: ENV['MAIL_ADMIN'], subject: 'Participation level changes', body: msg)
   end
 end
