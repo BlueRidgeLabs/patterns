@@ -28,5 +28,4 @@ feature "public person page" do
     expect(last_person.first_name).to eq(new_person[:first_name])
   end
 
-
 end
