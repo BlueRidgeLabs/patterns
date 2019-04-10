@@ -5,6 +5,7 @@ class Public::PeopleController < ApplicationController
   after_action :allow_iframe
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!
+  before_action :find_user, only: [:api_create]
 
   # GET /people/new
   def new
@@ -59,28 +60,22 @@ class Public::PeopleController < ApplicationController
 
   def api_create
     output = { success: false }
-    if request.headers['AUTHORIZATION'].present?
-      @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
-      if @current_user.present?
-        @person = Person.new(api_create_params.except(:tags, :low_income, :locale_name))
-
-        @person.referred_by ='created via SMS'
-        @person.signup_at = Time.current
-        @person.created_by = @current_user.id
-        if params[:tags].present?
-          tags = api_create_params[:tags].tr('_', ' ').split(',')
-          @person.tag_list.add(tags)
-        end
-        @person.low_income = api_create_params[:low_income] == 'Y' if api_create_params[:low_income].present?
-
-        if api_create_params[:locale_name].present?
-          locale = Person.locale_name_to_locale(api_create_params[:locale_name])
-          @person.locale = locale if locale.present?
-        end
-
-        output[:success] = @person.save ? true : false
-      end
+    PaperTrail.request.whodunnit = @current_user
+    @person = Person.new(api_create_params.except(:tags, :low_income, :locale_name))
+    @person.referred_by ='created via SMS'
+    @person.signup_at = Time.current
+    @person.created_by = @current_user.id
+    if params[:tags].present?
+      tags = api_create_params[:tags].tr('_', ' ').split(',')
+      @person.tag_list.add(tags)
     end
+    @person.low_income = api_create_params[:low_income] == 'Y' if api_create_params[:low_income].present?
+
+    if api_create_params[:locale_name].present?
+      locale = Person.locale_name_to_locale(api_create_params[:locale_name])
+      @person.locale = locale if locale.present?
+    end
+    output[:success] = @person.save ? true : false
     http_code = output[:success] ? 201 : 401
     render json: output, status: http_code
   end
@@ -122,6 +117,13 @@ class Public::PeopleController < ApplicationController
   end
 
   private
+
+    def find_user
+      return false if request.headers['AUTHORIZATION'].blank?
+
+      @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
+      @current_user.present? or raise
+    end
 
     def api_create_params
       params.permit(:tags,
