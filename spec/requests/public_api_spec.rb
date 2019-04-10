@@ -54,9 +54,11 @@ describe "public_api", :type => :request do
     expect(response.content_type).to eq("application/json")
     
     person.reload
-    
     expect(person.first_name).to_not eq('Doggo')
     expect(person.first_name).to eq('Pupper')
+    expect(person.comments.size).to eq(1)
+    expect(person.comments.last.content).to include 'note'
+    expect(person.tag_list).to include('bat')
     
   end
 end
