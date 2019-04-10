@@ -14,6 +14,7 @@ feature "public person page" do
   
   scenario 'create new person' do
     visit '/public/people/new'
+    expect(page).to have_selector(:id, 'age_range')
     fill_in 'First name', with: new_person[:first_name]
     fill_in 'Last name', with:  new_person[:last_name]
     fill_in 'Email address', with:  new_person[:email_address]
