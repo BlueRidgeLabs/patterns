@@ -19,7 +19,7 @@ feature "public person page" do
     fill_in 'Email address', with:  new_person[:email_address]
     fill_in 'Phone number', with:  new_person[:phone_number]
     select 'Email', from: 'Preferred contact method'
-    select '26-40', from: 'age_range'
+    find('#age_range').select('26-40')
     fill_in 'Postal code', with: '11222'
     check 'person[low_income]'
     click_button 'Save'
