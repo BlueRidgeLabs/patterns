@@ -122,7 +122,7 @@ class Public::PeopleController < ApplicationController
       return false if request.headers['AUTHORIZATION'].blank?
 
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
-      @current_user.present? or raise
+      @current_user.present? || raise
     end
 
     def api_create_params
