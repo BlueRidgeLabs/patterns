@@ -1,3 +1,6 @@
+<% if @tagging.present? %>
 $("#tag-list").append("<%= escape_javascript(render partial: 'taggings/tagging', locals: {tagging: @tagging }) %>");
+<% end %>
+
 $("#tagging_name").val('');
 $('input#tag-typeahead').typeahead('val','');

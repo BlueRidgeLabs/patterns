@@ -26,7 +26,7 @@ class TaggingsController < ApplicationController
   # TODO: (EL) more rigorously test tagging logic
   def create
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
-    res = false
+    
     if klass && params[:tag].present? && params[:tag] != ''
       obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag].downcase
@@ -34,27 +34,18 @@ class TaggingsController < ApplicationController
       # res = current_user.tag(obj,with: params[:tagging][:name])
       unless obj.tags.map(&:name).include?(tag)
         obj.tag_list.add(tag)
-        res = obj.save
+        
         # super awkward way of finding the right *kind* of tag
-        found_tag = klass.tagged_with(tag).first.tags.detect { |t| t.name == tag }
-        @tagging = obj.taggings.find_by(tag_id: found_tag.id)
-      end
-    end
-
-    flash[:error] = "Oops, can't add that tag" unless res
-
-    if res
-      respond_to do |format|
-        format.js {}
-      end
-    else
-      respond_to do |format|
-        format.js do
-          render text: "console.log('tag save error');
-          $('#tagging_name').val('');
-          $('input#tag-typeahead').typeahead('val','');"
+        if obj.save
+          found_tag = klass.tagged_with(tag).first.tags.detect { |t| t.name == tag }
+          @tagging = obj.taggings.find_by(tag_id: found_tag.id)
+        else
+          flash[:error] = "Oops, can't add that tag: #{obj.errors.messages unless obj.valid?}"
         end
       end
+    end
+    respond_to do |format|
+      format.js {}
     end
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize

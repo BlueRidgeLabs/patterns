@@ -3,7 +3,15 @@
 <div class="page-header">
 <h1><%= @person.full_name %> <%= "| Deactivated" unless @person.active? %></h1>
 </div>
-
+<% unless @person.valid? %>
+<div class='validity-errors'>
+  <ul>
+    <% @person.errors.each do |error| %>
+      <li><%= error.message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
 <div class="row">
   <div class="span6">
     <div class="row">
