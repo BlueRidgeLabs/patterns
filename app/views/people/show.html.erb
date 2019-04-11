@@ -4,10 +4,11 @@
 <h1><%= @person.full_name %> <%= "| Deactivated" unless @person.active? %></h1>
 </div>
 <% unless @person.valid? %>
-<div class='validity-errors'>
+<div class='validity-errors' style='color: red;'>
+  <h4>person's info is invalid!</h4>
   <ul>
-    <% @person.errors.each do |error| %>
-      <li><%= error.message %></li>
+    <% @person.errors.messages.each do |msg| %>
+      <li><%= msg.join(' ') %></li>
     <% end %>
   </ul>
 </div>
