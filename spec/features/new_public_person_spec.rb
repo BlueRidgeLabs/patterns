@@ -17,7 +17,6 @@ feature "public person page" do
     visit '/public/people/new'
 
     expect(page).to have_css('#age_range')
-    puts page.body
     fill_in 'First name', with: new_person[:first_name]
     fill_in 'Last name', with:  new_person[:last_name]
     fill_in 'Email address', with:  new_person[:email_address]
