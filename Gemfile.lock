@@ -265,6 +265,10 @@ GEM
       activesupport (>= 4)
       railties (>= 4)
       request_store (~> 1.0)
+    lol_dba (2.1.7)
+      actionpack (>= 3.0, < 6.0)
+      activerecord (>= 3.0, < 6.0)
+      railties (>= 3.0, < 6.0)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -640,6 +644,7 @@ DEPENDENCIES
   jquery_mask_rails
   leaflet-rails
   lograge
+  lol_dba
   mail
   mandrill-rails
   memory_profiler

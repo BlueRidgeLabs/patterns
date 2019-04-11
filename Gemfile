@@ -50,6 +50,7 @@ group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
+  gem 'lol_dba' # find columns that should have indices
   gem 'heavens_door' # recording capybara tests
   gem 'capistrano', '~> 2.15.4'
   gem 'capistrano-sidekiq'
