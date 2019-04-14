@@ -137,12 +137,6 @@ feature "pools" do
       end
       expect(new_pool.reload.users.size).to eq(1)
 
-      # can add note
-      # new_note = "covfefe"
-      # fill_in 'comment_content', with: new_note
-      # click_button 'Add note'
-
-      # add notes
       # people search, add person
       # remove person
       # add multiple people
