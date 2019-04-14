@@ -24,7 +24,7 @@ class CartController < ApplicationController
           end
           send_data output, filename: "Pool-#{@cart.name}.csv"
         else
-          flash[:error] = 'not permitted'
+          flash[:error] = I18n.t('not_permitted')
         end
       end
     end
@@ -102,6 +102,7 @@ class CartController < ApplicationController
       @cart.rapidpro_sync = false
       @cart.save
       @deleted_all = true
+      flash[:notice] = I18n.t('cart.delete_all_people_success', cart_name: @cart.name)
     else
       @deleted = [cart_params[:person_id]]
       cart_person = @cart.carts_people.find_by(person_id: cart_params[:person_id])

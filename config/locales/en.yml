@@ -22,5 +22,9 @@
 en:
   hello: "Hello world"
   deactivate: "Deactivate"
+  not_permitted: "Not permitted"
   cart:
     delete_person_success: "Deleted %{person_name} from %{cart_name}"
+    delete_all_people_success: "Removed all people from %{cart_name}"
+  research_session:
+    call_location: "Call #{name} at #{phone_number}" 

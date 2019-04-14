@@ -33,8 +33,8 @@
     <div class="controls">
       <%= f.text_field :title, placeholder: 'short and descriptive', :class => 'text_field' %>
       <%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
+          toggle: "popover",
+          placement: "top",
           content: "User Testing session #4 is not useful nor informative. This is internal only, so use your own name,team name, and the purpose.",
           title: 'popover',
           original_title:"Informative title please!"} %>
@@ -45,8 +45,8 @@
     <div class="controls">
       <%= f.text_field :location, placeholder: "leave empty for call", :class => 'text_field' %>
       <%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
+          toggle: "popover",
+          placement: "top",
           content: "Where is this taking place? May be seen by DIG members",
           title: 'popover',
           original_title:"Location"} %>
@@ -57,14 +57,14 @@
     <div class="controls">
       <%= f.text_area :description, :class => 'text_area' %>
       <%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
+          toggle: "popover",
+          placement: "top",
           content: "DIG members may see this, so keep it informative for them and for yourself",
           title: 'popover',
           original_title:"Description"} %>
     </div>
   </div>
-  
+
 
   <h2>Time</h2>
 
@@ -78,10 +78,10 @@
   <div class="control-group">
     <%= f.label "Duration in minutes", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :duration, [15,30,45,60,75,90,115,120,135] %>
+      <%= f.select :duration, ResearchSession::DURATION_OPTIONS %>
       <%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
+          toggle: "popover",
+          placement: "top",
           content: "usefull so we know how much h",
           title: 'popover',
           original_title:"Informative title please!"} %>
@@ -99,18 +99,18 @@
                                   }
                           %>
       <%= content_tag :span,'?',class: 'badge', data:{
-          toggle: "popover", 
-          placement: "top", 
+          toggle: "popover",
+          placement: "top",
           content: "These are different than people tags. Use thises so we know why you had your session, what it was meant to learn, the topic, what you tested, etc.",
           title: 'popover',
           original_title:"Tag your sessions!"} %>
     </div>
   </div>
-  
-  <!-- 
+
+  <!--
   <div class="control-group">
     <%= f.label "Send Invitations?", :class => 'control-label' %>
-    
+
    <label class="controls toggle-check">
       <%= check_box :send_invites, 'boolean_attribute', {class: 'toggle-check-input hidden'}, 'true', 'false' %>
       <span class="toggle-check-text"></span>
