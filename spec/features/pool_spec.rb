@@ -125,6 +125,7 @@ feature "pools" do
       within('#users-list') do
         expect(page.find("#user-#{other_user.id}")).to have_content(other_user.name)
       end
+      expect(new_pool.reload.users.size).to eq(2)
 
       # can remove user
       within("#users-list #user-#{other_user.id}") do
@@ -134,6 +135,12 @@ feature "pools" do
       within('#users-list') do
         expect(page).not_to have_content(other_user.name)
       end
+      expect(new_pool.reload.users.size).to eq(1)
+
+      # can add note
+      # new_note = "covfefe"
+      # fill_in 'comment_content', with: new_note
+      # click_button 'Add note'
 
       # add notes
       # people search, add person
