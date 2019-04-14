@@ -69,4 +69,8 @@ feature "research sessions" do
       phone_number: user.phone_number
     ))
   end
+
+  # TODO: test tags
+  
+  # TODO: test pool
 end
