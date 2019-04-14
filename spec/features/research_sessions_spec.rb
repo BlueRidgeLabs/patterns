@@ -7,7 +7,7 @@ feature "research sessions" do
     login_with_admin_user(admin_user)
   end
 
-  scenario "creating a new session" do
+  scenario "creating a new session, with location" do
     approved_user = FactoryBot.create(:user)
     unapproved_user = FactoryBot.create(:user, :unapproved)
     title = "fake title"
@@ -39,17 +39,34 @@ feature "research sessions" do
 
     # verify created correctly
     new_research_session = ResearchSession.order(:id).last
-    expect(page.current_path).to eq(research_session_path(new_research_session))
     expect(new_research_session.title).to eq(title)
     expect(new_research_session.location).to eq(location)
     expect(new_research_session.description).to eq(description)
     expect(new_research_session.start_datetime).to be_within(1.seconds).of(start_datetime)
     expect(new_research_session.end_datetime).to be_within(1.seconds).of(start_datetime + duration.minutes)
     expect(new_research_session.duration).to eq(duration)
+    expect(page.current_path).to eq(research_session_path(new_research_session))
+    expect(page).to have_content(new_research_session.title)
+  end
 
-    # in session list
+  scenario "creating a new session, without location" do
+    user = FactoryBot.create(:user)
+    visit root_path
+    click_link 'New Session'
+    select user.name, from: 'research_session_user_id'
+    fill_in 'Session Title', with: "asdf"
+    # location not specified
+    fill_in 'Session Location', with: nil
+    fill_in 'Session description', with: "asdf"
+    fill_in 'Start datetime', with: Time.zone.now.strftime('%Y-%m-%d %H:%M %p')
+    select ResearchSession::DURATION_OPTIONS.first, from: 'research_session_duration'
+    click_button 'Create'
 
-    # test location blank
-
+    new_research_session = ResearchSession.order(:id).last
+    expect(new_research_session.location).to eq(I18n.t(
+      'research_session.call_location',
+      name: user.name,
+      phone_number: user.phone_number
+    ))
   end
 end

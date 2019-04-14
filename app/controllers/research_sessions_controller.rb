@@ -45,7 +45,13 @@ class ResearchSessionsController < ApplicationController
         @research_session.tag_list.add(tags, parse: true) if tags != 'research_session[tags]'
       end
 
-      @research_session.location = "Call #{current_user.name} at #{current_user.phone_number}" if @research_session.location.blank?
+      if @research_session.location.blank?
+        @research_session.location = I18n.t(
+          'research_session.call_location',
+          name: current_user.name,
+          phone_number: current_user.phone_number
+        )
+      end
       @research_session.save
 
       # need to handle case when the invitation is invalid
