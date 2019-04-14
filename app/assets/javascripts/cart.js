@@ -8,7 +8,7 @@ $(document).on('turbolinks:load',function() {
   var searchSelector = 'input#cart-typeahead';
 
   //filters out tags that are already in the list
-  var filter = function(suggestions) {9
+  var filter = function(suggestions) {
     var current_people = $('.cart-container tr').map(function(index,el){
       return Number(el.id.replace(/^(cart-)/,''));
     }).get();
