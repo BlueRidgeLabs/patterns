@@ -148,6 +148,7 @@ feature "pools" do
       within('#full-cart') do
         expect(page).to have_content(new_person.email_address)
       end
+      expect(new_pool.people.size).to eq(1)
 
       # can remove person from pool
       remove_btn = page.find("#cart-#{new_person.id}").find(".btn", text: "Remove")
@@ -157,6 +158,8 @@ feature "pools" do
       within('#full-cart') do
         expect(page).not_to have_content(new_person.email_address)
       end
+      expect(new_pool.people.size).to eq(0)
+
       # add multiple people
       # remove all
       # ? export csv
