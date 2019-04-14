@@ -195,7 +195,5 @@ feature "pools" do
       visit cart_path(current_pool)
       expect(page).not_to have_content('Export to CSV')
     end
-
-    # QUESTION: admin vs user login
   end
 end
