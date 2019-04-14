@@ -24,3 +24,4 @@ en:
   deactivate: "Deactivate"
   cart:
     delete_person_success: "Deleted %{person_name} from %{cart_name}"
+    delete_all_people_success: "Removed all people from %{cart_name}"

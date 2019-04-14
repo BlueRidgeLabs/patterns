@@ -168,6 +168,7 @@ feature "pools" do
       new_people.each { |person| expect(page).to have_content(person.email_address) }
       click_link('Remove All')
       wait_for_ajax
+      expect(page).to have_content(I18n.t('cart.delete_all_people_success', cart_name: new_pool.name))
       new_people.each { |person| expect(page).not_to have_content(person.email_address) }
       new_pool.reload
       expect(new_pool.people.size).to eq(0)
