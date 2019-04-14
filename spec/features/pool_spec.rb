@@ -149,8 +149,14 @@ feature "pools" do
         expect(page).to have_content(new_person.email_address)
       end
 
-      # people search, add person
-      # remove person
+      # can remove person from pool
+      remove_btn = page.find("#cart-#{new_person.id}").find(".btn", text: "Remove")
+      click_with_js(remove_btn)
+      wait_for_ajax
+      expect(page).to have_content(I18n.t('cart.delete_person_success', person_name: new_person.full_name, cart_name: new_pool.name))
+      within('#full-cart') do
+        expect(page).not_to have_content(new_person.email_address)
+      end
       # add multiple people
       # remove all
       # ? export csv
