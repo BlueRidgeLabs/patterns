@@ -137,6 +137,18 @@ feature "pools" do
       end
       expect(new_pool.reload.users.size).to eq(1)
 
+      # can search for person and add them to pool
+      new_person = FactoryBot.create(:person)
+      visit current_path
+      fill_in 'cart-typeahead', with: new_person.first_name
+      wait_for_ajax
+      page.find('.tt-dataset-People', text: new_person.full_name).click
+      wait_for_ajax
+      expect(page).to have_content("1 people added to #{new_pool.name}")
+      within('#full-cart') do
+        expect(page).to have_content(new_person.email_address)
+      end
+
       # people search, add person
       # remove person
       # add multiple people
