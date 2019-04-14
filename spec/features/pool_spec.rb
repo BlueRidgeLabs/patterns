@@ -87,15 +87,18 @@ feature "pools" do
   end
 
   context "pool page actions" do
-    scenario "create new pool" do
+    scenario "create new pool", js: true do
       pool_name = "the new pool"
       pool_description = "lorem ipsum"
 
+      # create new pool
       visit cart_path(current_pool)
       click_link 'New Pool'
       fill_in 'name', with: pool_name
       fill_in 'description', with: pool_description
       click_button 'Save changes'
+
+      # verify pool initialized correctly
       new_pool = Cart.find_by(name: pool_name, description: pool_description)
       expect(new_pool).not_to be_nil
       expect(new_pool.users.length).to eq(1)
@@ -104,14 +107,24 @@ feature "pools" do
       expect(new_pool.rapidpro_uuid).to be_nil
       expect(new_pool.rapidpro_sync).to eq(false)
       expect(new_pool.people.length).to eq(0)
-
       expect(page.current_path).to eq(cart_path(new_pool))
       expect(page).to have_content(pool_name)
       expect(page).to have_content(pool_description)
       expect(page).to have_content(admin_user.name)
 
+      # verify pool added to list of pools in nav bar
       expect(page.find('.current_cart')).to have_content(pool_name)
       expect(page.find('#pool-list')).to have_content(pool_name)
+
+      # can add user
+      other_user = FactoryBot.create(:user)
+      visit current_path
+      expect(page).to have_content(other_user.name)
+      select other_user.name, from: "user_id"
+      wait_for_ajax
+      within('#users-list') do
+        expect(page.find("#user-#{other_user.id}")).to have_content(other_user.name)
+      end
 
       # add user
       # remove user
@@ -122,6 +135,8 @@ feature "pools" do
       # remove all
       # ? export csv
       # can switch pool
+
+      # QUESTION: admin vs user login
     end
   end
 end
