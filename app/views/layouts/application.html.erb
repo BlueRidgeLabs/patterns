@@ -41,7 +41,7 @@
               <li><%= link_to "New Session", new_research_session_path %></li>
               <li><%= link_to "Session List", research_sessions_path %></li>
               <li>
-                <%= link_to cart_path(current_user.current_cart) do %>
+                <%= link_to cart_path(current_user.current_cart), class: "current_cart_link" do %>
                   Pool:&nbsp;
                   <span class='current_cart'><%= current_user.current_cart.name %></span>&nbsp;
                   <span class='badge cart-size'><%= current_user.current_cart.people.size %></span>
