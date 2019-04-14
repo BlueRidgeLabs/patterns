@@ -174,8 +174,13 @@ feature "pools" do
       expect(new_pool.people.size).to eq(0)
       expect(new_pool.rapidpro_sync).to eq(false)
 
-      # ? export csv
       # can switch pool
+      other_pool = admin_user.carts.where.not(id: new_pool.id).first
+      other_pool_btn = page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(other_pool)}']")
+      click_with_js(other_pool_btn)
+      expect(page.find('.current_cart_link')).to have_content(other_pool.name)
+      expect(page.current_path).to eq(cart_path(other_pool))
+    end
 
       # QUESTION: admin vs user login
     end
