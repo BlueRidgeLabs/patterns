@@ -160,7 +160,16 @@ feature "pools" do
       end
       expect(new_pool.people.size).to eq(0)
 
-      # add multiple people
+      # remove all (people) btn works
+      new_people = FactoryBot.create_list(:person, 2)
+      new_people.each { |person| new_pool.people << person }
+      visit current_path
+      new_people.each { |person| expect(page).to have_content(person.email_address) }
+      click_link('Remove All')
+      wait_for_ajax
+      new_people.each { |person| expect(page).not_to have_content(person.email_address) }
+      expect(new_pool.reload.people.size).to eq(0)
+
       # remove all
       # ? export csv
       # can switch pool
