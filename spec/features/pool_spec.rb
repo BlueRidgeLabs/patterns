@@ -126,8 +126,15 @@ feature "pools" do
         expect(page.find("#user-#{other_user.id}")).to have_content(other_user.name)
       end
 
-      # add user
-      # remove user
+      # can remove user
+      within("#users-list #user-#{other_user.id}") do
+        click_button('remove')
+      end
+      wait_for_ajax
+      within('#users-list') do
+        expect(page).not_to have_content(other_user.name)
+      end
+
       # add notes
       # people search, add person
       # remove person
