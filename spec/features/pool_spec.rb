@@ -161,6 +161,7 @@ feature "pools" do
       expect(new_pool.people.size).to eq(0)
 
       # remove all (people) btn works
+      new_pool.update_columns(rapidpro_sync: true)
       new_people = FactoryBot.create_list(:person, 2)
       new_people.each { |person| new_pool.people << person }
       visit current_path
@@ -168,9 +169,10 @@ feature "pools" do
       click_link('Remove All')
       wait_for_ajax
       new_people.each { |person| expect(page).not_to have_content(person.email_address) }
-      expect(new_pool.reload.people.size).to eq(0)
+      new_pool.reload
+      expect(new_pool.people.size).to eq(0)
+      expect(new_pool.rapidpro_sync).to eq(false)
 
-      # remove all
       # ? export csv
       # can switch pool
 
