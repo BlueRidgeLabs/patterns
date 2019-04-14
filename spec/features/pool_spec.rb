@@ -182,7 +182,20 @@ feature "pools" do
       expect(page.current_path).to eq(cart_path(other_pool))
     end
 
-      # QUESTION: admin vs user login
+    scenario "pool page csv export" do
+      # as admin
+      visit cart_path(current_pool)
+      click_link 'Export to CSV'
+      header = page.response_headers['Content-Disposition']
+      expect(header).to match(/^attachment/)
+      expect(header).to match(/filename="Pool-#{current_pool.name}.csv"$/)
+
+      # as non-admin
+      admin_user.update(new_person_notification: false)
+      visit cart_path(current_pool)
+      expect(page).not_to have_content('Export to CSV')
     end
+
+    # QUESTION: admin vs user login
   end
 end

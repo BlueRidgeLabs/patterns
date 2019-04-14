@@ -24,7 +24,7 @@ class CartController < ApplicationController
           end
           send_data output, filename: "Pool-#{@cart.name}.csv"
         else
-          flash[:error] = 'not permitted'
+          flash[:error] = I18n.t('not_permitted')
         end
       end
     end
