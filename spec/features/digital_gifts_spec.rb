@@ -6,7 +6,18 @@ feature "digital gifts page" do
   let(:user) { FactoryBot.create(:user) }
   let(:invitation){FactoryBot.create(:invitation)}
   let(:now) { DateTime.current }
+  let(:rapidpro_headers) { {
+      "ACCEPT" => "application/json",     # This is what Rails 4 accepts
+      "HTTP_ACCEPT" => "application/json",
+      'AUTHORIZATION' => admin_user.token # This is what Rails 3 accepts
+    } }
   
+  let(:invalid_headers){{
+      "ACCEPT" => "application/json",     # This is what Rails 4 accepts
+      "HTTP_ACCEPT" => "application/json",
+      'AUTHORIZATION' => user.token # This is what Rails 3 accepts
+    }  
+  }
   before do
     Timecop.freeze(now)
     login_with_admin_user(admin_user)

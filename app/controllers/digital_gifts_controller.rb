@@ -162,12 +162,12 @@ class DigitalGiftsController < ApplicationController
           render status: :created, json: { success: true, link: @digital_gift.link, msg: 'Successfully created a gift card for you!' }.to_json
         end
       else
-        Airbrake.notify("Can't create Digital Gift #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
-        render status: :unprocessable_entity, json: { success: false, msg: @digital_gift.errors.full_messages }.to_json
+        Airbrake.notify("Can't create Digital Gift, not valid #{api_params}")
+        render status: :unprocessable_entity, json: { success: false, msg: "digital gift invalid" }.to_json
       end
     else
-      Airbrake.notify("Can't create Digital Gift #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
-      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong. we will be in touch soon!', errors: @digital_gift.errors.full_messages }.to_json
+      Airbrake.notify("Can't create Digital Gift, research_session busted: #{api_params}")
+      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong. we will be in touch soon! research_session invalid' }.to_json
     end
   end
 
@@ -187,8 +187,8 @@ class DigitalGiftsController < ApplicationController
 
     # $2 fee possibly
     if @user.available_budget + 2.to_money < api_params['amount'].to_money
-      Airbrake.notify("Can't create Digital Gift, insufficient budget! #{@digital_gift.attributes}, #{@digital_gift.errors.full_messages.join("\n")}")
-      render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon.' }.to_json) && return
+      Airbrake.notify("Can't create Digital Gift, insufficient budget! #{api_params}")
+      render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon: insufficent budget' }.to_json) && return
     end
     #  should check if we've already given a digital gift for this research session
   end
