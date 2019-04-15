@@ -121,34 +121,19 @@ class DigitalGiftsController < ApplicationController
   def api_create
     # apithis is horrific too
     # https://blog.arkency.com/2014/07/4-ways-to-early-return-from-a-rails-controller/
+    
     validate_api_args
 
     # https://api.rubyonrails.org/v4.1.4/classes/ActionController/Metal.html#method-i-performed-3F
     return if performed?
 
     if @research_session.can_survey? && !@research_session.is_invited?(@person)
-      @invitation = Invitation.new(aasm_state: 'attended',
-                           person_id: @person.id,
-                           research_session_id: @research_session.id)
+      @invitation = Invitation.new(aasm_state: 'attended', person_id: @person.id, research_session_id: @research_session.id)
       @invitation.save
 
-      @digital_gift = DigitalGift.new(user_id: @user.id,
-                                      created_by: @user.id,
-                                      amount: api_params['amount'],
-                                      person_id: @person.id,
-                                      giftable_type: 'Invitation',
-                                      giftable_id: @invitation.id)
+      @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params['amount'], person_id: @person.id, giftable_type: 'Invitation', giftable_id: @invitation.id)
 
-      @reward = Reward.new(user_id: @user.id,
-                           created_by: @user.id,
-                           person_id: @person.id,
-                           amount: api_params['amount'],
-                           reason: 'survey',
-                           giftable_type: 'Invitation',
-                           giftable_id: @invitation.id,
-                           finance_code: @user&.team&.finance_code,
-                           team: @user&.team,
-                           rewardable_type: 'DigitalGift')
+      @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params['amount'], reason: 'survey', giftable_type: 'Invitation', giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: 'DigitalGift')
       if @digital_gift.valid?
         @digital_gift.request_link # do the thing!
         if @digital_gift.save
@@ -172,17 +157,17 @@ class DigitalGiftsController < ApplicationController
   end
 
   def validate_api_args
-    @user = User.find_by(token: request.headers['AUTHORIZATION']) if request.headers['AUTHORIZATION'].present?
+    @user = User.where(token: request.headers['AUTHORIZATION']).first if request.headers['AUTHORIZATION'].present?
 
-    render(status: :unauthorized)  && return if @user.blank? || !@user.admin?
+    render(status: :unauthorized, json: {success: false}.to_json)  && return if @user.blank? || !@user.admin?
 
-    @research_session = ResearchSession.find(api_params['research_session_id'])
+    @research_session = ResearchSession.where(api_params['research_session_id']).first
     phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))
-    @person = Person.active.find_by(phone_number: phone)
+    @person = Person.active.where(phone_number: phone).first
 
-    if @person.blank? || @research_session.blank?
+    if @person.blank? || @research_session.blank? || @user.blank?
       Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
-      render(status: :not_found) && return
+      render(status: :not_found, json: {success: false}.to_json) && return
     end
 
     # $2 fee possibly

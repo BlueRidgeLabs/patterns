@@ -92,6 +92,8 @@ feature "digital gifts page" do
     wait_for_ajax
     dg.reload
     expect(dg.sent).to eq(true)
+    visit "/digital_gifts/"
+    expect(page).to have_text(dg.order_id)
     Timecop.freeze now
   end
 
