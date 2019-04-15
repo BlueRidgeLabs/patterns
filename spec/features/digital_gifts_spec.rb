@@ -70,6 +70,58 @@ feature "digital gifts page" do
     wait_for_ajax
     person.reload
     expect(person.rewards_total.to_s).to eq('100.00')
+    
+    dg = person.rewards.last.rewardable
+    expect(dg.sent).to_not eq(true)
+
+    visit "/digital_gifts/#{dg.id}"
+    accept_alert do
+      click_button 'Not Yet'
+    end
+    wait_for_ajax
+    dg.reload
+    expect(dg.sent).to eq(true)
     Timecop.freeze now
+  end
+
+  scenario 'insufficient team budget', :vcr, :js do
+    do_top_up
+    research_session = invitation.research_session
+    person = invitation.person
+
+    Timecop.travel(research_session.end_datetime + 24.hours)
+    visit "/sessions/#{research_session.id}"
+    click_button 'attend' 
+    wait_for_ajax
+    invitation.reload
+    expect(invitation.aasm_state).to eq('attended')
+    find("#add-reward-#{invitation.id}").click
+    wait_for_ajax
+    fill_in('new-amount', visible: true, with: 100) 
+    accept_alert do
+      click_button 'Add Digital Gift'
+    end
+    wait_for_ajax
+    person.reload
+    expect(person.rewards_total.to_s).to_not eq('100.00')
+    Timecop.freeze now
+  end
+
+  scenario 'no digital gifts unless attended', :vcr, :js do
+    do_top_up
+    research_session = invitation.research_session
+    Timecop.travel(research_session.end_datetime + 24.hours)
+
+    visit "/sessions/#{research_session.id}"
+    find("#add-reward-#{invitation.id}").click
+    wait_for_ajax
+    expect(page).to_not have_selector('new-amount', visible: true)
+  end
+
+  def do_top_up(amount = 100)
+    visit '/budgets'
+    fill_in 'topup-amount', with: amount
+    click_button 'Top Up'
+    wait_for_ajax
   end
 end
