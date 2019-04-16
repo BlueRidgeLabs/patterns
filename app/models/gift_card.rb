@@ -271,15 +271,15 @@ class GiftCard < ApplicationRecord
 
     # gift_card_id can't change one set.
     # dunno if we really want it.
-    def force_immutable
-      if persisted?
-        IMMUTABLE.each do |attr|
-          next if self[attr].nil? # allow updates to nil
+    # def force_immutable
+    #   if persisted?
+    #     IMMUTABLE.each do |attr|
+    #       next if self[attr].nil? # allow updates to nil
 
-          changed.include?(attr) &&
-            errors.add(attr, :immutable) &&
-            self[attr] = changed_attributes[attr]
-        end
-      end
-    end
+    #       changed.include?(attr) &&
+    #         errors.add(attr, :immutable) &&
+    #         self[attr] = changed_attributes[attr]
+    #     end
+    #   end
+    # end
 end
