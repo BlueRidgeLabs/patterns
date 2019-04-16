@@ -19,6 +19,7 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'webmock'
 require 'vcr'
+require 'best_in_place/test_helpers'
 
 # stores http calls and plays them back
 VCR.configure do |config|
@@ -76,6 +77,7 @@ RSpec.configure do |config|
   # config.include Helpers
   config.extend ControllerMacros, type: :controller
   config.include Helpers
+  config.include BestInPlace::TestHelpers 
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
