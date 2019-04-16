@@ -94,7 +94,16 @@ feature "gift_cards page" do
     expect(gift_card.user.id).to eq(other_user.id)
   end
 
-  scenario 'assign to person', js: :true do
-
+  scenario 'edit card' do
+    gift_card = FactoryBot.create(:gift_card, user: admin_user)
+    
+    visit "/gift_cards/#{gift_card.id}"
+    expect(page).to have_content(gift_card.batch_id)
+    expect(page).to have_content(gift_card.last_4)
+    visit "/gift_cards/#{gift_card.id}/edit"
+    fill_in 'Secure code', with: '001'
+    click_button 'Update Gift card'
+    gift_card.reload
+    expect(gift_card.secure_code).to eq('001')
   end
 end
