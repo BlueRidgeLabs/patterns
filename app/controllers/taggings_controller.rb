@@ -26,7 +26,7 @@ class TaggingsController < ApplicationController
   # TODO: (EL) more rigorously test tagging logic
   def create
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
-    
+
     if klass && params[:tag].present? && params[:tag] != ''
       obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag].downcase
@@ -34,7 +34,7 @@ class TaggingsController < ApplicationController
       # res = current_user.tag(obj,with: params[:tagging][:name])
       unless obj.tags.map(&:name).include?(tag)
         obj.tag_list.add(tag)
-        
+
         # super awkward way of finding the right *kind* of tag
         if obj.save
           found_tag = klass.tagged_with(tag).first.tags.detect { |t| t.name == tag }

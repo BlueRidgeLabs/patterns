@@ -27,7 +27,7 @@ class ResearchSession < ApplicationRecord
   include Calendarable
   attr_accessor :people_ids
 
-  DURATION_OPTIONS = [15, 30, 45, 60, 75, 90, 115, 120, 135]
+  DURATION_OPTIONS = [15, 30, 45, 60, 75, 90, 115, 120, 135].freeze
 
   self.per_page  = 50
 

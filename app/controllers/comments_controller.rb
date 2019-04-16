@@ -1,94 +1,98 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: comments
-#
-#  id               :integer          not null, primary key
-#  content          :text(65535)
-#  user_id          :integer
-#  commentable_type :string(255)
-#  commentable_id   :integer
-#  created_at       :datetime
-#  updated_at       :datetime
-#  created_by       :integer
-#
+# # frozen_string_literal: true
 
-class CommentsController < ApplicationController
+# # == Schema Information
+# #
+# # Table name: comments
+# #
+# #  id               :integer          not null, primary key
+# #  content          :text(65535)
+# #  user_id          :integer
+# #  commentable_type :string(255)
+# #  commentable_id   :integer
+# #  created_at       :datetime
+# #  updated_at       :datetime
+# #  created_by       :integer
+# #
 
-  before_action :set_comment, only: %i[show edit update destroy]
+# unused
 
-  # GET /comments
-  # GET /comments.json
-  def index
-    @comments = Comment.all
-  end
+# class CommentsController < ApplicationController
 
-  # GET /comments/1
-  # GET /comments/1.json
-  def show; end
+#   before_action :set_comment, only: %i[show edit update destroy]
 
-  # GET /comments/new
-  def new
-    @comment = Comment.new
-  end
+#   # GET /comments
+#   # GET /comments.json
+#   def index
+#     @comments = Comment.all
+#   end
 
-  # GET /comments/1/edit
-  def edit; end
+#   # GET /comments/1
+#   # GET /comments/1.json
+#   def show; end
 
-  # POST /comments
-  # POST /comments.json
-  def create
-    @comment = Comment.new(comment_params)
+#   # GET /comments/new
+#   def new
+#     @comment = Comment.new
+#   end
 
-    respond_to do |format|
-      if @comment.with_user(current_user).save
-        # format.html { redirect_to @comment, notice: 'Comment was successfully created.' }
-        format.js   {}
-        # format.json { render action: 'show', status: :created, location: @comment }
-      else
-        # format.html { render action: 'new' }
-        format.js   { escape_javascript("console.log('error saving comment: #{comment.errors.inpsect}');") }
-        # format.json { render json: @comment.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+#   # GET /comments/1/edit
+#   def edit; end
 
-  # PATCH/PUT /comments/1
-  # PATCH/PUT /comments/1.json
-  def update
-    respond_to do |format|
-      if @comment.with_user(current_user).update(comment_params)
-        format.html { redirect_to @comment, notice: 'Comment was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @comment.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+#   # POST /comments
+#   # POST /comments.json
+#   def create
+#     @comment = Comment.new(comment_params)
 
-  # DELETE /comments/1
-  # DELETE /comments/1.json
-  def destroy
-    @comment.destroy
-    respond_to do |format|
-      # format.html { redirect_to comments_url }
-      # format.json { head :no_content }
-      format.js {}
-    end
-  end
+#     respond_to do |format|
+#       if @comment.with_user(current_user).save
+#         # format.html { redirect_to @comment, notice: 'Comment was successfully created.' }
+#         format.js   {}
+#         # format.json { render action: 'show', status: :created, location: @comment }
+#       else
+#         # format.html { render action: 'new' }
+#         format.js   { escape_javascript("console.log('error saving comment: #{comment.errors.inpsect}');") }
+#         # format.json { render json: @comment.errors, status: :unprocessable_entity }
+#       end
+#     end
+#   end
 
-  private
+#   # PATCH/PUT /comments/1
+#   # PATCH/PUT /comments/1.json
+#   def update
+#     respond_to do |format|
+#       if @comment.with_user(current_user).update(comment_params)
+#         format.html { redirect_to @comment, notice: 'Comment was successfully updated.' }
+#         format.json { head :no_content }
+#       else
+#         format.html { render action: 'edit' }
+#         format.json { render json: @comment.errors, status: :unprocessable_entity }
+#       end
+#     end
+#   end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_comment
-      @comment = Comment.find(params[:id])
-    end
+#   # DELETE /comments/1
+#   # DELETE /comments/1.json
+#   def destroy
+#     @comment.destroy
+#     respond_to do |format|
+#       # format.html { redirect_to comments_url }
+#       # format.json { head :no_content }
+#       format.js {}
+#     end
+#   end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def comment_params
-      params.require(:comment).permit(:content, :user_id, :commentable_type, :commentable_id)
-    end
+#   private
 
-end
+#     # Use callbacks to share common setup or constraints between actions.
+#     def set_comment
+#       @comment = Comment.find(params[:id])
+#     end
+
+#     # Never trust parameters from the scary internet, only allow the white list through.
+#     def comment_params
+#       params.require(:comment).permit(:content, :user_id, :commentable_type, :commentable_id)
+#     end
+
+# end

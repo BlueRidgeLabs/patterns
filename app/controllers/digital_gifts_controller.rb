@@ -121,7 +121,7 @@ class DigitalGiftsController < ApplicationController
   def api_create
     # apithis is horrific too
     # https://blog.arkency.com/2014/07/4-ways-to-early-return-from-a-rails-controller/
-    
+
     validate_api_args
 
     # https://api.rubyonrails.org/v4.1.4/classes/ActionController/Metal.html#method-i-performed-3F
@@ -148,7 +148,7 @@ class DigitalGiftsController < ApplicationController
         end
       else
         Airbrake.notify("Can't create Digital Gift, not valid #{api_params}")
-        render status: :unprocessable_entity, json: { success: false, msg: "digital gift invalid" }.to_json
+        render status: :unprocessable_entity, json: { success: false, msg: 'digital gift invalid' }.to_json
       end
     else
       Airbrake.notify("Can't create Digital Gift, research_session busted: #{api_params}")
@@ -159,7 +159,7 @@ class DigitalGiftsController < ApplicationController
   def validate_api_args
     @user = User.where(token: request.headers['AUTHORIZATION']).first if request.headers['AUTHORIZATION'].present?
 
-    render(status: :unauthorized, json: {success: false}.to_json)  && return if @user.blank? || !@user.admin?
+    render(status: :unauthorized, json: { success: false }.to_json)  && return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.where(api_params['research_session_id']).first
     phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))
@@ -167,7 +167,7 @@ class DigitalGiftsController < ApplicationController
 
     if @person.blank? || @research_session.blank? || @user.blank?
       Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
-      render(status: :not_found, json: {success: false}.to_json) && return
+      render(status: :not_found, json: { success: false }.to_json) && return
     end
 
     # $2 fee possibly
