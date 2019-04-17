@@ -7,6 +7,15 @@ feature "research sessions" do
     login_with_admin_user(admin_user)
   end
 
+  def fill_session_form(user:, title:, location:, description:, start_datetime:, duration:)
+    select user.name, from: 'research_session_user_id'
+    fill_in 'Session Title', with: title
+    fill_in 'Session Location', with: location
+    fill_in 'Session description', with: description
+    fill_in 'Start datetime', with: start_datetime.strftime('%Y-%m-%d %H:%M %p')
+    select duration, from: 'research_session_duration'
+  end
+
   scenario "creating a new session, with location" do
     approved_user = FactoryBot.create(:user)
     unapproved_user = FactoryBot.create(:user, :unapproved)
@@ -29,12 +38,15 @@ feature "research sessions" do
         expect(page).to have_content(duration_option)
       end
     end
-    select approved_user.name, from: 'research_session_user_id'
-    fill_in 'Session Title', with: title
-    fill_in 'Session Location', with: location
-    fill_in 'Session description', with: description
-    fill_in 'Start datetime', with: start_datetime.strftime('%Y-%m-%d %H:%M %p')
-    select duration, from: 'research_session_duration'
+
+    fill_session_form({
+      user: approved_user,
+      title: title,
+      location: location,
+      description: description,
+      start_datetime: start_datetime,
+      duration: duration
+    })
     click_button 'Create'
 
     # verify created correctly
@@ -53,13 +65,14 @@ feature "research sessions" do
     user = FactoryBot.create(:user)
     visit root_path
     click_link 'New Session'
-    select user.name, from: 'research_session_user_id'
-    fill_in 'Session Title', with: "asdf"
-    # location not specified
-    fill_in 'Session Location', with: nil
-    fill_in 'Session description', with: "asdf"
-    fill_in 'Start datetime', with: Time.zone.now.strftime('%Y-%m-%d %H:%M %p')
-    select ResearchSession::DURATION_OPTIONS.first, from: 'research_session_duration'
+    fill_session_form({
+      user: user,
+      title: "asdf",
+      location: nil,
+      description: "asdf",
+      start_datetime: Time.zone.now,
+      duration: ResearchSession::DURATION_OPTIONS.first
+    })
     click_button 'Create'
 
     new_research_session = ResearchSession.order(:id).last
