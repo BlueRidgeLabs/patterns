@@ -4,6 +4,7 @@ cache:
   directories:
     - /home/travis/.rvm/
     - /home/travis/vendor/bundle
+    - /home/travis/.webdrivers/
 sudo: required
 dist: bionic
 git:

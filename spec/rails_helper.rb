@@ -18,16 +18,7 @@ require 'simplecov'
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'webmock'
-require 'vcr'
 # require 'best_in_place/test_helpers' #busted
-
-# stores http calls and plays them back
-VCR.configure do |config|
-  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
-  config.configure_rspec_metadata!
-  config.hook_into :webmock
-end
-
 
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'

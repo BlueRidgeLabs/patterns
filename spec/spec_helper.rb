@@ -31,6 +31,7 @@ VCR.configure do |config|
   config.ignore_localhost = true
   config.default_cassette_options = { record: :new_episodes }
   config.hook_into :webmock
+  config.ignore_hosts ['chromedriver.storage.googleapis.com']
 end
 
 #
