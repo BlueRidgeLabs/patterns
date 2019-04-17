@@ -1,16 +1,12 @@
 language: ruby
 cache:
-  apt: true
   bundler: true
-  directories:
-    - /home/travis/.rvm/
 sudo: required
 dist: bionic
 git:
   depth: 1
   submodules: false
   quiet: true
-bundler_args: "--jobs=4 --retry=3 --without production"
 addons: # get google-chrome-stable
   chrome: stable
   code_climate:
