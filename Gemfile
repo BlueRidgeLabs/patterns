@@ -226,7 +226,7 @@ group :test do
   
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
   gem 'faker' 
-  gem 'rubocop', require: false
+  
   gem 'simplecov', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
@@ -261,11 +261,14 @@ group :development, :test do
   gem 'guard-bundler', require: false
   gem 'guard-minitest'
   gem 'guard-rspec', require: false
+  gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false
   gem 'guard-rubocop'
   gem 'selenium-webdriver'
   gem 'pry' # a console anywhere!
   gem 'rspec'
   gem 'rspec-rails'
+
   gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'sms-spec'
   gem "byebug", "~> 11.0"
