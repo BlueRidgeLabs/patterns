@@ -5,7 +5,7 @@ class Public::PeopleController < ApplicationController
   after_action :allow_iframe
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!
-  before_action :find_referr
+  
   before_action :find_user, only: %i[api_create show update]
   before_action :find_person, only: %i[show update]
 
