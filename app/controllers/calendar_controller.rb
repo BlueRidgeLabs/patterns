@@ -10,8 +10,6 @@ class CalendarController < ApplicationController
 
   include ActionController::MimeResponds
 
-
-
   def feed # TODO: refactor into calendarable.
     calendar = Icalendar::Calendar.new
     case visitor.class.to_s
@@ -34,8 +32,6 @@ class CalendarController < ApplicationController
     calendar.publish
     render plain: calendar.to_ical
   end
-
-  
 
   private
 

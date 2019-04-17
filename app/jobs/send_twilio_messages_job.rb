@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # # frozen_string_literal: true
 
 # # app/jobs/twilio/send_messages.rb
@@ -12,7 +14,6 @@
 #   sidekiq_options retry: 1
 
 #   # FIXME: Refactor and re-enable cop
-#   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
 #   #
 #   def perform(messages, phone_numbers, smsCampaign)
 #     Rails.logger.info '[TwilioSender] job enqueued'
