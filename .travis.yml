@@ -1,8 +1,5 @@
 language: ruby
-cache: 
-  - bundler
-  directories:
-     - /home/travis/.rvm/
+cache: bundler
 sudo: required
 dist: bionic
 git:
@@ -33,3 +30,4 @@ before_script:
   - ./cc-test-reporter before-build
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
