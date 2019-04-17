@@ -137,67 +137,6 @@ class Invitation < ApplicationRecord
     false
   end
 
-  # def send_invitation
-  #   Rails.logger.info("sent invitation for inv:#{id}")
-
-  #   case person.preferred_contact_method.upcase
-  #   when 'SMS'
-  #     send_invite_sms
-  #   when 'EMAIL'
-  #     send_invite_email
-  #   end
-  # end
-
-  # def send_invite_email
-  #   ::PersonMailer.invite(
-  #     invitation:  self,
-  #     person: person
-  #   ).deliver_later
-  # end
-
-  # def send_invite_sms
-  #   SendInvitationsSmsJob.perform_async(person.id, id, :invite)
-  # end
-
-  # def send_reminder
-  #   Rails.logger.info("sent reminder for inv:#{id}")
-
-  #   case person.preferred_contact_method.upcase
-  #   when 'SMS'
-  #     SendInvitationsSmsJob.perform_async(person.id, id, :remind)
-  #   when 'EMAIL'
-  #     ::PersonMailer.remind(invitations: [self], email_address: person.email_address).deliver_now
-  #   end
-  # end
-
-  # these three could definitely be refactored. too much copy-paste
-  # also rename for nomenclature convention
-  # def notify_about_confirmation
-  #   Rails.logger.info("confirm for inv:#{id}")
-
-  #   ::PersonMailer.confirm(email_address: user.email, invitation: self).deliver_later
-  #   case person.preferred_contact_method.upcase
-  #   when 'SMS'
-  #     SendInvitationsSmsJob.perform_async(person.id, id, :confirm)
-  #   when 'EMAIL'
-  #     ::PersonMailer.confirm(email_address: person.email_address, invitation: self).deliver_later
-  #   end
-  # end
-
-  # def notify_about_cancellation
-  #   # notify the user
-  #   Rails.logger.info("cancel for inv:#{id}")
-
-  #   ::PersonMailer.cancel(email_address: user.email, invitation: self).deliver_later
-
-  #   case person.preferred_contact_method.upcase
-  #   when 'SMS'
-  #     SendInvitationsSmsJob.perform_async(person.id, id, :cancel)
-  #   when 'EMAIL'
-  #     ::PersonMailer.cancel(email_address: person.email_address, invitation: self).deliver_later
-  #   end
-  # end
-
   def permitted_events
     aasm.events.call(permitted: true).map(&:name).map(&:to_s)
   end
@@ -222,17 +161,6 @@ class Invitation < ApplicationRecord
 
   def in_past?
     Time.zone.now > start_datetime
-  end
-
-  def human_state
-    case aasm_state
-    when 'created' || 'reminded'
-      'Unconfirmed'
-    when 'rescheduled'
-      'Rescheduling'
-    else
-      aasm_state.capitalize
-    end
   end
 
 end
