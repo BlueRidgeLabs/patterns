@@ -269,17 +269,17 @@ class GiftCard < ApplicationRecord
       errors[:base].push("Card number #{full_card_number} is not valid.") unless CreditCardValidations::Luhn.valid?(full_card_number)
     end
 
-    # gift_card_id can't change one set.
-    # dunno if we really want it.
-    # def force_immutable
-    #   if persisted?
-    #     IMMUTABLE.each do |attr|
-    #       next if self[attr].nil? # allow updates to nil
+  # gift_card_id can't change one set.
+  # dunno if we really want it.
+  # def force_immutable
+  #   if persisted?
+  #     IMMUTABLE.each do |attr|
+  #       next if self[attr].nil? # allow updates to nil
 
-    #       changed.include?(attr) &&
-    #         errors.add(attr, :immutable) &&
-    #         self[attr] = changed_attributes[attr]
-    #     end
-    #   end
-    # end
+  #       changed.include?(attr) &&
+  #         errors.add(attr, :immutable) &&
+  #         self[attr] = changed_attributes[attr]
+  #     end
+  #   end
+  # end
 end

@@ -148,4 +148,3 @@ class CalendarController < ApplicationController
       end
     end
 end
-# rubocop:enable ClassLength
