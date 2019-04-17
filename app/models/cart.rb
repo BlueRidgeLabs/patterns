@@ -15,7 +15,7 @@
 #  rapidpro_sync :boolean          default(FALSE)
 #
 
-# should be renamed to pool...
+# TODO: should be renamed to pool...
 class Cart < ApplicationRecord
   belongs_to :user
 
