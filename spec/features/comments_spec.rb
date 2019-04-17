@@ -25,6 +25,7 @@ feature "adding comments" do
     visit "/sessions/#{invitation.research_session.id}"
     fill_in 'comment_content', with: comment_text
     click_button 'Add note'
+    wait_for_ajax
     expect(page).to have_content(comment_text)
   end
 
