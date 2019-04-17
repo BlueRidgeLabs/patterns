@@ -1,6 +1,9 @@
 language: ruby
 cache:
   bundler: true
+  directories:
+    - /home/travis/.rvm/
+    - /home/travis/vendor/bundle
 sudo: required
 dist: bionic
 git:
@@ -15,6 +18,7 @@ services:
   - redis # using mock redis in tests
   - mysql
 install:
+  - bundle install -j 4 --without=production
   - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
   - unzip ~/chromedriver_linux64.zip -d ~/
   - rm ~/chromedriver_linux64.zip
