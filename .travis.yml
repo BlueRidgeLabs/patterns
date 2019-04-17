@@ -1,9 +1,11 @@
 language: ruby
-cache: bundler
+cache:
+  apt: true
+  bundler: true
+  directories:
+    - /home/travis/.rvm/
 sudo: required
 dist: bionic
-rvm:
-  - 2.6.2
 git:
   depth: 1
   submodules: false
