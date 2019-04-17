@@ -7,13 +7,23 @@ feature "research sessions" do
     login_with_admin_user(admin_user)
   end
 
-  def fill_session_form(user:, title:, location:, description:, start_datetime:, duration:)
+  def go_to_session_form
+    visit root_path
+    click_link 'New Session'
+    expect(page.current_path).to eq(new_research_session_path)
+  end
+
+  def fill_session_form(user:, title: "fake title", location: nil, description: "fake desc", start_datetime: Time.zone.now, duration: ResearchSession::DURATION_OPTIONS.first)
     select user.name, from: 'research_session_user_id'
     fill_in 'Session Title', with: title
     fill_in 'Session Location', with: location
     fill_in 'Session description', with: description
     fill_in 'Start datetime', with: start_datetime.strftime('%Y-%m-%d %H:%M %p')
     select duration, from: 'research_session_duration'
+  end
+
+  def pool_label(pool)
+    "#{pool.name}: #{pool.people.count}"
   end
 
   scenario "creating a new session, with location" do
@@ -26,9 +36,7 @@ feature "research sessions" do
     duration = ResearchSession::DURATION_OPTIONS.first
 
     # create new session
-    visit root_path
-    click_link 'New Session'
-    expect(page.current_path).to eq(new_research_session_path)
+    go_to_session_form
     within('#research_session_user_id') do
       expect(page).to have_content(approved_user.name)
       expect(page).not_to have_content(unapproved_user.name)
@@ -62,28 +70,71 @@ feature "research sessions" do
   end
 
   scenario "creating a new session, without location" do
-    user = FactoryBot.create(:user)
-    visit root_path
-    click_link 'New Session'
-    fill_session_form({
-      user: user,
-      title: "asdf",
-      location: nil,
-      description: "asdf",
-      start_datetime: Time.zone.now,
-      duration: ResearchSession::DURATION_OPTIONS.first
-    })
+    go_to_session_form
+    fill_session_form({ user: admin_user, location: nil })
     click_button 'Create'
 
     new_research_session = ResearchSession.order(:id).last
     expect(new_research_session.location).to eq(I18n.t(
       'research_session.call_location',
-      name: user.name,
-      phone_number: user.phone_number
+      name: admin_user.name,
+      phone_number: admin_user.phone_number
     ))
   end
 
+  scenario "create a new session, with people", js: true do
+    pool_1 = FactoryBot.create(:cart, user: admin_user)
+    pool_2 = FactoryBot.create(:cart, user: admin_user)
+    pool_3 = FactoryBot.create(:cart)
+    pool_1.people << person_1a = FactoryBot.create(:person)
+    pool_1.people << person_1b = FactoryBot.create(:person)
+    pool_2.people << person_2a = FactoryBot.create(:person)
+    pool_2.people << person_2b = FactoryBot.create(:person)
+
+    visit new_research_session_path
+    fill_session_form({ user: admin_user })
+
+    # expect current user's pools to be selectable
+    within("#cart") do
+      expect(page).to have_content(pool_label(pool_1))
+      expect(page).to have_content(pool_label(pool_2))
+      expect(page).not_to have_content(pool_label(pool_3))
+    end
+
+    # select pool 1
+    select pool_label(pool_1), from: "cart"
+    wait_for_ajax
+    within("#mini-cart") do
+      expect(page).to have_content(person_1a.full_name)
+      expect(page).to have_content(person_1b.full_name)
+    end
+
+    # add all from pool 1
+    click_with_js(page.find('#add_all'))
+    wait_for_ajax
+    within("#people-store") do
+      expect(page).to have_content(person_1a.full_name)
+      expect(page).to have_content(person_1b.full_name)
+    end
+
+    # remove all from pool 1
+    click_with_js(page.find('#remove_all'))
+    wait_for_ajax
+    within("#people-store") do
+      expect(page).not_to have_content(person_1a.full_name)
+      expect(page).not_to have_content(person_1b.full_name)
+    end
+
+    # add person 1 from pool 1
+    # remove person 1 from pool 1
+    # add person 1 from pool 1 again
+    # switch to pool 2
+    # add both person 1 from pool 2
+    # create
+    # expect ...
+  end
+
   # TODO: test tags
-  
-  # TODO: test pool
+
+  # TODO: test errors
 end
