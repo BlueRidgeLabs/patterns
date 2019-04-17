@@ -154,11 +154,11 @@ class Person < ApplicationRecord
   ransack_alias :comments, :comments_content
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number_or_comments_content
 
-  def self.send_all_reminders
-    # this is where reservation_reminders
-    # called by whenever in /config/schedule.rb
-    Person.active.all.find_each(&:send_invitation_reminder)
-  end
+  # def self.send_all_reminders
+  #   # this is where reservation_reminders
+  #   # called by whenever in /config/schedule.rb
+  #   Person.active.all.find_each(&:send_invitation_reminder)
+  # end
 
   def self.update_all_participation_levels
     @results = []
@@ -322,26 +322,26 @@ class Person < ApplicationRecord
     [address_1, address_2, city, state, postal_code].reject(&:blank?).join(', ')
   end
 
-  def send_invitation_reminder
-    # called by whenever in /config/schedule.rb
-    invs = invitations.remindable.upcoming(2)
-    case preferred_contact_method.upcase
-    when 'SMS'
-      ::InvitationReminderSms.new(to: person, invitations: invs).send
-    when 'EMAIL'
-      ::PersonMailer.remind(
-        invitations:  invs,
-        email_address: email_address
-      ).deliver_later
-    end
+  # def send_invitation_reminder
+  #   # called by whenever in /config/schedule.rb
+  #   invs = invitations.remindable.upcoming(2)
+  #   case preferred_contact_method.upcase
+  #   when 'SMS'
+  #     ::InvitationReminderSms.new(to: person, invitations: invs).send
+  #   when 'EMAIL'
+  #     ::PersonMailer.remind(
+  #       invitations:  invs,
+  #       email_address: email_address
+  #     ).deliver_later
+  #   end
 
-    invs.each do |inv|
-      if inv.aasm_state == 'invited'
-        inv.aasm_state = 'reminded'
-        inv.save
-      end
-    end
-  end
+  #   invs.each do |inv|
+  #     if inv.aasm_state == 'invited'
+  #       inv.aasm_state = 'reminded'
+  #       inv.save
+  #     end
+  #   end
+  # end
 
   def to_a
     fields = Person.column_names
