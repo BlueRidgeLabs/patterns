@@ -176,7 +176,7 @@ feature "research sessions" do
     expect(ResearchSession.count).to eq(0)
   end
 
-  def invite_person(person)
+  def add_invitee(person)
     within("#mini-cart") do
       click_with_js(page.find("#add-person-#{person.id}"))
     end
@@ -186,13 +186,19 @@ feature "research sessions" do
     end
   end
 
-  def uninvite_person(person)
+  def remove_invitee(person)
     within("#mini-cart") do
       click_with_js(page.find("#remove-person-#{person.id}"))
     end
     wait_for_ajax
     within('.invitees') do
       expect(page).not_to have_content(person.full_name)
+    end
+  end
+
+  def assert_invitee_actions_exist(actions)
+    actions.each do |action|
+      expect(page).to have_xpath("//input[@value='#{action}']")
     end
   end
 
@@ -211,16 +217,35 @@ feature "research sessions" do
     end
 
     # invite person 1
-    invite_person(person_1)
+    add_invitee(person_1)
     invitation_1 = research_session.reload.invitations.find_by(person: person_1)
     expect(invitation_1).to be_truthy
+    expect(invitation_1.aasm_state).to eq('created')
+    expect(page).to have_content(I18n.t(
+      'research_session.add_invitee_success',
+      person_name: person_1.full_name
+    ))
     within("#invitation-#{invitation_1.id}-actions") do
-      expect(page).to have_xpath("//input[@value='invite']")
-      expect(page).to have_xpath("//input[@value='attend']")
+      assert_invitee_actions_exist(['invite', 'attend'])
     end
 
+    # person 1, invite!
+    within("#invitation-#{invitation_1.id}-actions") do
+      invite_btn = page.find(:xpath, "//input[@value='invite']")
+      click_with_js(invite_btn)
+      wait_for_ajax
+      assert_invitee_actions_exist(['remind', 'confirm', 'cancel', 'attend'])
+    end
+    expect(page).to have_content(I18n.t(
+      'invitation.event_success',
+      event: "Invite",
+      person_name: person_1.full_name
+    ))
+    expect(invitation_1.reload.aasm_state).to eq("invited")
+
     # uninvite person 1
-    uninvite_person(person_1)
+    remove_invitee(person_1)
     expect(research_session.reload.invitations.count).to eq(0)
+    expect(page).to have_content(I18n.t('research_session.remove_invitee_success', person_name: person_1.full_name))
   end
 end

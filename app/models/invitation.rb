@@ -76,6 +76,7 @@ class Invitation < ApplicationRecord
   }
   # invitations can move through states
   # necessary for text messaging bits in the future
+  # TODO: test
   aasm do
     state :created, initial: true
     state :invited
@@ -234,5 +235,4 @@ class Invitation < ApplicationRecord
       aasm_state.capitalize
     end
   end
-
 end
