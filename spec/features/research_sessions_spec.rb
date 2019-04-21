@@ -165,7 +165,7 @@ feature "research sessions" do
     expect(invitation_2a).to be_truthy
     expect(invitation_1a.aasm_state).to eq('created')
     expect(invitation_2a.aasm_state).to eq('created')
+    visit research_sessions_path
+    expect(page).to have_content(new_research_session.title)
   end
-
-  # TODO: test errors
 end
