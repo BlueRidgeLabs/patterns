@@ -197,6 +197,9 @@ feature "research sessions" do
   end
 
   def assert_invitee_actions_exist(actions)
+    actions.each do |action|
+      expect(page).to have_xpath("//input[@value='#{action}']")
+    end
   end
 
   def assert_invitee_action_works(invitation:, action:, new_state:, new_actions:)
@@ -204,9 +207,7 @@ feature "research sessions" do
       action_btn = page.find(:xpath, "//input[@value='#{action}']")
       click_with_js(action_btn)
       wait_for_ajax
-      new_actions.each do |new_action|
-        expect(page).to have_xpath("//input[@value='#{new_action}']")
-      end
+      assert_invitee_actions_exist(new_actions)
     end
     expect(page).to have_content(I18n.t(
       'invitation.event_success',
@@ -296,5 +297,24 @@ feature "research sessions" do
       new_state: "cancelled",
       new_actions: ['attend']
     })
+
+    # invite person 2
+    add_invitee(person_2)
+    invitation_2 = research_session.reload.invitations.find_by(person: person_2)
+    assert_invitee_actions_exist(['invite', 'attend'])
+
+    # travel far past the session date
+    Timecop.freeze(start_datetime + 1.day) do
+      visit current_path
+      within("#invitation-#{invitation_2.id}-actions") do
+        assert_invitee_actions_exist(['attend', 'miss'])
+      end
+      assert_invitee_action_works({
+        invitation: invitation_2,
+        action: "miss",
+        new_state: "missed",
+        new_actions: ['attend']
+      })
+    end
   end
 end
