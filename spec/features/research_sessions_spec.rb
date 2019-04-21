@@ -168,4 +168,11 @@ feature "research sessions" do
     visit research_sessions_path
     expect(page).to have_content(new_research_session.title)
   end
+
+  scenario "error handling" do
+    go_to_session_form
+    click_button 'Create'
+    expect(page).to have_content("There were problems with some of the fields: Description can't be blank, Title can't be blank, Start datetime can't be blank")
+    expect(ResearchSession.count).to eq(0)
+  end
 end
