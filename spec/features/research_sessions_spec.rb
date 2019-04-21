@@ -169,10 +169,58 @@ feature "research sessions" do
     expect(page).to have_content(new_research_session.title)
   end
 
-  scenario "error handling" do
+  scenario "errors when creating a new session" do
     go_to_session_form
     click_button 'Create'
     expect(page).to have_content("There were problems with some of the fields: Description can't be blank, Title can't be blank, Start datetime can't be blank")
     expect(ResearchSession.count).to eq(0)
+  end
+
+  def invite_person(person)
+    within("#mini-cart") do
+      click_with_js(page.find("#add-person-#{person.id}"))
+    end
+    wait_for_ajax
+    within('.invitees') do
+      expect(page).to have_content(person.full_name)
+    end
+  end
+
+  def uninvite_person(person)
+    within("#mini-cart") do
+      click_with_js(page.find("#remove-person-#{person.id}"))
+    end
+    wait_for_ajax
+    within('.invitees') do
+      expect(page).not_to have_content(person.full_name)
+    end
+  end
+
+  scenario "invitee actions", js: true do
+    start_datetime = DateTime.current + 2.days
+    research_session = FactoryBot.create(:research_session, start_datetime: start_datetime)
+    current_cart = admin_user.current_cart
+    current_cart.people << person_1 = FactoryBot.create(:person)
+    current_cart.people << person_2 = FactoryBot.create(:person)
+    visit research_session_path(research_session)
+
+    # expect current pool's people to be visible, for selection
+    within("#mini-cart") do
+      expect(page).to have_content(person_1.full_name)
+      expect(page).to have_content(person_2.full_name)
+    end
+
+    # invite person 1
+    invite_person(person_1)
+    invitation_1 = research_session.reload.invitations.find_by(person: person_1)
+    expect(invitation_1).to be_truthy
+    within("#invitation-#{invitation_1.id}-actions") do
+      expect(page).to have_xpath("//input[@value='invite']")
+      expect(page).to have_xpath("//input[@value='attend']")
+    end
+
+    # uninvite person 1
+    uninvite_person(person_1)
+    expect(research_session.reload.invitations.count).to eq(0)
   end
 end
