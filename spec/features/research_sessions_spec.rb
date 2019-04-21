@@ -152,8 +152,6 @@ feature "research sessions" do
     # add both person 1 from pool 2
     click_with_js(page.find("#add-#{person_2a.id}"))
 
-    # add tags
-
     # create
     click_button 'Create'
     new_research_session = ResearchSession.order(:id).last
@@ -168,8 +166,6 @@ feature "research sessions" do
     expect(invitation_1a.aasm_state).to eq('created')
     expect(invitation_2a.aasm_state).to eq('created')
   end
-
-  # TODO: test tags
 
   # TODO: test errors
 end
