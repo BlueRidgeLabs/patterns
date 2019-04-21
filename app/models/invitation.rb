@@ -76,7 +76,7 @@ class Invitation < ApplicationRecord
   }
   # invitations can move through states
   # necessary for text messaging bits in the future
-  # TODO: test
+  # TODO: (EL) uncomment after_commits, and test
   aasm do
     state :created, initial: true
     state :invited

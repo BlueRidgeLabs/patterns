@@ -197,9 +197,23 @@ feature "research sessions" do
   end
 
   def assert_invitee_actions_exist(actions)
-    actions.each do |action|
-      expect(page).to have_xpath("//input[@value='#{action}']")
+  end
+
+  def assert_invitee_action_works(invitation:, action:, new_state:, new_actions:)
+    within("#invitation-#{invitation.id}-actions") do
+      action_btn = page.find(:xpath, "//input[@value='#{action}']")
+      click_with_js(action_btn)
+      wait_for_ajax
+      new_actions.each do |new_action|
+        expect(page).to have_xpath("//input[@value='#{new_action}']")
+      end
     end
+    expect(page).to have_content(I18n.t(
+      'invitation.event_success',
+      event: action.capitalize,
+      person_name: invitation.person.full_name
+    ))
+    expect(invitation.reload.aasm_state).to eq(new_state)
   end
 
   scenario "invitee actions", js: true do
@@ -230,22 +244,57 @@ feature "research sessions" do
     end
 
     # person 1, invite!
-    within("#invitation-#{invitation_1.id}-actions") do
-      invite_btn = page.find(:xpath, "//input[@value='invite']")
-      click_with_js(invite_btn)
-      wait_for_ajax
-      assert_invitee_actions_exist(['remind', 'confirm', 'cancel', 'attend'])
-    end
-    expect(page).to have_content(I18n.t(
-      'invitation.event_success',
-      event: "Invite",
-      person_name: person_1.full_name
-    ))
-    expect(invitation_1.reload.aasm_state).to eq("invited")
+    assert_invitee_action_works({
+      invitation: invitation_1,
+      action: "invite",
+      new_state: "invited",
+      new_actions: ['remind', 'confirm', 'cancel', 'attend']
+    })
+
+    # person 1, remind!
+    assert_invitee_action_works({
+      invitation: invitation_1,
+      action: "remind",
+      new_state: "reminded",
+      new_actions: ['remind', 'confirm', 'cancel', 'attend']
+    })
+
+    # person 1, confirm!
+    assert_invitee_action_works({
+      invitation: invitation_1,
+      action: "confirm",
+      new_state: "confirmed",
+      new_actions: ['confirm', 'cancel', 'attend']
+    })
+
+    # person 1, attend!
+    assert_invitee_action_works({
+      invitation: invitation_1,
+      action: "attend",
+      new_state: "attended",
+      new_actions: ['attend']
+    })
 
     # uninvite person 1
     remove_invitee(person_1)
     expect(research_session.reload.invitations.count).to eq(0)
     expect(page).to have_content(I18n.t('research_session.remove_invitee_success', person_name: person_1.full_name))
+
+    # reinvite person 1
+    add_invitee(person_1)
+    invitation_1 = research_session.reload.invitations.find_by(person: person_1)
+    # person 1, invite, and cancel!
+    assert_invitee_action_works({
+      invitation: invitation_1,
+      action: "invite",
+      new_state: "invited",
+      new_actions: ['remind', 'confirm', 'cancel', 'attend']
+    })
+    assert_invitee_action_works({
+      invitation: invitation_1,
+      action: "cancel",
+      new_state: "cancelled",
+      new_actions: ['attend']
+    })
   end
 end
