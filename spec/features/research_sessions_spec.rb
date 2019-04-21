@@ -83,13 +83,16 @@ feature "research sessions" do
   end
 
   scenario "create a new session, with people", js: true do
+    # create two new pools for user
     pool_1 = FactoryBot.create(:cart, user: admin_user)
     pool_2 = FactoryBot.create(:cart, user: admin_user)
-    pool_3 = FactoryBot.create(:cart)
     pool_1.people << person_1a = FactoryBot.create(:person)
     pool_1.people << person_1b = FactoryBot.create(:person)
     pool_2.people << person_2a = FactoryBot.create(:person)
     pool_2.people << person_2b = FactoryBot.create(:person)
+
+    # create pool for other user
+    pool_3 = FactoryBot.create(:cart)
 
     visit new_research_session_path
     fill_session_form({ user: admin_user })
@@ -126,12 +129,44 @@ feature "research sessions" do
     end
 
     # add person 1 from pool 1
+    click_with_js(page.find("#add-#{person_1a.id}"))
+    wait_for_ajax
+    within('#people-store') do
+      expect(page).to have_content(person_1a.full_name)
+    end
+
     # remove person 1 from pool 1
+    click_with_js(page.find("#remove-person-#{person_1a.id}"))
+    wait_for_ajax
+    within('#people-store') do
+      expect(page).not_to have_content(person_1a.full_name)
+    end
+
     # add person 1 from pool 1 again
+    click_with_js(page.find("#add-#{person_1a.id}"))
+    wait_for_ajax
+
     # switch to pool 2
+    select pool_label(pool_2), from: "cart"
+
     # add both person 1 from pool 2
+    click_with_js(page.find("#add-#{person_2a.id}"))
+
+    # add tags
+
     # create
-    # expect ...
+    click_button 'Create'
+    new_research_session = ResearchSession.order(:id).last
+    invitations = new_research_session.invitations
+
+    # expect invitations created along with research session
+    expect(invitations.length).to eq(2)
+    invitation_1a = invitations.find_by(person: person_1a)
+    invitation_2a = invitations.find_by(person: person_2a)
+    expect(invitation_1a).to be_truthy
+    expect(invitation_2a).to be_truthy
+    expect(invitation_1a.aasm_state).to eq('created')
+    expect(invitation_2a.aasm_state).to eq('created')
   end
 
   # TODO: test tags
