@@ -5,7 +5,7 @@
           renderer: BootstrapPagination::Rails %>
 <div class="row">
   <div class="span12">
-    <table class="table table-striped">
+    <table class="table table-striped" id='users-table'>
       <thead>
         <tr>
           <th colspan="1">name</th>
@@ -20,7 +20,7 @@
 
       <tbody>
         <% @users.each do |user| %>
-          <tr>
+          <tr id="user-<%= user.id %>">
             <td><%= link_to user.name, user %></td>
             <td><%= best_in_place user, :email_address,
                       ok_button: 'Save',
