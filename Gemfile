@@ -50,6 +50,7 @@ group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
+  gem 'lol_dba' # find columns that should have indices
   gem 'heavens_door' # recording capybara tests
   gem 'capistrano', '~> 2.15.4'
   gem 'capistrano-sidekiq'
@@ -221,13 +222,11 @@ group :test do
   # gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
 
-  
-  #gem 'codeclimate-test-reporter'
   gem 'coveralls', require: false
   
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
   gem 'faker' 
-  gem 'rubocop', require: false
+  
   gem 'simplecov', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
@@ -241,6 +240,7 @@ group :test do
   # webrick is slow, capybara will use puma instead
   gem 'puma'
 
+  gem 'webmock'
   # in memory redis for testing only
   gem 'mock_redis'
 
@@ -261,11 +261,14 @@ group :development, :test do
   gem 'guard-bundler', require: false
   gem 'guard-minitest'
   gem 'guard-rspec', require: false
+  gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false
   gem 'guard-rubocop'
   gem 'selenium-webdriver'
   gem 'pry' # a console anywhere!
   gem 'rspec'
   gem 'rspec-rails'
+
   gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'sms-spec'
   gem "byebug", "~> 11.0"

@@ -2,7 +2,6 @@
 
 # FIXME: Refactor and re-enable cop
 # this is primarily used by admins to track upcoming sessions...
-# rubocop:disable ClassLength
 class CalendarController < ApplicationController
   # this is so that people can also visit the calendar.
   # identified by their secure token.
@@ -10,12 +9,6 @@ class CalendarController < ApplicationController
   skip_after_action :update_user_activity, only: %i[feed admin_feed]
 
   include ActionController::MimeResponds
-
-  def show
-    @default_date = default_time
-    @show_modal = modal_to_load
-    redirect_to root_url unless visitor
-  end
 
   def feed # TODO: refactor into calendarable.
     calendar = Icalendar::Calendar.new
@@ -38,41 +31,6 @@ class CalendarController < ApplicationController
     end
     calendar.publish
     render plain: calendar.to_ical
-  end
-
-  def research_sessions # should be different for user and person, maybe?
-    @research_sessions = visitor.
-                         research_sessions.includes(:invitations).
-                         where('start_datetime BETWEEN ? AND ?',
-                           cal_params[:start],
-                           cal_params[:end])
-  end
-
-  def show_actions
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def show_invitation
-    visitor
-    @invitation = Invitation.find_by(id: allowed_params[:id])
-    respond_to do |format|
-      if @invitation.owner_or_invitee?(@visitor)
-        format.js {}
-      else
-        flash[:error] = 'invalid option'
-        format.js { render json: {}, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def show_research_session
-    visitor
-    @research_session = ResearchSession.find_by(id: allowed_params[:id])
-    respond_to do |format|
-      format.js
-    end
   end
 
   private
@@ -111,28 +69,12 @@ class CalendarController < ApplicationController
         :default_time)
     end
 
-    def research_session
-      @research_session ||= ResearchSession.find_by(id: allowed_params['research_session_id']) if allowed_params['research_session_id']
-    end
-
-    def invitation
-      @invitation ||= Invitation.find_by(id: allowed_params['invitation_id']) if allowed_params['invitation_id']
-    end
-
     def default_time
       return invitation.start_datetime.strftime('%F') if invitation
       return research_session.start_datetime.strftime('%F') if research_session
       return Time.zone.parse(allowed_params['default_time']).strftime('%F') if allowed_params['default_time']
 
       Time.current.strftime('%F')
-    end
-
-    def modal_to_load
-      return 'invitation' if invitation
-
-      return 'research_session' if research_session
-
-      false
     end
 
     def cal_params
@@ -149,4 +91,3 @@ class CalendarController < ApplicationController
       end
     end
 end
-# rubocop:enable ClassLength

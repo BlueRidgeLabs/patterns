@@ -1,7 +1,7 @@
 namespace :tag_migration do
   desc 'Bulk add taggings by Id'
   task migrate: :environment  do
-    PaperTrail.enabled = false
+    PaperTrail.disable
     tags_results = ActiveRecord::Base.connection.exec_query('SELECT * FROM old_tags')
     taggings_results = ActiveRecord::Base.connection.exec_query('SELECT * FROM old_taggings')
     people = Person.all
@@ -28,6 +28,9 @@ namespace :tag_migration do
         errors << [person_id, e]
       end
     end
+    PaperTrail.enable
     puts errors
+  
   end
+
 end

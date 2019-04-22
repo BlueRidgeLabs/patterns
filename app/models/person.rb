@@ -108,13 +108,18 @@ class Person < ApplicationRecord
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalize :landline, default_country_code: 'US'
 
-  # validates :phone_number, presence: true, length: { in: 9..15 },
-  #   unless: proc { |person| person.email_address.present? }
+  validates :phone_number, presence: true, length: { in: 9..15 },
+    unless: proc { |person| person.email_address.present? }
+  validates :email_address, presence: true,
+    unless: proc { |person| person.phone_number.present? }
+
+  validates :email_address,
+    format: { with: Devise.email_regexp,
+              if: proc { |person| person.email_address.present? } }
+
   validates :phone_number, allow_blank: true, uniqueness: true
   validates :landline, allow_blank: true, uniqueness: true
 
-  # validates :email_address, presence: true,gc
-  #   unless: proc { |person| person.phone_number.present? }
   validates :email_address, email: true, allow_blank: true, uniqueness: true
 
   # scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM rewards where rewards.reason = 1)') }
@@ -149,11 +154,11 @@ class Person < ApplicationRecord
   ransack_alias :comments, :comments_content
   ransack_alias :nav_bar_search, :full_name_or_email_address_or_phone_number_or_comments_content
 
-  def self.send_all_reminders
-    # this is where reservation_reminders
-    # called by whenever in /config/schedule.rb
-    Person.active.all.find_each(&:send_invitation_reminder)
-  end
+  # def self.send_all_reminders
+  #   # this is where reservation_reminders
+  #   # called by whenever in /config/schedule.rb
+  #   Person.active.all.find_each(&:send_invitation_reminder)
+  # end
 
   def self.update_all_participation_levels
     @results = []
@@ -317,26 +322,26 @@ class Person < ApplicationRecord
     [address_1, address_2, city, state, postal_code].reject(&:blank?).join(', ')
   end
 
-  def send_invitation_reminder
-    # called by whenever in /config/schedule.rb
-    invs = invitations.remindable.upcoming(2)
-    case preferred_contact_method.upcase
-    when 'SMS'
-      ::InvitationReminderSms.new(to: person, invitations: invs).send
-    when 'EMAIL'
-      ::PersonMailer.remind(
-        invitations:  invs,
-        email_address: email_address
-      ).deliver_later
-    end
+  # def send_invitation_reminder
+  #   # called by whenever in /config/schedule.rb
+  #   invs = invitations.remindable.upcoming(2)
+  #   case preferred_contact_method.upcase
+  #   when 'SMS'
+  #     ::InvitationReminderSms.new(to: person, invitations: invs).send
+  #   when 'EMAIL'
+  #     ::PersonMailer.remind(
+  #       invitations:  invs,
+  #       email_address: email_address
+  #     ).deliver_later
+  #   end
 
-    invs.each do |inv|
-      if inv.aasm_state == 'invited'
-        inv.aasm_state = 'reminded'
-        inv.save
-      end
-    end
-  end
+  #   invs.each do |inv|
+  #     if inv.aasm_state == 'invited'
+  #       inv.aasm_state = 'reminded'
+  #       inv.save
+  #     end
+  #   end
+  # end
 
   def to_a
     fields = Person.column_names
@@ -393,72 +398,5 @@ class Person < ApplicationRecord
       ::UserMailer.new_person_notify(email_address: email, person: self).deliver_later
     end
   end
-
-  # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  #
-  # Compare to other records in the database to find possible duplicates.
-  def possible_duplicates
-    @duplicates = {}
-    if last_name.present?
-      last_name_duplicates = Person.where(last_name: last_name).where.not(id: id)
-      last_name_duplicates.each do |duplicate|
-        duplicate_hash = {}
-        duplicate_hash['person'] = duplicate
-        duplicate_hash['match_count'] = 1
-        duplicate_hash['last_name_match'] = true
-        duplicate_hash['matches_on'] = ['Last Name']
-        @duplicates[duplicate.id] = duplicate_hash
-      end
-    end
-    if email_address.present?
-      email_address_duplicates = Person.where(email_address: email_address).where.not(id: id)
-      email_address_duplicates.each do |duplicate|
-        if @duplicates.key? duplicate.id
-          @duplicates[duplicate.id]['match_count'] += 1
-          @duplicates[duplicate.id]['matches_on'].push('Email Address')
-        else
-          @duplicates[duplicate.id] = {}
-          @duplicates[duplicate.id]['person'] = duplicate
-          @duplicates[duplicate.id]['match_count'] = 1
-          @duplicates[duplicate.id]['matches_on'] = ['Email Address']
-        end
-        @duplicates[duplicate.id]['email_address_match'] = true
-      end
-    end
-    if phone_number.present?
-      phone_number_duplicates = Person.where(phone_number: phone_number).where.not(id: id)
-      phone_number_duplicates.each do |duplicate|
-        if @duplicates.key? duplicate.id
-          @duplicates[duplicate.id]['match_count'] += 1
-          @duplicates[duplicate.id]['matches_on'].push('Phone Number')
-        else
-          @duplicates[duplicate.id] = {}
-          @duplicates[duplicate.id]['person'] = duplicate
-          @duplicates[duplicate.id]['match_count'] = 1
-          @duplicates[duplicate.id]['matches_on'] = ['Phone Number']
-        end
-        @duplicates[duplicate.id]['phone_number_match'] = true
-      end
-    end
-    if address_1.present?
-      address_1_duplicates = Person.where(address_1: address_1).where.not(id: id)
-      address_1_duplicates.each do |duplicate|
-        if @duplicates.key? duplicate.id
-          @duplicates[duplicate.id]['match_count'] += 1
-          @duplicates[duplicate.id]['matches_on'].push('Address_1')
-        else
-          @duplicates[duplicate.id] = {}
-          @duplicates[duplicate.id]['person'] = duplicate
-          @duplicates[duplicate.id]['match_count'] = 1
-          @duplicates[duplicate.id]['matches_on'] = ['Address_1']
-        end
-        @duplicates[duplicate.id]['address_1_match'] = true
-      end
-    end
-    @duplicates
-  end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
 end
 # rubocop:enable ClassLength

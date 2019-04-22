@@ -44,9 +44,9 @@ class GiftCard < ApplicationRecord
   validates :expiration_date,
     format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
-  validates :batch_id, format: { with: /[0-9]*/ }
-  validates :secure_code, format: { with: /[0-9]*/ }
-  validates :sequence_number, format: { with: /[0-9]*/ }
+  validates :batch_id, format: { with: /\A[0-9]*\z/ }
+  validates :secure_code, format: { with: /\A[0-9]*\z/ }
+  validates :sequence_number, format: { with: /\A[0-9]*\z/ }
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
   default_scope { order(sequence_number: :asc) }
@@ -269,17 +269,17 @@ class GiftCard < ApplicationRecord
       errors[:base].push("Card number #{full_card_number} is not valid.") unless CreditCardValidations::Luhn.valid?(full_card_number)
     end
 
-    # gift_card_id can't change one set.
-    # dunno if we really want it.
-    def force_immutable
-      if persisted?
-        IMMUTABLE.each do |attr|
-          next if self[attr].nil? # allow updates to nil
+  # gift_card_id can't change one set.
+  # dunno if we really want it.
+  # def force_immutable
+  #   if persisted?
+  #     IMMUTABLE.each do |attr|
+  #       next if self[attr].nil? # allow updates to nil
 
-          changed.include?(attr) &&
-            errors.add(attr, :immutable) &&
-            self[attr] = changed_attributes[attr]
-        end
-      end
-    end
+  #       changed.include?(attr) &&
+  #         errors.add(attr, :immutable) &&
+  #         self[attr] = changed_attributes[attr]
+  #     end
+  #   end
+  # end
 end

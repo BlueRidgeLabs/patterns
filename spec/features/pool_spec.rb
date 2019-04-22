@@ -195,5 +195,10 @@ feature "pools" do
       visit cart_path(current_pool)
       expect(page).not_to have_content('Export to CSV')
     end
+    
+    scenario "cart index" do
+      visit '/cart'
+      expect(page).to have_content current_pool.name
+    end
   end
 end

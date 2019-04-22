@@ -5,32 +5,22 @@ class Public::PeopleController < ApplicationController
   after_action :allow_iframe
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!
+  
+  before_action :find_user, only: %i[api_create show update]
+  before_action :find_person, only: %i[show update]
 
   # GET /people/new
   def new
-    @referrer = current_user.nil? ? false : "patterns user: #{current_user.name}"
-    if params[:referrer]
-      begin
-        uri = URI.parse(params[:referrer])
-        @referrer = params[:referrer] if uri.is_a?(URI::HTTP)
-      rescue URI::InvalidURIError
-        @referrer = false
-      end
-    end
     @person = ::Person.new
     @person.created_by = current_user.id if current_user.present?
   end
 
   def show
-    if find_user_and_person
-      render json: @person.to_json
-    else
-      render json: { success: false }, status: :not_found
-    end
+    render json: @person.to_json
   end
 
   def update
-    if find_user_and_person
+    if @current_user.present? && @person.present?
       PaperTrail.request.whodunnit = @current_user
 
       if update_params[:tags].present?
@@ -59,28 +49,22 @@ class Public::PeopleController < ApplicationController
 
   def api_create
     output = { success: false }
-    if request.headers['AUTHORIZATION'].present?
-      @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
-      if @current_user.present?
-        @person = Person.new(api_create_params.except(:tags, :low_income, :locale_name))
-
-        @person.referred_by ='created via SMS'
-        @person.signup_at = Time.current
-        @person.created_by = @current_user.id
-        if params[:tags].present?
-          tags = api_create_params[:tags].tr('_', ' ').split(',')
-          @person.tag_list.add(tags)
-        end
-        @person.low_income = api_create_params[:low_income] == 'Y' if api_create_params[:low_income].present?
-
-        if api_create_params[:locale_name].present?
-          locale = Person.locale_name_to_locale(api_create_params[:locale_name])
-          @person.locale = locale if locale.present?
-        end
-
-        output[:success] = @person.save ? true : false
-      end
+    PaperTrail.request.whodunnit = @current_user
+    @person = Person.new(api_create_params.except(:tags, :low_income, :locale_name))
+    @person.referred_by ='created via SMS'
+    @person.signup_at = Time.current
+    @person.created_by = @current_user.id
+    if params[:tags].present?
+      tags = api_create_params[:tags].tr('_', ' ').split(',')
+      @person.tag_list.add(tags)
     end
+    @person.low_income = api_create_params[:low_income] == 'Y' if api_create_params[:low_income].present?
+
+    if api_create_params[:locale_name].present?
+      locale = Person.locale_name_to_locale(api_create_params[:locale_name])
+      @person.locale = locale if locale.present?
+    end
+    output[:success] = @person.save ? true : false
     http_code = output[:success] ? 201 : 401
     render json: output, status: http_code
   end
@@ -122,6 +106,30 @@ class Public::PeopleController < ApplicationController
   end
 
   private
+
+    def find_user
+      raise ActionController::RoutingError.new('Not Found') if request.headers['AUTHORIZATION'].blank?
+
+      @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
+
+      if @current_user.nil?
+        render(file: 'public/404.html', status: :not_found) && return
+      else
+        true
+      end
+    end
+
+    def find_person
+      if update_params[:phone_number].present?
+        phone = PhonyRails.normalize_number(CGI.unescape(update_params[:phone_number]))
+        @person = Person.find_by(phone_number: phone)
+        if @person.nil?
+          render(file: 'public/404.html', status: :not_found) && return
+        else
+          true
+        end
+      end
+    end
 
     def api_create_params
       params.permit(:tags,
@@ -186,22 +194,5 @@ class Public::PeopleController < ApplicationController
 
     def allow_iframe
       response.headers.except! 'X-Frame-Options'
-    end
-
-    def find_user_and_person
-      if request.headers['AUTHORIZATION'].present? && update_params[:phone_number].present?
-        @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
-
-        phone = PhonyRails.normalize_number(CGI.unescape(update_params[:phone_number]))
-        @person = Person.find_by(phone_number: phone)
-
-        if @current_user.nil? || @person.nil?
-          false
-        else
-          true
-        end
-      else
-        false
-      end
     end
 end

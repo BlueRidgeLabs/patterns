@@ -17,6 +17,8 @@ require 'mock_redis'
 require 'simplecov'
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
+require 'webmock'
+# require 'best_in_place/test_helpers' #busted
 
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
@@ -61,11 +63,12 @@ end
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  #config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # config.include Helpers
   config.extend ControllerMacros, type: :controller
   config.include Helpers
+  # config.include BestInPlace::TestHelpers #busted
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -92,5 +95,7 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.profile_examples = true
+  
   config.include Devise::Test::ControllerHelpers, :type => :controller
 end

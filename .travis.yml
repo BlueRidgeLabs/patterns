@@ -1,12 +1,16 @@
 language: ruby
-cache: bundler
+cache:
+  bundler: true
+  directories:
+    - /home/travis/.rvm/
+    - /home/travis/vendor/bundle
+    - /home/travis/.webdrivers/
 sudo: required
 dist: bionic
 git:
   depth: 1
   submodules: false
   quiet: true
-bundler_args: "--jobs=4 --retry=3 --without production"
 addons: # get google-chrome-stable
   chrome: stable
   code_climate:
@@ -15,14 +19,14 @@ services:
   - redis # using mock redis in tests
   - mysql
 install:
-  - bundle install -j 4 --without production
-  - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
-  - unzip ~/chromedriver_linux64.zip -d ~/
-  - rm ~/chromedriver_linux64.zip
-  - sudo mv -f ~/chromedriver /usr/local/share/
-  - sudo chmod +x /usr/local/share/chromedriver
-  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+  - bundle install -j 4 --without=production
 before_script:  
   - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
   - bundle exec rake db:migrate RAILS_ENV=test 
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9516 http://localhost &
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+

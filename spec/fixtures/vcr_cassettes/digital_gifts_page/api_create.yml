@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://testflight.giftrocket.com/api/v1/funding_sources?access_token=5bf0ImG7ADeup5vUN
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers: {}
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 15 Apr 2019 18:28:16 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfduid=d483a453a3657090136970c509ca4a6431555352896; expires=Tue, 14-Apr-20
+        18:28:16 GMT; path=/; domain=.giftrocket.com; HttpOnly
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Etag:
+      - W/"3f02058a1e5b9fe10a3661a42b0aba04"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - a2a988b8-ba4a-40b5-a760-30e5ac72af38
+      X-Runtime:
+      - '0.083824'
+      Via:
+      - 1.1 vegur
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 4c7ffa70ac83c5de-EWR
+    body:
+      encoding: UTF-8
+      string: '{"funding_sources":[{"method":"balance","id":"8LQBI4C61HO7","meta":{"available_cents":459200}}]}'
+    http_version: 
+  recorded_at: Sun, 21 Apr 2019 19:27:53 GMT
+recorded_with: VCR 4.0.0

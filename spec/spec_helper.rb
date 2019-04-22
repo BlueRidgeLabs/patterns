@@ -21,6 +21,19 @@ SimpleCov.start
 require 'devise'
 require 'factory_bot_rails'
 require 'webdrivers'
+require 'webmock'
+require 'vcr'
+
+# stores http calls and plays them back
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
+  config.configure_rspec_metadata!
+  config.ignore_localhost = true
+  config.default_cassette_options = { record: :new_episodes }
+  config.hook_into :webmock
+  config.ignore_hosts ['chromedriver.storage.googleapis.com']
+end
+
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
@@ -53,6 +66,8 @@ RSpec.configure do |config|
   # inherited by the metadata hash of host groups and examples, rather than
   # triggering implicit auto-inclusion in groups with matching metadata.
   config.shared_context_metadata_behavior = :apply_to_host_groups
+
+
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.

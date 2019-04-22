@@ -1,47 +1,40 @@
 require 'rails_helper'
 
-xdescribe Calendarable do
+describe Calendarable do
   context 'reservation calendar' do
-    let!(:event_invitation) { FactoryBot.create(:event_invitation) }
-    let!(:person) { event_invitation.invitees.sample }
-    let!(:time_slot) { event_invitation.event.time_slots.sample }
-    let!(:reservation) {
-      Invitation.create(person: person,
-                             time_slot: time_slot,
-                             user: event_invitation.user,
-                             event_invitation: event_invitation,
-                             event: event_invitation.event)
-    }
+    let!(:invitation) { FactoryBot.create(:invitation) }
+    let!(:person) { invitation.person }
+    let!(:research_session) { invitation.research_session}
+    let!(:user){ research_session.user}
 
     it 'can generate an ical event' do
-      reservation.reload
-      expect(reservation).to respond_to(:to_ics)
-      expect(reservation.to_ics.description).to include(reservation.description)
+      research_session.reload
+      expect(research_session).to respond_to(:to_ics)
+      expect(research_session.to_ics.description).to include(research_session.description)
     end
 
     it 'has  an alarm' do
-      ics = reservation.to_ics
+      ics = research_session.to_ics
       expect(ics.alarms.length).to eq(1)
     end
 
     it 'returns datetimes' do
       klass = ActiveSupport::TimeWithZone
-      expect(reservation.start_datetime.class).to eq(klass)
-      expect(time_slot.start_datetime.class).to eq(klass)
-      expect(event_invitation.start_datetime.class).to eq(klass)
+      expect(research_session.start_datetime.class).to eq(klass)
+      expect(invitation.start_datetime.class).to eq(klass)
     end
   end
 
-  context 'event_invitation' do
-    let(:ei) { FactoryBot.create(:event_invitation) }
+  context 'research session invitation' do
+    let(:invitation) { FactoryBot.create(:invitation) }
 
     it 'can generate an ical event' do
-      expect(ei).to respond_to(:to_ics)
-      expect(ei.to_ics.description).to include(ei.description)
+      expect(invitation).to respond_to(:to_ics)
+      expect(invitation.to_ics.description).to include(invitation.description)
     end
 
     it 'should not have an alarm' do
-      expect(ei.to_ics.alarms.length).to eq(0)
+      expect(invitation.to_ics.alarms.length).to eq(0)
     end
   end
 end

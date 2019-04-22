@@ -40,6 +40,7 @@
         <%= link_to "+",
               modal_rewards_path(invitation.class.to_s, invitation.id),
                 {:remote => true,
+                  :id => "add-reward-#{invitation.id}",
                   'data-toggle' =>  "modal",
                   'data-target' => '#modal-window',
                   class: 'btn btn-mini'} %>
