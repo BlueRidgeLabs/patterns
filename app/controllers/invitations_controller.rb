@@ -75,7 +75,11 @@ class InvitationsController < ApplicationController
     # want explicit 'and' here.
     if @invitation.send("may_#{event}?")
       @invitation.send("#{event}!") && @invitation.save
-      flash[:notice] = "#{event.capitalize} for #{@invitation.person.full_name}"
+      flash[:notice] = I18n.t(
+        'invitation.event_success',
+        event: event.capitalize,
+        person_name: @invitation.person.full_name
+      )
     elsif @invitation.errors.empty?
       flash[:alert] = 'Error, cannot update invitation'
     else

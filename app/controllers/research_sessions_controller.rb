@@ -110,11 +110,12 @@ class ResearchSessionsController < ApplicationController
     @research_session =  ResearchSession.find(params[:research_session_id])
     inv = @research_session.invitations.find_by(person_id: params[:person_id])
     @person = inv.person
+    # TODO: test
     if !inv.rewards.empty?
       flash[:error] = "Can't remove #{Person.find(inv.person_id).full_name}, they have a reward for this session."
     else
       inv.delete
-      flash[:notice] = "#{Person.find(inv.person_id).full_name} removed from session!" if @research_session.save
+      flash[:notice] = I18n.t('research_session.remove_invitee_success', person_name: @person.full_name) if @research_session.save
     end
     respond_to do |format|
       format.js
@@ -128,7 +129,12 @@ class ResearchSessionsController < ApplicationController
     inv = Invitation.create(person_id: params[:person_id], aasm_state: state, research_session_id: @research_session.id)
     @research_session.invitations << inv
     @person = inv.person
-    flash[:notice] = "#{@person.full_name} added to session!" if @research_session.save && @research_session.is_invited?(@person)
+    if @research_session.save && @research_session.is_invited?(@person)
+      flash[:notice] = I18n.t(
+        'research_session.add_invitee_success',
+        person_name: @person.full_name
+      )
+    end
     respond_to do |format|
       format.js
       format.html { redirect_to research_session_path(@research_session) }

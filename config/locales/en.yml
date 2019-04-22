@@ -27,4 +27,9 @@ en:
     delete_person_success: "Deleted %{person_name} from %{cart_name}"
     delete_all_people_success: "Removed all people from %{cart_name}"
   research_session:
-    call_location: "Call #{name} at #{phone_number}" 
+    call_location: "Call %{name} at %{phone_number}"
+    add_invitee_success: "%{person_name} added to session!"
+    remove_invitee_success: "%{person_name} removed from session!"
+    clone_btn: Clone me
+  invitation:
+    event_success: "%{event} for %{person_name}"
