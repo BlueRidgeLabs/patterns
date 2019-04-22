@@ -317,4 +317,18 @@ feature "research sessions" do
       })
     end
   end
+
+  scenario "cloning a session" do
+    research_session = FactoryBot.create(:research_session)
+    visit research_session_path(research_session)
+    click_link I18n.t("research_session.clone_btn")
+    expect(page.current_path).to eq(research_session_clone_path(research_session))
+
+    expect(page).to have_select('research_session_user_id', selected: admin_user.name)
+    expect(find_field('research_session_title').value).to eq research_session.title
+    expect(find_field('research_session_location').value).to eq research_session.location
+    expect(find_field('research_session_description').value).to eq research_session.description
+    expect(find_field('research_session_start_datetime').value).to eq research_session.start_datetime.strftime('%Y-%m-%d %H:%M:%S %z')
+    expect(find_field('research_session_duration').value).to eq research_session.duration.to_s
+  end
 end

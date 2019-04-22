@@ -19,7 +19,7 @@ research_session_id = <%= @research_session.id%>;
     <div class="well">
       <dl>
         <dt>Clone</dt>
-        <dd><%= link_to 'Clone me', research_session_clone_path(@research_session), class:'btn btn-small' %></dd>
+        <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-small' %></dd>
         <dt>Description</dt>
 
         <dd><%= best_in_place @research_session, :description %>
