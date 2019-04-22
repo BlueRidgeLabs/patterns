@@ -155,32 +155,6 @@ class SearchController < ApplicationController
     end
   end
 
-  # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Style/VariableName
-  #
-  def exportTwilio
-    # send messages to all people
-    message1 = params.delete(:message1)
-    message2 = params.delete(:message2)
-    message1 = GSMEncoder.encode(message1)
-    message2 = GSMEncoder.encode(message2) if message2.present?
-    messages = Array[message1, message2]
-    smsCampaign = params.delete(:twiliowufoo_campaign)
-    @q = Person.active.ransack(params[:q])
-    @people = @q.result.includes(:tags)
-    Rails.logger.info("[SearchController#exportTwilio] people #{@people}")
-    phone_numbers = @people.collect(&:phone_number)
-    Rails.logger.info("[SearchController#exportTwilio] people #{phone_numbers}")
-    phone_numbers = phone_numbers.reject { |e| e.to_s.blank? }
-
-    SendTwilioMessagesJob.perform_async(messages, phone_numbers, smsCampaign)
-    Rails.logger.info("[SearchController#exportTwilio] Sent #{phone_numbers} to Twilio")
-    respond_to do |format|
-      format.js {}
-    end
-  end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Style/MethodName, Style/VariableName
-
   def advanced
     @search = ransack_params
     @search.build_grouping unless @search.groupings.exists?

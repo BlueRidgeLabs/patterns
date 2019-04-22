@@ -151,24 +151,6 @@ Logan::Application.routes.draw do
   post '/api/create_person', to: 'public/people#api_create', as: :api_create
   get '/api/show', to: 'public/people#show', as: :public_show_person
 
-  # resources :twilio_wufoos
-
-  # resources :twilio_messages do
-  #   collection do
-  #     post 'newtwil'
-  #     get 'newtwil'
-  #     post 'uploadnumbers'
-  #     get 'sendmessages'
-  #   end
-  # end
-
-  # post 'receive_text/index', defaults: { format: 'xml' }
-  # post 'receive_text/smssignup', defaults: { format: 'xml' }
-
-  # post "twilio_messages/updatestatus", to: 'twilio_messages/#updatestatus'
-
-  # post "twil", to: 'twilio_messages/#newtwil'
-
   get 'taggings/', as: :tag_index, to: 'taggings#index'
   get 'taggings/create', as: :tag_create
   get 'taggings/destroy', as: :tag_destroy
