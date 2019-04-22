@@ -7,7 +7,15 @@ feature 'admin page' do
     login_with_admin_user(admin_user)
   end
 
-  scenario "" do
+  scenario "non admin" do
+    admin_user.update(new_person_notification: false)
+    visit root_path
+    expect(page).not_to have_content("Admin Page")
+    visit users_path
+    expect(page.current_path).not_to eq(users_path)
+  end
+
+  scenario "view user" do
     now = Time.zone.now
     distant_past_session = FactoryBot.create(:research_session, user: admin_user, start_datetime: now + 8.days)
     distant_future_session = FactoryBot.create(:research_session, user: admin_user, start_datetime: now - 8.days)
