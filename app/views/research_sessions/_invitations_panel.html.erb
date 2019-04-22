@@ -28,8 +28,8 @@
         <td><%= link_to person.full_name, 
                 person_path(person), 
                 id: "person-#{person.id}" %></td>
-        <td><%= number_to_phone(person.phone_number&.gsub('+1',''), area_code: true) %></td> 
-        <td>
+        <td><%= number_to_phone(person.phone_number&.gsub('+1',''), area_code: true) %></td>
+        <td id="<%= "invitation-#{invitation.id}-actions" %>">
           <%= render partial: 'invitations/actions', locals: {invitation: invitation} %>
         </td>
         <td><%= invitation.aasm_state %></td>

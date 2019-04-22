@@ -16,10 +16,10 @@ current_session ||= @current_session
        id='add-<%= person.id%>'>add</a>
     <% elsif current_session.is_invited?(person) %> 
       <!-- is already invited -->
-      <%= link_to "Remove from Session", research_session_remove_person_path(current_session,person) %>
+      <%= link_to "Remove from Session", research_session_remove_person_path(current_session,person), id: "remove-person-#{person.id}" %>
     <% else %>
       <!--not yet invited-->
-      <%= link_to "Add to Session", research_session_add_person_path(current_session,person) %>
+      <%= link_to "Add to Session", research_session_add_person_path(current_session,person), id: "add-person-#{person.id}" %>
     <% end %>
   </td>
   <td>

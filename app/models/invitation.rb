@@ -76,6 +76,7 @@ class Invitation < ApplicationRecord
   }
   # invitations can move through states
   # necessary for text messaging bits in the future
+  # TODO: (EL) uncomment after_commits, and test
   aasm do
     state :created, initial: true
     state :invited
@@ -162,5 +163,4 @@ class Invitation < ApplicationRecord
   def in_past?
     Time.zone.now > start_datetime
   end
-
 end
