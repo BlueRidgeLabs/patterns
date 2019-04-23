@@ -13,6 +13,22 @@ feature 'admin page' do
     expect(page).not_to have_content("Admin Page")
     visit users_path
     expect(page.current_path).not_to eq(users_path)
+    visit user_path(admin_user)
+    expect(page.current_path).to eq(root_path)
+    visit new_user_path(admin_user)
+    expect(page.current_path).to eq(root_path)
+    visit edit_user_path(admin_user)
+    expect(page.current_path).to eq(root_path)
+    visit user_changes_path
+    expect(page.current_path).to eq(root_path)
+    visit finance_code
+    expect(page.current_path).to eq(root_path)
+    # TODO: test other admin paths
+      # http://localhost:3000/admin/people_amount
+      # http://localhost:3000/admin/teams
+      # http://localhost:3000/budgets
+      # http://localhost:3000/cart
+      # http://localhost:3000/admin/map
   end
 
   scenario "view user" do
