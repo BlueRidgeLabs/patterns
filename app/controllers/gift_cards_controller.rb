@@ -200,6 +200,19 @@ class GiftCardsController < ApplicationController
     end
   end
 
+  def preload_cards
+    if current_user.admin?
+      (preload_params[:seq_start]..preload_params[:seq_end]).each do |seq|
+        GiftCard.create(sequence_number: seq,
+                        batch_id: preload_params[:batch_id],
+                        amount: preload_params[:amount],
+                        expiration_date: preload_params[:expiration_date],
+                        user_id: current_user.id,
+                        created_by:current_user.id)
+      end
+    end
+  end
+
   private
 
     # Use callbacks to share common setup or constraints between actions.
@@ -211,6 +224,10 @@ class GiftCardsController < ApplicationController
               end
 
       @gift_card = GiftCard.find(ca_id)
+    end
+
+    def preload_params
+      params.permit(:seq_start, :seq_end, :batch_id, :amount, :expiration_date)
     end
 
     def new_gift_card_params
