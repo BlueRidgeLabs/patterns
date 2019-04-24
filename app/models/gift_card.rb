@@ -38,14 +38,14 @@ class GiftCard < ApplicationRecord
   validates :sequence_number, presence: true
   validates :expiration_date, presence: true
   validates :user_id, presence: true
-  validates :secure_code, presence: true
+
   validates :reward_id, uniqueness: true, allow_nil: true
 
   validates :expiration_date,
     format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
   validates :batch_id, format: { with: /\A[0-9]*\z/ }
-  validates :secure_code, format: { with: /\A[0-9]*\z/ }
+  validates :secure_code, format: { with: /\A[0-9]*\z/ }, allow_blank: true
   validates :sequence_number, format: { with: /\A[0-9]*\z/ }
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
@@ -63,7 +63,7 @@ class GiftCard < ApplicationRecord
   # after_commit :create_activation_call, on: :create
 
   # uses action cable to update card.
-  after_commit :update_front_end, on: :update
+  after_commit :update_front_end, on: [:update, :create]
 
   def self.import(file, user)
     errored_cards = []
@@ -219,12 +219,15 @@ class GiftCard < ApplicationRecord
     !active? && !ongoing_call?
   end
 
-  def scrub_input # sometimes we drop leading 0's in csv
+  def scrub_input
     self.sequence_number = sequence_number&.to_i
     self.batch_id = batch_id&.to_i
     self.full_card_number = full_card_number&.delete('-')
     self.secure_code = secure_code&.delete('.0', '')
-    secure_code.prepend('0') while secure_code.length < 3
+    if secure_code.present?
+      # sometimes we drop leading 0's in csv
+      secure_code.prepend('0') while secure_code.length < 3
+    end
   end
 
   private
@@ -264,7 +267,7 @@ class GiftCard < ApplicationRecord
     end
 
     def luhn_number_valid
-      errors[:base].push('Must include a card number.') if full_card_number.blank?
+      return true if full_card_number.blank?
       errors[:base].push('Card Number is not long enough.') if full_card_number.length != 16
       errors[:base].push("Card number #{full_card_number} is not valid.") unless CreditCardValidations::Luhn.valid?(full_card_number)
     end
