@@ -55,5 +55,40 @@ feature 'admin page' do
     expect(page).not_to have_content(other_user_session.title)
   end
 
-  # TODO: non admin
+  scenario "creating a new user" do
+    team = FactoryBot.create(:team)
+    name = "Doggo Johnson"
+    email = "doggo@johnson.com"
+    phone_number = "  555-444-7777   "
+    normalized_phone_number = "+15554447777"
+    password = "asdfa989shdf"
+
+    visit users_path
+    click_link "New User"
+    expect(page.current_path).to eq(new_user_path)
+
+    fill_in 'Name', with: name
+    fill_in 'Email address', with: email
+    fill_in 'Phone number', with: phone_number
+    select team.name, from: 'user_team_id'
+    fill_in 'Password', with: password
+    fill_in 'Password confirmation', with: password
+    check 'Approved'
+    click_button 'Create User'
+
+    new_user = User.order(:id).last
+    expect(page.current_path).to eq(user_path(new_user))
+    expect(page).to have_content(I18n.t('user.successfully_created'))
+
+    expect(new_user.name).to eq(name)
+    expect(new_user.email).to eq(email)
+    expect(new_user.phone_number).to eq(normalized_phone_number)
+    expect(new_user.encrypted_password).to be_truthy
+    expect(new_user.team).to eq(team)
+    expect(new_user.approved).to eq(true)
+    expect(new_user.current_cart.name).to eq("#{new_user.name}-pool")
+    expect(new_user.approved).to eq(true)
+    expect(new_user.token).to be_truthy
+    expect(new_user.new_person_notification).to eq(false)
+  end
 end

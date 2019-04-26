@@ -48,7 +48,7 @@ class UsersController < ApplicationController
     @user = User.new(user_create_params)
 
     if @user.save
-      redirect_to @user, notice: 'User was successfully created.'
+      redirect_to @user, notice: I18n.t('user.successfully_created')
     else
       render :new
     end
