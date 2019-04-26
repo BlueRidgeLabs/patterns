@@ -22,7 +22,7 @@
   </thead>
   <tbody> 
     <%= render partial: "single_gift_card",
-                   locals: {gift_card: @gift_card} %>
+                   locals: {gift_card: @gift_card, approved_users: User.approved.all} %>
   </tbody>
 </table>
 <h3>Calls</h3>

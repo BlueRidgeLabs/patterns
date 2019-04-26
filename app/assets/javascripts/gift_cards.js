@@ -1,5 +1,6 @@
 $(document).on('turbolinks:load', function() {
   assign_cards_to_user = function(){
+    console.log('called assign cards to user');
     var user_id = document.getElementById('select_user_for_cards').value;
     var checked = $('input:checked[name="gift_card_id_change[]"]').map(function() {
       return parseInt(this.value);
@@ -15,8 +16,6 @@ $(document).on('turbolinks:load', function() {
     var checked_count = $('#gift-cards-large tr input[type="checkbox"]:checked:visible').length
     $('#checkedcount').html(checked_count);
   }
-  
-  
 
   $('#card-all').on('click',function(){
     $('#gift-cards-large tr input[type="checkbox"]:visible').prop('checked', this.checked);
@@ -24,7 +23,7 @@ $(document).on('turbolinks:load', function() {
   });
 
   
-  var attr_sort_state = {'user-name':false, 'sequence-number':false}
+  var attr_sort_state = {'user-name':false, 'sequence-number':false,'batch-id':false}
   var cur_attr = 'user-name';
 
   function toggleSortState(attr){
@@ -106,6 +105,16 @@ $(document).on('turbolinks:load', function() {
 
   $("#sequence-title").on('click', function(){
     cur_attr = 'sequence-number'
+    var rows = $("#gift-cards-large tr").get();
+    rows.sort(sortTableAttr);
+    $.each(rows, function(index, row){
+            $("#gift-cards-large").append(row);
+    });
+    toggleSortState(cur_attr);
+  });
+
+  $("#batch-title").on('click', function(){
+    cur_attr = 'batch-id'
     var rows = $("#gift-cards-large tr").get();
     rows.sort(sortTableAttr);
     $.each(rows, function(index, row){
