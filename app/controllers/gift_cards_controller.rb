@@ -3,16 +3,18 @@
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy change_user check]
   skip_before_action :verify_authenticity_token, only: [:create]
+  before_action :admin_needed, only: [:admin_cards, :preload_cards, :change_user]
   # GET /gift_cards
   # GET /gift_cards.json
   def index
     @errored_cards = []
     @cards = if current_user.admin?
-               GiftCard.includes(:user).unassigned
+               GiftCard.includes(:user).unassigned.ready
              else
-               GiftCard.includes(:user).unassigned.where(user_id: current_user.id)
+               GiftCard.includes(:user).unassigned.ready.where(user_id: current_user.id)
              end
     # busted ones first
+    @preloaded_cards = GiftCard.includes(:user).preloaded.where(user_id: current_user.id) 
     @gift_cards = @cards.sort_by(&:sort_helper)
     @cards = @cards.where(status: 'active')
   end
@@ -160,7 +162,7 @@ class GiftCardsController < ApplicationController
   # PATCH/PUT /gift_cards/1.json
   def update
     respond_to do |format|
-      if @gift_card.update(gift_card_params) && current_user.admin?
+      if @gift_card.update(gift_card_params)
         format.html { redirect_to @gift_card, notice: 'Card activation was successfully updated.' }
         format.json { render :show, status: :ok, location: @gift_card }
       else
@@ -173,7 +175,8 @@ class GiftCardsController < ApplicationController
   # DELETE /gift_cards/1
   # DELETE /gift_cards/1.json
   def destroy
-    @gift_card.destroy if current_user.admin?
+    # TODO: CanCan
+    @gift_card.destroy if current_user.admin? 
     respond_to do |format|
       if current_user.admin?
         format.html { redirect_to gift_cards_url, notice: 'Card activation was successfully destroyed.' }
@@ -186,31 +189,41 @@ class GiftCardsController < ApplicationController
   end
 
   def change_user
-    if current_user.admin?
-      # https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
-      ca = Array.wrap(@gift_card)
-      ca.each do |c|
-        c.user_id = params[:user_id]
-        c.save
-      end
-      flash[:notice] = "#{ca.size} Cards owner changed to #{ca.first.user.name}"
+    # https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
+    ca = Array.wrap(@gift_card)
+    ca.each do |c|
+      c.user_id = params[:user_id]
+      c.save
     end
+    flash[:notice] = "#{ca.size} Cards owner changed to #{ca.first.user.name}"
     respond_to do |format|
       format.json { render json: { success: true }.to_json, status: :ok }
     end
   end
 
-  def preload_cards
-    if current_user.admin?
-      (preload_params[:seq_start]..preload_params[:seq_end]).each do |seq|
-        GiftCard.create(sequence_number: seq,
-                        batch_id: preload_params[:batch_id],
-                        amount: preload_params[:amount],
-                        expiration_date: preload_params[:expiration_date],
-                        user_id: current_user.id,
-                        created_by:current_user.id)
-      end
+  def preload
+    gcs = []
+    (preload_params[:seq_start]..preload_params[:seq_end]).each do |seq|
+      gcs << GiftCard.create(sequence_number: seq,
+                            batch_id: preload_params[:batch_id],
+                            amount: preload_params[:amount],
+                            expiration_date: preload_params[:expiration_date],
+                            user_id: current_user.id,
+                            created_by: current_user.id,
+                            status:'preload')
     end
+    flash[:notice] = "#{gcs.size} cards added"
+    respond_to do |format|
+      format.html { redirect_to preloaded_gift_cards_path }
+      format.json { render json: { success: true }.to_json, status: :ok }
+    end
+  end
+
+  # ui for admin card management
+  def preloaded
+    @preloaded_cards = GiftCard.includes(:user).preloaded.order(sequence_number: :asc).order(batch_id: :desc)
+    @low_seq = @preloaded_cards.map(&:sequence_number).map(&:to_i).min
+    @high_seq = @preloaded_cards.map(&:sequence_number).map(&:to_i).max
   end
 
   private

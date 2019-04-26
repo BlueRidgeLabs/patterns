@@ -68,6 +68,12 @@ Logan::Application.routes.draw do
            action: :change_user,
            as: :change_user,
            defaults: {format: 'json'}
+      get 'preloaded',
+          action: :preloaded,
+          as: :preloaded
+      post 'preload',
+           action: 'preload',
+           as: 'preload'
     end
   end
 
