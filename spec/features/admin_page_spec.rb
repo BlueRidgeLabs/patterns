@@ -21,7 +21,7 @@ feature 'admin page' do
     expect(page.current_path).to eq(root_path)
     visit user_changes_path
     expect(page.current_path).to eq(root_path)
-    visit finance_code
+    visit finance_code_path
     expect(page.current_path).to eq(root_path)
     # TODO: test other admin paths
       # http://localhost:3000/admin/people_amount
