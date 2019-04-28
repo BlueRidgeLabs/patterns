@@ -89,7 +89,7 @@ class UsersController < ApplicationController
     end
 
     def admin?
-      redirect_to root_url unless @current_user.admin?
+      redirect_to root_url unless current_user.admin?
     end
 
     def user_create_params
