@@ -131,4 +131,16 @@ feature 'admin page' do
       expect(page).to have_content("Email can't be blank")
     end
   end
+
+  scenario "changes" do
+    with_versioning do
+      expect(PaperTrail).to be_enabled
+      user = FactoryBot.create(:user)
+      user.update(name: "No Name")
+      visit user_changes_path
+      user.changes do |change|
+        expect(page).to have_content(change.id)
+      end
+    end
+  end
 end

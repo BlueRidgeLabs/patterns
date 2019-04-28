@@ -19,6 +19,7 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'webmock'
 # require 'best_in_place/test_helpers' #busted
+require 'paper_trail/frameworks/rspec'
 
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
@@ -96,6 +97,6 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.profile_examples = true
-  
+
   config.include Devise::Test::ControllerHelpers, :type => :controller
 end
