@@ -103,4 +103,32 @@ feature 'admin page' do
       expect(page).to have_content("errors prohibited this user")
     end
   end
+
+  def open_edit_form_for(user)
+    visit user_path(user)
+    click_link "Edit"
+    expect(page.current_path).to eq(edit_user_path(user))
+  end
+
+  scenario "updating user" do
+    new_name = "No Name"
+    user = FactoryBot.create(:user)
+    open_edit_form_for(user)
+    fill_in 'Name', with: new_name
+    click_button 'Update User'
+    expect(page.current_path).to eq(user_path(user))
+    expect(user.reload.name).to eq(new_name)
+    expect(page).to have_content(I18n.t('user.successfully_updated'))
+  end
+
+  scenario "error updating user" do
+    user = FactoryBot.create(:user)
+    open_edit_form_for(user)
+    fill_in 'Email address', with: ""
+    click_button 'Update User'
+    expect(page.current_path).to eq(user_path(user))
+    within('form.edit_user') do
+      expect(page).to have_content("Email can't be blank")
+    end
+  end
 end
