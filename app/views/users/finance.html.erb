@@ -21,11 +21,11 @@
 
       <tbody>
         <% @results.each do |code| %>
-        <tr>
-          <% q_param = {finance_code_eq:code[:code],created_at_date_gteq:@start_date.to_date, created_at_date_lteq: @end_date.to_date} %> 
+        <tr id="finance-code-<%= code[:code] %>">
+          <% q_param = {finance_code_eq:code[:code],created_at_date_gteq:@start_date.to_date, created_at_date_lteq: @end_date.to_date} %>
           <td><%= link_to code[:code], rewards_path(q:q_param) %></td>
-          <td><%= code[:count] %></td>
-          <td><%= humanized_money_with_symbol code[:amount] %></td>
+          <td class="finance-code__code"><%= code[:count] %></td>
+          <td class="finance-code__amount"><%= humanized_money_with_symbol code[:amount] %></td>
         <% end %>
       </tbody>
     </table>

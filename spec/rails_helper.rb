@@ -96,6 +96,6 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.profile_examples = true
-  
+
   config.include Devise::Test::ControllerHelpers, :type => :controller
 end

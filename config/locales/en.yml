@@ -33,3 +33,6 @@ en:
     clone_btn: Clone me
   invitation:
     event_success: "%{event} for %{person_name}"
+  user:
+    successfully_created: "User was successfully created."
+    successfully_updated: "User was successfully updated."

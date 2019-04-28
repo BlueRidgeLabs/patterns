@@ -135,7 +135,7 @@ class GiftCardsController < ApplicationController
       if gc.save
         gc.start_activate!
       else
-        err_msg = "Card Error: sequence: #{gc.sequence_number}, #{gc.full_card_number}, #{gc.errors[:base]}"
+        err_msg = "Card Error: #{gc.attributes}, #{gc.errors.messages}"
         Airbrake.notify(err_msg)
         @errors.push gc.errors.messages[:base]
       end

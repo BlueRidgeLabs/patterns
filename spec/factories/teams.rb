@@ -15,7 +15,7 @@ require 'faker'
 FactoryBot.define do
   factory :team do
     name { Faker::Name.name }
-    finance_code "BRL"
+    finance_code { Team::FINANCE_CODES.sample }
     description { Faker::Lorem.sentence }
   end
 end
