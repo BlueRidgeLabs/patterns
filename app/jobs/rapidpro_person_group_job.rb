@@ -44,8 +44,8 @@ class RapidproPersonGroupJob
     end
   end
 
-  def retry(pids, retry_delay)
-    RapidProPersonGroup.perform_in(retry_delay, pids, @cart.id, @action)
+  def retry_later(pids, retry_delay)
+    RapidProPersonGroupJob.perform_in(retry_delay, pids, @cart.id, @action)
   end
 
 end
