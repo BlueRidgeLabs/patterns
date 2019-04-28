@@ -132,7 +132,7 @@ feature 'admin page' do
     end
   end
 
-  scenario "changes" do
+  scenario "changes page" do
     with_versioning do
       expect(PaperTrail).to be_enabled
       user = FactoryBot.create(:user)
