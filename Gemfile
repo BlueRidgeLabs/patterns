@@ -43,6 +43,8 @@ gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby', branch: 'brl_bra
 
 gem "aws-sdk-s3", require: false
 
+gem "hashie"
+
 # generate capybara tests
 
 
