@@ -316,7 +316,6 @@ GEM
     net-ssh (5.2.0)
     net-ssh-gateway (2.0.0)
       net-ssh (>= 4.0.0)
-    net_http_ssl_fix (0.0.10)
     nio4r (2.3.1)
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
@@ -562,8 +561,7 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webdrivers (3.7.2)
-      net_http_ssl_fix
+    webdrivers (3.8.0)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
@@ -705,7 +703,7 @@ DEPENDENCIES
   validates_zipcode
   vcr
   web-console
-  webdrivers (~> 3.0)
+  webdrivers (~> 3.8)
   webmock
   whenever
   will_paginate
