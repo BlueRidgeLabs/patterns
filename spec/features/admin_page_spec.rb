@@ -91,4 +91,16 @@ feature 'admin page' do
     expect(new_user.token).to be_truthy
     expect(new_user.new_person_notification).to eq(false)
   end
+
+  scenario "error creating user" do
+    visit users_path
+    click_link "New User"
+    expect(page.current_path).to eq(new_user_path)
+
+    click_button 'Create User'
+    expect(page.current_path).to eq(users_path)
+    within("form#new_user") do
+      expect(page).to have_content("errors prohibited this user")
+    end
+  end
 end
