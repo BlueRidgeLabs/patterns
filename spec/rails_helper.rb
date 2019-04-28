@@ -19,7 +19,6 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'webmock'
 # require 'best_in_place/test_helpers' #busted
-require 'paper_trail/frameworks/rspec'
 
 SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
