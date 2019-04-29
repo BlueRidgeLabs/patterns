@@ -19,6 +19,10 @@
       </thead>
 
       <tbody>
+        <% teams = Team.all.inject({}){ |acc,el|
+                        acc[el.id]=el.name
+                        acc
+                      } %>
         <% @users.each do |user| %>
           <tr>
             <td><%= link_to user.name, user %></td>
@@ -34,10 +38,7 @@
                       collection: {false: "No", true: "Yes"} %></td>
             <td><%= best_in_place user, :team_id,
                       as: :select,
-                      collection: Team.all.inject({}){ |acc,el|
-                        acc[el.id]=el.name
-                        acc
-                      },
+                      collection: teams ,
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></td>
             <td><%= user.rewards_total %></td>

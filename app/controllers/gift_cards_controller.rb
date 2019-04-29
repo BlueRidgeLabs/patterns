@@ -3,7 +3,7 @@
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy change_user check]
   skip_before_action :verify_authenticity_token, only: [:create]
-  before_action :admin_needed, only: [:admin_cards, :preload_cards, :change_user]
+  before_action :admin_needed, only: %i[preload change_user]
   # GET /gift_cards
   # GET /gift_cards.json
   def index

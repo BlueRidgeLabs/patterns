@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   # GET /users
   def index
     User.per_page = 100
-    @users = User.order('approved desc').paginate(page: params[:page])
+    @users = User.includes(:rewards, :team).order('approved desc').paginate(page: params[:page])
   end
 
   # GET /users/1
