@@ -216,7 +216,7 @@ $(document).on('turbolinks:load', function() {
     $(this).siblings('input[type="text"]').val('').trigger('propertychange').focus();
     $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
     $(this).siblings('input[type="text"]').blur();
-    $('.card-activation').each(function(i, v) { $(v).show(); });
+    $('.gift-card').each(function(i, v) { $(v).show(); });
     update_checkbox_count()
   });
 
