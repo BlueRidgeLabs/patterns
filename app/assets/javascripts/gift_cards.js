@@ -12,6 +12,12 @@ $(document).on('turbolinks:load', function() {
     }
   }
 
+ $('.activate-toggle').click(function(){
+    $('#manual_card').toggle()
+    $('#activate-toggle-down').toggle()
+    $('#activate-toggle-right').toggle()
+ })
+
   function update_checkbox_count(){
     var checked_count = $('#gift-cards-large tr input[type="checkbox"]:checked:visible').length
     $('#checkedcount').html(checked_count);
@@ -225,7 +231,7 @@ $(document).on('turbolinks:load', function() {
     $(this).siblings('input[type="text"]').val('').trigger('propertychange').focus();
     $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
     $(this).siblings('input[type="text"]').blur();
-    $('.card-activation').each(function(i, v) { $(v).show(); });
+    $('.gift-card').each(function(i, v) { $(v).show(); });
     update_checkbox_count()
   });
 
