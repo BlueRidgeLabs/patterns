@@ -14,7 +14,7 @@ class GiftCardsController < ApplicationController
                GiftCard.includes(:user).unassigned.ready.where(user_id: current_user.id)
              end
     # busted ones first
-    @preloaded_cards = GiftCard.includes(:user).preloaded.where(user_id: current_user.id) 
+    @preloaded_cards = GiftCard.includes(:user).preloaded.where(user_id: current_user.id)
     @gift_cards = @cards.sort_by(&:sort_helper)
     @cards = @cards.where(status: 'active')
   end
@@ -122,9 +122,24 @@ class GiftCardsController < ApplicationController
     redirect_to gift_cards_path
   end
 
+
+  def activate
+    # iterate through params
+    # skip ones that are busted and flash notice
+    # find the gift card
+    # add the new data: card number and secure code
+    # check validity
+    # flash notice on error and skip
+    # save if good and call activate
+    # reload page?
+    # busted cards should remain
+    # good cards should not and should be in chunk below
+  end
+
   # POST /gift_cards
   # POST /gift_cards.json
   def create
+    # this isn't really used anymore...
     @errors = []
 
     @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc|
@@ -176,7 +191,7 @@ class GiftCardsController < ApplicationController
   # DELETE /gift_cards/1.json
   def destroy
     # TODO: CanCan
-    @gift_card.destroy if current_user.admin? 
+    @gift_card.destroy if current_user.admin?
     respond_to do |format|
       if current_user.admin?
         format.html { redirect_to gift_cards_url, notice: 'Card activation was successfully destroyed.' }
@@ -210,7 +225,7 @@ class GiftCardsController < ApplicationController
                             expiration_date: preload_params[:expiration_date],
                             user_id: current_user.id,
                             created_by: current_user.id,
-                            status:'preload')
+                            status: 'preload')
     end
     flash[:notice] = "#{gcs.size} cards added"
     respond_to do |format|

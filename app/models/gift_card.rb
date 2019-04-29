@@ -49,13 +49,14 @@ class GiftCard < ApplicationRecord
 
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
-  
+
   default_scope { order(sequence_number: :asc) }
 
   scope :preloaded, -> {
-      where(full_card_number: nil,
-            secure_code: nil,
-            status: 'preload') }
+                      where(full_card_number: nil,
+                            secure_code: nil,
+                            status: 'preload')
+                    }
 
   scope :ready, -> { where.not(status: ['preload']) }
   # see force_immutable below. do we not want to allow people to
@@ -70,7 +71,7 @@ class GiftCard < ApplicationRecord
   # after_commit :create_activation_call, on: :create
 
   # uses action cable to update card.
-  after_commit :update_front_end, on: [:update, :create]
+  after_commit :update_front_end, on: %i[update create]
 
   def self.import(file, user)
     errored_cards = []
@@ -304,7 +305,6 @@ class GiftCard < ApplicationRecord
 
       true
     end
-
 
   # gift_card_id can't change one set.
   # dunno if we really want it.

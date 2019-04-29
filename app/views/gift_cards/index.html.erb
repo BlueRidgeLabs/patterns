@@ -53,7 +53,7 @@ table tr {
       
         <tbody>
           <% @preloaded_cards.each do |pr_card| %>
-          <tr class='new_card'>
+          <tr class='new_card' id='preloaded-<%= pr_card.id %>'>
             <td>
               <%= text_field_tag 'new_gift_cards[][sequence_number]',
                     pr_card.sequence_number,

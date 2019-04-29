@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   def admin_needed
     unless current_user&.admin?
       flash[:warning] = 'Unathorized'
-      render json: { 'error' => 'authentication error' }, status: :unauthorized 
+      render json: { 'error' => 'authentication error' }, status: :unauthorized
     end
   end
 
