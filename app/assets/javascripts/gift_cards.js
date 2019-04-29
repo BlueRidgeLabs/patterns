@@ -12,6 +12,12 @@ $(document).on('turbolinks:load', function() {
     }
   }
 
+ $('.activate-toggle').click(function(){
+    $('#manual_card').toggle()
+    $('#activate-toggle-down').toggle()
+    $('#activate-toggle-right').toggle()
+ })
+
   function update_checkbox_count(){
     var checked_count = $('#gift-cards-large tr input[type="checkbox"]:checked:visible').length
     $('#checkedcount').html(checked_count);
