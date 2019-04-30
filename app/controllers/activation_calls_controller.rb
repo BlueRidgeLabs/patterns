@@ -35,7 +35,7 @@ class ActivationCallsController < ApplicationController
   #   # sets card to active
   # end
   # idempotent
-  def check 
+  def check
     respond_to do |format|
       format.xml
     end
