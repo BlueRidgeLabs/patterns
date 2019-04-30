@@ -125,15 +125,34 @@ class GiftCardsController < ApplicationController
 
   def activate
     # iterate through params
-    # skip ones that are busted and flash notice
-    # find the gift card
-    # add the new data: card number and secure code
-    # check validity
-    # flash notice on error and skip
-    # save if good and call activate
-    # reload page?
-    # busted cards should remain
-    # good cards should not and should be in chunk below
+    @errors = []
+
+    @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc|
+      next if ngc[:full_card_number].blank? || ngc[:secure_code].blank?
+
+      gc = GiftCard.find_by(sequence_number: ngc[:sequence_number],
+                       batch_id: ngc[:batch_id])
+      gc.full_card_number = ngc[:full_card_number]
+      gc.secure_code = ngc[:secure_code]
+      if gc.valid?
+        gc.save
+        gc.start_activate!
+      else
+        Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
+        @errors.push gc.errors.messages[:base]
+      end
+    end
+
+    respond_to do |format|
+      if @errors.empty?
+        format.html { redirect_to gift_cards_url, notice: 'Card Activation process started.' }
+        format.json { render json: { success: true }, status: :updated }
+      else
+        flash[:error] = "Card Errors: #{@errors.length} \n #{@errors}"
+        format.html { redirect_to gift_cards_url }
+        format.json { render json: @errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # POST /gift_cards
@@ -141,7 +160,6 @@ class GiftCardsController < ApplicationController
   def create
     # this isn't really used anymore...
     @errors = []
-
     @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc|
       GiftCard.new(ngc)
     end
@@ -152,12 +170,11 @@ class GiftCardsController < ApplicationController
       if gc.save
         gc.start_activate!
       else
-        err_msg = "Card Error: #{gc.attributes}, #{gc.errors.messages}"
-        Airbrake.notify(err_msg)
+        Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
         @errors.push gc.errors.messages[:base]
       end
     end
-    flash[:error] = "Card Errors: #{@errors.length} \n #{@errors}" if @errors.present?
+
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
     # use after_save_commit hook to do background task.
@@ -166,7 +183,9 @@ class GiftCardsController < ApplicationController
       if @errors.empty?
         format.html { redirect_to gift_cards_url, notice: 'Card Activation process started.' }
         format.js {}
+        format.json { render json: { success: true }, status: :updated }
       else
+        flash[:error] = "Card Errors: #{@errors.length} \n #{@errors}"
         format.html { redirect_to gift_cards_url }
         format.json { render json: @errors, status: :unprocessable_entity }
       end
