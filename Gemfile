@@ -89,7 +89,7 @@ group :production do
   #gem 'newrelic_rpm'
   gem 'skylight' # perf
   gem 'lograge' # sane logs
-  
+
   gem 'unicorn', "5.4.1" # Use unicorn as the app server
 end
 
@@ -223,10 +223,10 @@ group :test do
   gem 'memory_test_fix' # in memory DB, for the speedy
 
   gem 'coveralls', require: false
-  
+
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
-  gem 'faker' 
-  
+  gem 'faker'
+
   gem 'simplecov', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
@@ -252,7 +252,7 @@ group :development, :test do
   gem 'parallel_tests' # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
   gem 'holder_rails'
   gem 'capybara'
-  gem "webdrivers", "~> 3.0"
+  gem "webdrivers", "~> 3.8"
   gem 'capybara-email'
   gem 'concurrent-ruby'
   gem 'database_cleaner'

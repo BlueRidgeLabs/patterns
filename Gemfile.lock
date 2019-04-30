@@ -703,7 +703,7 @@ DEPENDENCIES
   validates_zipcode
   vcr
   web-console
-  webdrivers (~> 3.0)
+  webdrivers (~> 3.8)
   webmock
   whenever
   will_paginate

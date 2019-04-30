@@ -25,7 +25,7 @@
   <div class="control-group">
     <%= form.label :finance_code, :class => 'control-label' %>
     <div class="controls">
-      <%= form.select :finance_code, options_for_select(Team.finance_codes,selected: team.finance_code)%>
+      <%= form.select :finance_code, options_for_select(Team::FINANCE_CODES,selected: team.finance_code)%>
     </div>
   </div>
   <div class="actions">

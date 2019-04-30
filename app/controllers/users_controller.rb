@@ -48,7 +48,7 @@ class UsersController < ApplicationController
     @user = User.new(user_create_params)
 
     if @user.save
-      redirect_to @user, notice: 'User was successfully created.'
+      redirect_to @user, notice: I18n.t('user.successfully_created')
     else
       render :new
     end
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to(@user, notice: 'User was successfully updated.') }
+        format.html { redirect_to(@user, notice: I18n.t('user.successfully_updated')) }
       else
         format.html { render :edit }
       end
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
     end
 
     def admin?
-      redirect_to root_url unless @current_user.admin?
+      redirect_to root_url unless current_user.admin?
     end
 
     def user_create_params
