@@ -34,8 +34,8 @@ class ActivationCallsController < ApplicationController
   # def activate_response # this is where the gather endpoint it.
   #   # sets card to active
   # end
-
-  def check # idempotent
+  # idempotent
+  def check 
     respond_to do |format|
       format.xml
     end
