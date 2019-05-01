@@ -17,7 +17,7 @@ table tr {
 </div>
 <h1>Preload a batch</h1>
 <div class='container'>
-  <div class='row'>
+  <div class='row preload-cards'>
     <%= form_tag preload_gift_cards_path do %>
       <%= number_field_tag :seq_start, {in: (1..499), step:1} %>
       <%= number_field_tag :seq_end, { in: (2..500), step:1} %>

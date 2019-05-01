@@ -20,15 +20,24 @@
 require 'faker'
 FactoryBot.define do
   factory :gift_card do
-    full_card_number {CreditCardValidations::Factory.random(:mastercard)}
+    sequence(:sequence_number) {|n| n }
     expiration_date '05/20'
     user_id 1
     created_by 1
-    status 'active'
+    batch_id {Faker::Number.number(8)}
     amount_cents 2500
     amount_currency "USD"
-    secure_code {Faker::Number.number(3)}
-    sequence_number {Faker::Number.number(3)}
-    batch_id {Faker::Number.number(8)}
+    active
+
+    trait :active do
+      status 'active'
+      full_card_number {CreditCardValidations::Factory.random(:mastercard)}
+      secure_code {Faker::Number.number(3)}
+    end
+    
+    trait :preloaded do
+        status 'preload'
+    end
+    
   end
 end
