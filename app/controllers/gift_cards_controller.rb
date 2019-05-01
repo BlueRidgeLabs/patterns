@@ -237,14 +237,16 @@ class GiftCardsController < ApplicationController
 
   def preload
     gcs = []
+    
     (preload_params[:seq_start]..preload_params[:seq_end]).each do |seq|
-      gcs << GiftCard.create(sequence_number: seq,
+      gcs << GiftCard.create(sequence_number: seq.to_i,
                             batch_id: preload_params[:batch_id],
                             amount: preload_params[:amount],
                             expiration_date: preload_params[:expiration_date],
                             user_id: current_user.id,
                             created_by: current_user.id,
                             status: 'preload')
+    
     end
     flash[:notice] = "#{gcs.size} cards added"
     respond_to do |format|

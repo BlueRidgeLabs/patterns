@@ -18,6 +18,42 @@ feature "gift_cards page" do
     login_with_admin_user(admin_user)
   end
 
+  scenario 'preload cards' do
+    visit '/gift_cards/preloaded'
+    within '.preload-cards' do
+      fill_in 'seq_start', with: 1
+      fill_in 'seq_end', with: 10
+      fill_in 'batch_id', with: batch
+      fill_in 'expiration_date', with: expiration_date
+      fill_in 'amount', with: amount
+    end
+
+    click_button 'Preload'
+    visit '/gift_cards/preloaded'
+    expect(GiftCard.preloaded.size).to eq(10)
+    expect(page).to have_content(batch)
+    expect(page).to have_content(admin_user.name)
+    visit '/gift_cards'
+    expect(page).not_to have_content(batch)
+  end
+
+  scenario 'activate Preloaded cards', :js do
+    gc = FactoryBot.create(:gift_card, :preloaded, user_id: admin_user.id)
+    visit '/gift_cards'
+    find_button('activate-toggle-right').click
+    within '.new_card' do
+      fill_in 'new_gift_cards__full_card_number', with: valid_cc
+      fill_in 'new_gift_cards__secure_code', with: secure_code
+    end
+    click_button 'Activate'
+    gc.reload
+    expect(gc.status).to_not eq('preload')
+    expect(gc.status).to eq('activate_started')
+    expect(gc.full_card_number).to eq(valid_cc)
+    expect(gc.secure_code).to eq(secure_code)
+  end
+
+
   scenario 'add valid giftcard', js: :true do
     visit '/gift_cards'
 
@@ -79,7 +115,7 @@ feature "gift_cards page" do
 
   scenario 'change card owner', js: :true do
     
-    gift_card = FactoryBot.create(:gift_card, user: admin_user)
+    gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
     other_user = FactoryBot.create(:user)
     visit '/gift_cards'
     expect(page).to have_text(gift_card.last_4)
@@ -95,7 +131,7 @@ feature "gift_cards page" do
   end
 
   scenario 'edit card' do
-    gift_card = FactoryBot.create(:gift_card, user: admin_user)
+    gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
     
     visit "/gift_cards/#{gift_card.id}"
     expect(page).to have_content(gift_card.batch_id)
