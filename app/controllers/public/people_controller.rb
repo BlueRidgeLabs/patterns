@@ -11,6 +11,7 @@ class Public::PeopleController < ApplicationController
 
   # GET /people/new
   def new
+    @referrer = URI(params[:referrer]).to_s
     @person = ::Person.new
     @person.created_by = current_user.id if current_user.present?
   end
