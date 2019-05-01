@@ -26,7 +26,7 @@ table tr {
 
   <div class='row' style='display: none;' id='manual_card'>
     <div class='span12'>
-    <%= form_tag gift_cards_path do %>
+    <%= form_tag activate_gift_cards_path do %>
       <table>
         <thead>
           <tr>
@@ -58,7 +58,6 @@ table tr {
               <%= text_field_tag 'new_gift_cards[][sequence_number]',
                     pr_card.sequence_number,
                     {placeholder:'Sequence',
-                    disabled: true,
                     class: 'input-mini',
                     'data-mask':'999'} %>
             </td>
@@ -79,7 +78,6 @@ table tr {
             <td>
               <%= text_field_tag 'new_gift_cards[][expiration_date]',
                     pr_card.expiration_date,
-                    disabled: true,
                     placeholder: 'MM/YY', 
                     class: 'input-mini',
                     'data-mask': '00/00' %>
@@ -88,7 +86,6 @@ table tr {
               <%= text_field_tag 'new_gift_cards[][amount]',
                     pr_card.amount,  
                     {placeholder: '$25.00', 
-                    disabled: true,
                     class: 'input-mini',
                     'data-mask': '$999.99'} %>
             </td>
@@ -97,7 +94,6 @@ table tr {
               <%= text_field_tag 'new_gift_cards[][batch_id]', 
                     pr_card.batch_id,
                     {placeholder: 'Batch ID',
-                    disabled: true,
                     class: 'input-mini',
                     'data-mask':'999999'} %>
             </td>

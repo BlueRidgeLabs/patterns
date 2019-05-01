@@ -74,6 +74,9 @@ Logan::Application.routes.draw do
       post 'preload',
            action: 'preload',
            as: 'preload'
+      post 'activate',
+           action:'activate',
+           as: 'activate'
     end
   end
 
