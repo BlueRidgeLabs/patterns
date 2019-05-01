@@ -122,7 +122,6 @@ class GiftCardsController < ApplicationController
     redirect_to gift_cards_path
   end
 
-
   def activate
     # iterate through params
     @errors = []
@@ -132,10 +131,10 @@ class GiftCardsController < ApplicationController
 
       gc = GiftCard.find_by(sequence_number: ngc[:sequence_number],
                             batch_id: ngc[:batch_id])
-      
+
       gc.full_card_number = ngc[:full_card_number].delete!('-')
       gc.secure_code = ngc[:secure_code]
-      if gc.valid? 
+      if gc.valid?
         gc.save
         gc.start_activate! if gc.ready!
       else

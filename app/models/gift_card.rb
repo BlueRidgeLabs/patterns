@@ -53,8 +53,8 @@ class GiftCard < ApplicationRecord
   default_scope { order(sequence_number: :asc) }
 
   scope :preloaded, -> {
-                      where(full_card_number: [nil,''],
-                            secure_code: [nil,''],
+                      where(full_card_number: [nil, ''],
+                            secure_code: [nil, ''],
                             status: 'preload')
                     }
 
@@ -185,7 +185,7 @@ class GiftCard < ApplicationRecord
   def last_4
     full_card_number.to_s.last(4)
   end
-  
+
   def permitted_states
     aasm.states(permitted: true).map(&:name).map(&:to_s)
   end
