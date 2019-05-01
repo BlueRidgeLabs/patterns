@@ -36,7 +36,9 @@ FactoryBot.define do
     end
     
     trait :preloaded do
-        status 'preload'
+      full_card_number nil
+      secure_code nil
+      status 'preload'
     end
     
   end
