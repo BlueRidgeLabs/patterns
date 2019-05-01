@@ -53,8 +53,8 @@ class GiftCard < ApplicationRecord
   default_scope { order(sequence_number: :asc) }
 
   scope :preloaded, -> {
-                      where(full_card_number: nil,
-                            secure_code: nil,
+                      where(full_card_number: [nil,''],
+                            secure_code: [nil,''],
                             status: 'preload')
                     }
 
@@ -113,12 +113,16 @@ class GiftCard < ApplicationRecord
     state :check_errored
     state :active
 
+    event :return_to_preloaded do
+      transitions to: :preload
+    end
+
     event :ready, guards: :can_activate? do
       transitions from: :preload, to: :ready_to_activate
     end
 
     event :start_activate, after_commit: :create_activation_call do
-      transitions from: %i[ready activate_started], to: :activate_started
+      transitions from: %i[ready_to_activate activate_started], to: :activate_started
     end
 
     event :activate_error, after_commit: :activation_error_report do
@@ -180,6 +184,10 @@ class GiftCard < ApplicationRecord
 
   def last_4
     full_card_number.to_s.last(4)
+  end
+  
+  def permitted_states
+    aasm.states(permitted: true).map(&:name).map(&:to_s)
   end
 
   def sort_helper

@@ -131,12 +131,13 @@ class GiftCardsController < ApplicationController
       next if ngc[:full_card_number].blank? || ngc[:secure_code].blank?
 
       gc = GiftCard.find_by(sequence_number: ngc[:sequence_number],
-                       batch_id: ngc[:batch_id])
-      gc.full_card_number = ngc[:full_card_number]
+                            batch_id: ngc[:batch_id])
+      
+      gc.full_card_number = ngc[:full_card_number].delete!('-')
       gc.secure_code = ngc[:secure_code]
-      if gc.valid?
+      if gc.valid? 
         gc.save
-        gc.start_activate!
+        gc.start_activate! if gc.ready!
       else
         Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
         @errors.push gc.errors.messages[:base]
@@ -278,13 +279,13 @@ class GiftCardsController < ApplicationController
     end
 
     def new_gift_card_params
-      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number state]
+      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number status]
       params.permit(new_gift_cards: allowed)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gift_card_params
-      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number state]
+      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number status]
 
       params.fetch(:gift_card, {}).permit(allowed)
     end
