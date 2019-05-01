@@ -22,9 +22,10 @@
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
-
+  has_paper_trail
   include AASM
   include Rewardable
+  
   page 20
 
   attr_accessor :old_user_id
