@@ -55,6 +55,7 @@
 </table>
 <%= link_to 'Edit', edit_gift_card_path(@gift_card) %> |
 <%= link_to 'Back', gift_cards_path %>
+<% if current_user.admin? %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -87,5 +88,4 @@
     <% end %>
   </tbody>
 </table>
-
-
+<% end %>
