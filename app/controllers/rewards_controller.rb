@@ -8,9 +8,9 @@ class RewardsController < ApplicationController
   # GET /rewards.csv
   def index
     @q_rewards = if current_user.admin?
-                   Reward.ransack(params[:q])
+                   Reward.includes(:user, :rewardable).ransack(params[:q])
                  else
-                   Reward.where(created_by: current_user.id).ransack(params[:q])
+                   Reward.includes(:user, :rewardable).where(created_by: current_user.id).ransack(params[:q])
                  end
     @q_rewards.sorts = [sort_column + ' ' + sort_direction] if @q_rewards.sorts.empty?
     respond_to do |format|
