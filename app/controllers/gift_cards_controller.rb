@@ -3,16 +3,18 @@
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: %i[show edit update destroy change_user check]
   skip_before_action :verify_authenticity_token, only: [:create]
+  before_action :admin_needed, only: %i[preload change_user]
   # GET /gift_cards
   # GET /gift_cards.json
   def index
     @errored_cards = []
     @cards = if current_user.admin?
-               GiftCard.includes(:user).unassigned
+               GiftCard.includes(:user).unassigned.ready
              else
-               GiftCard.includes(:user).unassigned.where(user_id: current_user.id)
+               GiftCard.includes(:user).unassigned.ready.where(user_id: current_user.id)
              end
     # busted ones first
+    @preloaded_cards = GiftCard.includes(:user).preloaded.where(user_id: current_user.id)
     @gift_cards = @cards.sort_by(&:sort_helper)
     @cards = @cards.where(status: 'active')
   end
@@ -120,11 +122,44 @@ class GiftCardsController < ApplicationController
     redirect_to gift_cards_path
   end
 
+  def activate
+    # iterate through params
+    @errors = []
+
+    @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc|
+      next if ngc[:full_card_number].blank? || ngc[:secure_code].blank?
+
+      gc = GiftCard.find_by(sequence_number: ngc[:sequence_number],
+                            batch_id: ngc[:batch_id])
+
+      gc.full_card_number = ngc[:full_card_number].delete!('-')
+      gc.secure_code = ngc[:secure_code]
+      if gc.valid?
+        gc.save
+        gc.start_activate! if gc.ready!
+      else
+        Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
+        @errors.push gc.errors.messages[:base]
+      end
+    end
+
+    respond_to do |format|
+      if @errors.empty?
+        format.html { redirect_to gift_cards_url, notice: 'Card Activation process started.' }
+        format.json { render json: { success: true }, status: :updated }
+      else
+        flash[:error] = "Card Errors: #{@errors.length} \n #{@errors}"
+        format.html { redirect_to gift_cards_url }
+        format.json { render json: @errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # POST /gift_cards
   # POST /gift_cards.json
   def create
+    # this isn't really used anymore...
     @errors = []
-
     @gift_cards = new_gift_card_params['new_gift_cards'].map do |ngc|
       GiftCard.new(ngc)
     end
@@ -135,12 +170,11 @@ class GiftCardsController < ApplicationController
       if gc.save
         gc.start_activate!
       else
-        err_msg = "Card Error: #{gc.attributes}, #{gc.errors.messages}"
-        Airbrake.notify(err_msg)
+        Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
         @errors.push gc.errors.messages[:base]
       end
     end
-    flash[:error] = "Card Errors: #{@errors.length} \n #{@errors}" if @errors.present?
+
     # this is where we do the whole starting calls thing.
     # create activation calls type=activate
     # use after_save_commit hook to do background task.
@@ -149,7 +183,9 @@ class GiftCardsController < ApplicationController
       if @errors.empty?
         format.html { redirect_to gift_cards_url, notice: 'Card Activation process started.' }
         format.js {}
+        format.json { render json: { success: true }, status: :updated }
       else
+        flash[:error] = "Card Errors: #{@errors.length} \n #{@errors}"
         format.html { redirect_to gift_cards_url }
         format.json { render json: @errors, status: :unprocessable_entity }
       end
@@ -160,7 +196,7 @@ class GiftCardsController < ApplicationController
   # PATCH/PUT /gift_cards/1.json
   def update
     respond_to do |format|
-      if @gift_card.update(gift_card_params) && current_user.admin?
+      if @gift_card.update(gift_card_params)
         format.html { redirect_to @gift_card, notice: 'Card activation was successfully updated.' }
         format.json { render :show, status: :ok, location: @gift_card }
       else
@@ -173,6 +209,7 @@ class GiftCardsController < ApplicationController
   # DELETE /gift_cards/1
   # DELETE /gift_cards/1.json
   def destroy
+    # TODO: CanCan
     @gift_card.destroy if current_user.admin?
     respond_to do |format|
       if current_user.admin?
@@ -186,18 +223,43 @@ class GiftCardsController < ApplicationController
   end
 
   def change_user
-    if current_user.admin?
-      # https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
-      ca = Array.wrap(@gift_card)
-      ca.each do |c|
-        c.user_id = params[:user_id]
-        c.save
-      end
-      flash[:notice] = "#{ca.size} Cards owner changed to #{ca.first.user.name}"
+    # https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
+    ca = Array.wrap(@gift_card)
+    ca.each do |c|
+      c.user_id = params[:user_id]
+      c.save
     end
+    flash[:notice] = "#{ca.size} Cards owner changed to #{ca.first.user.name}"
     respond_to do |format|
       format.json { render json: { success: true }.to_json, status: :ok }
     end
+  end
+
+  def preload
+    gcs = []
+    
+    (preload_params[:seq_start]..preload_params[:seq_end]).each do |seq|
+      gcs << GiftCard.create(sequence_number: seq.to_i,
+                            batch_id: preload_params[:batch_id],
+                            amount: preload_params[:amount],
+                            expiration_date: preload_params[:expiration_date],
+                            user_id: current_user.id,
+                            created_by: current_user.id,
+                            status: 'preload')
+    
+    end
+    flash[:notice] = "#{gcs.size} cards added"
+    respond_to do |format|
+      format.html { redirect_to preloaded_gift_cards_path }
+      format.json { render json: { success: true }.to_json, status: :ok }
+    end
+  end
+
+  # ui for admin card management
+  def preloaded
+    @preloaded_cards = GiftCard.includes(:user).preloaded.order(sequence_number: :asc).order(batch_id: :desc)
+    @low_seq = @preloaded_cards.map(&:sequence_number).map(&:to_i).min
+    @high_seq = @preloaded_cards.map(&:sequence_number).map(&:to_i).max
   end
 
   private
@@ -213,14 +275,18 @@ class GiftCardsController < ApplicationController
       @gift_card = GiftCard.find(ca_id)
     end
 
+    def preload_params
+      params.permit(:seq_start, :seq_end, :batch_id, :amount, :expiration_date)
+    end
+
     def new_gift_card_params
-      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number state]
+      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number status]
       params.permit(new_gift_cards: allowed)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gift_card_params
-      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number state]
+      allowed = %i[amount batch_id expiration_date full_card_number secure_code sequence_number status]
 
       params.fetch(:gift_card, {}).permit(allowed)
     end

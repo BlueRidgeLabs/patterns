@@ -22,7 +22,7 @@
   </thead>
   <tbody> 
     <%= render partial: "single_gift_card",
-                   locals: {gift_card: @gift_card} %>
+                   locals: {gift_card: @gift_card, approved_users: User.approved.all} %>
   </tbody>
 </table>
 <h3>Calls</h3>
@@ -55,3 +55,37 @@
 </table>
 <%= link_to 'Edit', edit_gift_card_path(@gift_card) %> |
 <%= link_to 'Back', gift_cards_path %>
+<% if current_user.admin? %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th colspan="1">ChangeId</th>
+      <th colspan="1">Type</th>
+      <th colspan="1">User</th>
+      <th colspan="1">Object</th>
+      <th colspan="1">event</th>
+      <th colspan="4">changes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gift_card.versions.each do |change| %>
+    <tr>
+      <td><%= change.id %></td>
+      <td><%= change.item_type %></td>
+      <td><%= link_to(User.find(change.whodunnit).name, user_path(change.whodunnit)) if change&.whodunnit&.class == 'User' %></td>
+      <td><%=
+        begin
+          link_to(find_name(change.item), url_for(change.item))
+        rescue NameError
+          "none"
+        end
+      %></td>
+      <td><%= change.event %></td>
+      <td>
+      <%=raw ap JSON.parse(change.object_changes), html: true if change.object_changes %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

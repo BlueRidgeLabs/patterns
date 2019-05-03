@@ -25,6 +25,13 @@ class ApplicationController < ActionController::Base
     render json: { 'error' => 'authentication error' }, status: :unauthorized unless current_user
   end
 
+  def admin_needed
+    unless current_user&.admin?
+      flash[:warning] = 'Unathorized'
+      render json: { 'error' => 'authentication error' }, status: :unauthorized
+    end
+  end
+
   delegate :current_cart, to: :current_user
 
   def update_user_activity

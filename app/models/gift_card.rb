@@ -22,9 +22,11 @@
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
-
+  
   include AASM
   include Rewardable
+  
+  
   page 20
 
   attr_accessor :old_user_id
@@ -38,19 +40,27 @@ class GiftCard < ApplicationRecord
   validates :sequence_number, presence: true
   validates :expiration_date, presence: true
   validates :user_id, presence: true
-  validates :secure_code, presence: true
+
   validates :reward_id, uniqueness: true, allow_nil: true
 
   validates :expiration_date,
     format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
   validates :batch_id, format: { with: /\A[0-9]*\z/ }
-  validates :secure_code, format: { with: /\A[0-9]*\z/ }
-  validates :sequence_number, format: { with: /\A[0-9]*\z/ }
+  validates :secure_code, format: { with: /\A[0-9]*\z/ }, allow_blank: true
+
   # sequences are per batch
   validates :sequence_number, uniqueness: { scope: :batch_id }
+
   default_scope { order(sequence_number: :asc) }
 
+  scope :preloaded, -> {
+                      where(full_card_number: [nil, ''],
+                            secure_code: [nil, ''],
+                            status: 'preload')
+                    }
+
+  scope :ready, -> { where.not(status: ['preload']) }
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
   # IMMUTABLE = %w{gift_card_id}
@@ -63,7 +73,7 @@ class GiftCard < ApplicationRecord
   # after_commit :create_activation_call, on: :create
 
   # uses action cable to update card.
-  after_commit :update_front_end, on: :update
+  after_commit :update_front_end, on: %i[update create]
 
   def self.import(file, user)
     errored_cards = []
@@ -97,15 +107,24 @@ class GiftCard < ApplicationRecord
   end
 
   aasm column: 'status', requires_lock: true do
-    state :created, initial: true
+    state :preload, initial: true
+    state :ready_to_activate
     state :activate_started
     state :activate_errored
     state :check_started
     state :check_errored
     state :active
 
+    event :return_to_preloaded do
+      transitions to: :preload
+    end
+
+    event :ready, guards: :can_activate? do
+      transitions from: :preload, to: :ready_to_activate
+    end
+
     event :start_activate, after_commit: :create_activation_call do
-      transitions from: %i[created activate_started], to: :activate_started
+      transitions from: %i[ready_to_activate activate_started], to: :activate_started
     end
 
     event :activate_error, after_commit: :activation_error_report do
@@ -169,6 +188,10 @@ class GiftCard < ApplicationRecord
     full_card_number.to_s.last(4)
   end
 
+  def permitted_states
+    aasm.states(permitted: true).map(&:name).map(&:to_s)
+  end
+
   def sort_helper
     case status
     when 'active'
@@ -177,12 +200,16 @@ class GiftCard < ApplicationRecord
       -6
     when 'check_started'
       -7
-    when 'created'
+    when 'ready'
       -8
     when 'activate_errored'
       -9
     when 'check_errored'
       -10
+    when 'preload'
+      -12
+    else
+      -13
     end
   end
 
@@ -194,8 +221,10 @@ class GiftCard < ApplicationRecord
       'warning'
     when 'check_started'
       'warning'
-    when 'created'
+    when 'preload'
       'warning'
+    when 'ready_to_activate'
+      'success'
     when 'activate_errored'
       'important'
     when 'check_errored'
@@ -215,16 +244,21 @@ class GiftCard < ApplicationRecord
 
   def can_run_check?
     return false if active? # don't run any more checks if active
+    return false if preload?
+    return false if ready_to_activate?
 
     !active? && !ongoing_call?
   end
 
-  def scrub_input # sometimes we drop leading 0's in csv
+  def scrub_input
     self.sequence_number = sequence_number&.to_i
     self.batch_id = batch_id&.to_i
     self.full_card_number = full_card_number&.delete('-')
     self.secure_code = secure_code&.delete('.0', '')
-    secure_code.prepend('0') while secure_code.length < 3
+    if secure_code.present?
+      # sometimes we drop leading 0's in csv
+      secure_code.prepend('0') while secure_code.length < 3
+    end
   end
 
   private
@@ -234,9 +268,12 @@ class GiftCard < ApplicationRecord
     end
 
     def broadcast_update(c_user = nil)
+      return if status == 'preload' # instead, we should manage this
+
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "gift_card_event_#{current_user.id}_channel",
         type: :update,
+        status: status,
         id: id,
         large: render_large_gift_card(current_user),
         mini: render_mini_gift_card(current_user),
@@ -246,6 +283,7 @@ class GiftCard < ApplicationRecord
     def broadcast_delete(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "gift_card_event_#{current_user.id}_channel",
+        status: status,
         type: :delete,
         id: id,
         count: GiftCard.active_unassigned_count(current_user)
@@ -254,7 +292,7 @@ class GiftCard < ApplicationRecord
     def render_large_gift_card(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ApplicationController.render partial: 'gift_cards/single_gift_card',
-        locals: { gift_card: self, current_user: current_user }
+        locals: { gift_card: self, current_user: current_user, approved_users: User.approved.all }
     end
 
     def render_mini_gift_card(c_user = nil)
@@ -264,9 +302,18 @@ class GiftCard < ApplicationRecord
     end
 
     def luhn_number_valid
-      errors[:base].push('Must include a card number.') if full_card_number.blank?
+      return true if full_card_number.blank?
+
       errors[:base].push('Card Number is not long enough.') if full_card_number.length != 16
       errors[:base].push("Card number #{full_card_number} is not valid.") unless CreditCardValidations::Luhn.valid?(full_card_number)
+    end
+
+    def can_activate?
+      return false if full_card_number.blank?
+      return false if secure_code.blank?
+      return false unless CreditCardValidations::Luhn.valid?(full_card_number)
+
+      true
     end
 
   # gift_card_id can't change one set.

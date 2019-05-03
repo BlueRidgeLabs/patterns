@@ -21,6 +21,12 @@
     </dl>
     <h4>Card id: <%= gift_card.id %></h4>
   
+  <div class="field">
+    <%= form.label :status %><br>
+    <%= form.select :status,
+          gift_card.permitted_states %>
+  </div>
+
    <div class="field">
     <%= form.label :batch_id %><br>
     <%= form.text_field :batch_id,
