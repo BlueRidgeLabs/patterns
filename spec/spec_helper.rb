@@ -22,7 +22,10 @@ require 'devise'
 require 'factory_bot_rails'
 require 'webdrivers'
 require 'webmock'
+require 'webmock/rspec'
 require 'vcr'
+
+WebMock.disable_net_connect!
 
 # stores http calls and plays them back
 VCR.configure do |config|
