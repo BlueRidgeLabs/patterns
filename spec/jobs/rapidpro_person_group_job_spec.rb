@@ -52,7 +52,7 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
         group: cart.rapidpro_uuid
       }
 
-      expect(HTTParty).to receive(:post).with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_409_res)
+      expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_409_res)
       expect_any_instance_of(sut).to receive(:retry_later).with(first_10.map(&:id), 105)
       perform_job(action)
     end
