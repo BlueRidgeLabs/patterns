@@ -7,22 +7,17 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
     _p.sort_by(&:id)
   end
   let(:cart) { FactoryBot.create(:cart, rapidpro_sync: true, rapidpro_uuid: SecureRandom.uuid) }
-  let(:rapidpro_409_res) { Hashie::Mash.new({ code: 429, headers: { 'retry-after': 100 } }) }
 
   def perform_job(action)
     sut.new.perform(people.map(&:id), cart.id, action)
-  end
-
-  before do
-    allow(HTTParty).to receive(:post).and_return(rapidpro_409_res)
   end
 
   context "rapidpro sync is false for cart" do
     before { cart.update(rapidpro_sync: false) }
 
     it "doesn't do a damn thing" do
-      perform_job("add")
       expect(HTTParty).not_to receive(:post)
+      perform_job("add")
     end
   end
 
@@ -42,6 +37,7 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
 
   context "rapidpro returns status 429" do
     it "enqueues job to be re-run later, with remaining people" do
+      rapidpro_409_res = Hashie::Mash.new({ code: 429, headers: { 'retry-after': 100 } })
       action = "add"
       last_100 = people.last(100)
       first_10 = people.first(10)
@@ -56,7 +52,7 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
         group: cart.rapidpro_uuid
       }
 
-      expect(HTTParty).to receive(:post).with(request_url, headers: request_headers, body: request_body.to_json)
+      expect(HTTParty).to receive(:post).with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_409_res)
       expect_any_instance_of(sut).to receive(:retry_later).with(first_10.map(&:id), 105)
       perform_job(action)
     end
