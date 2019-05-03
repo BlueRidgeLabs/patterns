@@ -55,16 +55,17 @@ $(document).on('turbolinks:load', function() {
   // validate the credit card
   function addCardValidation(){
     $('.full-card-number').on('blur',function(){
-      $(this).validateCreditCard(function(result)
-      {
-        if(!result.luhn_valid){
-          $(this).css('border-color', 'red');
-          $('#activate-button').attr('disabled', true);
-        }else{
-          $('#activate-button').attr('disabled', false);
-          $(this).css('border-color', '#cccccc');
-        }
-      });
+      if($(this).val() !== ''){
+        $(this).validateCreditCard(function(result){
+          if(!result.luhn_valid){
+            $(this).css('border-color', 'red');
+            $('#activate-button').attr('disabled', true);
+          }else{
+            $('#activate-button').attr('disabled', false);
+            $(this).css('border-color', '#cccccc');
+          }
+        });
+      }
     });
   }
 

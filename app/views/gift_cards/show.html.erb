@@ -69,7 +69,7 @@
   </thead>
 
   <tbody>
-    <% @gift_card.versions.each do |change| %>
+    <% @gift_card.versions.reorder(created_at: :desc).each do |change| %>
     <tr>
       <td><%= change.id %></td>
       <td><%= change.item_type %></td>
