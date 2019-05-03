@@ -99,9 +99,6 @@ GEM
     bootstrap3-datetimepicker-rails (4.17.47)
       momentjs-rails (>= 2.8.1)
     builder (3.2.3)
-    bullet (6.0.0)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.11)
     bundler-audit (0.6.1)
       bundler (>= 1.2.0, < 3)
       thor (~> 0.18)
@@ -555,7 +552,6 @@ GEM
     unicorn (5.4.1)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uniform_notifier (1.12.1)
     validates_overlap (0.8.6)
       rails (>= 3.0.0)
     validates_zipcode (0.2.0)
@@ -606,7 +602,6 @@ DEPENDENCIES
   best_in_place (~> 3.0.1)
   bootsnap
   bootstrap3-datetimepicker-rails
-  bullet
   bundler-audit (>= 0.5.0)
   byebug (~> 11.0)
   capistrano (~> 2.15.4)
