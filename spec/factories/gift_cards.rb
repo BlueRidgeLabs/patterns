@@ -5,7 +5,7 @@
 #  id               :bigint(8)        not null, primary key
 #  full_card_number :string(255)
 #  expiration_date  :string(255)
-#  sequence_number  :string(255)
+#  sequence_number  :integer
 #  secure_code      :string(255)
 #  batch_id         :string(255)
 #  status           :string(255)      default("created")
@@ -17,6 +17,7 @@
 #  amount_currency  :string(255)      default("USD"), not null
 #  created_by       :integer
 #
+
 require 'faker'
 FactoryBot.define do
   factory :gift_card do

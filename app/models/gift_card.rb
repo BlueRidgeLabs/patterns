@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: gift_cards
@@ -7,7 +6,7 @@
 #  id               :bigint(8)        not null, primary key
 #  full_card_number :string(255)
 #  expiration_date  :string(255)
-#  sequence_number  :string(255)
+#  sequence_number  :integer
 #  secure_code      :string(255)
 #  batch_id         :string(255)
 #  status           :string(255)      default("created")
