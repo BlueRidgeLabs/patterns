@@ -42,15 +42,8 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
       last_100 = people.last(100)
       first_10 = people.first(10)
       request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-      request_headers = {
-        'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-        'Content-Type'  => 'application/json'
-      }
-      request_body = {
-        action: action,
-        contacts: last_100.map(&:rapidpro_uuid),
-        group: cart.rapidpro_uuid
-      }
+      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+      request_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_409_res)
       expect_any_instance_of(sut).to receive(:retry_later).with(first_10.map(&:id), 105)
@@ -61,11 +54,37 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
   context "valid action, rapidpro info correct, and rate-limit not exceeded" do
     context "action is 'add'" do
       it "adds people to rapidpro" do
+        rapidpro_ok_res = Hashie::Mash.new({ code: 200 })
+        action = "add"
+        last_100 = people.last(100)
+        first_10 = people.first(10)
+        request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
+        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+        request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
+        request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
+
+        expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_1_body.to_json).and_return(rapidpro_ok_res)
+        expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_2_body.to_json).and_return(rapidpro_ok_res)
+        expect_any_instance_of(sut).not_to receive(:retry_later)
+        perform_job(action)
       end
     end
 
     context "action is 'remove'" do
       it "removes people from rapidpro" do
+        rapidpro_ok_res = Hashie::Mash.new({ code: 200 })
+        action = "remove"
+        last_100 = people.last(100)
+        first_10 = people.first(10)
+        request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
+        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+        request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
+        request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
+
+        expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_1_body.to_json).and_return(rapidpro_ok_res)
+        expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_2_body.to_json).and_return(rapidpro_ok_res)
+        expect_any_instance_of(sut).not_to receive(:retry_later)
+        perform_job(action)
       end
     end
   end
