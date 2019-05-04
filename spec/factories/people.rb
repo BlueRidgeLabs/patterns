@@ -81,7 +81,7 @@ FactoryBot.define do
     secondary_connection_description 'worse'
     trait :not_dig do
       # tagged with 'not dig' stops a whole bunch of things from happening
-      after(:create) { |person| person.update_attributes(tag_list: 'not_dig') }
+      after(:create) { |person| person.update_attributes(tag_list: 'not dig') }
     end
 
     trait :rapidpro_syncable do
