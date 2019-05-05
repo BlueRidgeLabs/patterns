@@ -30,6 +30,8 @@ class RapidproGroupJob
   end
 
   def create
+    return unless @cart.rapidpro_sync # perhaps cart is no longer synced
+
     url = @base_url + 'groups.json'
 
     if @cart.rapidpro_uuid.present?
