@@ -52,6 +52,21 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
   end
 
   context "valid action, rapidpro info correct, and rate-limit not exceeded" do
+    it "skips folx tagged with 'not dig'" do
+      dig_people = FactoryBot.create_list(:person, 10, :rapidpro_syncable).to_a.sort_by(&:id)
+      not_dig_people = FactoryBot.create_list(:person, 10, :rapidpro_syncable, :not_dig).to_a.sort_by(&:id)
+      all_people = (dig_people + not_dig_people).sort_by(&:id)
+
+      rapidpro_ok_res = Hashie::Mash.new({ code: 200 })
+      action = "add"
+      request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
+      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+      request_body = { action: action, contacts: dig_people .map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
+
+      expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_ok_res)
+      sut.new.perform(all_people.map(&:id), cart.id, action)
+    end
+
     context "action is 'add'" do
       it "adds people to rapidpro" do
         rapidpro_ok_res = Hashie::Mash.new({ code: 200 })
@@ -88,4 +103,5 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
       end
     end
   end
+
 end
