@@ -152,8 +152,59 @@ RSpec.describe RapidproGroupJob, :type => :job do
     end
   end
 
-  xdescribe "helper methods" do
+  describe "helper methods" do
     describe "#find_group" do
+      context "a matching group exists" do
+        it "runs through all pages until it finds a matching group" do
+          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new({
+            parsed_response: {
+              'results' => [{
+                'uuid' => 'otheruuid'
+              }],
+              'next' => 'nexturl'
+            }
+          }))
+          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new({
+            parsed_response: {
+              'results' => [{
+                'uuid' => cart.rapidpro_uuid
+              }],
+              'next' => 'nexturl2'
+            }
+          }))
+          expect(HTTParty).not_to receive(:get).with('nexturl2', headers: rapidpro_headers)
+          _sut = sut.new
+          # just calling this to initialize instance vars
+          _sut.perform(cart.id, 'stub')
+          expect(_sut.find_group).to eq(true)
+        end
+      end
+
+      context "a matching group does not exist" do
+        it "returns false" do
+          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new({
+            parsed_response: {
+              'results' => [{
+                'uuid' => 'otheruuid'
+              }],
+              'next' => 'nexturl'
+            }
+          }))
+          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new({
+            parsed_response: {
+              'results' => [{
+                'uuid' => "otherotheruuid"
+              }],
+              'next' => nil
+            }
+          }))
+          expect(HTTParty).not_to receive(:get).with('nexturl2', headers: rapidpro_headers)
+          _sut = sut.new
+          # just calling this to initialize instance vars
+          _sut.perform(cart.id, 'stub')
+          expect(_sut.find_group).to eq(false)
+        end
+      end
     end
   end
 end
