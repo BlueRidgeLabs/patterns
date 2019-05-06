@@ -16,7 +16,7 @@ class RapidproDeleteJob
       case res.code
       when 404
         return false
-      when 204 || 201 || 200 # successful delete
+      when 204, 201, 200 # successful delete
         person.update_column(:rapidpro_uuid, nil) # skip callbacks
         return true
       when 429 # rapidpro rate limiting us.
