@@ -79,10 +79,13 @@ FactoryBot.define do
     primary_connection_description 'so so'
     secondary_connection_id connections[:public_wifi]
     secondary_connection_description 'worse'
-    trait :not_dig do 
+    trait :not_dig do
       # tagged with 'not dig' stops a whole bunch of things from happening
-      after(:create) { |person| person.update_attributes(tag_list: 'not_dig') }
+      after(:create) { |person| person.update_attributes(tag_list: 'not dig') }
     end
 
+    trait :rapidpro_syncable do
+      rapidpro_uuid { SecureRandom.uuid }
+    end
   end
 end

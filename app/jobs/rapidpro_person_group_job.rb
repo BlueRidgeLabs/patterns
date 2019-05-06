@@ -24,7 +24,10 @@ class RapidproPersonGroupJob
 
     return unless @cart.rapidpro_sync # perhaps cart is no longer synced
 
-    @people_uuids = Person.where(id: people_ids).tagged_with('not dig', exclude: true).pluck(:rapidpro_uuid).compact
+    # TODO: test 'not dig' exclusion and compacting
+    # NOTE: (EL) `.order(:id)`is required for specs to assert that the correct
+    # uuids are being iterated through
+    @people_uuids = Person.where(id: people_ids).tagged_with('not dig', exclude: true).order(:id).pluck(:rapidpro_uuid).compact
     @action = action
     raise 'cart not in rapidpro' if @cart.rapidpro_uuid.nil?
     raise 'invalid action' unless %w[add remove].include? action
@@ -33,19 +36,21 @@ class RapidproPersonGroupJob
     not_throttled = true
     while @people_uuids.size.positive? && not_throttled
       uuids = @people_uuids.pop(100)
-      body = { 'action': @action, contacts: uuids, group: @cart.rapidpro_uuid }
+      body = { action: @action, contacts: uuids, group: @cart.rapidpro_uuid }
       res = HTTParty.post(url, headers: @headers, body: body.to_json)
       next unless res.code == 429 # throttled
 
       retry_delay = res.headers['retry-after'].to_i + 5
-      pids = Person.where(rapidpro_uuid: @people_uuids)
+      # NOTE: (EL) `.order(:id)`is required for specs to assert that the correct
+      # uuids are being passed to `retry_later`
+      pids = Person.where(rapidpro_uuid: @people_uuids).order(:id).pluck(:id)
       retry_later(pids, retry_delay)
       not_throttled = false
     end
   end
 
-  def retry(pids, retry_delay)
-    RapidProPersonGroup.perform_in(retry_delay, pids, @cart.id, @action)
+  def retry_later(pids, retry_delay)
+    RapidProPersonGroupJob.perform_in(retry_delay, pids, @cart.id, @action)
   end
 
 end

@@ -43,6 +43,8 @@ gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby', branch: 'brl_bra
 
 gem "aws-sdk-s3", require: false
 
+gem "hashie"
+
 # generate capybara tests
 
 
@@ -215,36 +217,27 @@ gem 'leaflet-rails'
 group :test do
   # mock tests w/mocha
   gem 'mocha', require: false
-
   gem 'sqlite3', platform: %i[ruby mswin mingw]
-
   ## for JRuby
   # gem 'jdbc-sqlite3', platform: :jruby
   gem 'memory_test_fix' # in memory DB, for the speedy
-
   gem 'coveralls', require: false
-
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
   gem 'faker'
-
   gem 'simplecov', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
-
   # retry poltergeist specs. they are finicky
   gem 'rspec-retry'
-
   # calendaring tests will almost always break on saturdays.
   gem 'timecop'
-
   # webrick is slow, capybara will use puma instead
   gem 'puma'
-
   gem 'webmock'
   # in memory redis for testing only
   gem 'mock_redis'
-
   gem 'vcr'
+  gem 'rspec-sidekiq'
 end
 
 group :development, :test do
