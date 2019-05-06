@@ -30,6 +30,8 @@ class RapidproGroupJob
   end
 
   def create
+    return unless @cart.rapidpro_sync # perhaps cart is no longer synced
+
     url = @base_url + 'groups.json'
 
     if @cart.rapidpro_uuid.present?
@@ -47,6 +49,7 @@ class RapidproGroupJob
       when 429 # throttled
         retry_delay = res.headers['retry-after'].to_i + 5
         RapidproGroupJob.perform_in(retry_delay, @cart.id, 'create') # re-queue job
+        return
       else
         Rails.logger.error res.code
         raise 'error'
