@@ -153,7 +153,7 @@ feature 'admin page' do
     Timecop.travel(now - 1.year)
     fc_1_old_reward = FactoryBot.create(:reward, amount_cents: 50_00, finance_code: finance_code_1)
     fc_2_old_reward = FactoryBot.create(:reward, amount_cents: 50_00, finance_code: finance_code_2)
-    Timecop.return
+    Timecop.travel(now)
 
     fc_1_recent_reward_1 = FactoryBot.create(:reward, amount_cents: 100_00, finance_code: finance_code_1)
     fc_1_recent_reward_2 = FactoryBot.create(:reward, amount_cents: 200_00, finance_code: finance_code_1)
