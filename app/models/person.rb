@@ -237,7 +237,7 @@ class Person < ApplicationRecord
             ActiveRecord::RecordInvalid
           end
         else
-          cart.remove_person_id(id) # no-op if person not in cart
+          cart.remove_person(id) # no-op if person not in cart
         end
       end # end cart update
       return { pid: id, old: old_level, new: new_level }
