@@ -64,6 +64,15 @@ class Person < ApplicationRecord
     NOT_VERIFIED_TYPE = 'No'
   ].freeze
 
+  # * Active DIG member =“Participated in 3+ sessions” = invited to join FB group;
+  # * [Need another name for level 2] = “Participated in at least one season--
+  #     (could code as 6 months active) OR at least 2 different projects/teams
+  #     (could code based on being tagged in a session by at least 2 different teams)
+  # * DIG Ambassador = “active for at least one year, 2+ projects/teams
+  # if there’s any way to automate that info to flow into dashboard/pool —
+  # and notify me when new person gets added-- that would be amazing
+  PARTICIPATION_LEVELS = %w[new inactive participant active ambassador]
+
   page 50
 
   # include Searchable
@@ -173,17 +182,6 @@ class Person < ApplicationRecord
     end
   end
 
-  def self.participation_levels
-    # * Active DIG member =“Participated in 3+ sessions” = invited to join FB group;
-    # * [Need another name for level 2] = “Participated in at least one season--
-    #     (could code as 6 months active) OR at least 2 different projects/teams
-    #     (could code based on being tagged in a session by at least 2 different teams)
-    # * DIG Ambassador = “active for at least one year, 2+ projects/teams
-    # if there’s any way to automate that info to flow into dashboard/pool —
-    # and notify me when new person gets added-- that would be amazing
-    %w[new inactive participant active ambassador]
-  end
-
   def inactive_criteria
     # have gotten a gift card, but not in the past year.
     rewards.where('created_at < ?', 1.year.ago).size >= 1
@@ -231,7 +229,7 @@ class Person < ApplicationRecord
       tag_list.remove(old_level)
       tag_list.add(new_level)
       save
-      Cart.where(name: Person.participation_levels).find_each do |cart|
+      Cart.where(name: Person::PARTICIPATION_LEVELS).find_each do |cart|
         if cart.name == new_level
           begin
             cart.people << self
