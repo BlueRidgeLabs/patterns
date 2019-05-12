@@ -66,21 +66,23 @@ describe Person do
   # Not working with shoulda-matchers 3.1.0
   # it { is_expected.to validate_uniqueness_of(:phone_number) }
 
-  it 'validates uniqueness of phone_number' do
-    expect(subject).to be_valid
-    another_person = FactoryBot.create(:person)
-    subject.phone_number = another_person.phone_number
-    expect(subject).to_not be_valid
-  end
+  describe "validations" do
+    it 'validates uniqueness of phone_number' do
+      expect(subject).to be_valid
+      another_person = FactoryBot.create(:person)
+      subject.phone_number = another_person.phone_number
+      expect(subject).to_not be_valid
+    end
 
-  it 'requires either a phone number or an email to be present' do
-    expect(subject).to be_valid
-    subject.email_address = ''
-    expect(subject).to be_valid
-    subject.phone_number = ''
-    
-    expect(subject).to_not be_valid
-    subject.email_address = 'jessica@jones.com'
-    expect(subject).to be_valid
+    it 'requires either a phone number or an email to be present' do
+      expect(subject).to be_valid
+      subject.email_address = ''
+      expect(subject).to be_valid
+      subject.phone_number = ''
+
+      expect(subject).to_not be_valid
+      subject.email_address = 'jessica@jones.com'
+      expect(subject).to be_valid
+    end
   end
 end
