@@ -21,20 +21,9 @@ class RapidproUpdateJob
     if @person.phone_number.present?
       endpoint_url = @base_url + 'contacts.json'
 
-      lang = case @person.locale
-             when 'en'
-               'eng'
-             when 'es'
-               'spa'
-             when 'zh'
-               'chi'
-             else
-               'eng'
-             end
-
       body = { name: @person.full_name,
                first_name: @person.first_name,
-               language: lang }
+               language: RapidproService.language_for_person(@person) }
 
       # eventual fields: # first_name: person.first_name,
       # last_name: person.last_name,
