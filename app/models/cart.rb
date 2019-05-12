@@ -59,7 +59,7 @@ class Cart < ApplicationRecord
     (users << user) unless users.include?(user)
   end
 
-  def remove_person_id(person_id)
+  def remove_person(person_id)
     cart_person = carts_people.find_by(person_id: person_id)
     cart_person.destroy if cart_person.present?
   end
