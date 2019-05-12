@@ -8,12 +8,12 @@ class RapidproUpdateJob
   # otherwise use uuid. this will allow changes to phone numbers.
   # additionally, it means we only need one worker.
   def perform(id)
-    @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-                 'Content-Type'  => 'application/json' }
+    @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
     @base_url = 'https://rapidpro.brl.nyc/api/v2/'
     Rails.logger.info '[RapidProUpdate] job enqueued'
     @person = Person.find(id)
 
+    # TODO: (EL) should we early-return?
     RapidproDeleteJob.perform_async(id) if @person.tag_list.include?('not dig') || @person.active == false
 
     # we may deal with a word where rapidpro does email...
@@ -54,6 +54,7 @@ class RapidproUpdateJob
         # rapidpro tags are space delimited and have underscores for spaces
         body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' ') }
       else # person doesn't yet exist in rapidpro
+        # TODO: (EL) should we also set urns, groups, and fields?
         cgi_urn = CGI.escape(urn)
         url = endpoint_url + "?urn=#{cgi_urn}" # uses phone number to identify.
       end
