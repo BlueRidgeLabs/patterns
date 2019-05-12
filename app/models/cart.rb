@@ -55,7 +55,8 @@ class Cart < ApplicationRecord
   end
 
   def add_user_to_cart(user_id)
-    users << User.find(user_id)
+    user = User.find(user_id)
+    (users << user) unless users.include?(user)
   end
 
   def remove_person_id(person_id)
