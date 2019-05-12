@@ -15,5 +15,16 @@ describe Cart do
         expect(cart.reload.users.length).to eq(1)
       end
     end
+
+    describe "#remove_person(person_id)" do
+      it "removes person from cart, if they exist" do
+        cart.people.destroy_all
+        person = FactoryBot.create(:person)
+        cart.people << person
+        cart.remove_person(person.id)
+        expect(cart.reload.people.length).to eq(0)
+        expect{ cart.remove_person(person.id) }.not_to raise_error
+      end
+    end
   end
 end
