@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Cart do
   let(:cart) { FactoryBot.create(:cart) }
 
-  describe "methods" do
+  describe "public instance methods" do
     describe "#add_user(user_id)" do
       it "adds user to cart, if they aren't already there" do
         cart.users.destroy_all
@@ -24,6 +24,26 @@ describe Cart do
         cart.remove_person(person.id)
         expect(cart.reload.people.length).to eq(0)
         expect{ cart.remove_person(person.id) }.not_to raise_error
+      end
+    end
+  end
+
+  describe "private instance methods" do
+    describe "#update_rapidpro" do
+      context "rapidpro_sync is true" do
+        it "enqueues Rapidpro create group job" do
+          cart.update(rapidpro_sync: true)
+          expect(RapidproGroupJob).to receive(:perform_async).with(cart.id, 'create')
+          cart.send(:update_rapidpro)
+        end
+      end
+
+      context "rapidpro_sync is false" do
+        it "enqueues Rapidpro delete group job" do
+          cart.update(rapidpro_sync: false)
+          expect(RapidproGroupJob).to receive(:perform_async).with(cart.id, 'delete')
+          cart.send(:update_rapidpro)
+        end
       end
     end
   end
