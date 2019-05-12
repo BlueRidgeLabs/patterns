@@ -54,7 +54,7 @@ class Cart < ApplicationRecord
     cu.save
   end
 
-  def add_user_to_cart(user_id)
+  def add_user(user_id)
     user = User.find(user_id)
     (users << user) unless users.include?(user)
   end
