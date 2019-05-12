@@ -3,6 +3,18 @@ require 'rails_helper'
 describe Cart do
   let(:cart) { FactoryBot.create(:cart) }
 
+  describe "callbacks" do
+    context "person added to, and removed from, cart" do
+      it "enqueues RapidproPersonGroupJob 'add'/'remove' jobs, respectively" do
+        person = FactoryBot.create(:person)
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, 'add')
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, 'remove')
+        cart.people << person
+        cart.remove_person(person.id)
+      end
+    end
+  end
+
   describe "public instance methods" do
     describe "#add_user(user_id)" do
       it "adds user to cart, if they aren't already there" do
