@@ -156,7 +156,7 @@ class User < ApplicationRecord
   rescue NoMethodError => _e
     # this is used for users created before multi-cart.
     cart = Cart.find_by(user_id: id)
-    cart.add_user_to_cart(id) unless cart&.users.include?(self)
+    cart.add_user_to_cart(id)
     cart.assign_current_cart(id)
     cart.save
     cart
@@ -174,7 +174,7 @@ class User < ApplicationRecord
       cu.save
     rescue NoMethodError => _e
       cart = Cart.find cart_id
-      cart.add_user_to_cart(id) unless cart.users.include?(self)
+      cart.add_user_to_cart(id)
       cart.assign_current_cart(id)
       cart.save
     end
