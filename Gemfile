@@ -67,9 +67,9 @@ group :development do
   gem 'rack-mini-profiler'
   gem 'ruby-prof'
   gem 'stackprof' # ruby 2.1+ only
-
+  gem "bundler-audit", ">= 0.5.0", require: false
   # n+1 killer.
-  #gem 'bullet'
+  # gem 'bullet'
 
   # what attributes does this model actually have?
   gem 'annotate'

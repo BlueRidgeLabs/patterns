@@ -13,7 +13,7 @@
 #
 
 class Team < ApplicationRecord
-  FINANCE_CODES = %w[BRL CATA1 CATA2 FELL]
+  FINANCE_CODES = %w[BRL CATA1 CATA2 FELL].freeze
   has_many :users
   has_many :research_sessions, through: :users
   has_many :rewards

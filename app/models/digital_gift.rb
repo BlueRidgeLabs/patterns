@@ -45,6 +45,8 @@ class DigitalGift < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
   belongs_to :reward, optional: true
 
+  validate :can_order?
+  
   after_create :save_transaction
 
   attr_accessor :giftable_id
@@ -94,11 +96,17 @@ class DigitalGift < ApplicationRecord
   # is this really how I want to do it?
   def request_link
     raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
+    raise unless can_order?
 
     self.funding_source_id = DigitalGift.balance_funding_source.id
 
-    # this is wrong. Should choose based on amount.
-    self.campaign_id = DigitalGift.campaigns&.first&.id
+    if amount.to_i < 20
+      #small dollar amounts, no fee
+      self.campaign_id = ENV['GIFTROCKET_LOW_CAMPAIGN']
+    else
+      # high dolalr amounts, $2 fee
+      self.campaign_id = ENV['GIFTROCKET_HIGH_CAMPAIGN']
+    end
 
     generate_external_id
 
@@ -116,7 +124,7 @@ class DigitalGift < ApplicationRecord
   # first from our user's team budget
   # then from giftrocket, and then we make the request
   def can_order?
-    amount >= user.available_budget
+    (amount + 2.to_money) <= user.available_budget
   end
 
   # maybe this is just a

@@ -15,14 +15,19 @@ table tr {
     </ul>
   <% end %>
 </div>
-<h1>Activate Cards</h1>
-<%= link_to "Upload Cards", "#modal-window", :class => "btn btn-default", "data-toggle" => "modal" %>
+
+
 <div class='container'>
-  <div class='row'>
-    
+<% if @preloaded_cards.present? %>
+<h1 class='activate-toggle'>Activate Cards <span id='activate-toggle-right' class='icon-caret-right'></span><span id='activate-toggle-down' class='icon-caret-down' style='display:none'></span> </h1>
+<!--
+<%= link_to "Upload Cards", "#modal-window", :class => "btn btn-default", "data-toggle" => "modal" %>
+-->
+
+  <div class='row' style='display: none;' id='manual_card'>
     <div class='span12'>
-    <%= form_tag gift_cards_path do %>
-      <table style='' id='manual_card'>
+    <%= form_tag activate_gift_cards_path do %>
+      <table>
         <thead>
           <tr>
             <th>Sequence&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
@@ -42,18 +47,21 @@ table tr {
           content: "It is a number that stays the same for the whole batch of cards, fairly long, and is the last number on the right in the plastic window above where it says -Robin Hood Foundation-",
           title: 'popover',
           original_title:"Sequence Number"} %></th>
-            <th><span class='badge badge-success' id='add-gift-card-row'>+</span></th>
+            <th><!-- <span class='badge badge-success' id='add-gift-card-row'>+</span>--></th>
           </tr>
         </thead>
       
         <tbody>
-          <tr class='new_card'>
+          <% @preloaded_cards.each do |pr_card| %>
+          <tr class='new_card' id='preloaded-<%= pr_card.id %>'>
             <td>
-              <%= text_field_tag 'new_gift_cards[][sequence_number]',
-                    '',
+              <%= text_field_tag 'sequence_number',
+                    pr_card.sequence_number,
                     {placeholder:'Sequence',
                     class: 'input-mini',
+                    disabled: true,
                     'data-mask':'999'} %>
+                <%= hidden_field_tag 'new_gift_cards[][sequence_number]',pr_card.sequence_number %> 
             </td>
             <td>
               <%= text_field_tag 'new_gift_cards[][full_card_number]',
@@ -66,32 +74,41 @@ table tr {
               <%= text_field_tag 'new_gift_cards[][secure_code]', 
                     '',
                     {placeholder: 'Secure Code',
-                    class: 'input-mini',
+                    class: 'input-mini secure-code',
                     'data-mask': '999'} %>
             </td>
             <td>
-              <%= text_field_tag 'new_gift_cards[][expiration_date]',
-                    '', 
+              <%= text_field_tag 'expiration_date',
+                    pr_card.expiration_date,
                     placeholder: 'MM/YY', 
                     class: 'input-mini',
+                    disabled: true,
                     'data-mask': '00/00' %>
+              <%= hidden_field_tag 'new_gift_cards[][expiration_date]',pr_card.expiration_date %>
             </td>
             <td>
-              <%= text_field_tag 'new_gift_cards[][amount]','',  
+              <%= text_field_tag 'amount',
+                    pr_card.amount,  
                     {placeholder: '$25.00', 
-                    class: 'input-mini',
-                    'data-mask': '$999.99'} %>
+                     class: 'input-mini',
+                     disabled: true,
+                     'data-mask': '$999.99'} %>
+                <%= hidden_field_tag 'new_gift_cards[][amount]',pr_card.amount %>
             </td>
             
             <td>
-              <%= text_field_tag 'new_gift_cards[][batch_id]', '',
+              <%= text_field_tag 'batch_id', 
+                    pr_card.batch_id,
                     {placeholder: 'Batch ID',
-                    class: 'input-mini',
-                    'data-mask':'999999'} %>
+                     class: 'input-mini',
+                     disabled: true,
+                     'data-mask':'999999'} %>
+              <%= hidden_field_tag 'new_gift_cards[][batch_id]',pr_card.batch_id %>
             </td>
             <td>
             </td>
           </tr>
+          <% end %>
         </tbody>
       </table>
       <%= submit_tag "Activate",{ 
@@ -101,6 +118,7 @@ table tr {
     <% end %>
     </div>
   </div>
+  <% end %>
   <div class='row'>
     <div class='span12'>
       <hr>
@@ -136,7 +154,7 @@ table tr {
         <thead>
           <tr>
             <th colspan="1">Last 4</th>
-            <th colspan="1">Batch</th>
+            <th colspan="1" id='batch-title'>Batch</th>
             <th colspan="1" id='sequence-title'>Sequence</th>
             <th colspan="1">Amount</th>
             <th colspan="1">Status</th>
@@ -153,11 +171,11 @@ table tr {
           </tr>
         </thead>
 
-        <tbody id='gift-cards-large'> 
+        <tbody id='gift-cards-large' class='assigned'> 
           <!-- should be partials below for reuse -->
           <%= render partial: "single_gift_card",
                      collection: @gift_cards, 
-                     as: :gift_card %>
+                     as: :gift_card, locals: { approved_users: User.approved.all } %>
         </tbody>
       </table>
     </div>

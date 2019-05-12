@@ -1,8 +1,10 @@
 <tr id='gift-card-<%=gift_card.id%>' 
   class='well well-small gift-card <%= cycle('dark', 'light') %>'
   data-user-name='<%= gift_card.user.name %>'
+  data-user-id='<%= gift_card.user.id %>'
   data-id='<%=gift_card.id%>' 
   data-last-4='<%= gift_card.last_4 %>'
+  data-batch-id='<%= gift_card.batch_id %>'
   data-sequence-number='<%= gift_card.sequence_number %>'>
   <td>
     <%= gift_card.last_4 %>
@@ -28,6 +30,8 @@
             id: "check-card-#{gift_card.id}" %>
     <% elsif gift_card.ongoing_call? %>
       <%= image_tag("/spinner.gif",size: '20x20') %>
+    <% elsif gift_card.preload? %>
+      Ready to assign.
     <% else %>
       Ready for use.
     <% end %>
@@ -35,7 +39,7 @@
   <% if current_user.admin? %>
   <td> <!-- admin -->
     <%= select_tag :user_id,
-        options_from_collection_for_select(User.approved.all,
+        options_from_collection_for_select(approved_users,
                                           'id',
                                           'name', gift_card.user_id),
           class: 'input-small',

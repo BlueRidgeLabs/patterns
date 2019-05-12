@@ -1,7 +1,7 @@
   <tr id='gift-card-<%= gift_card.id %>'
       data-sequence-number='<%= gift_card.sequence_number%>'
-      data-last-4='<%= gift_card.sequence_number%>'
-      data-user-name='<%= gift_card.user.name%>'
+      data-last-4='<%= gift_card.sequence_number.to_s %>'
+      data-user-name='<%= gift_card.user.name %>'
       class='well well-small gift-card'>
     <td class='batch_id'>
       <%= gift_card.batch_id %>

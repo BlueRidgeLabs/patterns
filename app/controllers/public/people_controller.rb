@@ -11,6 +11,8 @@ class Public::PeopleController < ApplicationController
 
   # GET /people/new
   def new
+    # this should only allow permitted domains.
+    @referrer = URI(params[:referrer]).to_s if params[:referrer].present?
     @person = ::Person.new
     @person.created_by = current_user.id if current_user.present?
   end

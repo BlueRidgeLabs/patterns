@@ -5,7 +5,7 @@
 #  id               :bigint(8)        not null, primary key
 #  full_card_number :string(255)
 #  expiration_date  :string(255)
-#  sequence_number  :string(255)
+#  sequence_number  :integer
 #  secure_code      :string(255)
 #  batch_id         :string(255)
 #  status           :string(255)      default("created")
@@ -17,18 +17,30 @@
 #  amount_currency  :string(255)      default("USD"), not null
 #  created_by       :integer
 #
+
 require 'faker'
 FactoryBot.define do
   factory :gift_card do
-    full_card_number {CreditCardValidations::Factory.random(:mastercard)}
+    sequence(:sequence_number) {|n| n }
     expiration_date '05/20'
     user_id 1
     created_by 1
-    status 'active'
+    batch_id {Faker::Number.number(8)}
     amount_cents 2500
     amount_currency "USD"
-    secure_code {Faker::Number.number(3)}
-    sequence_number {Faker::Number.number(3)}
-    batch_id {Faker::Number.number(8)}
+    active
+
+    trait :active do
+      status 'active'
+      full_card_number {CreditCardValidations::Factory.random(:mastercard)}
+      secure_code {Faker::Number.number(3)}
+    end
+    
+    trait :preloaded do
+      full_card_number nil
+      secure_code nil
+      status 'preload'
+    end
+    
   end
 end

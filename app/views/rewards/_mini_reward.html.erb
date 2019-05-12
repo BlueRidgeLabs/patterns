@@ -3,7 +3,7 @@
     <td><%= link_to(reward.rewardable.class, reward.rewardable) %></td>
     <td><%= case reward.rewardable.class.to_s
         when 'GiftCard'
-            "Seq #" + reward.rewardable.sequence_number
+            "Seq ##{reward.rewardable.sequence_number}"
         when 'DigitalGift'
             link_to "get link", reward.rewardable
         when 'CashCard'
