@@ -44,10 +44,6 @@ class Cart < ApplicationRecord
     "#{name}: #{people.size}"
   end
 
-  def current_cart_for?
-    carts_users.includes(:user).select(&:current_cart)&.map(&:user)
-  end
-
   def assign_current_cart(user_id)
     cu = carts_users.find_or_create_by(user_id: user_id)
     cu.set_current_cart
