@@ -89,13 +89,13 @@ class ResearchSessionsController < ApplicationController
   end
 
   def invitations_panel
-    @research_session =  ResearchSession.find(params[:research_session_id])
+    @research_session = ResearchSession.find(params[:research_session_id])
     render partial: 'invitations_panel',
       locals: { invitations: @research_session.invitations }
   end
 
   def update
-    @research_session =  ResearchSession.find(params[:id])
+    @research_session = ResearchSession.find(params[:id])
     respond_to do |format|
       if @research_session.update(research_session_params)
         format.html { redirect_to(@research_session, notice: 'Session was successfully updated.') }
@@ -107,7 +107,7 @@ class ResearchSessionsController < ApplicationController
   end
 
   def remove_person
-    @research_session =  ResearchSession.find(params[:research_session_id])
+    @research_session = ResearchSession.find(params[:research_session_id])
     inv = @research_session.invitations.find_by(person_id: params[:person_id])
     @person = inv.person
     # TODO: test
@@ -124,7 +124,7 @@ class ResearchSessionsController < ApplicationController
   end
 
   def add_person
-    @research_session =  ResearchSession.find(params[:research_session_id])
+    @research_session = ResearchSession.find(params[:research_session_id])
     state = params[:invited].presence || 'created'
     inv = Invitation.create(person_id: params[:person_id], aasm_state: state, research_session_id: @research_session.id)
     @research_session.invitations << inv

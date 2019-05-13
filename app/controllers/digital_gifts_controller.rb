@@ -159,7 +159,7 @@ class DigitalGiftsController < ApplicationController
   def validate_api_args
     @user = User.where(token: request.headers['AUTHORIZATION']).first if request.headers['AUTHORIZATION'].present?
 
-    render(status: :unauthorized, json: { success: false }.to_json)  && return if @user.blank? || !@user.admin?
+    render(status: :unauthorized, json: { success: false }.to_json) && return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.where(api_params['research_session_id']).first
     phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))

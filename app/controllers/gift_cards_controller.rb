@@ -112,7 +112,7 @@ class GiftCardsController < ApplicationController
     if params[:file].nil?
       flash[:error] = 'No file uploaded'
     else
-      xls =  Roo::Spreadsheet.open(params[:file].path)
+      xls = Roo::Spreadsheet.open(params[:file].path)
       cards_count = 0
       xls.sheet(0).each { |row| cards_count += 1 if row[0].present? }
       flash[:notice] = "Import started for #{cards_count - 1} cards."
@@ -164,7 +164,7 @@ class GiftCardsController < ApplicationController
       GiftCard.new(ngc)
     end
 
-    @gift_cards.each  do |gc|
+    @gift_cards.each do |gc|
       gc.user = current_user
       gc.scrub_input
       if gc.save

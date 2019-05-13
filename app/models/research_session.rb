@@ -29,7 +29,7 @@ class ResearchSession < ApplicationRecord
 
   DURATION_OPTIONS = [15, 30, 45, 60, 75, 90, 115, 120, 135].freeze
 
-  self.per_page  = 50
+  self.per_page = 50
 
   # different types # breaks stuff
   #  enum session_type: %i[interview focus_group social test]

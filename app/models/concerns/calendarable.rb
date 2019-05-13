@@ -115,7 +115,7 @@ tags: #{cached_tag_list})
     end
 
     def generate_alarm(event)
-      user_email = defined?(user) ?  user.email : ENV['MAIL_ADMIN']
+      user_email = defined?(user) ? user.email : ENV['MAIL_ADMIN']
       event.alarm do |alarm|
         alarm.attendee = "mailto:#{user_email}"
         alarm.summary  = description

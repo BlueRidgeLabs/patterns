@@ -53,7 +53,7 @@ class Public::PeopleController < ApplicationController
     output = { success: false }
     PaperTrail.request.whodunnit = @current_user
     @person = Person.new(api_create_params.except(:tags, :low_income, :locale_name))
-    @person.referred_by ='created via SMS'
+    @person.referred_by = 'created via SMS'
     @person.signup_at = Time.current
     @person.created_by = @current_user.id
     if params[:tags].present?

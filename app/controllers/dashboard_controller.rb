@@ -15,7 +15,7 @@ class DashboardController < ApplicationController
 
     @verified_count = Person.active.verified.size
     @unverified_count = Person.active.not_verified.size
-    @deactivated_count    = Person.deactivated.where('deactivated_at > ?', 1.month.ago).size
+    @deactivated_count = Person.deactivated.where('deactivated_at > ?', 1.month.ago).size
     @deactivated_people = Person.deactivated.where(active: false).order('deactivated_at DESC').limit(10)
 
     @last_logins = User.approved.order('last_sign_in_at DESC').all
@@ -30,8 +30,8 @@ class DashboardController < ApplicationController
     @popular_tags   = Person.includes(:taggings).active.tag_counts.order('taggings_count DESC').limit(10)
     @new_tags       = Person.includes(:taggings).active.tag_counts.order('id desc').limit(10)
 
-    @recent_participants   = ResearchSession.includes(:invitations).order('research_sessions.created_at DESC').where('start_datetime < ?', Time.current).limit(10).map(&:people).flatten.uniq
-    @recent_sessions   = ResearchSession.includes(:invitations).order('created_at DESC').limit(10)
+    @recent_participants = ResearchSession.includes(:invitations).order('research_sessions.created_at DESC').where('start_datetime < ?', Time.current).limit(10).map(&:people).flatten.uniq
+    @recent_sessions = ResearchSession.includes(:invitations).order('created_at DESC').limit(10)
 
     @upcoming_participants = ResearchSession.includes(:invitations).where('research_sessions.start_datetime between NOW() and ?', 1.week.from_now).map(&:people).flatten.uniq
     @upcoming_sessions = ResearchSession.includes(:invitations).where('start_datetime between NOW() and ?', 1.week.from_now)

@@ -108,7 +108,7 @@ class Reward < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Type', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
+      csv_column_names = ['Gift Card ID', 'Type', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
       csv << csv_column_names
       all.includes(:person, :user, :team, :rewardable, :giftable).find_each do |reward|
         batch_id = reward.rewardable_type == 'GiftCard' ? reward.rewardable.batch_id : ''
@@ -122,7 +122,7 @@ class Reward < ApplicationRecord
                      reward.giftable.created_at.to_date.to_s || '',
                      reward.created_at.to_s(:rfc822),
                      batch_id,
-                     sequence_number ||'',
+                     sequence_number || '',
                      reward.amount.to_s,
                      reward.reason.titleize,
                      reward.person.id || '',

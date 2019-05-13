@@ -43,7 +43,7 @@ class GiftCard < ApplicationRecord
   validates :reward_id, uniqueness: true, allow_nil: true
 
   validates :expiration_date,
-    format: { with:  %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
+    format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
   validates :batch_id, format: { with: /\A[0-9]*\z/ }
   validates :secure_code, format: { with: /\A[0-9]*\z/ }, allow_blank: true
@@ -79,7 +79,7 @@ class GiftCard < ApplicationRecord
     xls =  Roo::Spreadsheet.open(file)
     cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
     xls.sheet(0).each(cols) do |row|
-      next if row[:full_card_number].blank? ||  row[:full_card_number] == 'full_card_number' # empty rows
+      next if row[:full_card_number].blank? || row[:full_card_number] == 'full_card_number' # empty rows
       next if GiftCard.where(sequence_number: row[:sequence_number], batch_id: row[:batch_id]).present?
 
       row[:full_card_number].delete!('-')
@@ -170,10 +170,10 @@ class GiftCard < ApplicationRecord
     # if assigned, delete.
     # otherwise, update
     if reward_id.nil?
-      User.admin.each { |u|  broadcast_update(u) }
+      User.admin.each { |u| broadcast_update(u) }
       broadcast_update
     else
-      User.admin.each { |u|  broadcast_delete(u) }
+      User.admin.each { |u| broadcast_delete(u) }
       broadcast_delete
     end
   end

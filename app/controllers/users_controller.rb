@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     @changes = PaperTrail::Version.where(whodunnit: @user.id).
                order(created_at: :desc).
                page(params[:changes_page])
-    around_now = Time.zone.now-7.days..Time.zone.now+7.days
+    around_now = Time.zone.now - 7.days..Time.zone.now + 7.days
     @sessions = ResearchSession.includes(:user).
                 where(start_datetime: around_now, user_id: @user.id).
                 page(params[:sessions_page])
