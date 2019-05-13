@@ -46,7 +46,7 @@ class DigitalGift < ApplicationRecord
   belongs_to :reward, optional: true
 
   validate :can_order?
-  
+
   after_create :save_transaction
 
   attr_accessor :giftable_id
@@ -100,13 +100,13 @@ class DigitalGift < ApplicationRecord
 
     self.funding_source_id = DigitalGift.balance_funding_source.id
 
-    if amount.to_i < 20
-      #small dollar amounts, no fee
-      self.campaign_id = ENV['GIFTROCKET_LOW_CAMPAIGN']
-    else
-      # high dolalr amounts, $2 fee
-      self.campaign_id = ENV['GIFTROCKET_HIGH_CAMPAIGN']
-    end
+    self.campaign_id = if amount.to_i < 20
+                         # small dollar amounts, no fee
+                         ENV['GIFTROCKET_LOW_CAMPAIGN']
+                       else
+                         # high dolalr amounts, $2 fee
+                         ENV['GIFTROCKET_HIGH_CAMPAIGN']
+                       end
 
     generate_external_id
 

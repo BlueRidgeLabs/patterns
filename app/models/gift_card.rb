@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: gift_cards
@@ -21,11 +22,10 @@
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
-  
+
   include AASM
   include Rewardable
-  
-  
+
   page 20
 
   attr_accessor :old_user_id
