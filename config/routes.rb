@@ -230,6 +230,7 @@ Logan::Application.routes.draw do
 
   resources :people do
     collection do
+      get 'lookup/:uuid', action: :lookup, as: :lookup
       post 'create_sms'
       post ':person_id/deactivate', action: :deactivate, as: :deactivate
       post ':person_id/reactivate', action: :reactivate, as: :reactivate
