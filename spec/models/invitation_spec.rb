@@ -12,7 +12,7 @@
 
 require 'rails_helper'
 
-xdescribe Invitation do
+describe Invitation do
   # it { is_expected.to validate_presence_of(:person) }
   # it { is_expected.to validate_presence_of(:user) }
   # it { is_expected.to validate_presence_of(:time_slot) }
@@ -58,12 +58,3 @@ xdescribe Invitation do
   end
 end
 
-def build_valid_args_from_event_invitation(event_invitation)
-  {
-    event_invitation: event_invitation,
-    user: event_invitation.user,
-    person: event_invitation.invitees.first,
-    event: event_invitation.event,
-    time_slot: event_invitation.event.time_slots.first
-  }
-end
