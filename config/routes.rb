@@ -1,5 +1,5 @@
 require 'sidekiq/web'
-Logan::Application.routes.draw do  
+Patterns::Application.routes.draw do  
   
   resources :cash_cards
   resources :budgets do
