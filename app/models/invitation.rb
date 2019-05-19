@@ -26,15 +26,13 @@ class Invitation < ApplicationRecord
   # so users can take notes.
   has_many :comments, as: :commentable, dependent: :destroy
 
-# can't destroy an attended or rewarded invitation
+  # can't destroy an attended or rewarded invitation
   before_destroy :can_destroy?
   # this is how we give rewards for sessions.
   has_many :rewards, as: :giftable, dependent: :destroy
 
   # one person can't have multiple invitations for the same event
   validates :person_id, uniqueness: { scope: :research_session_id }
-
-  
 
   # not sure about all these delegations.
   delegate :user,
@@ -157,9 +155,7 @@ class Invitation < ApplicationRecord
   end
 
   def can_destroy?
-    unless rewards.empty? && !['attended','missed'].include?(aasm_state)
-      throw(:abort) 
-    end
+    throw(:abort) unless rewards.empty? && !%w[attended missed].include?(aasm_state)
   end
 
   def can_miss?

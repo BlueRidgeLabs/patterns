@@ -25,8 +25,7 @@ class TransactionLog < ApplicationRecord
 
   belongs_to :user
 
-  validate :sufficient_budget?
-  validate :correct_type?
+  validate :logic_validation
 
   validates :from_id, presence: true
   validates :from_type, presence: true
@@ -42,8 +41,6 @@ class TransactionLog < ApplicationRecord
     inclusion: {
       in: %w[Budget User]
     }
-
-  validate :sufficient_budget?
 
   def update_budgets
     case transaction_type
@@ -71,43 +68,55 @@ class TransactionLog < ApplicationRecord
     @recipient ||= recipient_type.classify.constantize.find(recipient_id)
   end
 
-  private
+  # is there sufficient budget for the transaction recipient go through
+  # do we do this here?
+  def sufficient_budget?
+    # topup auth handled elsewhere.
+    return true if transaction_type == 'Topup'
 
-    def admin?
-      from.admin? if from.respond_to?(:admin?)
+    if from.amount.to_i > amount.to_i
+      # everyone else, including admins has to have enough
+      errors.add(:amount, :invalid, message: 'insufficient budget')
+    else
+      true
     end
+  end
 
-    def correct_type?
-      case transaction_type
-      when 'Transfer'
-        if recipient_type == 'Budget' && from_type == 'Budget' && from_id != recipient_id
-          true
-        else
-          errors.add('Incorrect recipients')
-        end
-      when 'Topup'
-        if recipient_type == 'Budget' && from_type == 'User' && admin? && from.team == recipient.team
-          true
-        else
-          errors.add('not admin, likely.')
-        end
-      when 'DigitalGift'
-        if recipient_type == 'DigitalGift' && from_type == 'Budget'
-          true
-        else
-          errors.add('wrong types!')
-        end
+  def admin?
+    from.admin? if from.respond_to?(:admin?)
+  end
+
+  def from_present?
+    errors.add(:from_id, :invalid, message: 'from not found') if from.nil?
+  end
+
+  def correct_type?
+    case transaction_type
+    when 'Transfer'
+      if recipient_type == 'Budget' && from_type == 'Budget' && from_id != recipient_id
+        true
+      else
+        errors.add(:transaction_type, :invalid, message: 'Incorrect recipients')
+      end
+    when 'Topup'
+      if recipient_type == 'Budget' && from_type == 'User' && admin? && from.team == recipient.team
+        true
+      else
+        errors.add(:transaction_type, :invalid, message: 'not admin, likely.')
+      end
+    when 'DigitalGift'
+      if recipient_type == 'DigitalGift' && from_type == 'Budget'
+        true
+      else
+        errors.add(:transaction_type, :invalid, 'message: wrong types!')
       end
     end
+  end
 
-    # is there sufficient budget for the transaction recipient go through
-    # do we do this here?
-    def sufficient_budget?
-      return false if from.nil?
-
-      return from.admin? if from.respond_to?(:admin?) # it's a user
-
-      from.amount >= amount # should always have an amount
-    end
+  def logic_validation
+    from_present?
+    sufficient_budget?
+    correct_type?
+  end
 
 end

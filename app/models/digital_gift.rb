@@ -120,11 +120,16 @@ class DigitalGift < ApplicationRecord
     self.order_details = Base64.encode64(Marshal.dump(my_order))
   end
 
+  def expected_fee
+    # fee is $3 if amount is less than $20
+    amount.to_i < 20 ? 0.to_money : 3.to_money
+  end
+
   # this is where we check if we can actually request this gift
   # first from our user's team budget
   # then from giftrocket, and then we make the request
   def can_order?
-    (amount + 2.to_money) <= user.available_budget
+    (amount + expected_fee) <= user.available_budget
   end
 
   # maybe this is just a
