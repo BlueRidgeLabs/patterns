@@ -5,7 +5,7 @@
 
 require File.expand_path('config/application', __dir__)
 
-Logan::Application.load_tasks
+Patterns::Application.load_tasks
 
 if Rails.env != 'production' && Rails.env != 'staging'
   require 'coveralls/rake/task'

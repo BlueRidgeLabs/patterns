@@ -3,7 +3,7 @@
 # This file is used by Rack-based servers to start the application.
 
 require ::File.expand_path('../config/environment', __FILE__)
-run Logan::Application
+run Patterns::Application
 
 # no more delayed job web
 # if Rails.env.production?
