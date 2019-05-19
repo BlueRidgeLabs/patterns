@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: transaction_logs
+#
+#  id               :bigint(8)        not null, primary key
+#  from_id          :integer
+#  from_type        :string(255)
+#  recipient_id     :integer
+#  recipient_type   :string(255)
+#  transaction_type :string(255)
+#  user_id          :integer
+#  amount_cents     :integer          default(0), not null
+#  amount_currency  :string(255)      default("USD"), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'rails_helper'
 
 describe TransactionLog do
@@ -8,9 +25,6 @@ describe TransactionLog do
     let(:user) { FactoryBot.create(:user) }
     let(:other_budget) { user.budget }
     
-    before(:all) do
-      
-    end
 
     it 'should top up' do
       TransactionLog.create(amount: 100,
@@ -92,6 +106,12 @@ describe TransactionLog do
       expect(tl.valid?).to eq(false)
       expect(tl.errors.messages[:amount]).to eq(['insufficient budget'])
     end
+
+  end
+
+  xdescribe 'digital gifts' do
+    # this is necessary. We'll need a factory here, I think.
+
   end
 
 
