@@ -24,7 +24,7 @@ module Patterns
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
 
-    config.autoload_paths += %W(#{config.root}/app/jobs #{config.root}/app/mailers #{config.root}/app/sms)
+    config.autoload_paths += %W(#{config.root}/app/jobs #{config.root}/app/mailers #{config.root}/app/services #{config.root}/app/sms)
 
     # Analytics
     Patterns::Application.config.google_analytics_enabled = false
