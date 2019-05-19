@@ -416,4 +416,196 @@ http_interactions:
       string: 73.0.3683.68
     http_version: 
   recorded_at: Wed, 17 Apr 2019 18:36:25 GMT
+- request:
+    method: get
+    uri: https://chromedriver.storage.googleapis.com/LATEST_RELEASE_74.0.3729
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - chromedriver.storage.googleapis.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Guploader-Uploadid:
+      - AEnB2UontLQEddSodERpK0O8_-jr3ea5OZKqUzupec7HnAbsU-cN6CD9LSbRAi8AyI7U9hsUwfhg4qhY70oGqfktQ6ee5-CrlQ
+      Expires:
+      - Sun, 19 May 2019 23:31:17 GMT
+      Date:
+      - Sun, 19 May 2019 22:31:17 GMT
+      Last-Modified:
+      - Tue, 12 Mar 2019 19:25:30 GMT
+      Etag:
+      - '"445488632b27bf112162f240458c8b75"'
+      X-Goog-Generation:
+      - '1552418730367675'
+      X-Goog-Metageneration:
+      - '1'
+      X-Goog-Stored-Content-Encoding:
+      - identity
+      X-Goog-Stored-Content-Length:
+      - '11'
+      Content-Type:
+      - text/plain
+      Content-Language:
+      - en
+      X-Goog-Hash:
+      - crc32c=pfhT1g==
+      - md5=RFSIYysnvxEhYvJARYyLdQ==
+      X-Goog-Storage-Class:
+      - STANDARD
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '11'
+      Server:
+      - UploadServer
+      Cache-Control:
+      - public, max-age=3600
+      Age:
+      - '1949'
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,44,43,39"
+    body:
+      encoding: UTF-8
+      string: 74.0.3729.6
+    http_version: 
+  recorded_at: Sun, 19 May 2019 23:03:44 GMT
+- request:
+    method: get
+    uri: https://chromedriver.storage.googleapis.com/LATEST_RELEASE_74.0.3729
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - chromedriver.storage.googleapis.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Guploader-Uploadid:
+      - AEnB2UontLQEddSodERpK0O8_-jr3ea5OZKqUzupec7HnAbsU-cN6CD9LSbRAi8AyI7U9hsUwfhg4qhY70oGqfktQ6ee5-CrlQ
+      Expires:
+      - Sun, 19 May 2019 23:31:17 GMT
+      Date:
+      - Sun, 19 May 2019 22:31:17 GMT
+      Last-Modified:
+      - Tue, 12 Mar 2019 19:25:30 GMT
+      Etag:
+      - '"445488632b27bf112162f240458c8b75"'
+      X-Goog-Generation:
+      - '1552418730367675'
+      X-Goog-Metageneration:
+      - '1'
+      X-Goog-Stored-Content-Encoding:
+      - identity
+      X-Goog-Stored-Content-Length:
+      - '11'
+      Content-Type:
+      - text/plain
+      Content-Language:
+      - en
+      X-Goog-Hash:
+      - crc32c=pfhT1g==
+      - md5=RFSIYysnvxEhYvJARYyLdQ==
+      X-Goog-Storage-Class:
+      - STANDARD
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '11'
+      Server:
+      - UploadServer
+      Cache-Control:
+      - public, max-age=3600
+      Age:
+      - '1949'
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,44,43,39"
+    body:
+      encoding: UTF-8
+      string: 74.0.3729.6
+    http_version: 
+  recorded_at: Sun, 19 May 2019 23:03:44 GMT
+- request:
+    method: get
+    uri: https://chromedriver.storage.googleapis.com/LATEST_RELEASE_74.0.3729
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - chromedriver.storage.googleapis.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Guploader-Uploadid:
+      - AEnB2UontLQEddSodERpK0O8_-jr3ea5OZKqUzupec7HnAbsU-cN6CD9LSbRAi8AyI7U9hsUwfhg4qhY70oGqfktQ6ee5-CrlQ
+      Expires:
+      - Sun, 19 May 2019 23:31:17 GMT
+      Date:
+      - Sun, 19 May 2019 22:31:17 GMT
+      Last-Modified:
+      - Tue, 12 Mar 2019 19:25:30 GMT
+      Etag:
+      - '"445488632b27bf112162f240458c8b75"'
+      X-Goog-Generation:
+      - '1552418730367675'
+      X-Goog-Metageneration:
+      - '1'
+      X-Goog-Stored-Content-Encoding:
+      - identity
+      X-Goog-Stored-Content-Length:
+      - '11'
+      Content-Type:
+      - text/plain
+      Content-Language:
+      - en
+      X-Goog-Hash:
+      - crc32c=pfhT1g==
+      - md5=RFSIYysnvxEhYvJARYyLdQ==
+      X-Goog-Storage-Class:
+      - STANDARD
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '11'
+      Server:
+      - UploadServer
+      Cache-Control:
+      - public, max-age=3600
+      Age:
+      - '1950'
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,44,43,39"
+    body:
+      encoding: UTF-8
+      string: 74.0.3729.6
+    http_version: 
+  recorded_at: Sun, 19 May 2019 23:03:44 GMT
 recorded_with: VCR 4.0.0

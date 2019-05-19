@@ -88,7 +88,7 @@ describe TransactionLog do
                           from_id: budget.id,
                           from_type: 'Budget',
                           user_id: admin_user.id)
-      
+
       expect(tl.valid?).to eq(false)
       expect(tl.errors.messages[:amount]).to eq(['insufficient budget'])
     end

@@ -74,7 +74,7 @@ class TransactionLog < ApplicationRecord
     # topup auth handled elsewhere.
     return true if transaction_type == 'Topup'
 
-    if from.amount.to_i > amount.to_i
+    if from.amount.to_i < amount.to_i
       # everyone else, including admins has to have enough
       errors.add(:amount, :invalid, message: 'insufficient budget')
     else
