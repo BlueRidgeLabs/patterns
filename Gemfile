@@ -80,6 +80,7 @@ group :development do
   # a console in your browser, when you want to interrogate views.
   gem 'web-console'
 
+  gem 'rails-erd'
   # silences logging of requests for assets
   #gem 'quiet_assets'
 
