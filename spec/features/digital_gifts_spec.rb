@@ -4,7 +4,9 @@ require 'rails_helper'
 feature "digital gifts page" do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:user) { FactoryBot.create(:user) }
-  let(:invitation){FactoryBot.create(:invitation)}
+  let(:rs) { FactoryBot.create(:research_session, user: admin_user)}
+  let(:invitation) { FactoryBot.create(:invitation, 
+                                        research_session: rs)}
   let(:now) { DateTime.current }
   let(:rapidpro_headers) { {
       "ACCEPT" => "application/json",     # This is what Rails 4 accepts
@@ -33,17 +35,16 @@ feature "digital gifts page" do
     expect(Budget.all.sum(&:amount)).to eq(expected_amount)
   end
 
-  scenario 'transfer to user', :vcr, :js do
+  xscenario 'transfer to user', :vcr, :js do
     # don't like this whole bit here creating a budget. 
     # should have a factory for this
     budget = user.team.budget
     original_amount = budget.amount
-    expect(Budget.all.size).to eq(2)
-
     visit '/budgets'
     fill_in 'topup-amount', with: 200
     click_button 'Top Up'
     wait_for_ajax
+    expect(admin_user.budget.amount.to_s).to eq('200.00')
     visit '/budgets'
     fill_in 'transfer-amount', with: 100
     select user.team.name, from: "recipient_id"
