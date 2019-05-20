@@ -46,7 +46,7 @@ feature "digital gifts page" do
     click_button 'Top Up'
     wait_for_ajax
     expect(admin_user.budget.amount.to_s).to eq('200.00')
-    visit '/budgets'
+
     fill_in 'transfer-amount', with: 100
     select admin_user.budget.name, from: 'from_id'
     select budget.name, from: 'recipient_id'
