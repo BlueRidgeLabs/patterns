@@ -1,7 +1,8 @@
-set :application, 'logan-staging'
+set :application, 'patterns-staging'
 set :branch, fetch(:branch, ENV['STAGING_BRANCH'])
+set :user, 'patterns'
 set :rails_env, :staging
-set :rvm_ruby_string, '2.2.5@staging'              # use the same ruby as used locally for deployment
+set :rvm_ruby_string, '2.6.2@staging'              # use the same ruby as used locally for deployment
 
 server ENV['STAGING_SERVER'], :app, :web, :db, primary: true
 

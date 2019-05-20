@@ -48,7 +48,7 @@ add-apt-repository ppa:certbot/certbot
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 
-apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev clang certbot
+apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev clang certbot
 
 mysqladmin -ppassword create `echo $RAILS_ENV`
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
@@ -57,7 +57,7 @@ openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
 # stop nginx for letsencrypt initial setup
 service nginx stop
 
-certbot certonly --standalone --agree-tos --email blueridgelabs@robinhood.org -d patterns.brl.nyc
+certbot certonly --standalone --agree-tos --email blueridgelabs@robinhood.org -d staging.patterns.brl.nyc
 
 service nginx start
 
@@ -79,7 +79,7 @@ chmod +x /etc/cron.daily/nginx_restart.sh
 
 # setting up regular backups
 # cat >/etc/cron.d/patterns_backup.sh <<EOL
-# 32 *    * * *   logan   /home/logan/.rvm/wrappers/ruby-2.2.4@global/backup perform --trigger my_backup -r /var/www/logan-`echo $RAILS_ENV`/current/Backup/
+# 32 *    * * *   logan   /home/logan/.rvme/wrappers/ruby-2.2.4@global/backup perform --trigger my_backup -r /var/www/logan-`echo $RAILS_ENV`/current/Backup/
 # EOL
 # chmod +x /etc/cron.d/patterns_backup.sh
 
@@ -89,7 +89,7 @@ service cron restart
 echo 'patterns ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/patterns
 mkdir -p /var/www/patterns-`echo $RAILS_ENV`
 mkdir -p /var/www/patterns-`echo $RAILS_ENV`/shared/
-mkdir -p /var/www/patterns-`echo $RAILS_ENV`/shared/
+
 
 # creating the logan user.
 getent passwd patterns  > /dev/null
@@ -111,7 +111,7 @@ EOL
   echo 'gem: --no-document' >> ~/.gemrc
 
   # installing ruby and rvm
-  gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+  gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
   curl -sSL https://get.rvm.io | bash -s stable
   echo 'rvm_trust_rvmrcs_flag=1' >> ~/.rvmrc
   source /home/patterns/.rvm/scripts/rvm
@@ -119,7 +119,7 @@ EOL
   rvm use 2.6.2@`echo $RAILS_ENV` --create
   rvm @global do gem install rake whenever
   rvm @global do gem install backup -v5.0.0.beta.2
-  echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
+  #echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
   ln -s /var/www/patterns-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
   exit # back to root.
 fi
