@@ -24,6 +24,8 @@ module Rewardable
 
   # may not be necessary because of dependent :nullify
   def unassign
+    return if self.class.to_s == 'DigitalGift' # can't unassign
+
     self.reward_id = nil
     save
   end

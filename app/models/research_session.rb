@@ -52,6 +52,8 @@ class ResearchSession < ApplicationRecord
     :user_id,
     presence: true
 
+  validates :duration, numericality: { greater_than_or_equal_to: 0 }
+
   default_scope { includes(:invitations).order(start_datetime: :desc) }
 
   scope :today, -> { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day) }
@@ -103,7 +105,7 @@ class ResearchSession < ApplicationRecord
   private
 
     def update_missing_attributes
-      self.end_datetime = start_datetime + duration.minutes
+      self.end_datetime = start_datetime + duration.minutes if end_datetime.nil?
     end
 
     def clean_invitations
