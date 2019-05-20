@@ -35,9 +35,10 @@ feature "digital gifts page" do
     expect(Budget.all.sum(&:amount)).to eq(expected_amount)
   end
 
-  xscenario 'transfer to user', :vcr, :js do
+  scenario 'transfer to user', :vcr, :js do
     # don't like this whole bit here creating a budget. 
     # should have a factory for this
+
     budget = user.team.budget
     original_amount = budget.amount
     visit '/budgets'
@@ -47,7 +48,8 @@ feature "digital gifts page" do
     expect(admin_user.budget.amount.to_s).to eq('200.00')
     visit '/budgets'
     fill_in 'transfer-amount', with: 100
-    select user.team.name, from: "recipient_id"
+    select admin_user.budget.name, from: 'from_id'
+    select budget.name, from: 'recipient_id'
     click_button 'Transfer'
     wait_for_ajax
     budget.reload
