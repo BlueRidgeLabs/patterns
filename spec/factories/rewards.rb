@@ -35,7 +35,7 @@ FactoryBot.define do
     end
 
     trait :digital_gift do
-      rewardable { build(:digital_gift, user: user, created_by: user.id ) }
+      rewardable { build(:digital_gift, :funded, user: user, created_by: user.id ) }
     end
     
     # after(:build) do |reward|

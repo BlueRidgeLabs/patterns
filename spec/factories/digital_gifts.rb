@@ -38,7 +38,11 @@ FactoryBot.define do
     
     trait :funded do
       before(:create) do |dg|
-        admin = create(:user,:admin)
+        if user.admin?
+          admin = user
+        else
+          admin = create(:user,:admin)
+        end
         create(:transaction_log, :topup, user: admin, amount: dg.amount)
         create(:transaction_log, :transfer ,amount: dg.amount, other_user: dg.user, user: admin)
       end

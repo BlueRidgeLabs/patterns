@@ -96,10 +96,12 @@ describe ResearchSession do
       let(:rs) { FactoryBot.create(:research_session, user: admin)}
       let(:invitation) { FactoryBot.create(:invitation, 
                                             research_session: rs)}
-      let(:reward) { FactoryBot.create(:reward,:gift_card, 
-                                      amount:25,
-                                      giftable: invitation, 
-                                      user: admin)}
+      
+      let(:reward) { FactoryBot.create(:reward,
+                                       :gift_card, 
+                                       amount:25,
+                                       giftable: invitation, 
+                                       user: admin)}
       
       it 'should have a rewarded person' do
         rs.reload
@@ -110,6 +112,20 @@ describe ResearchSession do
         expect(invitation.person.rewards_count).to eq(1)
       end
 
+      it 'can add a digital gift as a reward' do
+        reward.save
+        rs.reload
+        Timecop.travel(rs.start_datetime + 5.days)
+        invitation.attend!
+        dg = FactoryBot.create(:reward, 
+                               :digital_gift, 
+                               giftable: invitation, 
+                               user: admin)
+        dg.save
+        invitation.reload
+        expect(invitation.rewards.size).to eq(2)
+        expect(dg.giftable).to eq(invitation)
+      end
     end
   end
 end
