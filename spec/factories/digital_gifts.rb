@@ -30,15 +30,22 @@
 require 'faker'
 FactoryBot.define do
   factory :digital_gift do
-    user
+    user 
     created_by 1
     amount_cents 2500
     amount_currency "USD"
+    
+    
+    trait :funded do
+      before(:create) do |dg|
+        admin = create(:user,:admin)
+        create(:transaction_log, :topup, user: admin, amount: dg.amount)
+        create(:transaction_log, :transfer ,amount: dg.amount, other_user: dg.user, user: admin)
+      end
+    end
+
     trait :small do
       amount_cents 500
-    end
-    after(:create) do |digital_gift|
-      digital_gift.save_transaction
     end
   end
 end

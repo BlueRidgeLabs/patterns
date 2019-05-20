@@ -86,5 +86,30 @@ describe ResearchSession do
         expect(subject.save).to eql false
       end
     end
+    
+    describe 'future, fully hydrated research session' do  
+      after(:all) do
+        Timecop.return
+      end
+
+      let(:admin) {FactoryBot.create(:user,:admin)}
+      let(:rs) { FactoryBot.create(:research_session, user: admin)}
+      let(:invitation) { FactoryBot.create(:invitation, 
+                                            research_session: rs)}
+      let(:reward) { FactoryBot.create(:reward,:gift_card, 
+                                      amount:25,
+                                      giftable: invitation, 
+                                      user: admin)}
+      
+      it 'should have a rewarded person' do
+        rs.reload
+        expect(reward.amount.to_s).to eq('25.00')
+        expect(rs.rewards.size).to eq(1)
+        expect(admin.rewards_total.to_s).to eq('25.00')
+        expect(invitation.person.rewards_total.to_s).to eq('25.00')
+        expect(invitation.person.rewards_count).to eq(1)
+      end
+
+    end
   end
 end

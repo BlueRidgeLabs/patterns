@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :transaction_log do
     trait :topup do
       amount 100
-      user(:admin)
+      user { create(:user,:admin) }
       recipient_type 'Budget'
       recipient_id { user.budget.id }
       transaction_type 'Topup'
@@ -17,7 +17,7 @@ FactoryBot.define do
         other_user { user }
       end
       amount 100
-      user(:admin)
+      user { create(:user,:admin) }
       recipient_type 'Budget'
       recipient_id { other_user.budget.id }
       transaction_type 'Transfer'

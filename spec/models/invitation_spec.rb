@@ -24,7 +24,7 @@ describe Invitation do
     let(:research_session_2) { FactoryBot.create(:research_session) }
     let(:now) { Time.current }
     let(:gift_card) { FactoryBot.create(:gift_card, :active, user: user) }
-
+    
     after(:all) do
       Timecop.return
     end
