@@ -16,7 +16,7 @@ then
 fi
 
 ARG1=${1:-'production'}
-ARG2=${2:-'secretpassword'}
+
 echo "setting up $ARG1 environment on this server";
 
 
@@ -27,7 +27,9 @@ echo "MYSQL_USER=root" >> /etc/environment
 echo "MYSQL_PASSWORD=password" >> /etc/environment
 echo "MYSQL_PWD=password" >> /etc/environment
 echo "MYSQL_HOST=localhost" >> /etc/environment
-echo "DJ_PASSWORD=$ARG2" >> /etc/environment
+echo "MALLOC_ARENA_MAX=2" >> /etc/environment
+echo "RAILS_MAX_THREADS=30" >> /etc/environment
+
 echo "127.0.0.1 $ARG1" >> /etc/hosts
 
 source /etc/environment;
@@ -65,8 +67,8 @@ then
    rm /etc/nginx/sites-enabled/default
 fi
 # use the nginx config in our repo
-rm /etc/nginx/sites_enabled/logan.conf;
-ln -s /var/www/logan-`echo $RAILS_ENV`/current/config/server_conf/`echo $RAILS_ENV`_nginx.conf  /etc/nginx/sites-enabled/logan.conf;
+rm /etc/nginx/sites_enabled/patterns.conf;
+ln -s /var/www/patterns-`echo $RAILS_ENV`/current/config/server_conf/`echo $RAILS_ENV`_nginx.conf  /etc/nginx/sites-enabled/logan.conf;
 
 
 # daily nginx restart for new certs
@@ -84,18 +86,18 @@ chmod +x /etc/cron.daily/nginx_restart.sh
 service cron restart
 
 #passwordless sudo for logan, or else we can't install rvm
-echo 'logan ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/logan
-mkdir -p /var/www/logan-`echo $RAILS_ENV`
-mkdir -p /var/www/logan-`echo $RAILS_ENV`/shared/
-mkdir -p /var/www/logan-`echo $RAILS_ENV`/shared/
+echo 'patterns ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/patterns
+mkdir -p /var/www/patterns-`echo $RAILS_ENV`
+mkdir -p /var/www/patterns-`echo $RAILS_ENV`/shared/
+mkdir -p /var/www/patterns-`echo $RAILS_ENV`/shared/
 
 # creating the logan user.
-getent passwd logan  > /dev/null
+getent passwd patterns  > /dev/null
 if [ $? -eq 0 ]; then
-  echo "logan exists, skipping user creation"
+  echo "patterns user exists, skipping user creation"
 else
-  useradd -m -s /bin/bash logan;
-  su - logan;
+  useradd -m -s /bin/bash patterns;
+  su - patterns;
   mkdir -p ~/.ssh/
   # maybe get the keys from github?:
   # https://developer.github.com/v3/repos/keys/
@@ -112,20 +114,20 @@ EOL
   gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
   curl -sSL https://get.rvm.io | bash -s stable
   echo 'rvm_trust_rvmrcs_flag=1' >> ~/.rvmrc
-  source /home/logan/.rvm/scripts/rvm
+  source /home/patterns/.rvm/scripts/rvm
   rvm install 2.6.2
   rvm use 2.6.2@`echo $RAILS_ENV` --create
   rvm @global do gem install rake whenever
   rvm @global do gem install backup -v5.0.0.beta.2
   echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
-  ln -s /var/www/logan-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
+  ln -s /var/www/patterns-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
   exit # back to root.
 fi
 
 # remove our logan passwordless sudo, for security
 # exit
 # rm /etc/sudoers.d/logan
-chown -R logan:logan /var/www/logan*
+chown -R patterns:patterns /var/www/patterns*
 
 #we've provisioned this server
 touch /etc/provisioned
