@@ -37,5 +37,8 @@ FactoryBot.define do
     trait :small do
       amount_cents 500
     end
+    after(:create) do |digital_gift|
+      digital_gift.save_transaction
+    end
   end
 end

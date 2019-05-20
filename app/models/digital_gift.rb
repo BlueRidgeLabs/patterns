@@ -44,7 +44,7 @@ class DigitalGift < ApplicationRecord
   has_one :transaction_log, as: :recipient
   has_many :comments, as: :commentable, dependent: :destroy
 
-  validate :can_order?
+  validate :can_order? # doesn't actually validate
 
   after_create :save_transaction
 
