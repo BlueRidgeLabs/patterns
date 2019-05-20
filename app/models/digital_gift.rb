@@ -43,7 +43,6 @@ class DigitalGift < ApplicationRecord
   has_one :budget, through: :user
   has_one :transaction_log, as: :recipient
   has_many :comments, as: :commentable, dependent: :destroy
-  belongs_to :reward, optional: true
 
   validate :can_order?
 

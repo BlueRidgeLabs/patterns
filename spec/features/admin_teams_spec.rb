@@ -27,7 +27,6 @@ feature 'Team Management' do
 
   scenario 'create valid team' do
     visit '/admin/teams/new'
-
     fill_in 'Name', with: 'foo'
     fill_in 'Description', with: 'bar'
     select 'BRL', from: 'Finance code'
@@ -36,7 +35,7 @@ feature 'Team Management' do
     expect(team.name).to eq('foo')
     expect(team.finance_code).to eq('BRL')
   end
-  
+
   # driver not supported: trigger
   # scenario 'reassign user to a team', :js do
   #   visit '/admin/users'

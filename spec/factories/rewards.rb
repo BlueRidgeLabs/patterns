@@ -35,12 +35,12 @@ FactoryBot.define do
 
     trait :digital_gift do
       after(:build) do |reward|
-        reward.rewardable = build(:digital_gift)
+        reward.rewardable = build(:digital_gift, user: reward.user, created_by: reward.user.id )
       end
     end
     
     after(:build) do |reward|
-      reward.giftable = build(:invitation)
+      reward.giftable = build(:invitation, person: reward.person)
     end
     
     after(:create) do |reward|

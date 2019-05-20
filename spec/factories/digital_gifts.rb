@@ -32,10 +32,8 @@ FactoryBot.define do
   factory :digital_gift do
     user
     created_by 1
-
     amount_cents 2500
     amount_currency "USD"
-    
     trait :small do
       amount_cents 500
     end
