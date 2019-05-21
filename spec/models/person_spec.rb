@@ -54,6 +54,9 @@ require 'rails_helper'
 
 describe Person do
   subject { FactoryBot.build(:person) }
+  let(:now) { DateTime.current }
+  let(:more_than_a_year_ago) { now - 1.year - 1.day }
+  let(:less_than_a_year_ago) { now - 1.year + 1.day }
 
   describe "validations" do
     it 'validates uniqueness of phone_number' do
@@ -230,9 +233,6 @@ describe Person do
 
       context "sessions with 2+ teams in past year, and 3+ sessions ever" do
         it "returns true" do
-          now = DateTime.current
-          more_than_a_year_ago = now - 1.year - 1.day
-          less_than_a_year_ago = now - 1.year + 1.day
           team_1 = FactoryBot.create(:team)
           team_2 = FactoryBot.create(:team)
 
@@ -262,6 +262,25 @@ describe Person do
 
     # TODO: sort out definition with bill
     describe "#active_criteria" do
+    end
+
+    describe "#participant_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+
+      context "at least one reward in the past year" do
+        it "returns true" do
+          Timecop.freeze(more_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.participant_criteria).to eq(false)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.participant_criteria).to eq(true)
+        end
+      end
     end
   end
 end
