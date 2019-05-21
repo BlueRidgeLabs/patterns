@@ -206,8 +206,6 @@ class Person < ApplicationRecord
   end
 
   def ambassador_criteria
-    # older than a year and 2 or more sessions with two teams and
-    # either 3 research sessions or 6 cards in the last year
     if tag_list.include?('brl special ambassador')
       true
     else
