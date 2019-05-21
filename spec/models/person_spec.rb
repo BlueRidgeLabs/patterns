@@ -217,5 +217,47 @@ describe Person do
         end
       end
     end
+
+    describe "#ambassador_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+      context "tag list includes 'brl special ambassador'" do
+        it "returns true" do
+          expect(person.ambassador_criteria).to eq(false)
+          person.update_attributes(tag_list: "brl special ambassador")
+          expect(person.ambassador_criteria).to eq(true)
+        end
+      end
+
+      context "sessions with 2+ teams in past year, and 3+ sessions ever" do
+        it "returns true" do
+          now = DateTime.current
+          more_than_a_year_ago = now - 1.year - 1.day
+          less_than_a_year_ago = now - 1.year + 1.day
+          team_1 = FactoryBot.create(:team)
+          team_2 = FactoryBot.create(:team)
+
+          expect(person.ambassador_criteria).to eq(false)
+          Timecop.freeze(more_than_a_year_ago) do
+            FactoryBot.create_list(:reward, 3, :gift_card, person: person)
+            person.reload
+          end
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person, team: team_1)
+            person.reload
+          end
+          expect(person.ambassador_criteria).to eq(false)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person, team: team_1)
+            person.reload
+          end
+          expect(person.ambassador_criteria).to eq(false)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person, team: team_2)
+            person.reload
+          end
+          expect(person.ambassador_criteria).to eq(true)
+        end
+      end
+    end
   end
 end

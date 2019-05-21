@@ -211,7 +211,9 @@ class Person < ApplicationRecord
     if tag_list.include?('brl special ambassador')
       true
     else
-      rewards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && rewards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
+      sessions_with_two_or_more_teams_in_the_past_year = rewards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
+      at_least_three_sessions_ever = rewards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
+      sessions_with_two_or_more_teams_in_the_past_year && at_least_three_sessions_ever
     end
   end
 
