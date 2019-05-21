@@ -71,7 +71,13 @@ class Person < ApplicationRecord
   # * DIG Ambassador = “active for at least one year, 2+ projects/teams
   # if there’s any way to automate that info to flow into dashboard/pool —
   # and notify me when new person gets added-- that would be amazing
-  PARTICIPATION_LEVELS = %w[new inactive participant active ambassador]
+  PARTICIPATION_LEVELS = [
+    PARTICIPATION_LEVEL_NEW = "new",
+    PARTICIPATION_LEVEL_INACTIVE = "inactive",
+    PARTICIPATION_LEVEL_PARTICIPANT = "participant",
+    PARTICIPATION_LEVEL_ACTIVE = "active",
+    PARTICIPATION_LEVEL_AMBASSADOR = "ambassador"
+  ]
 
   page 50
 
@@ -155,6 +161,7 @@ class Person < ApplicationRecord
     %i[no_signup_card ransack_tagged_with]
   end
 
+  # TODO:
   def self.locale_name_to_locale(locale_name)
     obj = { 'english': 'en', 'spanish': 'es', 'chinese': 'zh' }
     obj[locale_name.downcase]
@@ -209,11 +216,11 @@ class Person < ApplicationRecord
   end
 
   def calc_participation_level
-    pl = 'new' # needs outreach
-    pl = 'inactive'    if inactive_criteria
-    pl = 'participant' if participant_criteria
-    pl = 'active'      if active_criteria
-    pl = 'ambassador'  if ambassador_criteria
+    pl = PARTICIPATION_LEVEL_NEW # needs outreach
+    pl = PARTICIPATION_LEVEL_INACTIVE    if inactive_criteria
+    pl = PARTICIPATION_LEVEL_PARTICIPANT if participant_criteria
+    pl = PARTICIPATION_LEVEL_ACTIVE      if active_criteria
+    pl = PARTICIPATION_LEVEL_AMBASSADOR  if ambassador_criteria
     pl
   end
 

@@ -117,4 +117,52 @@ describe Person do
       end
     end
   end
+
+  describe "instance methods" do
+    describe "#update_participation_level" do
+      let(:person) { FactoryBot.create(:person) }
+      let(:action) { person.update_participation_level }
+
+      context "not dig" do
+        before { person.update(tag_list: "not dig") }
+
+        it "returns nil" do
+          expect(action).to be_nil
+        end
+      end
+
+      context "participation_level not changed" do
+        it "returns nil and does nothing" do
+          old_level = person.participation_level
+          expect(person).to receive(:calc_participation_level).and_return(old_level)
+          expect(action).to be_nil
+          expect(person.reload.participation_level).to eq(old_level)
+        end
+      end
+
+      context "participation_level has changed" do
+        it "updates participation_level, updates tag list, updates placement in cart, and returns hash with id, old level, and new level" do
+          Person::PARTICIPATION_LEVELS.each do |pl|
+            FactoryBot.create(:cart, name: pl)
+          end
+          new_cart = Cart.find_by_name(Person::PARTICIPATION_LEVEL_NEW)
+          ambassador_cart = Cart.find_by_name(Person::PARTICIPATION_LEVEL_AMBASSADOR)
+
+          person.update(tag_list: Person::PARTICIPATION_LEVEL_NEW, participation_level: Person::PARTICIPATION_LEVEL_NEW)
+
+          new_level = Person::PARTICIPATION_LEVEL_AMBASSADOR
+          expect(person).to receive(:calc_participation_level).and_return(new_level)
+
+          expect(action).to eq({ pid: person.id, old: Person::PARTICIPATION_LEVEL_NEW, new: Person::PARTICIPATION_LEVEL_AMBASSADOR })
+          expect(person.reload.participation_level).to eq(Person::PARTICIPATION_LEVEL_AMBASSADOR)
+          expect(new_cart.reload.people.find_by_id(person.id)).to be_nil
+          expect(ambassador_cart.reload.people.find_by_id(person.id)).to be_truthy
+        end
+      end
+    end
+
+    # TODO: 
+    describe "#calc_participation_level" do
+    end
+  end
 end
