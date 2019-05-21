@@ -161,8 +161,61 @@ describe Person do
       end
     end
 
-    # TODO: 
     describe "#calc_participation_level" do
+      context "ambassador_criteria met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'ambassador'" do
+          allow(person).to receive(:ambassador_criteria).and_return(true)
+          allow(person).to receive(:active_criteria).and_return(true)
+          allow(person).to receive(:participant_criteria).and_return(true)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_AMBASSADOR)
+        end
+      end
+
+      context "active_criteria met, but ambassador_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'active'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(true)
+          allow(person).to receive(:participant_criteria).and_return(true)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_ACTIVE)
+        end
+      end
+
+      context "participant_criteria met, but ambassador_criteria and active_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'participant'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(false)
+          allow(person).to receive(:participant_criteria).and_return(true)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_PARTICIPANT)
+        end
+      end
+
+      context "inactive_criteria met, but ambassador_criteria, participant_criteria, and active_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'inactive'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(false)
+          allow(person).to receive(:participant_criteria).and_return(false)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_INACTIVE)
+        end
+      end
+
+      context "inactive_criteria, ambassador_criteria, participant_criteria, and active_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'new'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(false)
+          allow(person).to receive(:participant_criteria).and_return(false)
+          allow(person).to receive(:inactive_criteria).and_return(false)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_NEW)
+        end
+      end
     end
   end
 end
