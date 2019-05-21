@@ -282,5 +282,24 @@ describe Person do
         end
       end
     end
+
+    describe "#inactive_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+
+      context "at least one reward, but not in the past year" do
+        it "returns true" do
+          Timecop.freeze(more_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.inactive_criteria).to eq(true)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.inactive_criteria).to eq(false)
+        end
+      end
+    end
   end
 end

@@ -190,8 +190,9 @@ class Person < ApplicationRecord
   end
 
   def inactive_criteria
-    # have gotten a gift card, but not in the past year.
-    rewards.where('created_at < ?', 1.year.ago).size >= 1
+    at_least_one_reward_older_than_a_year = rewards.where('created_at < ?', 1.year.ago).size >= 1
+    no_rewards_in_the_past_year = rewards.where('created_at >= ?', 1.year.ago).size == 0
+    at_least_one_reward_older_than_a_year && no_rewards_in_the_past_year
   end
 
   def participant_criteria
