@@ -199,6 +199,7 @@ class Person < ApplicationRecord
     rewards.where('created_at > ?', 1.year.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
   end
 
+  # TODO: sort out definition with bill
   def active_criteria
     # gotten a gift card for a research session in the past 6 months
     # and two teams

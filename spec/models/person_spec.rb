@@ -259,5 +259,9 @@ describe Person do
         end
       end
     end
+
+    # TODO: sort out definition with bill
+    describe "#active_criteria" do
+    end
   end
 end
