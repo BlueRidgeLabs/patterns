@@ -42,7 +42,7 @@ class CartController < ApplicationController
       if @create_result
         format.js {}
         format.json {}
-        format.html { redirect_to @cart, notice: 'Pool was successfully created.'  }
+        format.html { redirect_to @cart, notice: 'Pool was successfully created.' }
       else
         flash[:error] = @cart.errors
         format.js {}
@@ -83,7 +83,7 @@ class CartController < ApplicationController
     end
     new_size = @cart.people.size
     delta = new_size - current_size
-    flash[:notice] = "#{delta} people added to #{@cart.name}" if  delta.positive?
+    flash[:notice] = "#{delta} people added to #{@cart.name}" if delta.positive?
     respond_to do |format|
       format.js
       format.json { render json: @cart.people.pluck(:id) }

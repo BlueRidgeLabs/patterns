@@ -1,4 +1,4 @@
-Logan::Application.configure do
+Patterns::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Bullet.enable = true

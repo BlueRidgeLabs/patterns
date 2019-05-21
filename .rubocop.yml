@@ -1,4 +1,3 @@
-require: rubocop-performance
 AllCops:
   TargetRubyVersion: 2.5
   Exclude:
@@ -60,7 +59,7 @@ Style/Documentation:
   Enabled: false
 
 Style/GuardClause:
-  Enabled: false
+  Enabled: true
 
 Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
@@ -79,10 +78,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 Layout/ExtraSpacing:
-  Enabled: false
+  Enabled: true
 
 Layout/SpaceAroundOperators:
-  Enabled: false
+  Enabled: true
 
 Metrics/AbcSize:
   Max: 25

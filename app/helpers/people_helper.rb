@@ -44,7 +44,7 @@ module PeopleHelper
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Style/RescueEnsureAlignment
   def human_device_type_name(device_id)
-    Logan::Application.config.device_mappings.rassoc(device_id)[0].to_s; rescue StandardError; 'Unknown/No selection'
+    Patterns::Application.config.device_mappings.rassoc(device_id)[0].to_s; rescue StandardError; 'Unknown/No selection'
   end
   # rubocop:enable Style/RescueEnsureAlignment
 
@@ -54,7 +54,7 @@ module PeopleHelper
                  other: 'Other',
                  public_computer: 'Public computer',
                  public_wifi: 'Public wifi' }
-    begin; mappings[Logan::Application.config.connection_mappings.rassoc(connection_id)[0]]; rescue StandardError; 'Unknown/No selection'; end
+    begin; mappings[Patterns::Application.config.connection_mappings.rassoc(connection_id)[0]]; rescue StandardError; 'Unknown/No selection'; end
   end
 
   # FIXME: Refactor and re-enable cop
@@ -64,7 +64,7 @@ module PeopleHelper
     if person.email_address.present? && person.verified.start_with?('Verified')
       begin
         gibbon = Gibbon::Request.new
-        gibbon.lists(Logan::Application.config.cut_group_mailchimp_list_id).members(Digest::MD5.hexdigest(new_person.email_address.downcase)).upsert(
+        gibbon.lists(Patterns::Application.config.cut_group_mailchimp_list_id).members(Digest::MD5.hexdigest(new_person.email_address.downcase)).upsert(
           body: { email_address: new_person.email_address.downcase,
                   status: 'subscribed',
                   merge_fields: { FNAME: person.first_name,

@@ -151,15 +151,15 @@ feature 'admin page' do
     finance_code_1 = Team::FINANCE_CODES[0]
     finance_code_2 = Team::FINANCE_CODES[1]
     Timecop.travel(now - 1.year)
-    fc_1_old_reward = FactoryBot.create(:reward, amount_cents: 50_00, finance_code: finance_code_1)
-    fc_2_old_reward = FactoryBot.create(:reward, amount_cents: 50_00, finance_code: finance_code_2)
+    fc_1_old_reward = FactoryBot.create(:reward, :gift_card, amount_cents: 50_00, finance_code: finance_code_1)
+    fc_2_old_reward = FactoryBot.create(:reward, :gift_card, amount_cents: 50_00, finance_code: finance_code_2)
     Timecop.travel(now)
 
-    fc_1_recent_reward_1 = FactoryBot.create(:reward, amount_cents: 100_00, finance_code: finance_code_1)
-    fc_1_recent_reward_2 = FactoryBot.create(:reward, amount_cents: 200_00, finance_code: finance_code_1)
-    fc_1_recent_reward_3 = FactoryBot.create(:reward, amount_cents: 300_00, finance_code: finance_code_1)
-    fc_2_recent_reward_1 = FactoryBot.create(:reward, amount_cents: 400_00, finance_code: finance_code_2)
-    fc_2_recent_reward_2 = FactoryBot.create(:reward, amount_cents: 500_00, finance_code: finance_code_2)
+    fc_1_recent_reward_1 = FactoryBot.create(:reward, :gift_card, amount_cents: 100_00, finance_code: finance_code_1)
+    fc_1_recent_reward_2 = FactoryBot.create(:reward, :gift_card, amount_cents: 200_00, finance_code: finance_code_1)
+    fc_1_recent_reward_3 = FactoryBot.create(:reward, :gift_card, amount_cents: 300_00, finance_code: finance_code_1)
+    fc_2_recent_reward_1 = FactoryBot.create(:reward, :gift_card, amount_cents: 400_00, finance_code: finance_code_2)
+    fc_2_recent_reward_2 = FactoryBot.create(:reward, :gift_card, amount_cents: 500_00, finance_code: finance_code_2)
 
     visit finance_code_path
 

@@ -36,7 +36,7 @@ namespace :cut do
         post_body[f] = alt_value.present? ? alt_value : default_value
       end
 
-      curl_str = "curl -X POST #{hosts[args.env.to_sym]}/people #{post_body.collect { |k, v| "-d #{k}=\"#{v}\"" }.join(' ')} -d HandshakeKey=#{Logan::Application.config.wufoo_handshake_key}"
+      curl_str = "curl -X POST #{hosts[args.env.to_sym]}/people #{post_body.collect { |k, v| "-d #{k}=\"#{v}\"" }.join(' ')} -d HandshakeKey=#{Patterns::Application.config.wufoo_handshake_key}"
 
       puts "running: #{curl_str}"
       `#{curl_str}`

@@ -98,6 +98,15 @@ class PeopleController < ApplicationController
     @people = Person.order_by_reward_sum.page(params[:page])
   end
 
+  def lookup
+    person = Person.find_by(rapidpro_uuid: params[:uuid])
+    if person
+      redirect_to person_path(person)
+    else
+      redirect_to root_path
+    end
+  end
+
   # POST /people/:person_id/deactivate
   def deactivate
     @person = Person.find_by id: params[:person_id]

@@ -112,7 +112,7 @@ class GiftCardsController < ApplicationController
     if params[:file].nil?
       flash[:error] = 'No file uploaded'
     else
-      xls =  Roo::Spreadsheet.open(params[:file].path)
+      xls = Roo::Spreadsheet.open(params[:file].path)
       cards_count = 0
       xls.sheet(0).each { |row| cards_count += 1 if row[0].present? }
       flash[:notice] = "Import started for #{cards_count - 1} cards."
@@ -164,7 +164,7 @@ class GiftCardsController < ApplicationController
       GiftCard.new(ngc)
     end
 
-    @gift_cards.each  do |gc|
+    @gift_cards.each do |gc|
       gc.user = current_user
       gc.scrub_input
       if gc.save
@@ -237,7 +237,7 @@ class GiftCardsController < ApplicationController
 
   def preload
     gcs = []
-    
+
     (preload_params[:seq_start]..preload_params[:seq_end]).each do |seq|
       gcs << GiftCard.create(sequence_number: seq.to_i,
                             batch_id: preload_params[:batch_id],
@@ -246,7 +246,6 @@ class GiftCardsController < ApplicationController
                             user_id: current_user.id,
                             created_by: current_user.id,
                             status: 'preload')
-    
     end
     flash[:notice] = "#{gcs.size} cards added"
     respond_to do |format|

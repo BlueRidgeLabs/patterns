@@ -4,28 +4,22 @@
 #
 # Table name: rewards
 #
-#  id               :integer          not null, primary key
-#  gift_card_number :string(255)
-#  expiration_date  :string(255)
-#  person_id        :integer
-#  notes            :string(255)
-#  created_by       :integer
-#  reason           :integer
-#  amount_cents     :integer          default(0), not null
-#  amount_currency  :string(255)      default("USD"), not null
-#  giftable_id      :integer
-#  giftable_type    :string(255)
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  batch_id         :string(255)
-#  sequence_number  :integer
-#  active           :boolean          default(FALSE)
-#  secure_code      :string(255)
-#  team_id          :bigint(8)
-#  finance_code     :string(255)
-#  user_id          :integer
-#  rewardable_type  :string(255)
-#  rewardable_id    :bigint(8)
+#  id              :integer          not null, primary key
+#  person_id       :integer
+#  notes           :string(255)
+#  created_by      :integer
+#  reason          :integer
+#  amount_cents    :integer          default(0), not null
+#  amount_currency :string(255)      default("USD"), not null
+#  giftable_id     :integer
+#  giftable_type   :string(255)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  team_id         :bigint(8)
+#  finance_code    :string(255)
+#  user_id         :integer
+#  rewardable_type :string(255)
+#  rewardable_id   :bigint(8)
 #
 
 class Reward < ApplicationRecord
@@ -108,7 +102,7 @@ class Reward < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names =  ['Gift Card ID', 'Type', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
+      csv_column_names = ['Gift Card ID', 'Type', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
       csv << csv_column_names
       all.includes(:person, :user, :team, :rewardable, :giftable).find_each do |reward|
         batch_id = reward.rewardable_type == 'GiftCard' ? reward.rewardable.batch_id : ''
@@ -122,7 +116,7 @@ class Reward < ApplicationRecord
                      reward.giftable.created_at.to_date.to_s || '',
                      reward.created_at.to_s(:rfc822),
                      batch_id,
-                     sequence_number ||'',
+                     sequence_number || '',
                      reward.amount.to_s,
                      reward.reason.titleize,
                      reward.person.id || '',

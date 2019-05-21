@@ -25,7 +25,7 @@ module ExternalDataMappings
               :other
             end
 
-      Logan::Application.config.connection_mappings[sym]
+      Patterns::Application.config.connection_mappings[sym]
     end
     # rubocop:enable Metrics/MethodLength
 
@@ -44,7 +44,7 @@ module ExternalDataMappings
               :tablet
             end
 
-      Logan::Application.config.device_mappings[sym]
+      Patterns::Application.config.device_mappings[sym]
     end
     # rubocop:enable Metrics/MethodLength
 

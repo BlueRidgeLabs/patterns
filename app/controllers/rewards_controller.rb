@@ -20,7 +20,7 @@ class RewardsController < ApplicationController
       end
       format.csv do
         @rewards = @q_rewards.result.includes(:person, :rewardable, :giftable)
-        send_data @rewards.export_csv,  filename: "Rewards-#{Time.zone.today}.csv"
+        send_data @rewards.export_csv, filename: "Rewards-#{Time.zone.today}.csv"
       end
     end
   end
@@ -94,6 +94,7 @@ class RewardsController < ApplicationController
     klass = reward_params['rewardable_type'].classify.constantize
     @rewardable = klass.find(reward_params['rewardable_id'])
     @success = false
+    # TODO: Refactor
     if @rewardable && Reward.find_by(rewardable_type: @rewardable.class.to_s,
                            rewardable_id: @rewardable.id).nil?
       @reward = Reward.new(rewardable_type: @rewardable.class,
@@ -120,7 +121,7 @@ class RewardsController < ApplicationController
       if @success
         format.js { render action: :create }
         format.json {}
-        format.html { redirect_to @reward, notice: 'Reward was successfully created.'  }
+        format.html { redirect_to @reward, notice: 'Reward was successfully created.' }
       else
         format.js {}
         format.html { render action: 'edit' }

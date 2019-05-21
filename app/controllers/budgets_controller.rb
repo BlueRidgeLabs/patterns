@@ -13,7 +13,7 @@ class BudgetsController < ApplicationController
   # GET /budgets/1.json
   def show
     @transaction_log = TransactionLog.new
-    @transactions  = @budget.transactions
+    @transactions = @budget.transactions
   end
 
   # GET /budgets/new

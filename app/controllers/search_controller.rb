@@ -94,7 +94,7 @@ class SearchController < ApplicationController
               end
             end
           end
-          send_data output,  filename: "Search-#{Time.zone.today}.csv"
+          send_data output, filename: "Search-#{Time.zone.today}.csv"
         else
           flash[:error] = 'Not permitted'
         end
@@ -158,7 +158,7 @@ class SearchController < ApplicationController
   def advanced
     @search = ransack_params
     @search.build_grouping unless @search.groupings.exists?
-    @people  = ransack_result
+    @people = ransack_result
   end
 
   private

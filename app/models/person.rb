@@ -107,7 +107,7 @@ class Person < ApplicationRecord
     after_commit :send_to_mailchimp, on: %i[update create] if ENV['MAILCHIMP_API_KEY']
 
     after_commit :update_rapidpro, on: %i[update create] if ENV['RAPIDPRO_TOKEN']
-    before_destroy :delete_from_rapidpro  if ENV['RAPIDPRO_TOKEN']
+    before_destroy :delete_from_rapidpro if ENV['RAPIDPRO_TOKEN']
   end
 
   after_create  :update_neighborhood
@@ -302,19 +302,19 @@ class Person < ApplicationRecord
   end
 
   def primary_device_type_name
-    Logan::Application.config.device_mappings.rassoc(primary_device_id)[0].to_s if primary_device_id.present?
+    Patterns::Application.config.device_mappings.rassoc(primary_device_id)[0].to_s if primary_device_id.present?
   end
 
   def secondary_device_type_name
-    Logan::Application.config.device_mappings.rassoc(secondary_device_id)[0].to_s if secondary_device_id.present?
+    Patterns::Application.config.device_mappings.rassoc(secondary_device_id)[0].to_s if secondary_device_id.present?
   end
 
   def primary_connection_type_name
-    Logan::Application.config.connection_mappings.rassoc(primary_connection_id)[0].to_s if primary_connection_id.present?
+    Patterns::Application.config.connection_mappings.rassoc(primary_connection_id)[0].to_s if primary_connection_id.present?
   end
 
   def secondary_connection_type_name
-    Logan::Application.config.connection_mappings.rassoc(secondary_connection_id)[0].to_s if secondary_connection_id.present?
+    Patterns::Application.config.connection_mappings.rassoc(secondary_connection_id)[0].to_s if secondary_connection_id.present?
   end
 
   def lat_long

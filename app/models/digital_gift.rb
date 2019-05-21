@@ -43,10 +43,9 @@ class DigitalGift < ApplicationRecord
   has_one :budget, through: :user
   has_one :transaction_log, as: :recipient
   has_many :comments, as: :commentable, dependent: :destroy
-  belongs_to :reward, optional: true
 
-  validate :can_order?
-  
+  validate :can_order? # doesn't actually validate
+
   after_create :save_transaction
 
   attr_accessor :giftable_id
@@ -100,13 +99,13 @@ class DigitalGift < ApplicationRecord
 
     self.funding_source_id = DigitalGift.balance_funding_source.id
 
-    if amount.to_i < 20
-      #small dollar amounts, no fee
-      self.campaign_id = ENV['GIFTROCKET_LOW_CAMPAIGN']
-    else
-      # high dolalr amounts, $2 fee
-      self.campaign_id = ENV['GIFTROCKET_HIGH_CAMPAIGN']
-    end
+    self.campaign_id = if amount.to_i < 20
+                         # small dollar amounts, no fee
+                         ENV['GIFTROCKET_LOW_CAMPAIGN']
+                       else
+                         # high dolalr amounts, $2 fee
+                         ENV['GIFTROCKET_HIGH_CAMPAIGN']
+                       end
 
     generate_external_id
 
@@ -120,11 +119,16 @@ class DigitalGift < ApplicationRecord
     self.order_details = Base64.encode64(Marshal.dump(my_order))
   end
 
+  def expected_fee
+    # fee is $3 if amount is less than $20
+    amount.to_i < 20 ? 0.to_money : 3.to_money
+  end
+
   # this is where we check if we can actually request this gift
   # first from our user's team budget
   # then from giftrocket, and then we make the request
   def can_order?
-    (amount + 2.to_money) <= user.available_budget
+    (amount + expected_fee) <= user.available_budget
   end
 
   # maybe this is just a

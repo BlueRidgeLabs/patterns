@@ -104,7 +104,7 @@ class DigitalGiftsController < ApplicationController
         if @dg.save
           @reward.rewardable_id = @dg.id
           @success = @reward.save
-          @dg.reward_id = @reward.id # is this necessary?
+          @dg.assign(@reward.id) # is this necessary?
           @dg.save
         end
       else
@@ -139,7 +139,7 @@ class DigitalGiftsController < ApplicationController
         if @digital_gift.save
           @reward.rewardable_id = @digital_gift.id
           @success = @reward.save
-          @digital_gift.reward_id = @reward.id # is this necessary?
+          @digital_gift.assign(@reward.id) # is this necessary?
           @digital_gift.sent = true
           @digital_gift.sent_at = Time.current
           @digital_gift.sent_by = @user.id
@@ -159,7 +159,7 @@ class DigitalGiftsController < ApplicationController
   def validate_api_args
     @user = User.where(token: request.headers['AUTHORIZATION']).first if request.headers['AUTHORIZATION'].present?
 
-    render(status: :unauthorized, json: { success: false }.to_json)  && return if @user.blank? || !@user.admin?
+    render(status: :unauthorized, json: { success: false }.to_json) && return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.where(api_params['research_session_id']).first
     phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))

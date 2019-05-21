@@ -53,8 +53,8 @@
 require 'faker'
 
 # this is unused....
-devices = Logan::Application.config.device_mappings
-connections = Logan::Application.config.connection_mappings
+devices = Patterns::Application.config.device_mappings
+connections = Patterns::Application.config.connection_mappings
 
 FactoryBot.define do
   factory :person do
