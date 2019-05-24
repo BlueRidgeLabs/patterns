@@ -161,10 +161,9 @@ class Person < ApplicationRecord
     %i[no_signup_card ransack_tagged_with]
   end
 
-  # TODO:
   def self.locale_name_to_locale(locale_name)
-    obj = { 'english': 'en', 'spanish': 'es', 'chinese': 'zh' }
-    obj[locale_name.downcase]
+    obj = { 'english' => 'en', 'spanish' => 'es', 'chinese' => 'zh' }
+    obj[locale_name.to_s.downcase]
   end
 
   ransack_alias :comments, :comments_content
