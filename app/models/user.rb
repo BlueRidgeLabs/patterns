@@ -72,6 +72,7 @@ class User < ApplicationRecord
   # for sanity's sake
   alias_attribute :email_address, :email
   alias_attribute :title, :name
+  alias_attribute :full_name, :name
 
   def admin?
     new_person_notification
@@ -85,11 +86,6 @@ class User < ApplicationRecord
   def unapprove!
     update(approved: false)
     Rails.logger.info(I18n.t('user.unapproved', email: email))
-  end
-
-  def full_name
-    # convienence for calendar view.
-    name
   end
 
   def rewards_total
