@@ -289,22 +289,6 @@ class Person < ApplicationRecord
     end
   end
 
-  def primary_device_type_name
-    Patterns::Application.config.device_mappings.rassoc(primary_device_id)[0].to_s if primary_device_id.present?
-  end
-
-  def secondary_device_type_name
-    Patterns::Application.config.device_mappings.rassoc(secondary_device_id)[0].to_s if secondary_device_id.present?
-  end
-
-  def primary_connection_type_name
-    Patterns::Application.config.connection_mappings.rassoc(primary_connection_id)[0].to_s if primary_connection_id.present?
-  end
-
-  def secondary_connection_type_name
-    Patterns::Application.config.connection_mappings.rassoc(secondary_connection_id)[0].to_s if secondary_connection_id.present?
-  end
-
   def lat_long
     ::ZIP_LAT_LONG[postal_code.to_s]
   end
