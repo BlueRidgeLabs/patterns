@@ -251,13 +251,6 @@ class Person < ApplicationRecord
     end
   end
 
-  def signup_gc_sent
-    signup_cards = rewards.where(reason: 1)
-    return true unless signup_cards.empty?
-
-    false
-  end
-
   def verified?
     verified&.start_with?('Verified')
   end
