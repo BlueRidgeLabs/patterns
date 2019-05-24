@@ -36,3 +36,5 @@ en:
   user:
     successfully_created: "User was successfully created."
     successfully_updated: "User was successfully updated."
+    approved: "Approved user %{email}"
+    unapproved: "Unapproved user %{email}"

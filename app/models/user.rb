@@ -73,26 +73,18 @@ class User < ApplicationRecord
   alias_attribute :email_address, :email
   alias_attribute :title, :name
 
-  def inactive_message
-    if !approved?
-      :not_approved
-    else
-      super # Use whatever other message
-    end
-  end
-
   def admin?
     new_person_notification
   end
 
   def approve!
     update(approved: true)
-    Rails.logger.info("Approved user #{email}")
+    Rails.logger.info(I18n.t('user.approved', email: email))
   end
 
   def unapprove!
     update(approved: false)
-    Rails.logger.info("Unapproved user #{email}")
+    Rails.logger.info(I18n.t('user.unapproved', email: email))
   end
 
   def full_name
