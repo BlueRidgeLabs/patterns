@@ -71,19 +71,7 @@ class User < ApplicationRecord
 
   # for sanity's sake
   alias_attribute :email_address, :email
-
-  def title
-    name
-  end
-
-  def active_for_authentication?
-    if super && approved?
-      true
-    else
-      Rails.logger.warn("[SEC] User #{email} is not approved but attempted to authenticate.")
-      false
-    end
-  end
+  alias_attribute :title, :name
 
   def inactive_message
     if !approved?
