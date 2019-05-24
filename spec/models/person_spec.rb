@@ -57,6 +57,8 @@ describe Person do
   let(:now) { DateTime.current }
   let(:more_than_a_year_ago) { now - 1.year - 1.day }
   let(:less_than_a_year_ago) { now - 1.year + 1.day }
+  let(:more_than_six_months_ago) { now - 6.months - 1.day }
+  let(:less_than_six_months_ago) { now - 6.months + 1.day }
 
   describe "validations" do
     it 'validates uniqueness of phone_number' do
@@ -260,8 +262,23 @@ describe Person do
       end
     end
 
-    # TODO: sort out definition with bill
     describe "#active_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+
+      context "at least one reward in past six months" do
+        it "returns true" do
+          Timecop.freeze(more_than_six_months_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.active_criteria).to eq(false)
+          Timecop.freeze(less_than_six_months_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.active_criteria).to eq(true)
+        end
+      end
     end
 
     describe "#participant_criteria" do

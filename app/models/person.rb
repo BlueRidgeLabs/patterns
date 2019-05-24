@@ -200,11 +200,9 @@ class Person < ApplicationRecord
     rewards.where('created_at > ?', 1.year.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
   end
 
-  # TODO: sort out definition with bill
   def active_criteria
-    # gotten a gift card for a research session in the past 6 months
-    # and two teams
-    rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1 || rewards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
+    at_least_one_reward_in_past_six_months = rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
+    at_least_one_reward_in_past_six_months
   end
 
   def ambassador_criteria
