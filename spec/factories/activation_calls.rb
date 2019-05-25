@@ -34,5 +34,9 @@ FactoryBot.define do
     trait :check do
       call_type { ActivationCall::CALL_TYPE_CHECK }
     end
+
+    trait :started do
+      call_status { ActivationCall::CALL_STATUS_STARTED }
+    end
   end
 end

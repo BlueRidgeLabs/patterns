@@ -20,13 +20,16 @@ class ActivationCall < ApplicationRecord
   has_paper_trail
   has_secure_token
 
-  validates :gift_card_id, presence: true
-  validates :call_type, presence: true
   CALL_TYPES = [
     CALL_TYPE_ACTIVATE = 'activate',
     CALL_TYPE_CHECK = 'check',
     # CALL_TYPE_BALANCE = 'balance' # balance soon
   ]
+
+  CALL_STATUS_STARTED = 'started'
+
+  validates :gift_card_id, presence: true
+  validates :call_type, presence: true
   validates :call_type, inclusion: { in: CALL_TYPES }
 
   belongs_to :gift_card
@@ -35,7 +38,7 @@ class ActivationCall < ApplicationRecord
 
   alias_attribute :card, :gift_card
 
-  scope :ongoing, -> { where(call_status: 'started') }
+  scope :ongoing, -> { where(call_status: CALL_STATUS_STARTED) }
   scope :checks, -> { where(call_type: CALL_TYPE_CHECK) }
   scope :activations, -> { where(call_type: CALL_TYPE_ACTIVATE) }
 
