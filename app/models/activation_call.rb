@@ -22,7 +22,12 @@ class ActivationCall < ApplicationRecord
 
   validates :gift_card_id, presence: true
   validates :call_type, presence: true
-  validates :call_type, inclusion: { in: %w[activate check] } # balance soon
+  CALL_TYPES = [
+    CALL_TYPE_ACTIVATE = 'activate',
+    CALL_TYPE_CHECK = 'check',
+    # CALL_TYPE_BALANCE = 'balance' # balance soon
+  ]
+  validates :call_type, inclusion: { in: CALL_TYPES }
 
   belongs_to :gift_card
   after_commit :enqueue_call, on: :create
@@ -31,8 +36,8 @@ class ActivationCall < ApplicationRecord
   alias_attribute :card, :gift_card
 
   scope :ongoing, -> { where(call_status: 'started') }
-  scope :checks, -> { where(call_type: 'check') }
-  scope :activations, -> { where(call_type: 'activation') }
+  scope :checks, -> { where(call_type: CALL_TYPE_CHECK) }
+  scope :activations, -> { where(call_type: CALL_TYPE_ACTIVATE) }
 
   after_initialize :create_twilio
 
@@ -46,12 +51,12 @@ class ActivationCall < ApplicationRecord
 
   def type_transcript
     case call_type
-    when 'activate'
-      'your card now has been activated'
-    when 'check'
-      'the available balance on this account'
-    when 'balance' # not yet implemented. but could be
-      'the available balance'
+    when CALL_TYPE_ACTIVATE
+      I18n.t('activation_calls.transcript.activate')
+    when CALL_TYPE_CHECK
+      I18n.t('activation_calls.transcript.check')
+    # when 'balance' # not yet implemented. but could be
+    #   'the available balance'
     end
   end
 
