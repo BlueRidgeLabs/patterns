@@ -29,7 +29,7 @@ FactoryBot.define do
     created_by { user.id }
     team_id { user.team.id }
     finance_code { user.team.finance_code }
-    
+
     trait :gift_card do
       rewardable { build(:gift_card, user: user, created_by: user.id) }
     end
@@ -37,15 +37,14 @@ FactoryBot.define do
     trait :digital_gift do
       rewardable { build(:digital_gift, :funded, user: user, created_by: user.id ) }
     end
-    
+
     # after(:build) do |reward|
     #   reward.giftable = build(:invitation, person: reward.person)
     # end
-    
+
     after(:create) do |reward|
       reward.giftable.save
       reward.rewardable.save
     end
   end
 end
-

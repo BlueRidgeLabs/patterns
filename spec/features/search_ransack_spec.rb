@@ -12,7 +12,8 @@ feature 'search using ransack'  do
     login_with_admin_user
     visit '/search/index_ransack'
     click_button 'Search'
-    expect(page).to have_text('Showing 1 results of 1 total')
+    count = Person.all.size
+    expect(page).to have_text("Showing #{count} results of #{count} total")
   end
 
   scenario 'with matching parameters' do
@@ -20,7 +21,8 @@ feature 'search using ransack'  do
     visit '/search/index_ransack'
     fill_in 'q_postal_code_start', with: '606'
     click_button 'Search'
-    expect(page).to have_text('Showing 1 results of 1 total')
+    expect(page).to have_text(@person_one.first_name)
+    expect(page).to have_text("Showing 1 results of 1 total")
   end
 
   scenario 'with no matching parameters' do

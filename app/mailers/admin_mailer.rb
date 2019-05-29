@@ -16,10 +16,9 @@ class AdminMailer < ApplicationMailer
          body: text)
   end
 
-  def participation_level_change(results:, to:)
+  def participation_level_change(results, to)
     if results.present?
-      msg = %(Hi!\n
-      Participation level changes:\n)
+      msg = %(Hi!\n Participation level changes:\n)
       results.each do |r|
         next if r[:id].nil?
 
