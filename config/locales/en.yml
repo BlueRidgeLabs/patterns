@@ -36,3 +36,9 @@ en:
   user:
     successfully_created: "User was successfully created."
     successfully_updated: "User was successfully updated."
+    approved: "Approved user %{email}"
+    unapproved: "Unapproved user %{email}"
+  activation_call:
+    transcript:
+      activate: "your card now has been activated"
+      check: "the available balance on this account"

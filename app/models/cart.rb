@@ -44,21 +44,18 @@ class Cart < ApplicationRecord
     "#{name}: #{people.size}"
   end
 
-  def current_cart_for?
-    carts_users.includes(:user).select(&:current_cart)&.map(&:user)
-  end
-
   def assign_current_cart(user_id)
     cu = carts_users.find_or_create_by(user_id: user_id)
     cu.set_current_cart
     cu.save
   end
 
-  def add_user_to_cart(user_id)
-    users << User.find(user_id)
+  def add_user(user_id)
+    user = User.find(user_id)
+    (users << user) unless users.include?(user)
   end
 
-  def remove_person_id(person_id)
+  def remove_person(person_id)
     cart_person = carts_people.find_by(person_id: person_id)
     cart_person.destroy if cart_person.present?
   end

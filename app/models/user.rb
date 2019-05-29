@@ -71,27 +71,8 @@ class User < ApplicationRecord
 
   # for sanity's sake
   alias_attribute :email_address, :email
-
-  def title
-    name
-  end
-
-  def active_for_authentication?
-    if super && approved?
-      true
-    else
-      Rails.logger.warn("[SEC] User #{email} is not approved but attempted to authenticate.")
-      false
-    end
-  end
-
-  def inactive_message
-    if !approved?
-      :not_approved
-    else
-      super # Use whatever other message
-    end
-  end
+  alias_attribute :title, :name
+  alias_attribute :full_name, :name
 
   def admin?
     new_person_notification
@@ -99,17 +80,12 @@ class User < ApplicationRecord
 
   def approve!
     update(approved: true)
-    Rails.logger.info("Approved user #{email}")
+    Rails.logger.info(I18n.t('user.approved', email: email))
   end
 
   def unapprove!
     update(approved: false)
-    Rails.logger.info("Unapproved user #{email}")
-  end
-
-  def full_name
-    # convienence for calendar view.
-    name
+    Rails.logger.info(I18n.t('user.unapproved', email: email))
   end
 
   def rewards_total
@@ -156,7 +132,7 @@ class User < ApplicationRecord
   rescue NoMethodError => _e
     # this is used for users created before multi-cart.
     cart = Cart.find_by(user_id: id)
-    cart.add_user_to_cart(id) unless cart&.users.include?(self)
+    cart.add_user(id)
     cart.assign_current_cart(id)
     cart.save
     cart
@@ -174,7 +150,7 @@ class User < ApplicationRecord
       cu.save
     rescue NoMethodError => _e
       cart = Cart.find cart_id
-      cart.add_user_to_cart(id) unless cart.users.include?(self)
+      cart.add_user(id)
       cart.assign_current_cart(id)
       cart.save
     end

@@ -5,8 +5,8 @@
     <h5 >Count:<%= Person.active.count %></h5>
     <br/>
     <!-- can't get this to work, moving on -->
-    <!--Show: <%= select_tag :per_page, 
-                options_for_select([30,60,100,200,500,1000,1500], Person.per_page), 
+    <!--Show: <%= select_tag :per_page,
+                options_for_select([30,60,100,200,500,1000,1500], Person.per_page),
                 class: 'input-mini',
                 data:{
                   remote: true,
@@ -15,7 +15,7 @@
     <br/> -->
     <%= link_to "New Person", new_person_path, class: 'btn btn-small' %>
   </div>
-  
+
   <div class='span3'>
    <label for="tags">Tags</label>
       <%= form_tag '/people', method: :get %>
@@ -31,9 +31,9 @@
                           %>
       <%= submit_tag "Search", :name => nil, :class => 'btn btn-primary' %>
   </div>
-  
+
   <div class='span2'>
-    
+
   </div>
 </div>
 
@@ -67,7 +67,7 @@
           <tr id='person-<%= person.id %>'>
             <td><%= render partial: 'add_remove_cart',locals: {person: person} %></td>
             <td><%= link_to "#{person.first_name} #{person.last_name}", person_path(person) %></td>
-            <td><%= address_fields_to_sentence(person) %></td>
+            <td><%= person.address_fields_to_sentence %></td>
             <td><%= best_in_place person, :email_address %></td>
             <td><%= best_in_place person, :phone_number, display_with: lambda {|p| number_to_phone(p,area_code: true) } %></td>
             <td><%= best_in_place person, :verified, as: :select, collection: Person::VERIFIED_TYPES.map{|p| [p,p]} %></td>
