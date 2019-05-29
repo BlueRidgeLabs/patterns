@@ -26,6 +26,8 @@ class Invitation < ApplicationRecord
   # so users can take notes.
   has_many :comments, as: :commentable, dependent: :destroy
 
+  # can't destroy an attended or rewarded invitation
+  before_destroy :can_destroy?
   # this is how we give rewards for sessions.
   has_many :rewards, as: :giftable, dependent: :destroy
 
@@ -106,7 +108,7 @@ class Invitation < ApplicationRecord
       transitions from: %i[invited cancel reminded confirmed], to: :cancelled
     end
 
-    event :attend do
+    event :attend, guard: :in_past? do
       # can transition from anything to attended.
       transitions to: :attended
     end
@@ -150,6 +152,10 @@ class Invitation < ApplicationRecord
     permitted_events.each_with_index.map do |e, i|
       [permitted_states[i], e]
     end
+  end
+
+  def can_destroy?
+    throw(:abort) unless rewards.empty? && !%w[attended missed].include?(aasm_state)
   end
 
   def can_miss?

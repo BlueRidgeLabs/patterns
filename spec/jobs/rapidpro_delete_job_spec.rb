@@ -9,14 +9,14 @@ RSpec.describe RapidproDeleteJob, :type => :job do
   context "rapidpro_uuid not present" do
     before { person.update(rapidpro_uuid: nil) }
 
-    it "doesnt do a damn thing" do
+    it "doesnt do anything" do
       expect(HTTParty).not_to receive(:delete)
       expect(action).to be_nil
     end
   end
 
   context "rapidpro returns 404" do
-    it "returns false and doesnt do a damn thing" do
+    it "returns false and doesnt do anything" do
       expect(HTTParty).to receive(:delete).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers

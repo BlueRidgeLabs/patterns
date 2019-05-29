@@ -241,7 +241,7 @@ feature "research sessions" do
       person_name: person_1.full_name
     ))
     within("#invitation-#{invitation_1.id}-actions") do
-      assert_invitee_actions_exist(['invite', 'attend'])
+      assert_invitee_actions_exist(['invite'])
     end
 
     # person 1, invite!
@@ -249,7 +249,7 @@ feature "research sessions" do
       invitation: invitation_1,
       action: "invite",
       new_state: "invited",
-      new_actions: ['remind', 'confirm', 'cancel', 'attend']
+      new_actions: ['remind', 'confirm', 'cancel']
     })
 
     # person 1, remind!
@@ -257,7 +257,7 @@ feature "research sessions" do
       invitation: invitation_1,
       action: "remind",
       new_state: "reminded",
-      new_actions: ['remind', 'confirm', 'cancel', 'attend']
+      new_actions: ['remind', 'confirm', 'cancel']
     })
 
     # person 1, confirm!
@@ -265,9 +265,11 @@ feature "research sessions" do
       invitation: invitation_1,
       action: "confirm",
       new_state: "confirmed",
-      new_actions: ['confirm', 'cancel', 'attend']
+      new_actions: ['confirm', 'cancel']
     })
 
+    Timecop.travel(invitation_1.start_datetime + 2.hours)
+    visit research_session_path(research_session)
     # person 1, attend!
     assert_invitee_action_works({
       invitation: invitation_1,
@@ -275,7 +277,7 @@ feature "research sessions" do
       new_state: "attended",
       new_actions: ['attend']
     })
-
+    Timecop.return
     # uninvite person 1
     remove_invitee(person_1)
     expect(research_session.reload.invitations.count).to eq(0)
@@ -289,19 +291,19 @@ feature "research sessions" do
       invitation: invitation_1,
       action: "invite",
       new_state: "invited",
-      new_actions: ['remind', 'confirm', 'cancel', 'attend']
+      new_actions: ['remind', 'confirm', 'cancel']
     })
     assert_invitee_action_works({
       invitation: invitation_1,
       action: "cancel",
       new_state: "cancelled",
-      new_actions: ['attend']
+      new_actions: []
     })
 
     # invite person 2
     add_invitee(person_2)
     invitation_2 = research_session.reload.invitations.find_by(person: person_2)
-    assert_invitee_actions_exist(['invite', 'attend'])
+    assert_invitee_actions_exist(['invite'])
 
     # travel far past the session date
     Timecop.freeze(start_datetime + 1.day) do

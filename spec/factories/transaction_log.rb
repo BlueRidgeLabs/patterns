@@ -1,17 +1,28 @@
-# require 'faker'
+require 'faker'
 
-# FactoryBot.define do
-#   factory :transaction_log do
-#     transient do
-#       admin_user FactoryBot.create(:user, :admin)
-#     end
+FactoryBot.define do
+  factory :transaction_log do
+    trait :topup do
+      amount 100
+      user { create(:user,:admin) }
+      recipient_type 'Budget'
+      recipient_id { user.budget.id }
+      transaction_type 'Topup'
+      from_type 'User'
+      from_id { user.id }
+    end
 
-#     amount 100
-#     recipient_type 'Budget'
-#     transaction_type 'Topup'
-#     recipient_id  admin_user.id
-#     from_id admin_user.id
-#     from_type 'User'
-#     user_id admin_user.id
-#   end
-# end
+    trait :transfer do
+      transient do
+        other_user { user }
+      end
+      amount 100
+      user { create(:user,:admin) }
+      recipient_type 'Budget'
+      recipient_id { other_user.budget.id }
+      transaction_type 'Transfer'
+      from_type 'Budget'
+      from_id { user.budget.id }
+    end
+  end
+end

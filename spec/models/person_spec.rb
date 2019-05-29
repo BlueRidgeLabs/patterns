@@ -54,6 +54,11 @@ require 'rails_helper'
 
 describe Person do
   subject { FactoryBot.build(:person) }
+  let(:now) { DateTime.current }
+  let(:more_than_a_year_ago) { now - 1.year - 1.day }
+  let(:less_than_a_year_ago) { now - 1.year + 1.day }
+  let(:more_than_six_months_ago) { now - 6.months - 1.day }
+  let(:less_than_six_months_ago) { now - 6.months + 1.day }
 
   describe "validations" do
     it 'validates uniqueness of phone_number' do
@@ -113,6 +118,203 @@ describe Person do
           # results should be [nil, nil] before compacted to []
           expect(AdminMailer).not_to receive(:participation_level_change)
           Person.update_all_participation_levels
+        end
+      end
+    end
+  end
+
+  describe "instance methods" do
+    describe "#update_participation_level" do
+      let(:person) { FactoryBot.create(:person) }
+      let(:action) { person.update_participation_level }
+
+      context "not dig" do
+        before { person.update(tag_list: "not dig") }
+
+        it "returns nil" do
+          expect(action).to be_nil
+        end
+      end
+
+      context "participation_level not changed" do
+        it "returns nil and does nothing" do
+          old_level = person.participation_level
+          expect(person).to receive(:calc_participation_level).and_return(old_level)
+          expect(action).to be_nil
+          expect(person.reload.participation_level).to eq(old_level)
+        end
+      end
+
+      context "participation_level has changed" do
+        it "updates participation_level, updates tag list, updates placement in cart, and returns hash with id, old level, and new level" do
+          Person::PARTICIPATION_LEVELS.each do |pl|
+            FactoryBot.create(:cart, name: pl)
+          end
+          new_cart = Cart.find_by_name(Person::PARTICIPATION_LEVEL_NEW)
+          ambassador_cart = Cart.find_by_name(Person::PARTICIPATION_LEVEL_AMBASSADOR)
+
+          person.update(tag_list: Person::PARTICIPATION_LEVEL_NEW, participation_level: Person::PARTICIPATION_LEVEL_NEW)
+
+          new_level = Person::PARTICIPATION_LEVEL_AMBASSADOR
+          expect(person).to receive(:calc_participation_level).and_return(new_level)
+
+          expect(action).to eq({ pid: person.id, old: Person::PARTICIPATION_LEVEL_NEW, new: Person::PARTICIPATION_LEVEL_AMBASSADOR })
+          expect(person.reload.participation_level).to eq(Person::PARTICIPATION_LEVEL_AMBASSADOR)
+          expect(new_cart.reload.people.find_by_id(person.id)).to be_nil
+          expect(ambassador_cart.reload.people.find_by_id(person.id)).to be_truthy
+        end
+      end
+    end
+
+    describe "#calc_participation_level" do
+      context "ambassador_criteria met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'ambassador'" do
+          allow(person).to receive(:ambassador_criteria).and_return(true)
+          allow(person).to receive(:active_criteria).and_return(true)
+          allow(person).to receive(:participant_criteria).and_return(true)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_AMBASSADOR)
+        end
+      end
+
+      context "active_criteria met, but ambassador_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'active'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(true)
+          allow(person).to receive(:participant_criteria).and_return(true)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_ACTIVE)
+        end
+      end
+
+      context "participant_criteria met, but ambassador_criteria and active_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'participant'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(false)
+          allow(person).to receive(:participant_criteria).and_return(true)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_PARTICIPANT)
+        end
+      end
+
+      context "inactive_criteria met, but ambassador_criteria, participant_criteria, and active_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'inactive'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(false)
+          allow(person).to receive(:participant_criteria).and_return(false)
+          allow(person).to receive(:inactive_criteria).and_return(true)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_INACTIVE)
+        end
+      end
+
+      context "inactive_criteria, ambassador_criteria, participant_criteria, and active_criteria not met" do
+        let(:person) { FactoryBot.create(:person) }
+        it "returns 'new'" do
+          allow(person).to receive(:ambassador_criteria).and_return(false)
+          allow(person).to receive(:active_criteria).and_return(false)
+          allow(person).to receive(:participant_criteria).and_return(false)
+          allow(person).to receive(:inactive_criteria).and_return(false)
+          expect(person.calc_participation_level).to eq(Person::PARTICIPATION_LEVEL_NEW)
+        end
+      end
+    end
+
+    describe "#ambassador_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+      context "tag list includes 'brl special ambassador'" do
+        it "returns true" do
+          expect(person.ambassador_criteria).to eq(false)
+          person.update_attributes(tag_list: "brl special ambassador")
+          expect(person.ambassador_criteria).to eq(true)
+        end
+      end
+
+      context "sessions with 2+ teams in past year, and 3+ sessions ever" do
+        it "returns true" do
+          team_1 = FactoryBot.create(:team)
+          team_2 = FactoryBot.create(:team)
+
+          expect(person.ambassador_criteria).to eq(false)
+          Timecop.freeze(more_than_a_year_ago) do
+            FactoryBot.create_list(:reward, 3, :gift_card, person: person)
+            person.reload
+          end
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person, team: team_1)
+            person.reload
+          end
+          expect(person.ambassador_criteria).to eq(false)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person, team: team_1)
+            person.reload
+          end
+          expect(person.ambassador_criteria).to eq(false)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person, team: team_2)
+            person.reload
+          end
+          expect(person.ambassador_criteria).to eq(true)
+        end
+      end
+    end
+
+    describe "#active_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+
+      context "at least one reward in past six months" do
+        it "returns true" do
+          Timecop.freeze(more_than_six_months_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.active_criteria).to eq(false)
+          Timecop.freeze(less_than_six_months_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.active_criteria).to eq(true)
+        end
+      end
+    end
+
+    describe "#participant_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+
+      context "at least one reward in the past year" do
+        it "returns true" do
+          Timecop.freeze(more_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.participant_criteria).to eq(false)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.participant_criteria).to eq(true)
+        end
+      end
+    end
+
+    describe "#inactive_criteria" do
+      let(:person) { FactoryBot.create(:person) }
+
+      context "at least one reward, but not in the past year" do
+        it "returns true" do
+          Timecop.freeze(more_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.inactive_criteria).to eq(true)
+          Timecop.freeze(less_than_a_year_ago) do
+            FactoryBot.create(:reward, :gift_card, person: person)
+            person.reload
+          end
+          expect(person.inactive_criteria).to eq(false)
         end
       end
     end
