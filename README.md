@@ -2,8 +2,10 @@ Patterns
 =====
 [![Coverage Status](https://coveralls.io/repos/github/BlueRidgeLabs/patterns/badge.svg?branch=development)](https://coveralls.io/github/BlueRidgeLabs/patterns?branch=development)
 [![Build Status](https://travis-ci.org/BlueRidgeLabs/patterns.svg?branch=development)](https://travis-ci.org/BlueRidgeLabs/patterns)
+
 [![Code Climate](https://codeclimate.com/github/BlueRidgeLabs/patterns/badges/gpa.svg)](https://codeclimate.com/github/BlueRidgeLabs/patterns)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/aa04fbf31647d44fba41/maintainability)](https://codeclimate.com/github/BlueRidgeLabs/patterns/maintainability)
 Patterns is an application to manage people that are involved with Blue Ridge Labs' Design Insight Group.
 
 NOTE: 
