@@ -22,6 +22,14 @@ engines:
     enabled: true
   rubocop:
     enabled: true
+  bandit:
+    enabled: true
+  flog:
+    enabled: true
+  reek:
+    enabled: true
+  brakeman:
+    enabled: true
 ratings:
   paths:
   - Gemfile.lock
