@@ -48,7 +48,7 @@
               <%= @recent_signups[index].full_name %>
             </td>
             <td>
-              <%= address_fields_to_sentence(@recent_signups[index]) %>
+              <%= @recent_signups[index].address_fields_to_sentence %>
             </td>
             <td id="new-batchid-<%= @recent_signups[index].id %>">
               <%= form.text_field :batch_id, class: 'input-small', :placeholder => "Batch ID"  %>

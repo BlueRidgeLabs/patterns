@@ -37,10 +37,6 @@
 
 module PeopleHelper
 
-  def address_fields_to_sentence(person)
-    [person.address_1, person.address_2, person.city, person.state, person.postal_code].reject(&:blank?).join(', ')
-  end
-
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Style/RescueEnsureAlignment
   def human_device_type_name(device_id)
