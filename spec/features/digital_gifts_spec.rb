@@ -38,7 +38,6 @@ feature "digital gifts page" do
     # should have a factory for this
     budget = user.team.budget
     original_amount = budget.amount
-    expect(Budget.all.size).to eq(2)
 
     visit '/budgets'
     fill_in 'topup-amount', with: 200
