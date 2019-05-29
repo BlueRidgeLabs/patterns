@@ -239,6 +239,7 @@ group :test do
   gem 'mock_redis'
   gem 'vcr'
   gem 'rspec-sidekiq'
+  gem 'shoulda'
 end
 
 group :development, :test do
@@ -263,7 +264,6 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
 
-  gem 'shoulda-matchers', '~> 3.1.1', require: false
   gem 'sms-spec'
   gem "byebug", "~> 11.0"
 end

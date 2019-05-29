@@ -94,6 +94,7 @@ class RewardsController < ApplicationController
     klass = reward_params['rewardable_type'].classify.constantize
     @rewardable = klass.find(reward_params['rewardable_id'])
     @success = false
+    # TODO: Refactor
     if @rewardable && Reward.find_by(rewardable_type: @rewardable.class.to_s,
                            rewardable_id: @rewardable.id).nil?
       @reward = Reward.new(rewardable_type: @rewardable.class,

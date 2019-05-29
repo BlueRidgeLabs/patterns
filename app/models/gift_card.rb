@@ -40,8 +40,6 @@ class GiftCard < ApplicationRecord
   validates :expiration_date, presence: true
   validates :user_id, presence: true
 
-  validates :reward_id, uniqueness: true, allow_nil: true
-
   validates :expiration_date,
     format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 

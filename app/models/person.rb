@@ -71,7 +71,14 @@ class Person < ApplicationRecord
   # * DIG Ambassador = “active for at least one year, 2+ projects/teams
   # if there’s any way to automate that info to flow into dashboard/pool —
   # and notify me when new person gets added-- that would be amazing
-  PARTICIPATION_LEVELS = %w[new inactive participant active ambassador]
+
+  PARTICIPATION_LEVELS = [
+    PARTICIPATION_LEVEL_NEW = "new",
+    PARTICIPATION_LEVEL_INACTIVE = "inactive",
+    PARTICIPATION_LEVEL_PARTICIPANT = "participant",
+    PARTICIPATION_LEVEL_ACTIVE = "active",
+    PARTICIPATION_LEVEL_AMBASSADOR = "ambassador"
+  ]
 
   page 50
 
@@ -155,6 +162,7 @@ class Person < ApplicationRecord
     %i[no_signup_card ransack_tagged_with]
   end
 
+  # TODO:
   def self.locale_name_to_locale(locale_name)
     obj = { 'english': 'en', 'spanish': 'es', 'chinese': 'zh' }
     obj[locale_name.downcase]
@@ -183,8 +191,9 @@ class Person < ApplicationRecord
   end
 
   def inactive_criteria
-    # have gotten a gift card, but not in the past year.
-    rewards.where('created_at < ?', 1.year.ago).size >= 1
+    at_least_one_reward_older_than_a_year = rewards.where('created_at < ?', 1.year.ago).size >= 1
+    no_rewards_in_the_past_year = rewards.where('created_at >= ?', 1.year.ago).size == 0
+    at_least_one_reward_older_than_a_year && no_rewards_in_the_past_year
   end
 
   def participant_criteria
@@ -193,27 +202,26 @@ class Person < ApplicationRecord
   end
 
   def active_criteria
-    # gotten a gift card for a research session in the past 6 months
-    # and two teams
-    rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1 || rewards.where('created_at > ?', 6.months.ago).map(&:team).uniq.size >= 2
+    at_least_one_reward_in_past_six_months = rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
+    at_least_one_reward_in_past_six_months
   end
 
   def ambassador_criteria
-    # older than a year and 2 or more sessions with two teams and
-    # either 3 research sessions or 6 cards in the last year
     if tag_list.include?('brl special ambassador')
       true
     else
-      rewards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2 && rewards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
+      sessions_with_two_or_more_teams_in_the_past_year = rewards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
+      at_least_three_sessions_ever = rewards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
+      sessions_with_two_or_more_teams_in_the_past_year && at_least_three_sessions_ever
     end
   end
 
   def calc_participation_level
-    pl = 'new' # needs outreach
-    pl = 'inactive'    if inactive_criteria
-    pl = 'participant' if participant_criteria
-    pl = 'active'      if active_criteria
-    pl = 'ambassador'  if ambassador_criteria
+    pl = PARTICIPATION_LEVEL_NEW # needs outreach
+    pl = PARTICIPATION_LEVEL_INACTIVE    if inactive_criteria
+    pl = PARTICIPATION_LEVEL_PARTICIPANT if participant_criteria
+    pl = PARTICIPATION_LEVEL_ACTIVE      if active_criteria
+    pl = PARTICIPATION_LEVEL_AMBASSADOR  if ambassador_criteria
     pl
   end
 
@@ -242,13 +250,6 @@ class Person < ApplicationRecord
       end # end cart update
       return { pid: id, old: old_level, new: new_level }
     end
-  end
-
-  def signup_gc_sent
-    signup_cards = rewards.where(reason: 1)
-    return true unless signup_cards.empty?
-
-    false
   end
 
   def verified?

@@ -23,7 +23,7 @@ FactoryBot.define do
   factory :gift_card do
     sequence(:sequence_number) {|n| n }
     expiration_date '05/20'
-    user_id 1
+    user
     created_by 1
     batch_id {Faker::Number.number(8)}
     amount_cents 2500
