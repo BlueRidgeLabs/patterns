@@ -85,10 +85,6 @@ class Reward < ApplicationRecord
   #   Arel.sql('date(created_at)')
   # end
 
-  def self.available_types
-    %w[GiftCard CashCard DigitalGift]
-  end
-
   def reason_is_signup?
     reason == 'signup'
   end

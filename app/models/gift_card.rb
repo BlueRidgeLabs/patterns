@@ -176,11 +176,6 @@ class GiftCard < ApplicationRecord
     end
   end
 
-  def last_balance
-    ca = calls.checks.order(created_at: 'DESC').first
-    ca.nil? ? amount : ca.balance
-  end
-
   def last_4
     full_card_number.to_s.last(4)
   end

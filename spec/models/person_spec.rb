@@ -121,6 +121,17 @@ describe Person do
         end
       end
     end
+
+    describe "#locale_name_to_locale(locale_name)" do
+      it "works" do
+        expect(Person.locale_name_to_locale('english')).to eq('en')
+        expect(Person.locale_name_to_locale('ENgliSh')).to eq('en')
+        expect(Person.locale_name_to_locale('spanish')).to eq('es')
+        expect(Person.locale_name_to_locale('spanisH')).to eq('es')
+        expect(Person.locale_name_to_locale('chinese')).to eq('zh')
+        expect(Person.locale_name_to_locale('covfefe')).to be_nil
+      end
+    end
   end
 
   describe "instance methods" do

@@ -162,10 +162,9 @@ class Person < ApplicationRecord
     %i[no_signup_card ransack_tagged_with]
   end
 
-  # TODO:
   def self.locale_name_to_locale(locale_name)
-    obj = { 'english': 'en', 'spanish': 'es', 'chinese': 'zh' }
-    obj[locale_name.downcase]
+    obj = { 'english' => 'en', 'spanish' => 'es', 'chinese' => 'zh' }
+    obj[locale_name.to_s.downcase]
   end
 
   ransack_alias :comments, :comments_content
@@ -252,10 +251,6 @@ class Person < ApplicationRecord
     end
   end
 
-  def verified?
-    verified&.start_with?('Verified')
-  end
-
   def rewards_total
     end_of_last_year = Time.zone.today.beginning_of_year - 1.day
     total = rewards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
@@ -293,22 +288,6 @@ class Person < ApplicationRecord
     elsif !active || tag_list.include?('not dig')
       delete_from_rapidpro
     end
-  end
-
-  def primary_device_type_name
-    Patterns::Application.config.device_mappings.rassoc(primary_device_id)[0].to_s if primary_device_id.present?
-  end
-
-  def secondary_device_type_name
-    Patterns::Application.config.device_mappings.rassoc(secondary_device_id)[0].to_s if secondary_device_id.present?
-  end
-
-  def primary_connection_type_name
-    Patterns::Application.config.connection_mappings.rassoc(primary_connection_id)[0].to_s if primary_connection_id.present?
-  end
-
-  def secondary_connection_type_name
-    Patterns::Application.config.connection_mappings.rassoc(secondary_connection_id)[0].to_s if secondary_connection_id.present?
   end
 
   def lat_long
