@@ -185,7 +185,7 @@ class Person < ApplicationRecord
     @results.compact!
     if @results.present?
       User.approved.admin.all.find_each do |u|
-        AdminMailer.participation_level_change(results: @results, to: u.email_address).deliver_later
+        AdminMailer.participation_level_change(@results, u.email_address)&.deliver_later
       end
     end
   end
