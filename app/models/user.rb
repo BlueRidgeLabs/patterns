@@ -56,7 +56,7 @@ class User < ApplicationRecord
   has_many :carts, through: :carts_user, foreign_key: :user_id
   belongs_to :team
 
-  after_create :create_cart
+  after_commit :create_cart, on: :create
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalized_method :phone_number, default_country_code: 'US'
 
