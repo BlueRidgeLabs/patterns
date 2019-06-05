@@ -29,7 +29,7 @@ FactoryBot.define do
     created_by { user.id }
     team_id { user.team.id }
     finance_code { user.team.finance_code }
-
+    reason 2
     trait :gift_card do
       rewardable { build(:gift_card, user: user, created_by: user.id) }
     end

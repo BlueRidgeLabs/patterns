@@ -1,4 +1,5 @@
 $(document).on('turbolinks:load', function() {
+
   assign_cards_to_user = function(){
     console.log('called assign cards to user');
     var user_id = document.getElementById('select_user_for_cards').value;
@@ -18,7 +19,7 @@ $(document).on('turbolinks:load', function() {
     $('#activate-toggle-right').toggle()
  })
 
-  function update_checkbox_count(){
+  update_checkbox_count = function(){
     var checked_count = $('#gift-cards-large tr input[type="checkbox"]:checked:visible').length
     $('#checkedcount').html(checked_count);
   }
@@ -163,83 +164,94 @@ $(document).on('turbolinks:load', function() {
   }
   multiselect_setup();
 
-  // searches for workers. simple Fuse search.
-  var filter = function() {
-    // map through each card, hide it, and return a searchable obj.
-    var searchable_cards = $('.gift-card').map(function() {
-          $(this).hide(); // hide em all.
-          $(':checkbox').prop('checked', false); //uncheck all of the boxes
-          return { 
-            sequence: $(this).data('sequence-number'), 
-            last4:$(this).data('last-4'), 
-            username:$(this).data('user-name'),
-            sequsername:$(this).data('sequence-number') + ' ' + $(this).data('user-name'),
-            obj: $(this)}
-        })
+  filter_setup =  function(){
+    console.log('running filter setup')
+    
+    var filter = function() {
+      console.log('executing filter')
+      // map through each card, hide it, and return a searchable obj.
+      var searchable_cards = $('.gift-card').map(function() {
+            $(this).hide(); // hide em all.
+            $(':checkbox').prop('checked', false); //uncheck all of the boxes
+            return { 
+              sequence: $(this).data('sequence-number'), 
+              last4:$(this).data('last-4'), 
+              username:$(this).data('user-name'),
+              sequsername:$(this).data('sequence-number') + ' ' + $(this).data('user-name'),
+              obj: $(this)}
+          })
 
-    //small search area, so way less fuzzy
-    var options = {
-      keys: ['sequence', 'username','sequsername'],
-      shouldSort: true,
-      threshold: 0.1,
-      location: 0
+      //small search area, so way less fuzzy
+      var options = {
+        keys: ['sequence', 'username','sequsername'],
+        shouldSort: true,
+        threshold: 0.1,
+        location: 0
+      };
+
+      var fuse = new Fuse(searchable_cards, options);
+      var query = $('#card-search').val();
+      var found = [];
+      if (query.length > 0) {
+        found = fuse.search(query);
+        // show only found workers.
+        $(found).each(function(i, v) { $(v.obj).show();});
+      } else {
+        // show all of the workers, didn't find anything
+        $('.gift-card').each(function(i, v) { $(v).show(); });
+      }
     };
+    
 
-    var fuse = new Fuse(searchable_cards, options);
-    var query = $('#card-search').val();
-    var found = [];
-    if (query.length > 0) {
-      found = fuse.search(query);
-      // show only found workers.
-      $(found).each(function(i, v) { $(v.obj).show();});
-    } else {
-      // show all of the workers, didn't find anything
-      $('.gift-card').each(function(i, v) { $(v).show(); });
+    //setup before functions
+    var typingTimer;                //timer identifier
+    var doneTypingInterval = 100;  //time in ms, 5 second for example
+    var $input = $('#card-search');
+
+    //on keyup, start the countdown
+    $input.on('keyup', function () {
+      $('#card-search').addClass('loading');
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    });
+
+    //on keydown, clear the countdown 
+    $input.on('keydown', function () {
+      clearTimeout(typingTimer);
+    });
+
+    //user is "finished typing," do something
+    function doneTyping () {
+      $('#card-search').removeClass('loading');
+      filter();
+      if ($('#card-search').val() != '') {
+        $('.form-control-clear button').removeClass('btn-secondary').addClass('btn-primary');
+      } else {
+        $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
+      }
+      update_checkbox_count();
     }
-  };
-  
 
-  //setup before functions
-  var typingTimer;                //timer identifier
-  var doneTypingInterval = 100;  //time in ms, 5 second for example
-  var $input = $('#card-search');
-
-  //on keyup, start the countdown
-  $input.on('keyup', function () {
-    $('#card-search').addClass('loading');
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(doneTyping, doneTypingInterval);
-  });
-
-  //on keydown, clear the countdown 
-  $input.on('keydown', function () {
-    clearTimeout(typingTimer);
-  });
-
-  //user is "finished typing," do something
-  function doneTyping () {
-    $('#card-search').removeClass('loading');
-    filter();
-    if ($('#card-search').val() != '') {
-      $('.form-control-clear button').removeClass('btn-secondary').addClass('btn-primary');
-    } else {
+    $('.form-control-clear').click(function() {
+      $(this).siblings('input[type="text"]').val('').trigger('propertychange').focus();
       $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
-    }
-    update_checkbox_count();
-  }
-
-  $('.form-control-clear').click(function() {
-    $(this).siblings('input[type="text"]').val('').trigger('propertychange').focus();
-    $('.form-control-clear button').removeClass('btn-primary').addClass('btn-secondary');
-    $(this).siblings('input[type="text"]').blur();
-    $('.gift-card').each(function(i, v) { $(v).show(); });
-    update_checkbox_count()
-  });
+      $(this).siblings('input[type="text"]').blur();
+      $('.gift-card').each(function(i, v) { $(v).show(); });
+      update_checkbox_count()
+    });
+  };
 
   // after we have a new card added.
   $(document).ajaxComplete(function(event, request) {
     multiselect_setup();
     $(':checkbox').on('click', update_checkbox_count)
      update_checkbox_count();
+  });
+  
+  // $('#card-search').on('focus', filter_setup());
+
+  $("#modal-window").on('shown', function(){
+    // thank you javascript for arbitrary timing.
+    window.setTimeout(filter_setup, 250);
   });
 });
