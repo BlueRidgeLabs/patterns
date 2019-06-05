@@ -165,10 +165,10 @@ $(document).on('turbolinks:load', function() {
   multiselect_setup();
 
   filter_setup =  function(){
-    console.log('running filter setup')
+    
     
     var filter = function() {
-      console.log('executing filter')
+    
       // map through each card, hide it, and return a searchable obj.
       var searchable_cards = $('.gift-card').map(function() {
             $(this).hide(); // hide em all.
