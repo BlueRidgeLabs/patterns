@@ -218,6 +218,7 @@ feature "research sessions" do
   end
 
   scenario "invitee actions", js: true do
+    gift_card = FactoryBot.create(:gift_card,:active, user: admin_user)
     start_datetime = DateTime.current + 2.days
     research_session = FactoryBot.create(:research_session, start_datetime: start_datetime)
     current_cart = admin_user.current_cart
@@ -317,6 +318,12 @@ feature "research sessions" do
         new_state: "missed",
         new_actions: ['attend']
       })
+
+      # click_with_js(page.find("#add-reward-#{invitation_2.id}"))
+      # expect(page).to have_content(gift_card.last_4)
+      # fill_in 'card-search', with: gift_card.sequence_number.to_i + 4
+      # sleep 0.25
+      # expect(page).not_to have_content(gift_card.last_4)
     end
   end
 
