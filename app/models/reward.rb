@@ -37,7 +37,10 @@ class Reward < ApplicationRecord
     interview: 4,
     other: 5,
     focus_group: 6,
-    survey: 7
+    survey: 7,
+    coordination: 8,
+    translation: 9,
+    honorarium: 10
   }
 
   belongs_to :rewardable, polymorphic: true, touch: true
