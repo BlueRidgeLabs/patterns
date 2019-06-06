@@ -165,10 +165,10 @@ $(document).on('turbolinks:load', function() {
   multiselect_setup();
 
   filter_setup =  function(){
-    
+    console.log('filter_setup');
     
     var filter = function() {
-    
+      console.log('running filter');
       // map through each card, hide it, and return a searchable obj.
       var searchable_cards = $('.gift-card').map(function() {
             $(this).hide(); // hide em all.
@@ -252,6 +252,7 @@ $(document).on('turbolinks:load', function() {
 
   $("#modal-window").on('shown', function(){
     // thank you javascript for arbitrary timing.
+    console.log('shown');
     window.setTimeout(filter_setup, 450);
   });
 });
