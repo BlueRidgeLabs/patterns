@@ -252,6 +252,6 @@ $(document).on('turbolinks:load', function() {
 
   $("#modal-window").on('shown', function(){
     // thank you javascript for arbitrary timing.
-    window.setTimeout(filter_setup, 250);
+    window.setTimeout(filter_setup, 450);
   });
 });
