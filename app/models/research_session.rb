@@ -46,11 +46,11 @@ class ResearchSession < ApplicationRecord
   validate :clean_invitations
 
   validates :description,
-    :title,
-    :start_datetime,
-    :duration,
-    :user_id,
-    presence: true
+            :title,
+            :start_datetime,
+            :duration,
+            :user_id,
+            presence: true
 
   validates :duration, numericality: { greater_than_or_equal_to: 0 }
 
@@ -60,11 +60,11 @@ class ResearchSession < ApplicationRecord
 
   scope :future, -> {
     where('start_datetime > ?',
-      Time.zone.today.end_of_day)
+          Time.zone.today.end_of_day)
   }
   scope :past, -> {
     where('start_datetime < ?',
-      Time.zone.today.beginning_of_day)
+          Time.zone.today.beginning_of_day)
   }
 
   scope :upcoming, ->(d = 7) { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days) }

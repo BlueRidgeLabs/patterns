@@ -188,42 +188,42 @@ class PeopleController < ApplicationController
     # rubocop:disable Metrics/MethodLength
     def person_params
       params.require(:person).permit(:first_name,
-        :last_name,
-        :verified,
-        :referred_by,
-        :low_income,
-        :locale,
-        :email_address,
-        :neighborhood,
-        :address_1,
-        :address_2,
-        :city,
-        :state,
-        :postal_code,
-        :geography_id,
-        :primary_device_id,
-        :primary_device_description,
-        :secondary_device_id,
-        :secondary_device_description,
-        :primary_connection_id,
-        :primary_connection_description,
-        :secondary_connection_id,
-        :secondary_connection_description,
-        :phone_number,
-        :landline,
-        :participation_type,
-        :preferred_contact_method,
-        gift_cards_attributes: %i[
-          gift_card_number
-          expiration_date
-          person_id
-          notes
-          created_by
-          reason
-          amount
-          giftable_id
-          giftable_type
-        ])
+                                     :last_name,
+                                     :verified,
+                                     :referred_by,
+                                     :low_income,
+                                     :locale,
+                                     :email_address,
+                                     :neighborhood,
+                                     :address_1,
+                                     :address_2,
+                                     :city,
+                                     :state,
+                                     :postal_code,
+                                     :geography_id,
+                                     :primary_device_id,
+                                     :primary_device_description,
+                                     :secondary_device_id,
+                                     :secondary_device_description,
+                                     :primary_connection_id,
+                                     :primary_connection_description,
+                                     :secondary_connection_id,
+                                     :secondary_connection_description,
+                                     :phone_number,
+                                     :landline,
+                                     :participation_type,
+                                     :preferred_contact_method,
+                                     gift_cards_attributes: %i[
+                                       gift_card_number
+                                       expiration_date
+                                       person_id
+                                       notes
+                                       created_by
+                                       reason
+                                       amount
+                                       giftable_id
+                                       giftable_type
+                                     ])
     end
     # rubocop:enable Metrics/MethodLength
 

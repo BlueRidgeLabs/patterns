@@ -41,13 +41,13 @@ class User < ApplicationRecord
   # acts_as_tagger #if we want owned tags.
 
   devise :database_authenticatable,
-    :registerable,
-    :recoverable,
-    :rememberable,
-    :trackable,
-    :validatable,
-    :zxcvbnable, # password strength
-    stretches: Rails.env.production? ? 1 : 10
+         :registerable,
+         :recoverable,
+         :rememberable,
+         :trackable,
+         :validatable,
+         :zxcvbnable, # password strength
+         stretches: Rails.env.production? ? 1 : 10
 
   has_many :research_sessions
   has_many :invitations, through: :research_sessions

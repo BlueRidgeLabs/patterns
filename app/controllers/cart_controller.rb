@@ -194,26 +194,26 @@ class CartController < ApplicationController
 
     def cart_update_params
       params.require(:cart).permit(:description,
-        :name,
-        :id,
-        :user_id,
-        :user,
-        :person,
-        :rapidpro_sync,
-        :person_id)
+                                   :name,
+                                   :id,
+                                   :user_id,
+                                   :user,
+                                   :person,
+                                   :rapidpro_sync,
+                                   :person_id)
     end
 
     def cart_params
       params.permit(:person_id,
-        :all,
-        :type,
-        :name,
-        :id,
-        :user,
-        :rapidpro_sync,
-        :user_id,
-        :description,
-        :notes)
+                    :all,
+                    :type,
+                    :name,
+                    :id,
+                    :user,
+                    :rapidpro_sync,
+                    :user_id,
+                    :description,
+                    :notes)
     end
 
     def type_init

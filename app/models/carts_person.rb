@@ -14,8 +14,8 @@ class CartsPerson < ApplicationRecord
   belongs_to :person
 
   validates :person_id,
-    uniqueness: { scope: :cart_id,
-                  message: 'Person can only be in a cart once.' }
+            uniqueness: { scope: :cart_id,
+                          message: 'Person can only be in a cart once.' }
 
   if ENV['RAPIDPRO_TOKEN']
     after_create :add_to_rapidpro

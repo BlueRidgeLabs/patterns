@@ -41,7 +41,7 @@ class GiftCard < ApplicationRecord
   validates :user_id, presence: true
 
   validates :expiration_date,
-    format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
+            format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
 
   validates :batch_id, format: { with: /\A[0-9]*\z/ }
   validates :secure_code, format: { with: /\A[0-9]*\z/ }, allow_blank: true
@@ -264,21 +264,21 @@ class GiftCard < ApplicationRecord
 
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "gift_card_event_#{current_user.id}_channel",
-        type: :update,
-        status: status,
-        id: id,
-        large: render_large_gift_card(current_user),
-        mini: render_mini_gift_card(current_user),
-        count: GiftCard.active_unassigned_count(current_user)
+                                   type: :update,
+                                   status: status,
+                                   id: id,
+                                   large: render_large_gift_card(current_user),
+                                   mini: render_mini_gift_card(current_user),
+                                   count: GiftCard.active_unassigned_count(current_user)
     end
 
     def broadcast_delete(c_user = nil)
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "gift_card_event_#{current_user.id}_channel",
-        status: status,
-        type: :delete,
-        id: id,
-        count: GiftCard.active_unassigned_count(current_user)
+                                   status: status,
+                                   type: :delete,
+                                   id: id,
+                                   count: GiftCard.active_unassigned_count(current_user)
     end
 
     def render_large_gift_card(c_user = nil)
