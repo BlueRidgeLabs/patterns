@@ -141,6 +141,7 @@ bundle exec guard -g red_green_refactor
 
 Todo: 
 Think about converting all js to https://stimulusjs.org
+https://johnbeatty.co/stimulus-js-tutorials/
 
 Contributors
 ------------
