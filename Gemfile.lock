@@ -470,6 +470,9 @@ GEM
     rubocop-rails (2.0.1)
       rack (>= 1.1)
       rubocop (>= 0.70.0)
+    rubocop-rails_config (0.5.1)
+      railties (>= 3.0)
+      rubocop (~> 0.60)
     ruby-graphviz (1.2.4)
     ruby-prof (0.18.0)
     ruby-progressbar (1.10.1)
@@ -702,6 +705,7 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   rubocop-rails
+  rubocop-rails_config
   ruby-prof
   rubyzip
   rvm-capistrano

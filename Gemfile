@@ -257,8 +257,8 @@ group :development, :test do
   gem 'guard-minitest'
   gem 'guard-rspec', require: false
   gem 'rubocop', require: false
-  gem 'rubocop-rails', require: false
-  gem 'rubocop-performance', require: false
+  gem "rubocop-rails_config"  
+  gem 'rubocop-performance'
   gem 'guard-rubocop'
   gem 'selenium-webdriver'
   gem 'pry' # a console anywhere!
