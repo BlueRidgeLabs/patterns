@@ -76,12 +76,12 @@ class Reward < ApplicationRecord
   validates :reason, uniqueness: { scope: :person_id, if: :reason_is_signup? }
 
   validates :rewardable_type,
-    inclusion: {
-      in: %w[GiftCard CashCard DigitalGift],
-      if: proc { |r|
-        r.rewardable_id.present?
-      }
-    }
+            inclusion: {
+              in: %w[GiftCard CashCard DigitalGift],
+              if: proc { |r|
+                r.rewardable_id.present?
+              }
+            }
   validate :giftable_person_ownership
 
   # ransacker :created_at, type: :date do

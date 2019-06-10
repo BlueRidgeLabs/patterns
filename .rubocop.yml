@@ -46,7 +46,7 @@ Layout/EmptyLinesAroundModuleBody:
 Layout/IndentationConsistency:
   EnforcedStyle: rails
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   EnforcedStyle: consistent
 
 Style/RaiseArgs:
@@ -89,3 +89,4 @@ Metrics/AbcSize:
 Metrics/LineLength:
   Enabled: false
 
+require: rubocop-rails

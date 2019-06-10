@@ -230,20 +230,20 @@ class DigitalGiftsController < ApplicationController
 
     def api_params
       params.permit(:person_id,
-        :api_token,
-        :research_session_id,
-        :phone_number,
-        :amount)
+                    :api_token,
+                    :research_session_id,
+                    :phone_number,
+                    :amount)
     end
 
     def dg_params
       params.permit(:person_id,
-        :user_id,
-        :notes,
-        :reason,
-        :amount,
-        :giftable_type,
-        :giftable_id)
+                    :user_id,
+                    :notes,
+                    :reason,
+                    :amount,
+                    :giftable_type,
+                    :giftable_id)
     end
 
     # Use callbacks to share common setup or constraints between actions.

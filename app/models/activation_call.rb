@@ -22,9 +22,9 @@ class ActivationCall < ApplicationRecord
 
   CALL_TYPES = [
     CALL_TYPE_ACTIVATE = 'activate',
-    CALL_TYPE_CHECK = 'check',
+    CALL_TYPE_CHECK = 'check'
     # CALL_TYPE_BALANCE = 'balance' # balance soon
-  ]
+  ].freeze
 
   CALL_STATUS_STARTED = 'started'
 
@@ -58,8 +58,8 @@ class ActivationCall < ApplicationRecord
       I18n.t('activation_calls.transcript.activate')
     when CALL_TYPE_CHECK
       I18n.t('activation_calls.transcript.check')
-    # when 'balance' # not yet implemented. but could be
-    #   'the available balance'
+      # when 'balance' # not yet implemented. but could be
+      #   'the available balance'
     end
   end
 

@@ -36,13 +36,13 @@ class Invitation < ApplicationRecord
 
   # not sure about all these delegations.
   delegate :user,
-    :start_datetime,
-    :end_datetime,
-    :title,
-    :description,
-    :location,
-    :sms_description,
-    :duration, to: :research_session
+           :start_datetime,
+           :end_datetime,
+           :title,
+           :description,
+           :location,
+           :sms_description,
+           :duration, to: :research_session
 
   scope :today, -> {
     joins(:research_session).
@@ -52,13 +52,13 @@ class Invitation < ApplicationRecord
   scope :future, -> {
     joins(:research_session).
       where('research_sessions.start_datetime > ?',
-        Time.zone.today.end_of_day)
+            Time.zone.today.end_of_day)
   }
 
   scope :past, -> {
     joins(:research_session).
       where('research_sessions.start_datetime < ?',
-        Time.zone.today.beginning_of_day)
+            Time.zone.today.beginning_of_day)
   }
 
   scope :upcoming, ->(d = 7) {

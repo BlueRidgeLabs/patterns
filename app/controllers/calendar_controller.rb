@@ -59,14 +59,14 @@ class CalendarController < ApplicationController
 
     def allowed_params
       params.permit(:token,
-        :id,
-        :research_session_id,
-        :user_id,
-        :start,
-        :end,
-        :type,
-        :invitation_id,
-        :default_time)
+                    :id,
+                    :research_session_id,
+                    :user_id,
+                    :start,
+                    :end,
+                    :type,
+                    :invitation_id,
+                    :default_time)
     end
 
     def default_time

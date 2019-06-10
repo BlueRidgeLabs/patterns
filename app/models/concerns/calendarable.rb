@@ -22,14 +22,14 @@ module Calendarable
 
     scope :for_today, -> {
       where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
-        Time.zone.now.beginning_of_day,
-        Time.zone.now.end_of_day)
+            Time.zone.now.beginning_of_day,
+            Time.zone.now.end_of_day)
     }
 
     scope :for_today_and_tomorrow, -> {
       where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
-        Time.zone.now.beginning_of_day,
-        Time.zone.now.end_of_day + 1.day)
+            Time.zone.now.beginning_of_day,
+            Time.zone.now.end_of_day + 1.day)
     }
   end
 

@@ -73,12 +73,12 @@ class Person < ApplicationRecord
   # and notify me when new person gets added-- that would be amazing
 
   PARTICIPATION_LEVELS = [
-    PARTICIPATION_LEVEL_NEW = "new",
-    PARTICIPATION_LEVEL_INACTIVE = "inactive",
-    PARTICIPATION_LEVEL_PARTICIPANT = "participant",
-    PARTICIPATION_LEVEL_ACTIVE = "active",
-    PARTICIPATION_LEVEL_AMBASSADOR = "ambassador"
-  ]
+    PARTICIPATION_LEVEL_NEW = 'new',
+    PARTICIPATION_LEVEL_INACTIVE = 'inactive',
+    PARTICIPATION_LEVEL_PARTICIPANT = 'participant',
+    PARTICIPATION_LEVEL_ACTIVE = 'active',
+    PARTICIPATION_LEVEL_AMBASSADOR = 'ambassador'
+  ].freeze
 
   page 50
 
@@ -130,8 +130,8 @@ class Person < ApplicationRecord
     unless: proc { |person| person.phone_number.present? }
 
   validates :email_address,
-    format: { with: Devise.email_regexp,
-              if: proc { |person| person.email_address.present? } }
+            format: { with: Devise.email_regexp,
+                      if: proc { |person| person.email_address.present? } }
 
   validates :phone_number, allow_blank: true, uniqueness: true
   validates :landline, allow_blank: true, uniqueness: true
@@ -152,8 +152,8 @@ class Person < ApplicationRecord
 
   ransacker :full_name, formatter: proc { |v| v.mb_chars.downcase.to_s } do |parent|
     Arel::Nodes::NamedFunction.new('lower',
-      [Arel::Nodes::NamedFunction.new('concat_ws',
-        [Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]])])
+                                   [Arel::Nodes::NamedFunction.new('concat_ws',
+                                                                   [Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]])])
   end
 
   scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
@@ -191,7 +191,7 @@ class Person < ApplicationRecord
 
   def inactive_criteria
     at_least_one_reward_older_than_a_year = rewards.where('created_at < ?', 1.year.ago).size >= 1
-    no_rewards_in_the_past_year = rewards.where('created_at >= ?', 1.year.ago).size == 0
+    no_rewards_in_the_past_year = rewards.where('created_at >= ?', 1.year.ago).empty?
     at_least_one_reward_older_than_a_year && no_rewards_in_the_past_year
   end
 

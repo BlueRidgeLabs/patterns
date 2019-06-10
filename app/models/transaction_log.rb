@@ -33,14 +33,14 @@ class TransactionLog < ApplicationRecord
   validates :transaction_type, inclusion: { in: %w[DigitalGift Transfer Topup] }
 
   validates :recipient_type,
-    inclusion: {
-      in: %w[Budget DigitalGift]
-    }, allow_nil: true
+            inclusion: {
+              in: %w[Budget DigitalGift]
+            }, allow_nil: true
 
   validates :from_type,
-    inclusion: {
-      in: %w[Budget User]
-    }
+            inclusion: {
+              in: %w[Budget User]
+            }
 
   def update_budgets
     case transaction_type
