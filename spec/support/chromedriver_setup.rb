@@ -3,7 +3,7 @@ Capybara.save_path = 'tmp/capybara/'
 
 Capybara.register_driver(:headless_chrome) do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[no-sandbox headless disable-gpu] }
+    chromeOptions: { args: %w[no-sandbox headless disable-gpu disable-extensions disable-dev-shm-usage] }
   )
 
   Capybara::Selenium::Driver.new(
