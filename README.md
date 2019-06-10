@@ -139,6 +139,9 @@ To constantly run red-green-refactor tests:
 bundle exec guard -g red_green_refactor
 ```
 
+Todo: 
+Think about converting all js to https://stimulusjs.org
+
 Contributors
 ------------
 * Bill Cromie (bill@robinhood.org)
