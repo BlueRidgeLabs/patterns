@@ -64,6 +64,9 @@ GEM
     annotate (2.7.5)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 13.0)
+    apparition (0.3.0)
+      capybara (~> 3.13, < 4)
+      websocket-driver (>= 0.6.5)
     arel (9.0.0)
     ast (2.4.0)
     awesome_print (1.8.0)
@@ -467,9 +470,6 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.3.0)
       rubocop (>= 0.68.0)
-    rubocop-rails (2.0.1)
-      rack (>= 1.1)
-      rubocop (>= 0.70.0)
     rubocop-rails_config (0.5.1)
       railties (>= 3.0)
       rubocop (~> 0.60)
@@ -612,6 +612,7 @@ DEPENDENCIES
   acts-as-taggable-on
   airbrake (~> 5.0)
   annotate
+  apparition
   awesome_print
   aws-sdk-s3
   axlsx (~> 3.0.0.pre)
@@ -704,7 +705,6 @@ DEPENDENCIES
   rspec-sidekiq
   rubocop
   rubocop-performance
-  rubocop-rails
   rubocop-rails_config
   ruby-prof
   rubyzip

@@ -247,6 +247,7 @@ group :development, :test do
   gem 'parallel_tests' # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
   gem 'holder_rails'
   gem 'capybara'
+  gem 'apparition'
   gem "webdrivers", "~> 3.8"
   gem 'capybara-email'
   gem 'concurrent-ruby'
