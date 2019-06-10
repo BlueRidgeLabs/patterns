@@ -1,20 +1,8 @@
 # require 'capybara/selenium-webdriver'
 Capybara.save_path = 'tmp/capybara/'
 
-Capybara.register_driver(:headless_chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w[no-sandbox headless disable-gpu disable-extensions disable-dev-shm-usage] }
-  )
-
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    desired_capabilities: capabilities
-  )
-end
-
 Capybara.default_driver = :rack_test
-Capybara.javascript_driver = :headless_chrome
+Capybara.javascript_driver = :selenium_chrome_headless 
 # allows all elements to be seen by capybara, when js: true is set
 Capybara.ignore_hidden_elements = false
 # rubocop:disable all
