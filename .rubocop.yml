@@ -1,3 +1,6 @@
+inherit_gem:
+  rubocop-rails_config:
+  rubocop-performance:
 AllCops:
   TargetRubyVersion: 2.5
   Exclude:
@@ -89,4 +92,3 @@ Metrics/AbcSize:
 Metrics/LineLength:
   Enabled: false
 
-require: rubocop-rails
