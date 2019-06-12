@@ -63,9 +63,9 @@ class ActivationCall < ApplicationRecord
     end
   end
 
-  def can_be_updated?
-    call_status == 'started'
-  end
+  # def can_be_updated?
+  #   call_status == 'started'
+  # end
 
   def balance
     if transcript.present? && call_type == 'check'
