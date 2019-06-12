@@ -45,20 +45,20 @@ class ActivationCallsController < ApplicationController
     # twilio sends us the results of the gather here and we update
     # activation and call appropriately.
     # where we kick off a check if need be.
-    if @activation_call.can_be_updated? # finished calls can't be updated.
-      speech_results = params[:SpeechResult]
-      @activation_call.transcript = speech_results
-      if @activation_call.transcript_check # passed
-        @activation_call.success
-      else # fail
-        @activation_call.failure # launched another check call if necessary
-      end
-      if @activation_call.save
-        render status: :ok
-      else
-        render status: :unprocessable_entity
-      end
+    #if @activation_call.can_be_updated? # finished calls can't be updated.
+    speech_results = params[:SpeechResult]
+    @activation_call.transcript = speech_results
+    if @activation_call.transcript_check # passed
+      @activation_call.success
+    else # fail
+      @activation_call.failure # launched another check call if necessary
     end
+    if @activation_call.save
+      render status: :ok
+    else
+      render status: :unprocessable_entity
+    end
+    #end
   end
 
   # POST /activation_calls
