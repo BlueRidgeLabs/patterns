@@ -9,6 +9,10 @@ class ActivationCallUpdateJob
     res = redis.get('ActivationCallUpdateLock')
     if res.nil?
       ActivationCall.ongoing.find_each do |activation_call|
+        
+        activation_call.call_status = activation_call.call.status
+        activation_call.save
+
         if activation_call.card.present?
           if !activation_call.card&.active? && activation_call.timeout_error?
             activation_call.failure
