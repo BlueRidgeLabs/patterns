@@ -27,6 +27,5 @@ class ActivationCallUpdateJob
     else
       ActivationCallUpdateJob.perform_in(1.minute, call_id)
     end
-    # no card associated with this call. do away with it!
   end
 end
