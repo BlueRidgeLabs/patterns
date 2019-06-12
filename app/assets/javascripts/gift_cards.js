@@ -248,7 +248,7 @@ $(document).on('turbolinks:load', function() {
      update_checkbox_count();
   });
   
-  // $('#card-search').on('focus', filter_setup());
+  $('#card-search').on('focus', filter_setup());
 
   $("#modal-window").on('shown', function(){
     // thank you javascript for arbitrary timing.
