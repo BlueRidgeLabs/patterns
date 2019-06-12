@@ -51,6 +51,7 @@ class DigitalGiftsController < ApplicationController
 
   def create
     # this is kinda horrific
+    # TODO REFACTOR
     klass = GIFTABLE_TYPES.fetch(dg_params[:giftable_type])
     @giftable = klass.find(dg_params[:giftable_id])
     @success = true
@@ -119,6 +120,7 @@ class DigitalGiftsController < ApplicationController
   end
 
   def api_create
+    # TODO Refactor
     # apithis is horrific too
     # https://blog.arkency.com/2014/07/4-ways-to-early-return-from-a-rails-controller/
 
