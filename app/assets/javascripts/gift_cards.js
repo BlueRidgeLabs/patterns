@@ -9,7 +9,9 @@ $(document).on('turbolinks:load', function() {
     
     if (checked.length > 0) {
       url = '/gift_cards/change_user/'+checked;
-      $.ajax({type: "POST",url: url,data:{user_id: user_id}});
+      $.ajax({type: "POST",url: url,data:{user_id: user_id}}).done(function(){
+        if ($('#preloaded-cards').length) { location.reload();}
+      });
     }
   }
 
