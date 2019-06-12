@@ -10,7 +10,7 @@ class ActivationCallUpdateJob
     if res.nil?
       ActivationCall.ongoing.find_each do |activation_call|
         
-        activation_call.call_status = activation_call.call.status
+        activation_call.call_status = activation_call.call.update.status
         activation_call.save
 
         if activation_call.card.present?
