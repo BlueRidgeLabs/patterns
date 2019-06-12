@@ -51,7 +51,7 @@ en:
       unlocked: "Your account has been unlocked successfully. Please sign in to continue."
   errors:
     messages:
-      weak_password: "Not strong enough. Consider making it longer with randomly selected words? For advice: https://www.xkcd.com/936/"
+      weak_password: "Not strong enough. Consider making it longer with numbers, symbols and randomly selected words? For advice: https://preshing.com/20110811/xkcd-password-generator/"
       already_confirmed: "was already confirmed, please try signing in"
       confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
       expired: "has expired, please request a new one"
