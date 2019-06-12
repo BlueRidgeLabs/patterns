@@ -55,9 +55,9 @@ class ActivationCall < ApplicationRecord
   def type_transcript
     case call_type
     when CALL_TYPE_ACTIVATE
-      I18n.t('activation_calls.transcript.activate')
+      I18n.t('activation_call.transcript.activate')
     when CALL_TYPE_CHECK
-      I18n.t('activation_calls.transcript.check')
+      I18n.t('activation_call.transcript.check')
       # when 'balance' # not yet implemented. but could be
       #   'the available balance'
     end
