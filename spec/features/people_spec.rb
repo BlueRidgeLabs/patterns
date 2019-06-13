@@ -44,7 +44,9 @@ feature "people page" do
     select verified, from: 'Verified'
     click_button 'Create Person'
 
-    expect(page).to have_selector(:link_or_button, 'Update Person')
+    expect(page).to have_content(email_address)
+    expect(page).to have_content(first_name)
+    expect(page).to have_selector(:link_or_button, 'Edit')
 
     visit people_path
   end

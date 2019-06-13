@@ -42,3 +42,17 @@ en:
     transcript:
       activate: "your card now has been activated"
       check: "the available balance on this account"
+  helpers:
+    actions: "Actions"
+    links:
+      back: "Back"
+      cancel: "Cancel"
+      confirm: "Are you sure?"
+      destroy: "Delete"
+      edit: "Edit"
+      new: "New"
+    titles:
+      edit: "Edit"
+      save: "Save"
+      new: "New"
+      delete: "Delete"

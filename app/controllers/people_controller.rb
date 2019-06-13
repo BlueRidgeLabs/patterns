@@ -88,7 +88,7 @@ class PeopleController < ApplicationController
 
   # GET /people/new
   def new
-    @person = Person.new
+    @person ||= Person.new
   end
 
   # GET /people/1/edit
@@ -138,6 +138,7 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.json
   def create
+
     @person = Person.new(person_params)
     @person.created_by = current_user.id
     
@@ -146,16 +147,10 @@ class PeopleController < ApplicationController
       @person.errors.full_messages.each { |m| errors.push m }
       flash[:error] = errors.join(', ')
     end
-
-    respond_to do |format|
-      if @person.save
-        format.json { render action: 'show', status: :created, location: @person }
-        format.html { render action: 'show', location: @person }
-      else
-
-        format.json { render json: @person.errors, status: :unprocessable_entity }
-      end
-      
+    if @person.save
+      redirect_to person_path(@person)
+    else
+      render action: :new, person: @person
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -168,6 +163,7 @@ class PeopleController < ApplicationController
         format.html { redirect_to @person, notice: 'Person was successfully updated.' }
         format.json { respond_with_bip(@person) }
       else
+        flash[:error] = @person.errors.full_messages.join(', ')
         format.html { render action: 'edit' }
         format.json { render json: @person.errors, status: :unprocessable_entity }
       end
