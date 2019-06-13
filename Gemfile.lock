@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/BlueRidgeLabs/giftrocket-ruby.git
+  remote: https://github.com/BlueRidgeLabs/giftrocket-ruby.git
   revision: 6d39fa2ea5016b8e8de3f0a887599410aa5cfaaa
   branch: brl_branch
   specs:
@@ -740,4 +740,4 @@ RUBY VERSION
    ruby 2.6.2p47
 
 BUNDLED WITH
-   2.0.1
+   2.0.2
