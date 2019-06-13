@@ -140,15 +140,22 @@ class PeopleController < ApplicationController
   def create
     @person = Person.new(person_params)
     @person.created_by = current_user.id
-    @person.errors.full_messages.each { |m| flash[:error] = m } if @person.errors.present?
+    
+    if @person.errors.present?
+      errors = []
+      @person.errors.full_messages.each { |m| errors.push m }
+      flash[:error] = errors.join(', ')
+    end
 
     respond_to do |format|
       if @person.save
         format.json { render action: 'show', status: :created, location: @person }
+        format.html { render action: 'show', location: @person }
       else
+
         format.json { render json: @person.errors, status: :unprocessable_entity }
       end
-      format.html { render action: 'new' }
+      
     end
   end
   # rubocop:enable Metrics/MethodLength
