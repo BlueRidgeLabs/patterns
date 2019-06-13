@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_19_234300) do
+ActiveRecord::Schema.define(version: 2019_06_13_192411) do
 
   create_table "activation_calls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "gift_card_id"
@@ -155,6 +155,7 @@ ActiveRecord::Schema.define(version: 2019_05_19_234300) do
     t.boolean "sent"
     t.datetime "sent_at"
     t.integer "sent_by"
+    t.index ["person_id"], name: "index_digital_gifts_on_person_id"
     t.index ["reward_id"], name: "index_digital_gifts_on_reward_id"
     t.index ["user_id"], name: "index_digital_gifts_on_user_id"
   end
@@ -417,6 +418,7 @@ ActiveRecord::Schema.define(version: 2019_05_19_234300) do
     t.text "object", limit: 4294967295
     t.datetime "created_at"
     t.text "object_changes", limit: 4294967295
+    t.index ["item_id", "item_type"], name: "index_versions_on_item_id_and_item_type"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
