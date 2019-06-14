@@ -29,7 +29,7 @@ install:
 before_script:
   - bundle exec rails runner "Webdrivers::Chromedriver.update"
   - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
-  - bundle exec rake db:migrate RAILS_ENV=test
+  - bundle exec rake db:schema:load RAILS_ENV=test
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9516 http://localhost &
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
