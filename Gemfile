@@ -39,7 +39,7 @@ gem 'roo'
 gem 'redcarpet' # for markdown notes
 
 #giftrocket API for automagic giftcarding
-gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby', branch: 'brl_branch'
+gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby'
 
 gem "aws-sdk-s3", require: false
 
