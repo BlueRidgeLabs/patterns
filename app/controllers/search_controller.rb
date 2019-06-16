@@ -8,27 +8,11 @@ class SearchController < ApplicationController
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
   def index_ransack
-    if params[:q].present? && params[:q][:ransack_tagged_with].present?
-      t = params[:q][:ransack_tagged_with].split(',').map(&:strip)
-      @tags = Person.active.tag_counts.where(name: t).order(taggings_count: :desc)
-    else
-      @tags = []
-    end
-
-    # normalize phone numbers
-    params[:q][:phone_number_eq] = PhonyRails.normalize_number(params[:q][:phone_number_eq]) if params[:q].present? && params[:q][:phone_number_eq].present?
-
+    @tags = SearchService.parse_tags(params[:q])
+    params[:q] = SearchService.normalize_query(params[:q])
     # allow for larger pages
     Person.per_page = params[:per_page] if params[:per_page].present?
-
-    params[:q][:active_eq] = true if params[:q].present? && params[:q][:active_eq].blank?
-
-    @q = if current_user.admin?
-           Person.ransack(params[:q])
-         else
-           Person.verified.ransack(params[:q])
-         end
-
+    @q = current_user.admin? ? Person.ransack(params[:q]) : Person.verified.ransack(params[:q])
     @results = @q.result.distinct(:person).includes(:tags).page(params[:page])
 
     respond_to do |format|
