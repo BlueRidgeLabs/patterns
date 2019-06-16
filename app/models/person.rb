@@ -330,7 +330,7 @@ class Person < ApplicationRecord
   def self.human_device_type_name(device_id)
     device_mappings = Patterns::Application.config.device_mappings
     device_mappings.rassoc(device_id)[0].to_s
-  rescue
+  rescue StandardError
     'Unknown/No selection'
   end
 
@@ -344,7 +344,7 @@ class Person < ApplicationRecord
       public_wifi: 'Public wifi'
     }
     friendly_name_mappings[connection_mappings.rassoc(connection_id)[0]]
-  rescue
+  rescue StandardError
     'Unknown/No selection'
   end
 
