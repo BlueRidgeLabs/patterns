@@ -2,8 +2,6 @@
 
 # rubocop:disable ClassLength
 class SearchController < ApplicationController
-
-  include PeopleHelper
   include SearchHelper
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
