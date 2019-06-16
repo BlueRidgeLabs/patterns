@@ -51,7 +51,7 @@
 
   <div class="span3">
     <%= f.label :verified_eq_any %>
-    <%= f.select :verified_eq_any, @verified_list, {include_blank: true}, {:class => "input" }  %>
+    <%= f.select :verified_eq_any, Person::VERIFIED_TYPES, {include_blank: true}, {:class => "input" }  %>
     <%= f.label :notes_cont %>
     <%= f.search_field :comments_cont %>
   </div>
