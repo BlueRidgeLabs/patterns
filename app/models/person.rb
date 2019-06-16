@@ -349,24 +349,14 @@ class Person < ApplicationRecord
   end
 
   def to_csv_row
-    human_devices = %w[primary_device_id secondary_device_id]
-    human_connections = %w[primary_connection_id secondary_connection_id]
-
     Person.csv_headers.map do |f|
-      puts f
       field_value = send(f.to_sym)
-      if human_devices.include? f
-        Person.human_device_type_name(field_value)
-      elsif human_connections.include? f
-        Person.human_connection_type_name(field_value)
-      elsif f == 'phone_number'
-        field_value.present? ? field_value.phony_formatted(format: :national, spaces: '-') : ''
-      elsif f == 'email_address'
-        field_value.presence || ''
-      elsif f == 'tags'
-        tag_values.blank? ? '' : tag_values.join('|')
-      else
-        field_value
+      case f
+        when 'primary_device_id', 'secondary_device_id' then Person.human_device_type_name(field_value)
+        when 'primary_connection_id', 'secondary_connection_id' then Person.human_connection_type_name(field_value)
+        when 'phone_number' then field_value&.phony_formatted(format: :national, spaces: '-')
+        when 'tags' then tag_values&.join('|')
+        else field_value
       end
     end
   end
