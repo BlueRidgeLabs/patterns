@@ -20,44 +20,8 @@ class SearchController < ApplicationController
       format.html
       format.csv do
         if current_user.admin?
-          @results = @q.result.includes(:tags)
-          fields = Person.column_names
-          fields.push('tags')
-          output = CSV.generate do |csv|
-            # Generate the headers
-            csv << fields.map(&:titleize)
-
-            # Some fields need a helper method
-            human_devices = %w[primary_device_id secondary_device_id]
-            human_connections = %w[primary_connection_id secondary_connection_id]
-
-            # Write the results
-            @results.each do |person|
-              csv << fields.map do |f|
-                field_value = person[f]
-                if human_devices.include? f
-                  human_device_type_name(field_value)
-                elsif human_connections.include? f
-                  human_connection_type_name(field_value)
-                elsif f == 'phone_number'
-                  if field_value.present?
-                    field_value.phony_formatted(format: :national, spaces: '-')
-                  else
-                    ''
-                  end
-                elsif f == 'tags'
-                  if person.tag_values.blank?
-                    ''
-                  else
-                    person.tag_values.join('|')
-                  end
-                else
-                  field_value
-                end
-              end
-            end
-          end
-          send_data output, filename: "Search-#{Time.zone.today}.csv"
+          csv = SearchService.to_csv(@q)
+          send_data csv, filename: "Search-#{Time.zone.today}.csv"
         else
           flash[:error] = 'Not permitted'
         end
