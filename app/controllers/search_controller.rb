@@ -31,30 +31,9 @@ class SearchController < ApplicationController
 
     @results = @q.result.distinct(:person).includes(:tags).page(params[:page])
 
-    # Need to better define these
-    @participation_list = Person.distinct.pluck(:participation_type)
-    @verified_list = Person.distinct.pluck(:verified)
-    @mailchimp_result = 'Mailchimp export not attempted with this search'
-
     respond_to do |format|
       format.json { @results }
-      format.html do
-        if params[:segment_name].present?
-          list_name = params.delete(:segment_name)
-          @q = Person.active.ransack(params[:q])
-          @results_mailchimp = @q.result.includes(:tags)
-          @mce = MailchimpExport.new(name: list_name, recipients: @results_mailchimp.collect(&:email_address), created_by: current_user.id)
-          if @mce.with_user(current_user).save
-            Rails.logger.info("[SearchController#export] Sent #{@mce.recipients.size} email addresses to a static segment named #{@mce.name}")
-            @success = "Sent #{@mce.recipients.size} email addresses to a static segment named #{@mce.name}"
-            flash[:success] = "Successfully sent to mailchimp: #{@mce.errors.inspect}"
-          else
-            Rails.logger.error("[SearchController#export] failed to send event to mailchimp: #{@mce.errors.inspect}")
-            @error = "failed to send search to mailchimp: #{@mce.errors.inspect}"
-            flash[:failure] = "failed to send search to mailchimp: #{@mce.errors.inspect}"
-          end
-        end
-      end
+      format.html
       format.csv do
         if current_user.admin?
           @results = @q.result.includes(:tags)
