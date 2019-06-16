@@ -349,9 +349,9 @@ class Person < ApplicationRecord
   end
 
   def to_csv_row
-    Person.csv_headers.map do |f|
-      field_value = send(f.to_sym)
-      case f
+    Person.csv_headers.map do |field|
+      field_value = send(field.to_sym)
+      case field
         when 'primary_device_id', 'secondary_device_id' then Person.human_device_type_name(field_value)
         when 'primary_connection_id', 'secondary_connection_id' then Person.human_connection_type_name(field_value)
         when 'phone_number' then field_value&.phony_formatted(format: :national, spaces: '-')
