@@ -323,21 +323,48 @@ class Person < ApplicationRecord
   #   end
   # end
 
-  def to_a
-    fields = Person.column_names
-    fields.push('tags')
-    fields.map do |f|
+  def self.csv_headers
+    Person.column_names + ['tags']
+  end
+
+  def self.human_device_type_name(device_id)
+    device_mappings = Patterns::Application.config.device_mappings
+    device_mappings.rassoc(device_id)[0].to_s
+  rescue
+    'Unknown/No selection'
+  end
+
+  def self.human_connection_type_name(connection_id)
+    connection_mappings = Patterns::Application.config.connection_mappings
+    friendly_name_mappings = {
+      phone: 'Phone with data plan',
+      home_broadband: 'Home broadband (cable, DSL)',
+      other: 'Other',
+      public_computer: 'Public computer',
+      public_wifi: 'Public wifi'
+    }
+    friendly_name_mappings[connection_mappings.rassoc(connection_id)[0]]
+  rescue
+    'Unknown/No selection'
+  end
+
+  def to_csv_row
+    human_devices = %w[primary_device_id secondary_device_id]
+    human_connections = %w[primary_connection_id secondary_connection_id]
+
+    Person.csv_headers.map do |f|
+      puts f
       field_value = send(f.to_sym)
-      if f == 'phone_number'
-        if field_value.present?
-          field_value.phony_formatted(format: :national, spaces: '-')
-        else
-          ''
-        end
+      if human_devices.include? f
+        Person.human_device_type_name(field_value)
+      elsif human_connections.include? f
+        Person.human_connection_type_name(field_value)
+      elsif f == 'phone_number'
+        field_value.present? ? field_value.phony_formatted(format: :national, spaces: '-') : ''
       elsif f == 'email_address'
         field_value.presence || ''
       elsif f == 'tags'
-        tag_values.present? ? tag_values.join('|') : ''
+        tag_values.blank? ? '' : tag_values.join('|')
       else
         field_value
       end

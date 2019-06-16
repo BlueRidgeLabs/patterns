@@ -17,5 +17,14 @@ class SearchService
       query_params[:active_eq] = true if active.blank?
       query_params
     end
+
+    def to_csv(query_object)
+      results = query_object.result.includes(:tags)
+      headers = Person.csv_headers.map(&:titleize)
+      CSV.generate do |csv|
+        csv << headers
+        results.each { |person| csv << person.to_csv_row }
+      end
+    end
   end
 end
