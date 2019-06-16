@@ -27,7 +27,7 @@
 
     <%= f.label :referred_by_cont %>
     <%= f.search_field :referred_by_cont %>
-    
+
     <%= f.label :low_income_eq %>
     <%= f.select :low_income_eq, [["Yes", true], ["No", false], ["Unknown",nil]], {include_blank: true}, {:class => "input" } %>
 
@@ -64,28 +64,6 @@
                                     pre_populate: @tags.to_json
                                   }
                           %>
-    <!-- 
-    How do you search for people with rewards in this new paradigm?
-     -->
-    <!-- <label for='additional'>&nbsp;</label>
-    <span data-toggle="collapse" data-target="#additional-options"  class="btn btn-default">Click to Show Additional Options</span>
-      <div class="collapse" id="additional-options">
-        <%= f.label :participation_type_in %>
-        <%= f.select :participation_type_in, @participation_list, {include_blank: true}, { multiple: true, size: @participation_list.count + 1 } %>
-
-        <%= f.label :primary_device_id_in %>
-        <%= f.select :primary_device_id_in, [[human_device_type_name(0),0],[ human_device_type_name(1),1], [human_device_type_name(2),2], [ human_device_type_name(3),  3]], {include_blank: true}, {:multiple => true,  :class => "multiple", :size => '4' } %>
-
-        <%= f.label :primary_device_description_cont %>
-        <%= f.search_field :primary_device_description_cont %>
-
-        <%= f.label :primary_connection_id_in %>
-        <%= f.select :primary_connection_id_in, [[human_connection_type_name(0),0],[ human_connection_type_name(1),1], [human_connection_type_name(4),4], [ human_connection_type_name(3),  3], [human_connection_type_name(2), 2]], {include_blank: true}, {:multiple => true,  :class => "multiple", :size => '5' } %>
-
-        <%= f.label :primary_connection_description_cont %>
-        <%= f.search_field :primary_connection_description_cont %>
-      </div>
-    <br> -->
     <%= select_tag :per_page, options_for_select([30,60,100,200,500,1000,1500],Person.per_page) %>
     <%= f.submit 'Search', class: "btn btn-primary" %>
     <%= link_to 'Clear Search', request.path, class:"btn" %>
@@ -127,8 +105,8 @@ Search Parameters:
           Phone: <% if (result.phone_number.present?) %><%= search_result_field result.phone_number.phony_formatted(format: :national, spaces: '-') , :phone_number %><% else %> <%= search_result_field result.phone_number, :phone_number %><% end %><br/>
           Email: <%= search_result_field result.email_address, :email_address %><br/>
           Contact:<%= search_result_field result.preferred_contact_method, :preferred_contact_method %><br/>
-          
-          
+
+
         </td>
         <td class="span4">
           ZIP: <%= search_result_field result.postal_code, :postal_code %><br/>
@@ -179,4 +157,3 @@ Search Parameters:
   </div>
 </div>
 <% end %>
-
