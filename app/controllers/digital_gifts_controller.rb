@@ -79,7 +79,7 @@ class DigitalGiftsController < ApplicationController
                          finance_code: current_user&.team&.finance_code,
                          team: current_user&.team,
                          rewardable_type: 'DigitalGift')
-      if @dg.valid? && @dg.can_order? # if it's not valid, error out
+      if @dg.valid? # if it's not valid, error out
         @dg.request_link # do the thing!
         if @dg.save
           @reward.rewardable_id = @dg.id
@@ -115,7 +115,7 @@ class DigitalGiftsController < ApplicationController
       @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params['amount'], person_id: @person.id, giftable_type: 'Invitation', giftable_id: @invitation.id)
 
       @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params['amount'], reason: 'survey', giftable_type: 'Invitation', giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: 'DigitalGift')
-      if @digital_gift.valid? && @digital_gift.can_order?
+      if @digital_gift.valid?
         @digital_gift.request_link # do the thing!
         if @digital_gift.save
           @reward.rewardable_id = @digital_gift.id
