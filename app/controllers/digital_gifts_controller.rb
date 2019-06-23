@@ -55,12 +55,6 @@ class DigitalGiftsController < ApplicationController
     @success = true
     begin
       DigitalGiftService.validate_params(current_user, params)
-    rescue StandardError => e
-      @success = false
-      flash[:error] = e.message
-    end
-
-    if @success
       @dg = DigitalGift.new(user_id: current_user.id,
                           created_by: current_user.id,
                           amount: dg_params['amount'],
@@ -88,9 +82,12 @@ class DigitalGiftsController < ApplicationController
           @dg.save
         end
       else
-        flash[:error] = @dg.errors
+        flash[:error] = @dg.errors.full_messages
         @success = false
       end
+    rescue StandardError => e
+      @success = false
+      flash[:error] = e.message
     end
 
     respond_to do |format|
