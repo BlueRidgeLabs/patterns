@@ -48,9 +48,17 @@ RSpec.describe DigitalGiftsController, type: :controller do
         expect(DigitalGift.count).to eq(1)
         expect(Reward.count).to eq(1)
       end
+
+      it "errors if digital gift not allowed to be ordered" do
+        allow(DigitalGiftService).to receive(:validate_params)
+        post :create, params: params, xhr: true
+        expect(DigitalGift.count).to eq(0)
+        expect(Reward.count).to eq(0)
+        expect(flash[:error]).to eq("Insufficient budget to order from Giftrocket")
+      end
     end
 
-    xit "creates an associated gift and reward" do
+    it "creates an associated gift and reward" do
     end
   end
 end
