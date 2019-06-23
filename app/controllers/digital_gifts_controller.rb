@@ -52,35 +52,14 @@ class DigitalGiftsController < ApplicationController
   def create
     # this is kinda horrific
     # TODO REFACTOR
-    klass = GIFTABLE_TYPES.fetch(dg_params[:giftable_type])
-    @giftable = klass.find(dg_params[:giftable_id])
     @success = true
-    if @giftable.nil?
-      flash[:error] = 'No giftable object present'
+    begin
+      DigitalGiftService.validate_params(current_user, params)
+    rescue StandardError => e
       @success = false
+      flash[:error] = e.message
     end
 
-    if params[:giftable_type] == 'Invitation' && !@giftable&.attended?
-      flash[:error] = "#{@giftable.person.full_name} isn't marked as 'attended'."
-      @success = false
-    end
-
-    if params[:giftable_type] == 'Invitation' && @giftable.rewards.find { |r| r.rewardable_type == 'DigitalGift' }.present?
-      flash[:error] = "#{@giftable.person.full_name} Already has a digital gift"
-      @success = false
-    end
-
-    # cover fees
-    if params[:amount].to_money + 2.to_money >= current_user.available_budget
-      flash[:error] = 'Insufficient Team Budget'
-      @success = false # placeholder for now
-    end
-
-    # so, the APIs are wonky
-    # if params[:amount].to_money >= DigitalGift.current_budget
-    #   flash[:error] = 'Insufficient Gift Rocket Budget'
-    #   @success = false # placeholder for now
-    # end
     if @success
       @dg = DigitalGift.new(user_id: current_user.id,
                           created_by: current_user.id,

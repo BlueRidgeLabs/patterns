@@ -5,7 +5,7 @@ feature "digital gifts page" do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:user) { FactoryBot.create(:user) }
   let(:rs) { FactoryBot.create(:research_session, user: admin_user)}
-  let(:invitation) { FactoryBot.create(:invitation, 
+  let(:invitation) { FactoryBot.create(:invitation,
                                         research_session: rs)}
   let(:now) { DateTime.current }
   let(:rapidpro_headers) { {
@@ -13,12 +13,12 @@ feature "digital gifts page" do
       "HTTP_ACCEPT" => "application/json",
       'AUTHORIZATION' => admin_user.token # This is what Rails 3 accepts
     } }
-  
+
   let(:invalid_headers){{
       "ACCEPT" => "application/json",     # This is what Rails 4 accepts
       "HTTP_ACCEPT" => "application/json",
       'AUTHORIZATION' => user.token # This is what Rails 3 accepts
-    }  
+    }
   }
   before do
     Timecop.freeze(now)
@@ -36,7 +36,7 @@ feature "digital gifts page" do
   end
 
   scenario 'transfer to user', :vcr, :js do
-    # don't like this whole bit here creating a budget. 
+    # don't like this whole bit here creating a budget.
     # should have a factory for this
 
     budget = user.team.budget
@@ -58,11 +58,11 @@ feature "digital gifts page" do
 
 
   scenario 'add to invitation', :vcr, :js do
-    
+
     research_session = invitation.research_session
     person = invitation.person
-    
-    # don't like this whole bit here creating a budget. 
+
+    # don't like this whole bit here creating a budget.
     # should have a factory for this
     visit '/budgets'
     fill_in 'topup-amount', with: 200
@@ -71,20 +71,20 @@ feature "digital gifts page" do
 
     Timecop.travel(research_session.end_datetime + 24.hours)
     visit "/sessions/#{research_session.id}"
-    click_button 'attend' 
+    click_button 'attend'
     wait_for_ajax
     invitation.reload
     expect(invitation.aasm_state).to eq('attended')
     find("#add-reward-#{invitation.id}").click
     wait_for_ajax
-    fill_in('new-amount', visible: true, with: 100) 
+    fill_in('new-amount', visible: true, with: 100)
     accept_alert do
       click_button 'Add Digital Gift'
     end
     wait_for_ajax
     person.reload
     expect(person.rewards_total.to_s).to eq('100.00')
-    
+
     dg = person.rewards.last.rewardable
     expect(dg.sent).to_not eq(true)
 
@@ -107,13 +107,13 @@ feature "digital gifts page" do
 
     Timecop.travel(research_session.end_datetime + 24.hours)
     visit "/sessions/#{research_session.id}"
-    click_button 'attend' 
+    click_button 'attend'
     wait_for_ajax
     invitation.reload
     expect(invitation.aasm_state).to eq('attended')
     find("#add-reward-#{invitation.id}").click
     wait_for_ajax
-    fill_in('new-amount', visible: true, with: 100) 
+    fill_in('new-amount', visible: true, with: 100)
     accept_alert do
       click_button 'Add Digital Gift'
     end
