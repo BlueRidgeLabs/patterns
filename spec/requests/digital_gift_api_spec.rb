@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "digital_gift_api", type: :request do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:regular_user) { FactoryBot.create(:user) }
-  
+
   let(:person) { FactoryBot.create(:person) }
   let(:inactive_person) {FactoryBot.create(:person, active: false)}
   let(:research_session) { FactoryBot.create(:research_session, user: admin_user) }
@@ -12,7 +12,7 @@ describe "digital_gift_api", type: :request do
       "HTTP_ACCEPT" => "application/json",
       'AUTHORIZATION' => admin_user.token # This is what Rails 3 accepts
     } }
-  
+
   before do
     TransactionLog.create(amount: 100,
                           transaction_type: 'Topup',
@@ -28,8 +28,8 @@ describe "digital_gift_api", type: :request do
   end
 
   it 'creates a digital gift for a research session with budget', :vcr do
-    get "/digital_gifts/api_create", 
-      headers: headers, 
+    get "/digital_gifts/api_create",
+      headers: headers,
       params:{
         phone_number: person.phone_number,
         research_session_id: research_session.id,
@@ -48,8 +48,8 @@ describe "digital_gift_api", type: :request do
   end
 
   it 'cannot create a digital gift: insufficient budget',:vcr do
-    get "/digital_gifts/api_create", 
-      headers: headers, 
+    get "/digital_gifts/api_create",
+      headers: headers,
       params:{
         phone_number: person.phone_number,
         research_session_id: research_session.id,
@@ -64,12 +64,12 @@ describe "digital_gift_api", type: :request do
   end
 
   it 'cannot create a digital gift for a non-admin', :vcr do
-    get "/digital_gifts/api_create", 
+    get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json",
         'AUTHORIZATION' => regular_user.token # This is what Rails 3 accepts
-      }, 
+      },
       params:{
         phone_number: person.phone_number,
         research_session_id: research_session.id,
@@ -80,14 +80,14 @@ describe "digital_gift_api", type: :request do
     person.reload
     expect(person.rewards_total.to_s).to_not eq('250.00')
   end
- 
+
   it 'cannot create a digital gift for a non-existant user', :vcr do
-    get "/digital_gifts/api_create", 
+    get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json",
         'AUTHORIZATION' => 'bogustoken' # This is what Rails 3 accepts
-      }, 
+      },
       params:{
         phone_number: person.phone_number,
         research_session_id: research_session.id,
@@ -100,11 +100,11 @@ describe "digital_gift_api", type: :request do
   end
 
   it 'cannot create a digital gift without a token', :vcr do
-    get "/digital_gifts/api_create", 
+    get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json"
-      }, 
+      },
       params:{
         phone_number: person.phone_number,
         research_session_id: research_session.id,
@@ -117,12 +117,12 @@ describe "digital_gift_api", type: :request do
   end
 
   it 'cannot create a digital gift for an inactive person', :vcr do
-    get "/digital_gifts/api_create", 
+    get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json",
-        'AUTHORIZATION' => regular_user.token 
-      }, 
+        'AUTHORIZATION' => regular_user.token
+      },
       params:{
         phone_number: inactive_person.phone_number,
         research_session_id: research_session.id,
@@ -130,14 +130,14 @@ describe "digital_gift_api", type: :request do
       }
     expect(response.content_type).to eq("application/json")
     expect(response.status).to eq(401)
-    
+
     person.reload
     expect(person.rewards_total.to_s).to_not eq('250.00')
   end
 
   it 'cannot create a digital gift for a non-existant research session', :vcr do
-    get "/digital_gifts/api_create", 
-      headers: headers, 
+    get "/digital_gifts/api_create",
+      headers: headers,
       params:{
         phone_number: person.phone_number,
         research_session_id: research_session.id + 1,
