@@ -44,8 +44,6 @@ class DigitalGift < ApplicationRecord
   has_one :transaction_log, as: :recipient
   has_many :comments, as: :commentable, dependent: :destroy
 
-  validate :can_order? # doesn't actually validate
-
   after_create :save_transaction
 
   attr_accessor :giftable_id
@@ -93,9 +91,10 @@ class DigitalGift < ApplicationRecord
   end
 
   # is this really how I want to do it?
+  # TODO: move into own service? seems like this could use some cleaning up
   def request_link
     raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
-    raise unless can_order?
+    raise "Insufficient budget to order from Giftrocket" unless can_order?
 
     self.funding_source_id = DigitalGift.balance_funding_source.id
 
