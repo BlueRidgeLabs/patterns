@@ -690,7 +690,7 @@ DEPENDENCIES
   puma
   rack-cache
   rack-mini-profiler
-  rails (= 5.2.3)
+  rails (~> 5.2.0)
   rails-erd
   rails-i18n
   ransack
