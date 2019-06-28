@@ -34,6 +34,8 @@ class Cart < ApplicationRecord
 
   after_save :update_rapidpro, if: :saved_change_to_rapidpro_sync? if ENV['RAPIDPRO_TOKEN']
 
+  # TODO should have an actioncable update for carts in view
+  
   # keep current cart in carts_users,
   # add validation that it must be unique on scope of user.
   def owner
