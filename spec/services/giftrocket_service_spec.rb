@@ -5,7 +5,7 @@ RSpec.describe GiftrocketService do
 
   describe "#create_order!" do
     let(:person) { FactoryBot.create(:person) }
-    let(:digital_gift) { FactoryBot.create(:digital_gift, amount_cents: 40_00, person: person) }
+    let(:digital_gift) { FactoryBot.create(:digital_gift, amount_cents: GiftrocketService::SMALL_DOLLAR_THRESHOLD + 1_00, person: person) }
     let(:gr_gift_id) { 'covfefe_gift_id' }
     let(:gr_order_id) { 'covfefe_order_id' }
     let(:gr_funding_source_id) { 'covfefe_fs_id' }
@@ -36,7 +36,12 @@ RSpec.describe GiftrocketService do
       allow(Giftrocket::FundingSource).to receive(:list).and_return(mock_funding_sources)
     end
 
-    it "creates a giftrocket order and returns params to be persisted on digital gift" do
+    def assert_order_created(campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'], error_raised: false)
+      if error_raised
+        expect{ sut.create_order!(digital_gift) }.to raise_error
+        return
+      end
+
       expected_external_id = {
         person_id: digital_gift.person_id,
         giftable_id: digital_gift.giftable_id,
@@ -45,7 +50,7 @@ RSpec.describe GiftrocketService do
       expect(Giftrocket::Order).to receive(:create!).with({
         external_id: expected_external_id,
         funding_source_id: gr_funding_source_id,
-        campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'],
+        campaign_id: campaign_id,
         gifts: [
           amount: digital_gift.amount.to_s,
           recipient: {
@@ -58,13 +63,32 @@ RSpec.describe GiftrocketService do
       expect(result).to eq({
         external_id: expected_external_id,
         funding_source_id: gr_funding_source_id,
-        campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'],
+        campaign_id: campaign_id,
         fee: gr_fee,
         order_id: gr_order_id,
         gift_id: gr_gift_id,
         link: gr_recipient_link,
         order_details: Base64.encode64(Marshal.dump(mock_order))
       })
+    end
+
+    it "creates a giftrocket order and returns params to be persisted on digital gift" do
+      assert_order_created(campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'])
+    end
+
+    context "amount is small dollar amount" do
+      it "uses gf low campaign" do
+        digital_gift.update(amount_cents: GiftrocketService::SMALL_DOLLAR_THRESHOLD * 100 - 1)
+        assert_order_created(campaign_id: ENV['GIFTROCKET_LOW_CAMPAIGN'])
+      end
+    end
+
+    context "digital gift doesn't have person" do
+      it "raises error" do
+        person.destroy
+        digital_gift.reload
+        assert_order_created(error_raised: true)
+      end
     end
   end
 end
