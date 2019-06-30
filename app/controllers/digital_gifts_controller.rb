@@ -59,8 +59,8 @@ class DigitalGiftsController < ApplicationController
                           person_id: dg_params['person_id'])
       @reward = Reward.new(user_id: current_user.id,
                          created_by: current_user.id,
-                         person_id: dg_params['person_id'],
                          amount: dg_params['amount'],
+                         person_id: dg_params['person_id'],
                          reason: dg_params['reason'],
                          notes: dg_params['notes'],
                          giftable_type: dg_params['giftable_type'],
