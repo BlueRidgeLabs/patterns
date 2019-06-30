@@ -2,9 +2,10 @@ class GiftrocketService
   SMALL_DOLLAR_THRESHOLD = 20
 
   class << self
-    def create_order!(digital_gift)
+    def create_order!(digital_gift, reward)
+      validate_orderable!(digital_gift, reward)
       funding_source_id = balance_funding_source.id
-      external_id = external_id_for(digital_gift)
+      external_id = external_id_for(digital_gift, reward)
       campaign_id = campaign_id_for(digital_gift)
       order = Giftrocket::Order.create!({
         external_id: external_id,
@@ -31,6 +32,18 @@ class GiftrocketService
 
     private
 
+    def validate_orderable!(digital_gift, reward)
+      user = digital_gift.user
+      associations_are_invalid = digital_gift.person_id.nil? || reward.giftable_id.nil? || reward.giftable_type.nil?
+      budget_sufficient = (digital_gift.amount + expected_fee_for(digital_gift)) <= user.available_budget
+      raise if associations_are_invalid
+      raise "Insufficient budget to order from Giftrocket" unless budget_sufficient
+    end
+
+    def expected_fee_for(digital_gift)
+      digital_gift.amount.to_i < SMALL_DOLLAR_THRESHOLD ? 0.to_money : 3.to_money
+    end
+
     def campaign_id_for(digital_gift)
       if digital_gift.amount.to_i < SMALL_DOLLAR_THRESHOLD
         # small dollar amounts, no fee
@@ -41,17 +54,16 @@ class GiftrocketService
       end
     end
 
-    def external_id_for(digital_gift)
+    def external_id_for(digital_gift, reward)
       {
         person_id: digital_gift.person_id,
-        giftable_id: digital_gift.giftable_id,
-        giftable_type: digital_gift.giftable_type
+        giftable_id: reward.giftable_id,
+        giftable_type: reward.giftable_type
       }.to_json
     end
 
     def generate_gifts_for(digital_gift)
       person = digital_gift.person
-      raise if person.nil?
       [
         {
           amount: digital_gift.amount.to_s,

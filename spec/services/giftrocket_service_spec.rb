@@ -4,8 +4,10 @@ RSpec.describe GiftrocketService do
   let(:sut) { GiftrocketService }
 
   describe "#create_order!" do
+    let(:user) { FactoryBot.create(:user) }
     let(:person) { FactoryBot.create(:person) }
-    let(:digital_gift) { FactoryBot.create(:digital_gift, amount_cents: GiftrocketService::SMALL_DOLLAR_THRESHOLD + 1_00, person: person) }
+    let(:digital_gift) { FactoryBot.create(:digital_gift, amount_cents: GiftrocketService::SMALL_DOLLAR_THRESHOLD * 100 + 1_00, person: person, user: user) }
+    let(:reward) { FactoryBot.create(:reward, :digital_gift) }
     let(:gr_gift_id) { 'covfefe_gift_id' }
     let(:gr_order_id) { 'covfefe_order_id' }
     let(:gr_funding_source_id) { 'covfefe_fs_id' }
@@ -36,16 +38,18 @@ RSpec.describe GiftrocketService do
       allow(Giftrocket::FundingSource).to receive(:list).and_return(mock_funding_sources)
     end
 
-    def assert_order_created(campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'], error_raised: false)
+    def assert_order_created(campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'], error_raised: false, user_budget: 1000000.to_money)
+      allow(user).to receive(:available_budget).and_return(user_budget)
+
       if error_raised
-        expect{ sut.create_order!(digital_gift) }.to raise_error
+        expect{ sut.create_order!(digital_gift, reward) }.to raise_error
         return
       end
 
       expected_external_id = {
         person_id: digital_gift.person_id,
-        giftable_id: digital_gift.giftable_id,
-        giftable_type: digital_gift.giftable_type
+        giftable_id: reward.giftable_id,
+        giftable_type: reward.giftable_type
       }.to_json
       expect(Giftrocket::Order).to receive(:create!).with({
         external_id: expected_external_id,
@@ -59,7 +63,7 @@ RSpec.describe GiftrocketService do
           }
         ]
       }).and_return(mock_order)
-      result = sut.create_order!(digital_gift)
+      result = sut.create_order!(digital_gift, reward)
       expect(result).to eq({
         external_id: expected_external_id,
         funding_source_id: gr_funding_source_id,
@@ -83,11 +87,31 @@ RSpec.describe GiftrocketService do
       end
     end
 
-    context "digital gift doesn't have person" do
+    context "digital gift doesn't have person_id" do
       it "raises error" do
         person.destroy
         digital_gift.reload
         assert_order_created(error_raised: true)
+      end
+    end
+
+    context "reward doesn't have giftable_id" do
+      it "raises error" do
+        reward.update(giftable_id: nil)
+        assert_order_created(error_raised: true)
+      end
+    end
+
+    context "reward doesn't have giftable_type" do
+      it "raises error" do
+        reward.update(giftable_type: nil)
+        assert_order_created(error_raised: true)
+      end
+    end
+
+    context "user's available budget is insufficent" do
+      it "raises error" do
+        assert_order_created(error_raised: true, user_budget: 0.to_money)
       end
     end
   end
