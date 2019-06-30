@@ -12,29 +12,26 @@ class DigitalGiftService
       validate_amount!(current_user, params)
     end
 
+    # TODO: (EL) work out kinks, test, and call inside of dg_controller
     def create(user, params)
       validate_giftable!(params)
       validate_amount!(user, params)
 
       user_id = user.id
       team = user&.team
-      dg_params = params.slice(:amount, :person_id, :giftable_type, :giftable_id).merge({ user_id: user_id })
-      reward_params = params.merge({ created_by: user_id, finance_code: team&.finance_code, team: team, rewardable_type: 'DigitalGift' })
+      dg_params = params.slice(:amount, :person_id).merge({ user_id: user_id, created_by: user_id })
+      reward_params = params.merge({ finance_code: team&.finance_code, team: team, rewardable_type: 'DigitalGift' })
       digital_gift = DigitalGift.new(dg_params)
       reward = Reward.new(reward_params)
 
-      # TODO: refactor
-      if digital_gift.valid? && digital_gift.can_order? # if it's not valid, error out
-        digital_gift.request_link
-        if digital_gift.save
-          @reward.rewardable_id = digital_gift.id
-          @reward.save
-          digital_gift.assign(@reward.id) # is this necessary?
-          digital_gift.save
-        end
+      if digital_gift.valid?
+        digital_gift.create_order_on_giftrocket!(reward)
+        reward.rewardable_id = digital_gift.id
+        reward.save
+        digital_gift.assign(reward.id) # is this necessary?
+        digital_gift.save
       else
-        flash[:error] = digital_gift.errors
-        @success = false
+        raise digital_gift.errors.full_messages
       end
     end
 

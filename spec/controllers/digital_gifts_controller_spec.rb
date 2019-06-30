@@ -58,7 +58,8 @@ RSpec.describe DigitalGiftsController, type: :controller do
       end
     end
 
-    it "creates an associated gift and reward" do
+    # TODO: (EL) write this test before using DigitalGiftService.create in dg controller
+    xit "creates an associated gift and reward" do
     end
   end
 end
