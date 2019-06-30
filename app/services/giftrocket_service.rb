@@ -1,4 +1,6 @@
 class GiftrocketService
+  SMALL_DOLLAR_THRESHOLD = 20
+
   class << self
     def create_order!(digital_gift)
       funding_source_id = balance_funding_source.id
@@ -30,7 +32,7 @@ class GiftrocketService
     private
 
     def campaign_id_for(digital_gift)
-      if digital_gift.amount.to_i < 20
+      if digital_gift.amount.to_i < SMALL_DOLLAR_THRESHOLD
         # small dollar amounts, no fee
         ENV['GIFTROCKET_LOW_CAMPAIGN']
       else
