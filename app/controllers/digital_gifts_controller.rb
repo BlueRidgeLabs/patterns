@@ -50,18 +50,13 @@ class DigitalGiftsController < ApplicationController
   end
 
   def create
-    # this is kinda horrific
-    # TODO REFACTOR
     @success = true
     begin
       DigitalGiftService.validate_params(current_user, params)
       @dg = DigitalGift.new(user_id: current_user.id,
                           created_by: current_user.id,
                           amount: dg_params['amount'],
-                          person_id: dg_params['person_id'],
-                          giftable_type: dg_params['giftable_type'],
-                          giftable_id: dg_params['giftable_id'])
-
+                          person_id: dg_params['person_id'])
       @reward = Reward.new(user_id: current_user.id,
                          created_by: current_user.id,
                          person_id: dg_params['person_id'],
@@ -74,7 +69,7 @@ class DigitalGiftsController < ApplicationController
                          team: current_user&.team,
                          rewardable_type: 'DigitalGift')
       if @dg.valid? # if it's not valid, error out
-        @dg.request_link # do the thing!
+        @dg.create_order_on_giftrocket!(@reward) # do the thing!
         if @dg.save
           @reward.rewardable_id = @dg.id
           @success = @reward.save
@@ -109,11 +104,11 @@ class DigitalGiftsController < ApplicationController
       @invitation = Invitation.new(aasm_state: 'attended', person_id: @person.id, research_session_id: @research_session.id)
       @invitation.save
 
-      @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params['amount'], person_id: @person.id, giftable_type: 'Invitation', giftable_id: @invitation.id)
+      @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params['amount'], person_id: @person.id)
 
       @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params['amount'], reason: 'survey', giftable_type: 'Invitation', giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: 'DigitalGift')
       if @digital_gift.valid?
-        @digital_gift.request_link # do the thing!
+        @digital_gift.create_order_on_giftrocket!(@reward) # do the thing!
         if @digital_gift.save
           @reward.rewardable_id = @digital_gift.id
           @success = @reward.save
