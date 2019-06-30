@@ -46,39 +46,23 @@ class DigitalGift < ApplicationRecord
 
   after_create :save_transaction
 
-  attr_accessor :giftable_id
-  attr_accessor :giftable_type
-
+  # TODO: (EL) move all of this into GiftrocketService
   def self.campaigns
     Giftrocket::Campaign.list
   end
-
-  def self.funding_sources
-    Giftrocket::FundingSource.list
-  end
-
-  def self.balance_funding_source
-    DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }
-  end
-
   def self.current_budget
-    (DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }.available_cents / 100).to_money
+    (balance_funding_source.available_cents / 100).to_money
   end
-
   def self.orders
     Giftrocket::Order.list
   end
-
   def self.gifts
     Giftrocket::Gift.list
   end
-
   def fetch_gift
     raise if gift_id.nil?
-
     Giftrocket::Gift.retrieve(gift_id)
   end
-
   def check_status
     # STATUS                          Explanation
     # SCHEDULED_FOR_FUTURE_DELIVERY   self explanatory
@@ -90,53 +74,9 @@ class DigitalGift < ApplicationRecord
     fetch_gift.status
   end
 
-  # is this really how I want to do it?
-  # TODO: move into own service? seems like this could use some cleaning up
-  def request_link
-    raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
-    raise "Insufficient budget to order from Giftrocket" unless can_order?
-
-    self.funding_source_id = DigitalGift.balance_funding_source.id
-
-    self.campaign_id = if amount.to_i < 20
-                         # small dollar amounts, no fee
-                         ENV['GIFTROCKET_LOW_CAMPAIGN']
-                       else
-                         # high dolalr amounts, $2 fee
-                         ENV['GIFTROCKET_HIGH_CAMPAIGN']
-                       end
-
-    generate_external_id
-
-    my_order = Giftrocket::Order.create!(generate_order)
-    self.fee = my_order.payment.fees
-    self.order_id = my_order.id
-
-    gift = my_order.gifts.first
-    self.gift_id = gift.id
-    self.link = gift.raw['recipient']['link']
-    self.order_details = Base64.encode64(Marshal.dump(my_order))
-  end
-
-  def expected_fee
-    # fee is $3 if amount is less than $20
-    amount.to_i < 20 ? 0.to_money : 3.to_money
-  end
-
-  # this is where we check if we can actually request this gift
-  # first from our user's team budget
-  # then from giftrocket, and then we make the request
-  def can_order?
-    (amount + expected_fee) <= user.available_budget
-  end
-
-  # maybe this is just a
-  def generate_external_id
-    self.external_id = { person_id: person_id,
-                         giftable_id: giftable_id,
-                         giftable_type: giftable_type }.to_json
-
-    external_id
+  def create_order_on_giftrocket!(reward)
+    order_params = GiftrocketService.create_order!(self, reward)
+    update(order_params)
   end
 
   # rubocop:disable Security/MarshalLoad
@@ -154,37 +94,13 @@ class DigitalGift < ApplicationRecord
 
   private
 
-    def generate_gifts
-      raise if person.nil?
-
-      [
-        {
-          amount: amount.to_s,
-          recipient: {
-            name: person.full_name,
-            delivery_method: 'LINK'
-          }
-        }
-      ]
-    end
-
-    def generate_order
-      {
-        external_id: external_id,
-        funding_source_id: funding_source_id,
-        campaign_id: campaign_id,
-        gifts: generate_gifts
-      }
-    end
-
-    def save_transaction
-      TransactionLog.create(transaction_type: 'DigitalGift',
-                           from_id: user.budget.id,
-                           user_id: user.id,
-                           amount: total_for_budget,
-                           from_type: 'Budget',
-                           recipient_id: id,
-                           recipient_type: 'DigitalGift')
-    end
-
+  def save_transaction
+    TransactionLog.create(transaction_type: 'DigitalGift',
+                         from_id: user.budget.id,
+                         user_id: user.id,
+                         amount: total_for_budget,
+                         from_type: 'Budget',
+                         recipient_id: id,
+                         recipient_type: 'DigitalGift')
+  end
 end
