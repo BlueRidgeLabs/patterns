@@ -74,6 +74,7 @@ class DigitalGift < ApplicationRecord
     fetch_gift.status
   end
 
+  # TODO: (EL) probably move into digital_gift_service
   def create_order_on_giftrocket!(reward)
     order_params = GiftrocketService.create_order!(self, reward)
     update(order_params)
