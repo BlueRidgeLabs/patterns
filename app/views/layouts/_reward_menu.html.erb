@@ -1,6 +1,6 @@
 <%= nav_bar('nav nav-tabs') do %>
   <%= nav_link('All Rewards', rewards_path, class: 'presentation') %>
-  <%= nav_link('Available Gift Cards', gift_cards_path, class: 'presentation') %>
+  <%= nav_link("Available Gift Cards: #{current_user.unassigned_gift_cards_count}", gift_cards_path, class: 'presentation') %>
   <%= nav_link('Digital Gifts', digital_gifts_path, class: 'presentation') %>
   <%= nav_link('Cash Cards', cash_cards_path, class: 'presentation') %>
 <% end %>
