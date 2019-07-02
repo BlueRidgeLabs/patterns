@@ -14,6 +14,7 @@
           <th colspan="1">approved</th>
           <th colspan="1">team</th>
           <th colspan="1">$ YTD</th>
+          <th colspan="1">GiftCards Outstanding</th>
           <th colspan="2">actions</th>
         </tr>
       </thead>
@@ -42,6 +43,7 @@
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></td>
             <td><%= user.rewards_total %></td>
+            <td><%= user.unassigned_gift_cards_count %></td>
             <td><%= link_to 'Show', user %></td>
             <td><%= link_to 'Edit', edit_user_path(user) %></td>
           </tr>
