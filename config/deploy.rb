@@ -25,7 +25,7 @@ set :scm, :git
 set(:deploy_to) { "/var/www/#{application}" }
 set :deploy_via, :remote_cache
 set :use_sudo, false
-set :user, 'logan'
+set :user, 'patterns'
 set :keep_releases, 10
 set :stages, %w(production staging)
 set :default_stage, 'staging'
