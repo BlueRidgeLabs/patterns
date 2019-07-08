@@ -87,6 +87,10 @@ feature "pools" do
   end
 
   context "pool page actions" do
+    def delete_person_btn_for(person)
+      page.find("#person-#{person.id}").find(:xpath, ".//a[@href='#{delete_person_cart_index_path(person_id: person.id)}']")
+    end
+
     scenario "create new pool", js: true do
       pool_name = "the new pool"
       pool_description = "lorem ipsum"
@@ -173,6 +177,20 @@ feature "pools" do
       new_pool.reload
       expect(new_pool.people.size).to eq(0)
       expect(new_pool.rapidpro_sync).to eq(false)
+
+      # removing people that aren't in a pool should remove them and not throw an error.
+      # new_people = FactoryBot.create_list(:person, 2)
+      # new_people.each { |person| new_pool.people << person }
+      # new_pool.reload
+      # expect(new_pool.people.size).to eq(2)
+      # expect(new_pool.people).to include(new_people.first)
+      # visit current_path
+      # delete_btn = page.find("#cart-#{new_people.first.id}").find(:xpath, ".//a[@href='#{delete_person_cart_index_path(person_id: new_people.first.id)}']")
+      # expect(delete_btn).to have_content("Remove")
+      # cart_person = new_pool.carts_people.find_by(person_id: new_people.first)
+      # cart_person.destroy if cart_person.present?
+      # delete_btn.click
+
 
       # can switch pool
       other_pool = admin_user.carts.where.not(id: new_pool.id).first

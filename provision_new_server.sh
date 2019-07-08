@@ -34,8 +34,8 @@ echo "127.0.0.1 $ARG1" >> /etc/hosts
 
 source /etc/environment;
 
-apt-get update && apt-get dist-upgrade -y
-apt-get install -y python-software-properties software-properties-common
+apt-get update && apt-get full-upgrade -y
+apt-get install -y software-properties-common
 
 #installing rust
 curl https://sh.rustup.rs -sSf  > /tmp/rustup.sh
@@ -43,23 +43,23 @@ chmod +x /tmp/rustup.sh
 /tmp/rustup.sh -y
 
 apt-add-repository -y ppa:nginx/development
-add-apt-repository ppa:certbot/certbot
+add-apt-repository -y ppa:certbot/certbot
 
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 
-apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev clang certbot
+apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev clang certbot python-certbot-nginx
 
 mysqladmin -ppassword create `echo $RAILS_ENV`
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
 
 
 # stop nginx for letsencrypt initial setup
-service nginx stop
+# service nginx stop
+certbot certonly --nginx --agree-tos --email blueridgelabs@robinhood.org -d patterns.brl.nyc
 
-certbot certonly --standalone --agree-tos --email blueridgelabs@robinhood.org -d staging.patterns.brl.nyc
 
-service nginx start
+# service nginx start
 
 # we don't want the default nginx server setup.
 if [ -f /etc/nginx/sites-enabled/default ];
@@ -68,7 +68,7 @@ then
 fi
 # use the nginx config in our repo
 rm /etc/nginx/sites_enabled/patterns.conf;
-ln -s /var/www/patterns-`echo $RAILS_ENV`/current/config/server_conf/`echo $RAILS_ENV`_nginx.conf  /etc/nginx/sites-enabled/logan.conf;
+ln -s /var/www/patterns-`echo $RAILS_ENV`/current/config/server_conf/`echo $RAILS_ENV`_nginx.conf  /etc/nginx/sites-enabled/patterns.conf;
 
 
 # daily nginx restart for new certs
@@ -91,7 +91,7 @@ mkdir -p /var/www/patterns-`echo $RAILS_ENV`
 mkdir -p /var/www/patterns-`echo $RAILS_ENV`/shared/
 
 
-# creating the logan user.
+# creating the user.
 getent passwd patterns  > /dev/null
 if [ $? -eq 0 ]; then
   echo "patterns user exists, skipping user creation"
@@ -112,11 +112,12 @@ EOL
 
   # installing ruby and rvm
   gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+  unset rvm_path
   curl -sSL https://get.rvm.io | bash -s stable
   echo 'rvm_trust_rvmrcs_flag=1' >> ~/.rvmrc
   source /home/patterns/.rvm/scripts/rvm
-  rvm install 2.6.2
-  rvm use 2.6.2@`echo $RAILS_ENV` --create
+  rvm install 2.6.3
+  rvm use 2.6.3@`echo $RAILS_ENV` --create
   rvm @global do gem install rake whenever
   rvm @global do gem install backup -v5.0.0.beta.2
   #echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
@@ -135,5 +136,5 @@ touch /etc/provisioned
 # ensure github has deploy keys for your server
 
 # now run:
-# cap staging deploy:setup
-# cap staging deploy:cold
+# cap produciton deploy:setup
+# cap production deploy:cold

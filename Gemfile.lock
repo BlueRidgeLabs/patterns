@@ -1,9 +1,8 @@
 GIT
-  remote: git://github.com/BlueRidgeLabs/giftrocket-ruby.git
-  revision: 6d39fa2ea5016b8e8de3f0a887599410aa5cfaaa
-  branch: brl_branch
+  remote: https://github.com/BlueRidgeLabs/giftrocket-ruby.git
+  revision: 1cf6818941dc2f1b5846dc1858b924a6a067d5ba
   specs:
-    giftrocket_ruby (2.0.0)
+    giftrocket_ruby (2.0.1)
       activesupport (>= 3.2)
       httparty (~> 0.14.0)
       jwt (= 1.5.6)
@@ -71,17 +70,17 @@ GEM
     ast (2.4.0)
     awesome_print (1.8.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.174.0)
-    aws-sdk-core (3.54.2)
+    aws-partitions (1.176.0)
+    aws-sdk-core (3.56.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.21.0)
-      aws-sdk-core (~> 3, >= 3.53.0)
+    aws-sdk-kms (1.22.0)
+      aws-sdk-core (~> 3, >= 3.56.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.42.0)
-      aws-sdk-core (~> 3, >= 3.53.0)
+    aws-sdk-s3 (1.43.0)
+      aws-sdk-core (~> 3, >= 3.56.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.1.0)
@@ -115,7 +114,7 @@ GEM
     capistrano-sidekiq (0.10.0)
       capistrano
       sidekiq (>= 3.4)
-    capybara (3.23.0)
+    capybara (3.24.0)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -126,7 +125,7 @@ GEM
     capybara-email (3.0.1)
       capybara (>= 2.4, < 4.0)
       mail
-    capybara-screenshot (1.0.22)
+    capybara-screenshot (1.0.23)
       capybara (>= 1.0, < 4)
       launchy
     chartkick (3.2.0)
@@ -170,7 +169,7 @@ GEM
       devise
       zxcvbn-js (~> 4.4.1)
     diff-lcs (1.3)
-    docile (1.3.1)
+    docile (1.3.2)
     ed25519 (1.2.4)
     emoji (1.0.7)
       json
@@ -242,11 +241,11 @@ GEM
     icalendar (2.5.3)
       ice_cube (~> 0.16)
     ice_cube (0.16.3)
-    jaro_winkler (1.5.2)
+    jaro_winkler (1.5.3)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
     jmespath (1.4.0)
-    jquery-rails (4.3.3)
+    jquery-rails (4.3.5)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
@@ -267,7 +266,7 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    lograge (0.11.1)
+    lograge (0.11.2)
       actionpack (>= 4)
       activesupport (>= 4)
       railties (>= 4)
@@ -296,14 +295,14 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
-    mocha (1.8.0)
+    mocha (1.9.0)
       metaclass (~> 0.0.1)
     mock_redis (0.20.0)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     monetize (1.9.1)
       money (~> 6.12)
-    money (6.13.3)
+    money (6.13.4)
       i18n (>= 0.6.4, <= 2)
     money-rails (1.13.2)
       activesupport (>= 3.0)
@@ -338,7 +337,7 @@ GEM
       globalid
       paper_trail (>= 3.0.0)
     parallel (1.17.0)
-    parallel_tests (2.29.0)
+    parallel_tests (2.29.1)
       parallel
     parser (2.6.3.0)
       ast (~> 2.4.0)
@@ -352,7 +351,8 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (3.1.0)
-    puma (3.12.1)
+    puma (4.0.0)
+      nio4r (~> 2.0)
     rack (2.0.7)
     rack-cache (1.9.0)
       rack (>= 0.4)
@@ -439,12 +439,12 @@ GEM
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
       rspec-mocks (~> 3.8.0)
-    rspec-core (3.8.0)
+    rspec-core (3.8.1)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
-    rspec-mocks (3.8.0)
+    rspec-mocks (3.8.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-rails (3.8.2)
@@ -470,9 +470,14 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.3.0)
       rubocop (>= 0.68.0)
-    rubocop-rails_config (0.5.1)
+    rubocop-rails (2.0.1)
+      rack (>= 1.1)
+      rubocop (>= 0.70.0)
+    rubocop-rails_config (0.6.2)
       railties (>= 3.0)
-      rubocop (~> 0.60)
+      rubocop (~> 0.70)
+      rubocop-performance (~> 1.3)
+      rubocop-rails (~> 2.0)
     ruby-graphviz (1.2.4)
     ruby-prof (0.18.0)
     ruby-progressbar (1.10.1)
@@ -495,7 +500,7 @@ GEM
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
-    sassc-rails (2.1.1)
+    sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
       sprockets (> 3.0)
@@ -549,7 +554,7 @@ GEM
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    twilio-ruby (5.23.1)
+    twilio-ruby (5.24.0)
       faraday (~> 0.9)
       jwt (>= 1.5, <= 2.5)
       nokogiri (>= 1.6, < 2.0)
@@ -593,7 +598,7 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
-    whenever (0.11.0)
+    whenever (1.0.0)
       chronic (>= 0.6.3)
     will_paginate (3.1.7)
     will_paginate-bootstrap (0.2.5)
@@ -690,7 +695,7 @@ DEPENDENCIES
   puma
   rack-cache
   rack-mini-profiler
-  rails (= 5.2.3)
+  rails (~> 5.2.0)
   rails-erd
   rails-i18n
   ransack

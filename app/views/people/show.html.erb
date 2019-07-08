@@ -189,7 +189,7 @@
         <% @person.carts.each do |cart| %>
           <li id='cart-<%= cart.id %>'>
             <% if current_user.carts.include?(cart) %>
-              <%= link_to cart.name, cart_path(cart) %>: <%= cart.users.limit(5).map(&:name).join(", ")%><%= "..." if cart.users.size > 5 %>
+              <%= link_to cart.name, cart_index_path(cart) %>: <%= cart.users.limit(5).map(&:name).join(", ")%><%= "..." if cart.users.size > 5 %>
             <% else %>
               <%= cart.name %>: <%= cart.users.limit(5).map(&:name).join(", ")%><%= "..." if cart.users.size > 5 %>
             <% end %>

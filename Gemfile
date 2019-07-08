@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.6.2'
+ruby '~> 2.6.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2.3'
+gem 'rails', '~> 5.2.0'
 gem 'rails-i18n'
 gem 'actioncable'
 gem 'bootsnap', require: false
@@ -39,7 +39,7 @@ gem 'roo'
 gem 'redcarpet' # for markdown notes
 
 #giftrocket API for automagic giftcarding
-gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby', branch: 'brl_branch'
+gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby'
 
 gem "aws-sdk-s3", require: false
 
