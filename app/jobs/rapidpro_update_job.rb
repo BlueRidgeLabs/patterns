@@ -44,6 +44,9 @@ class RapidproUpdateJob
         body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' ') }
       else # person doesn't yet exist in rapidpro
         # TODO: (EL) should we also set urns, groups, and fields?
+        # (BC) Can't set urns groups and fields. 
+        # Have to make two requests. One to create the person
+        # and then another to set fields
         cgi_urn = CGI.escape(urn)
         url = endpoint_url + "?urn=#{cgi_urn}" # uses phone number to identify.
       end

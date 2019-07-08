@@ -48,7 +48,7 @@ class CommentsController < ApplicationController
         # format.json { render action: 'show', status: :created, location: @comment }
       else
         # format.html { render action: 'new' }
-        format.js   { escape_javascript("console.log('error saving comment: #{comment.errors.inpsect}');") }
+        format.js   { escape_javascript("console.log('error saving comment: #{@comment.errors.inspect}');") }
         # format.json { render json: @comment.errors, status: :unprocessable_entity }
       end
     end
