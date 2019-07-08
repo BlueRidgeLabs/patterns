@@ -155,7 +155,6 @@ ActiveRecord::Schema.define(version: 2019_06_13_192411) do
     t.boolean "sent"
     t.datetime "sent_at"
     t.integer "sent_by"
-    t.index ["person_id"], name: "index_digital_gifts_on_person_id"
     t.index ["reward_id"], name: "index_digital_gifts_on_reward_id"
     t.index ["user_id"], name: "index_digital_gifts_on_user_id"
   end
