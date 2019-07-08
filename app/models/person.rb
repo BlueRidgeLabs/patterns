@@ -323,23 +323,40 @@ class Person < ApplicationRecord
   #   end
   # end
 
-  def to_a
-    fields = Person.column_names
-    fields.push('tags')
-    fields.map do |f|
-      field_value = send(f.to_sym)
-      if f == 'phone_number'
-        if field_value.present?
-          field_value.phony_formatted(format: :national, spaces: '-')
-        else
-          ''
-        end
-      elsif f == 'email_address'
-        field_value.presence || ''
-      elsif f == 'tags'
-        tag_values.present? ? tag_values.join('|') : ''
-      else
-        field_value
+  def self.csv_headers
+    Person.column_names + ['tags']
+  end
+
+  def self.human_device_type_name(device_id)
+    device_mappings = Patterns::Application.config.device_mappings
+    device_mappings.rassoc(device_id)[0].to_s
+  rescue StandardError
+    'Unknown/No selection'
+  end
+
+  def self.human_connection_type_name(connection_id)
+    connection_mappings = Patterns::Application.config.connection_mappings
+    friendly_name_mappings = {
+      phone: 'Phone with data plan',
+      home_broadband: 'Home broadband (cable, DSL)',
+      other: 'Other',
+      public_computer: 'Public computer',
+      public_wifi: 'Public wifi'
+    }
+    friendly_name_mappings[connection_mappings.rassoc(connection_id)[0]]
+  rescue StandardError
+    'Unknown/No selection'
+  end
+
+  def to_csv_row
+    Person.csv_headers.map do |field|
+      field_value = send(field.to_sym)
+      case field
+      when 'primary_device_id', 'secondary_device_id' then Person.human_device_type_name(field_value)
+      when 'primary_connection_id', 'secondary_connection_id' then Person.human_connection_type_name(field_value)
+      when 'phone_number' then field_value&.phony_formatted(format: :national, spaces: '-')
+      when 'tags' then tag_values&.join('|')
+      else field_value
       end
     end
   end

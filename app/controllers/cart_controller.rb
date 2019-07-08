@@ -20,7 +20,7 @@ class CartController < ApplicationController
         if current_user.admin?
           output = CSV.generate do |csv|
             csv << Person.column_names.map(&:titleize)
-            @people.each { |person| csv << person.to_a }
+            @people.each { |person| csv << person.to_csv_row }
           end
           send_data output, filename: "Pool-#{@cart.name}.csv"
         else
