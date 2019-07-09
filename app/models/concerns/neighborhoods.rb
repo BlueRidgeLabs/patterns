@@ -97,6 +97,7 @@ module Neighborhoods
     'Canarsie'                      => [11234, 11236],
     'Southern Brooklyn'             => [11223, 11224, 11229, 11235],
     'Northwest Brooklyn'            => [11201, 11205, 11215, 11217, 11231],
+    'Bay Ridge'                     => [11029],
     'Flatbush'                      => [11203, 11210, 11225, 11226],
     'Brownsville'                   => [11233, 11212],
     'East New York and New Lots'    => [11207, 11208, 11239],
