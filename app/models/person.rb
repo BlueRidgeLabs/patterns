@@ -117,9 +117,8 @@ class Person < ApplicationRecord
   validates :first_name, presence: true
   validates :last_name, presence: true
 
-  validates :postal_code, presence: true
-  validates :postal_code, zipcode: { country_code: :us }
-
+  validates :postal_code, zipcode: { country_code: :us }, allow_blank: true
+  validate :postal_code_exists
   # phony validations and normalization
   phony_normalize :phone_number, default_country_code: 'US'
   phony_normalize :landline, default_country_code: 'US'
@@ -378,6 +377,12 @@ class Person < ApplicationRecord
 
   def md5_email
     Digest::MD5.hexdigest(email_address.downcase) if email_address.present?
+  end
+
+  def postal_code_exists
+    return true if postal_code.blank?
+    
+    ::ZIP_LAT_LONG[postal_code].present?
   end
 
   def update_neighborhood
