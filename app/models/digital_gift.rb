@@ -50,19 +50,25 @@ class DigitalGift < ApplicationRecord
   def self.campaigns
     Giftrocket::Campaign.list
   end
+
   def self.current_budget
-    (balance_funding_source.available_cents / 100).to_money
+    (GiftrocketService.balance_funding_source.available_cents / 100).to_money
   end
+
   def self.orders
     Giftrocket::Order.list
   end
+
   def self.gifts
     Giftrocket::Gift.list
   end
+
   def fetch_gift
     raise if gift_id.nil?
+
     Giftrocket::Gift.retrieve(gift_id)
   end
+
   def check_status
     # STATUS                          Explanation
     # SCHEDULED_FOR_FUTURE_DELIVERY   self explanatory
@@ -95,13 +101,13 @@ class DigitalGift < ApplicationRecord
 
   private
 
-  def save_transaction
-    TransactionLog.create(transaction_type: 'DigitalGift',
-                         from_id: user.budget.id,
-                         user_id: user.id,
-                         amount: total_for_budget,
-                         from_type: 'Budget',
-                         recipient_id: id,
-                         recipient_type: 'DigitalGift')
-  end
+    def save_transaction
+      TransactionLog.create(transaction_type: 'DigitalGift',
+                           from_id: user.budget.id,
+                           user_id: user.id,
+                           amount: total_for_budget,
+                           from_type: 'Budget',
+                           recipient_id: id,
+                           recipient_type: 'DigitalGift')
+    end
 end

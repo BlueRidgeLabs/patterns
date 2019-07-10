@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # amount: dg_params['amount'],
 # person_id: dg_params['person_id'],
 # giftable_type: dg_params['giftable_type'],
@@ -38,6 +40,7 @@ class DigitalGiftService
     def validate_giftable!(params)
       giftable = giftable_for(params)
       raise 'No giftable object present' if giftable.nil?
+
       person_name = giftable.person.full_name
       if params[:giftable_type] == 'Invitation'
         raise "#{person_name} isn't marked as 'attended'." unless giftable.attended?
@@ -53,7 +56,7 @@ class DigitalGiftService
     def giftable_for(params)
       id, type = params.values_at(:giftable_id, :giftable_type)
       klass = GIFTABLE_TYPES.fetch(type)
-      klass.find_by_id(id)
+      klass.find_by(id: id)
     end
   end
 end
