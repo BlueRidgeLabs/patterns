@@ -91,7 +91,7 @@ class DigitalGiftsController < ApplicationController
   end
 
   def api_create
-    # TODO Refactor
+    # TODO: Refactor
     # apithis is horrific too
     # https://blog.arkency.com/2014/07/4-ways-to-early-return-from-a-rails-controller/
 
