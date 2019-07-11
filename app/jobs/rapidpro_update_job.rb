@@ -14,7 +14,10 @@ class RapidproUpdateJob
     @person = Person.find(id)
 
     # TODO: (EL) should we early-return?
-    RapidproDeleteJob.perform_async(id) if @person.tag_list.include?('not dig') || @person.active == false
+    if @person.tag_list.include?('not dig') || @person.active == false
+      RapidproDeleteJob.perform_async(id)
+      return
+    end
 
     # we may deal with a word where rapidpro does email...
     # but not now.
@@ -56,8 +59,8 @@ class RapidproUpdateJob
       case res.code
       when 201 # new person in rapidpro
         if @person.rapidpro_uuid.blank?
-          # update column to skip callbacks
-          @person.update_column(:rapidpro_uuid, res.parsed_response['uuid'])
+          @person.rapidpro_uuid = res.parsed_response['uuid']
+          @person.save # this calls the rapidpro update again, for the other attributes
         end
       when 429 # throttled
         retry_delay = res.headers['retry-after'].to_i + 5
