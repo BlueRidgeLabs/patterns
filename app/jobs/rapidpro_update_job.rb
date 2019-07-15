@@ -67,8 +67,10 @@ class RapidproUpdateJob
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
         return true
+      when 400
+        raise "error: #{res.body}"
       else
-        raise "error: #{res.code}"
+        raise "error: #{res.code}, #{res.body}"
       end
     end
   end
