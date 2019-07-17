@@ -92,10 +92,22 @@ Model.new(:my_backup, 'Description for my_backup') do
   ##
   # Local (Copy) [Storage]
   #
+  
+
   store_with Local do |local|
-    local.path  = '/var/www/logan-production/shared/backups'
-    local.keep  = 20
-    local.keep  = Time.now - 2592000 # Remove all backups older than 1 month.
+    time = Time.now
+    if time.day == 1  # first day of the monthf
+      storage_id = :monthly
+      keep = 12
+    elsif time.sunday?
+      storage_id = :weekly
+      keep = 4
+    else
+      storage_id = :daily
+      keep = 200
+    end
+    local.path  = "/var/www/patterns-production/shared/backups/#{storage_id.to_s}"
+    local.keep  = keep
   end
 
   ##
@@ -106,7 +118,7 @@ Model.new(:my_backup, 'Description for my_backup') do
 
   encrypt_with GPG do |encryption|
     encryption.keys = {}
-    encryption.keys[ENV['MAIL_ADMIN']] = File.read('/home/logan/backup_public_key.pub')
+    encryption.keys[ENV['MAIL_ADMIN']] = File.read('/home/patterns/backup_public_key.pub')
     encryption.recipients = ENV['MAIL_ADMIN']
   end
   ##
