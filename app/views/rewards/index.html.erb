@@ -62,5 +62,5 @@
 <%= will_paginate @rewards, :renderer => BootstrapPagination::Rails %>
 <br>
 
-<%= link_to "Save this list as CSV", rewards_path(params.merge(format: :csv).permit!), :class => "btn"  %>
+<%= link_to "Save this list as CSV", rewards_path(format: :csv, params: params.permit!), :class => "btn"  %>
 

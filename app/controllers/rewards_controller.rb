@@ -189,7 +189,6 @@ class RewardsController < ApplicationController
     def set_reward
       @reward = Reward.find(params[:id])
     end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def reward_params
       params.require(:reward).permit(
