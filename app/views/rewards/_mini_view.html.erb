@@ -8,6 +8,9 @@
       <th>&nbsp;</th>
       <th>&nbsp;</th>
       <th>&nbsp;</th>
+      <% if current_user.admin? %>
+      <th>&nbsp;</th>
+      <% end %>
     </tr>
   </thead>
   <tbody id='mini-rewards'>
@@ -17,4 +20,3 @@
   </tbody>
 </thread>
 </table>
-
