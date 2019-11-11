@@ -115,19 +115,16 @@ class Public::PeopleController < ApplicationController
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
 
       if @current_user.nil?
-        render(file: 'public/404.html', status: :not_found) && return
+        render(file: 'public/404.html', status: :unauthorized) && return
       else
         true
       end
     end
 
     def find_person
-      if update_params[:phone_number].present?
-        phone = PhonyRails.normalize_number(CGI.unescape(update_params[:phone_number]).tr('tel:+',''))
-        @person = Person.find_by(phone_number: phone)
-      elsif update_params[:uuid].present?
+      if update_params[:uuid].present?
         @person = Person.find_by(rapidpro_uuid: update_params[:uuid])
-      end
+    end
 
       if @person.nil?
         render(file: 'public/404.html', status: :not_found) && return
@@ -160,7 +157,7 @@ class Public::PeopleController < ApplicationController
       %i[id created_at signup_at updated_at].each do |del|
         person_attributes.delete_at(person_attributes.index(del))
       end
-      person_attributes += %i[tags note]
+      person_attributes += %i[tags note uuid]
       params.permit(person_attributes)
     end
 
