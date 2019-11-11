@@ -122,8 +122,8 @@ class Public::PeopleController < ApplicationController
     end
 
     def find_person
-      if update_params[:uuid].present?
-        @person = Person.find_by(rapidpro_uuid: update_params[:uuid])
+      if update_params[:raidpro_uuid].present?
+        @person = Person.find_by(rapidpro_uuid: update_params[:rapidpro_uuid])
     end
 
       if @person.nil?
@@ -145,7 +145,6 @@ class Public::PeopleController < ApplicationController
                     :landline,
                     :referred_by,
                     :note,
-                    :uuid,
                     :low_income,
                     :phone_number,
                     :rapidpro_uuid,
@@ -157,7 +156,7 @@ class Public::PeopleController < ApplicationController
       %i[id created_at signup_at updated_at].each do |del|
         person_attributes.delete_at(person_attributes.index(del))
       end
-      person_attributes += %i[tags note uuid]
+      person_attributes += %i[tags note]
       params.permit(person_attributes)
     end
 
