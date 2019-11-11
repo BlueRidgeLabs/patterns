@@ -44,7 +44,9 @@ class RapidproUpdateJob
         body[:urns] << "mailto:#{@person.email_address}" if @person.email_address.present?
         body[:groups] = ['DIG']
         # rapidpro tags are space delimited and have underscores for spaces
-        body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' ') }
+        body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' '),
+                          verified: @person.verified? }
+
       else # person doesn't yet exist in rapidpro
         # TODO: (EL) should we also set urns, groups, and fields?
         # (BC) Can't set urns groups and fields. 
