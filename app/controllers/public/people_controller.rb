@@ -125,11 +125,14 @@ class Public::PeopleController < ApplicationController
       if update_params[:phone_number].present?
         phone = PhonyRails.normalize_number(CGI.unescape(update_params[:phone_number]).tr('tel:+',''))
         @person = Person.find_by(phone_number: phone)
-        if @person.nil?
-          render(file: 'public/404.html', status: :not_found) && return
-        else
-          true
-        end
+      elsif update_params[:uuid].present?
+        @person = Person.find_by(rapidpro_uuid: update_params[:uuid])
+      end
+
+      if @person.nil?
+        render(file: 'public/404.html', status: :not_found) && return
+      else
+        true
       end
     end
 
@@ -145,6 +148,7 @@ class Public::PeopleController < ApplicationController
                     :landline,
                     :referred_by,
                     :note,
+                    :uuid,
                     :low_income,
                     :phone_number,
                     :rapidpro_uuid,
