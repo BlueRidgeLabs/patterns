@@ -121,9 +121,7 @@ class Public::PeopleController < ApplicationController
     end
 
     def find_person
-      if update_params[:rapidpro_uuid].present?
-        @person = Person.find_by(rapidpro_uuid: update_params[:rapidpro_uuid])
-      end
+      @person = Person.find_by(rapidpro_uuid: update_params[:rapidpro_uuid]) if update_params[:rapidpro_uuid].present?
 
       if @person.nil?
         render(file: 'public/404.html', status: :not_found) && return

@@ -47,7 +47,7 @@ Layout/EmptyLinesAroundModuleBody:
   Enabled: false
 
 Layout/IndentationConsistency:
-  EnforcedStyle: rails
+  EnforcedStyle: indented_internal_methods
 
 Layout/IndentFirstHashElement:
   EnforcedStyle: consistent

@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 class SearchController < ApplicationController
   include SearchHelper
 
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def index_ransack
     @tags = SearchService.parse_tags(params[:q])
     params[:q] = SearchService.normalize_query(params[:q])
@@ -26,7 +25,7 @@ class SearchController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/BlockLength
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
@@ -122,4 +121,3 @@ class SearchController < ApplicationController
     end
   # rubocop:enable Metrics/MethodLength
 end
-# rubocop:enable ClassLength
