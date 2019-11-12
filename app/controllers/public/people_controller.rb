@@ -113,7 +113,6 @@ class Public::PeopleController < ApplicationController
       raise ActionController::RoutingError.new('Not Found') if request.headers['AUTHORIZATION'].blank?
 
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
-
       if @current_user.nil?
         render(file: 'public/404.html', status: :unauthorized) && return
       else
@@ -122,9 +121,9 @@ class Public::PeopleController < ApplicationController
     end
 
     def find_person
-      if update_params[:raidpro_uuid].present?
+      if update_params[:rapidpro_uuid].present?
         @person = Person.find_by(rapidpro_uuid: update_params[:rapidpro_uuid])
-    end
+      end
 
       if @person.nil?
         render(file: 'public/404.html', status: :not_found) && return
