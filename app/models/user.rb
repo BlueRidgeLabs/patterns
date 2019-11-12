@@ -97,7 +97,7 @@ class User < ApplicationRecord
   def unassigned_gift_cards_count
     GiftCard.unassigned.where(user_id: id).size
   end
-  
+
   delegate :budget, to: :team
 
   def available_budget

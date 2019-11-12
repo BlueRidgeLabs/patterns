@@ -45,7 +45,7 @@ class ActivationCallsController < ApplicationController
     # twilio sends us the results of the gather here and we update
     # activation and call appropriately.
     # where we kick off a check if need be.
-    
+
     speech_results = params[:SpeechResult]
     @activation_call.transcript = speech_results
     if @activation_call.transcript_check # passed
@@ -53,7 +53,7 @@ class ActivationCallsController < ApplicationController
     else # fail
       @activation_call.failure # launched another check call if necessary
     end
-    
+
     if @activation_call.save
       render status: :ok
     else

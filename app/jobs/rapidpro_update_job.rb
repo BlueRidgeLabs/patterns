@@ -45,11 +45,11 @@ class RapidproUpdateJob
         body[:groups] = ['DIG']
         # rapidpro tags are space delimited and have underscores for spaces
         body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' '),
-                          verified: @person.verified? }
+                          verified: @person.verified }
 
       else # person doesn't yet exist in rapidpro
         # TODO: (EL) should we also set urns, groups, and fields?
-        # (BC) Can't set urns groups and fields. 
+        # (BC) Can't set urns groups and fields.
         # Have to make two requests. One to create the person
         # and then another to set fields
         cgi_urn = CGI.escape(urn)

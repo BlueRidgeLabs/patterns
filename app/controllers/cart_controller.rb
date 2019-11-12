@@ -108,9 +108,7 @@ class CartController < ApplicationController
       cart_person = @cart.carts_people.find_by(person_id: cart_params[:person_id])
       cart_person.destroy if cart_person.present?
       @deleted_all = @cart.people.empty?
-      if cart_person.present?
-        flash[:notice] = I18n.t('cart.delete_person_success', person_name: cart_person.person.full_name, cart_name: @cart.name)
-      end
+      flash[:notice] = I18n.t('cart.delete_person_success', person_name: cart_person.person.full_name, cart_name: @cart.name) if cart_person.present?
     end
     @cart.save
 

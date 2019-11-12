@@ -138,10 +138,9 @@ class PeopleController < ApplicationController
   # POST /people
   # POST /people.json
   def create
-
     @person = Person.new(person_params)
     @person.created_by = current_user.id
-    
+
     if @person.errors.present?
       errors = []
       @person.errors.full_messages.each { |m| errors.push m }
