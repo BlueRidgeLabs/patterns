@@ -110,6 +110,11 @@ class Public::PeopleController < ApplicationController
   private
 
     def find_user
+      if Rails.env.development? 
+        @current_user = User.find 2
+        return true
+      end
+      
       raise ActionController::RoutingError.new('Not Found') if request.headers['AUTHORIZATION'].blank?
 
       @current_user = User.find_by(token: request.headers['AUTHORIZATION'])

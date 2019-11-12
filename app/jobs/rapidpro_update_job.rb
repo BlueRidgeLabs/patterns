@@ -64,10 +64,15 @@ class RapidproUpdateJob
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
         end
+        return true
       when 429 # throttled
         retry_delay = res.headers['retry-after'].to_i + 5
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
+        if @person.rapidpro_uuid.blank?
+          @person.rapidpro_uuid = res.parsed_response['uuid']
+          @person.save # this calls the rapidpro update again, for the other attributes
+        end
         return true
       when 400
         raise "error: #{res.body}"
