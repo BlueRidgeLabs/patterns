@@ -50,9 +50,9 @@ module Patterns
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = ENV['TIME_ZONE'] || "Central Time (US & Canada)"
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    #config.active_record.raise_in_transactional_callbacks = true
 
+    # for now. should be changed later
+    config.active_record.cache_versioning = false
 
     config.action_cable.mount_path = '/cable'
     redis_str = ENV['REDIS_URL'] || "redis://localhost:6379/0/cache"

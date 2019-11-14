@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 ruby '~> 2.6.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 6.0.0'
 gem 'rails-i18n'
 gem 'actioncable'
 gem 'bootsnap', require: false
 gem 'rack-cache'
-gem 'airbrake', '~> 5.0' # sends errors to external service
+gem 'airbrake' # sends errors to external service
 # gem 'pg' # soooooon!
 gem 'mysql2'
 
