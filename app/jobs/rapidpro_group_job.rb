@@ -62,17 +62,19 @@ class RapidproGroupJob
   end
 
   def delete
-    if @cart.rapidpro_uuid.present?
-      res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @headers)
-      case res.code
-      when 204
-        return true
-      when 429
-        retry_delay = res.headers['retry-after'].to_i + 5
-        RapidproGroupJob.perform_in(retry_delay, @cart.id, 'delete') # re-queue job
-      else
-        raise "delete error:#{@cart.id}, code: #{res.code}"
-      end
+    return unless @cart.rapidpro_uuid.present?
+
+    res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @headers)
+    case res.code
+    when 204
+      @cart.rapidpro_uuid = nil
+      @cart.save
+      return true
+    when 429
+      retry_delay = res.headers['retry-after'].to_i + 5
+      RapidproGroupJob.perform_in(retry_delay, @cart.id, 'delete') # re-queue job
+    else
+      raise "delete error:#{@cart.id}, code: #{res.code}"
     end
   end
 
