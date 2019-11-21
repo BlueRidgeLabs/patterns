@@ -13,7 +13,8 @@ describe "public_api", :type => :request do
   let(:tags) {'foo,bar,baz' }
   let(:preferred_contact_method) { { value: "SMS", label: "Text Message" } }
   let(:low_income) { true }
-  let(:person) { FactoryBot.create(:person) } 
+  let(:person){FactoryBot.create(:person,:rapidpro_syncable)}
+  let(:rapidpro_uuid){ SecureRandom.uuid }
   let(:headers) {
     {
       "ACCEPT" => "application/json",
@@ -38,21 +39,23 @@ describe "public_api", :type => :request do
                                           :postal_code => postal_code,
                                           :email_address => email_address,
                                           :low_income => true,
-                                          :phone_number => phone_number,},
+                                          :phone_number => phone_number,
+                                          :rapidpro_uuid => rapidpro_uuid},
                                           headers: headers
 
       expect(response.content_type).to eq("application/json")
       expect(response).to have_http_status(:created)
-
       expect(Person.last.first_name).to eq('Doggo')
     end
 
     it "updates person through API" do
+      
       post "/api/update_person", 
             params: { phone_number: person.phone_number, 
                       tags:'bat,bonk',
                       note:'this is a note',
-                      first_name: 'Pupper'
+                      first_name: 'Pupper',
+                      rapidpro_uuid: person.rapidpro_uuid
                     },
             headers: headers
       expect(response.content_type).to eq("application/json")
@@ -67,7 +70,7 @@ describe "public_api", :type => :request do
 
     it 'gets a person from the api' do
       get "/api/show.json",
-          params: {phone_number: person.phone_number},
+          params: {rapidpro_uuid: person.rapidpro_uuid},
           headers: headers
 
       expect(response.status).to eq(200)
@@ -89,7 +92,7 @@ describe "public_api", :type => :request do
                                           headers: invalid_headers
 
       expect(response.content_type).to eq("text/html")
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(401)
     end
     
     it 'cannot update a person' do
@@ -102,7 +105,7 @@ describe "public_api", :type => :request do
             headers: invalid_headers
 
       expect(response.content_type).to eq("text/html")
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(401)
       person.reload
       expect(person.first_name).to_not eq('pupper')
       expect(person.tag_list).to_not include('bat')
@@ -114,7 +117,7 @@ describe "public_api", :type => :request do
           headers: invalid_headers
 
       expect(response.status).to_not eq(200)
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(401)
     end
   end
 end
