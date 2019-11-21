@@ -70,7 +70,7 @@ class RapidproUpdateJob
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
         if @person.rapidpro_uuid.blank?
-          @person.rapidpro_uuid = res.parsed_response['uuid']
+          @person.rapidpro_uuid = res.parsed_response['uuid'] if res.parsed_response.present?
           @person.save # this calls the rapidpro update again, for the other attributes
         end
         return true

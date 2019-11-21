@@ -50,7 +50,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
             urns: ["tel:#{person.phone_number}", "mailto:#{person.email_address}"],
             groups: ["DIG"],
             fields: {
-              tags: "tag_1 tag_2"
+              tags: "tag_1 tag_2",
+              verified: person.verified
             }
           }.to_json
         )
@@ -71,7 +72,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
             urns: ["tel:#{person.phone_number}"],
             groups: ["DIG"],
             fields: {
-              tags: "tag_1 tag_2"
+              tags: "tag_1 tag_2",
+              verified: person.verified
             }
           }.to_json
         )
