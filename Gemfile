@@ -86,6 +86,7 @@ group :development do
 
   # enabling us to deploy via travis and encrypted keys!
   #gem 'travis'
+  gem 'spring'
 end
 
 group :production do
