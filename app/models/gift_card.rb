@@ -57,7 +57,8 @@ class GiftCard < ApplicationRecord
                             status: 'preload')
                     }
 
-  scope :ready, -> { where.not(status: ['preload']) }
+  scope :ready, -> { where.not(status: ['preload','missing']) }
+  
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
   # IMMUTABLE = %w{gift_card_id}
@@ -111,6 +112,7 @@ class GiftCard < ApplicationRecord
     state :check_started
     state :check_errored
     state :active
+    state :missing
 
     event :return_to_preloaded do
       transitions to: :preload
@@ -141,6 +143,10 @@ class GiftCard < ApplicationRecord
 
     event :success, after_commit: :do_success_notification do
       transitions to: :active
+    end
+
+    event :lost do
+      transitions from: :active, to: :missing
     end
   end
 
