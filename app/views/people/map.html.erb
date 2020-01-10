@@ -32,6 +32,20 @@
                  d > 3   ? 100 :
                            50 ;
       }
+      function style(feature) {
+        return {
+            fillColor: getColor(feature.properties['ZCTA5CE10']),
+            weight: 2,
+            opacity: 1,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.7
+        };
+      }
+
+
+      L.geoJson(statesData, {style: style}).addTo(map);
+      
       var mymap = L.map('bigmap').setView([40.650002, -73.949997], 10);
 
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {

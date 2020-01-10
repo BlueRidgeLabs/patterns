@@ -40,7 +40,8 @@ class Reward < ApplicationRecord
     survey: 7,
     coordination: 8,
     translation: 9,
-    honorarium: 10
+    honorarium: 10,
+    travel: 11
   }
 
   belongs_to :rewardable, polymorphic: true, touch: true

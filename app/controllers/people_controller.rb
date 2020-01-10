@@ -67,6 +67,8 @@ class PeopleController < ApplicationController
   end
 
   def map
+    # load in zips from geojson, filter ones we want, add in postal data, output json
+    # cache 
     @zips = Person.active.group(:postal_code).size
     @max =  @zips.values.max
   end
