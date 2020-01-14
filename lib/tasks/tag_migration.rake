@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 namespace :tag_migration do
-  desc 'Bulk add taggings by Id'
+  desc "Bulk add taggings by Id"
   task migrate: :environment  do
     PaperTrail.disable
-    tags_results = ActiveRecord::Base.connection.exec_query('SELECT * FROM old_tags')
-    taggings_results = ActiveRecord::Base.connection.exec_query('SELECT * FROM old_taggings')
+    tags_results = ActiveRecord::Base.connection.exec_query("SELECT * FROM old_tags")
+    taggings_results = ActiveRecord::Base.connection.exec_query("SELECT * FROM old_taggings")
     people = Person.all
     users = User.all
 
     people_tags = {}
     taggings_results.each do |tr|
-      people_tags[tr['taggable_id']] ||= []
-      tag_names = tags_results.find { |t| t['id'] == tr['tag_id'] }['name']
-      people_tags[tr['taggable_id']] << tag_names
+      people_tags[tr["taggable_id"]] ||= []
+      tag_names = tags_results.find { |t| t["id"] == tr["tag_id"] }["name"]
+      people_tags[tr["taggable_id"]] << tag_names
     end
     errors = []
     people_tags.each do |person_id, tags|
