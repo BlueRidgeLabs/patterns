@@ -15,7 +15,7 @@
 #
 
 # FIXME: Refactor and re-enable cop
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 class InvitationsController < ApplicationController
   # this is accessed by people, without usernames/passwords.
   # confitmation, updates, etc.
@@ -203,4 +203,4 @@ class InvitationsController < ApplicationController
       params.permit(:email_address, :person_id, :token)
     end
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength
