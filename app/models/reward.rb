@@ -89,11 +89,11 @@ class Reward < ApplicationRecord
   # end
 
   def reason_is_signup?
-    reason == 'signup'
+    reason == "signup"
   end
 
   def research_session
-    return nil if giftable.nil? || giftable_type != 'Invitation'
+    return nil if giftable.nil? || giftable_type != "Invitation"
 
     giftable&.research_session # double check unnecessary, but I like it.
   end
@@ -101,30 +101,30 @@ class Reward < ApplicationRecord
   # rubocop:disable Metrics/MethodLength
   def self.export_csv
     CSV.generate do |csv|
-      csv_column_names = ['Gift Card ID', 'Type', 'Given By', 'Team', 'FinanceCode', 'Session Title', 'Session Date', 'Sign Out Date', 'Batch ID', 'Sequence ID', 'Amount', 'Reason', 'Person ID', 'Name', 'Address', 'Phone Number', 'Email', 'Notes']
+      csv_column_names = ["Gift Card ID", "Type", "Given By", "Team", "FinanceCode", "Session Title", "Session Date", "Sign Out Date", "Batch ID", "Sequence ID", "Amount", "Reason", "Person ID", "Name", "Address", "Phone Number", "Email", "Notes"]
       csv << csv_column_names
       all.includes(:person, :user, :team, :rewardable, :giftable).find_each do |reward|
-        batch_id = reward.rewardable_type == 'GiftCard' ? reward.rewardable.batch_id : ''
-        sequence_number = reward.rewardable_type == 'GiftCard' ? reward.rewardable.sequence_number : ''
+        batch_id = reward.rewardable_type == "GiftCard" ? reward.rewardable.batch_id : ""
+        sequence_number = reward.rewardable_type == "GiftCard" ? reward.rewardable.sequence_number : ""
         row_items = [reward.id,
                      reward.rewardable_type,
                      reward.user.name,
-                     reward.team.name || '',
-                     reward.finance_code || '',
-                     reward.giftable.title || '',
-                     reward.giftable.created_at.to_date.to_s || '',
+                     reward.team.name || "",
+                     reward.finance_code || "",
+                     reward.giftable.title || "",
+                     reward.giftable.created_at.to_date.to_s || "",
                      reward.created_at.to_s(:rfc822),
                      batch_id,
-                     sequence_number || '',
+                     sequence_number || "",
                      reward.amount.to_s,
                      reward.reason.titleize,
-                     reward.person.id || '',
-                     reward.person.full_name || '',
-                     reward.person.address_fields_to_sentence || '']
+                     reward.person.id || "",
+                     reward.person.full_name || "",
+                     reward.person.address_fields_to_sentence || ""]
         if reward.person.phone_number.present?
-          row_items.push(reward.person.phone_number.phony_formatted(format: :national, spaces: '-'))
+          row_items.push(reward.person.phone_number.phony_formatted(format: :national, spaces: "-"))
         else
-          row_items.push('')
+          row_items.push("")
         end
         row_items.push(reward.person.email_address)
         row_items.push(reward.notes)
@@ -134,7 +134,6 @@ class Reward < ApplicationRecord
   end
 
   private
-
     # def assign_rewarded
     #   # tricksy: must allow creation of cards without activations
     #   # but must check to see if card has activation

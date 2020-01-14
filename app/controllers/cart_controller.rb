@@ -24,7 +24,7 @@ class CartController < ApplicationController
           end
           send_data output, filename: "Pool-#{@cart.name}.csv"
         else
-          flash[:error] = I18n.t('not_permitted')
+          flash[:error] = I18n.t("not_permitted")
         end
       end
     end
@@ -40,13 +40,13 @@ class CartController < ApplicationController
     @create_result = @cart.save
     respond_to do |format|
       if @create_result
-        format.js {}
-        format.json {}
-        format.html { redirect_to @cart, notice: 'Pool was successfully created.' }
+        format.js { }
+        format.json { }
+        format.html { redirect_to @cart, notice: "Pool was successfully created." }
       else
         flash[:error] = @cart.errors
-        format.js {}
-        format.html { render action: 'new' }
+        format.js { }
+        format.html { render action: "new" }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
       end
     end
@@ -55,11 +55,11 @@ class CartController < ApplicationController
   def update
     respond_to do |format|
       if @cart.update(cart_update_params)
-        format.html { redirect_to cart_path(@cart), notice: 'Cart was successfully updated.' }
+        format.html { redirect_to cart_path(@cart), notice: "Cart was successfully updated." }
         format.json { respond_with_bip(@cart) }
       else
         flash[:error] = @cart.errors
-        format.html { render action: 'edit' }
+        format.html { render action: "edit" }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
       end
     end
@@ -67,7 +67,7 @@ class CartController < ApplicationController
 
   # rubocop:disable Metrics/MethodLength
   def add
-    pids = cart_params[:person_id].split('/')
+    pids = cart_params[:person_id].split("/")
     people = Person.where(id: pids)
     @added = []
     current_size = @cart.people.size
@@ -102,13 +102,15 @@ class CartController < ApplicationController
       @cart.rapidpro_sync = false
       @cart.save
       @deleted_all = true
-      flash[:notice] = I18n.t('cart.delete_all_people_success', cart_name: @cart.name)
+      flash[:notice] = I18n.t("cart.delete_all_people_success", cart_name: @cart.name)
     else
       @deleted = [cart_params[:person_id]]
       cart_person = @cart.carts_people.find_by(person_id: cart_params[:person_id])
       cart_person.destroy if cart_person.present?
       @deleted_all = @cart.people.empty?
-      flash[:notice] = I18n.t('cart.delete_person_success', person_name: cart_person.person.full_name, cart_name: @cart.name) if cart_person.present?
+      if cart_person.present?
+        flash[:notice] = I18n.t("cart.delete_person_success", person_name: cart_person.person.full_name, cart_name: @cart.name)
+      end
     end
     @cart.save
 
@@ -141,13 +143,15 @@ class CartController < ApplicationController
     respond_to do |format|
       format.html { redirect_to :back }
       format.json { head :no_content }
-      format.js {}
+      format.js { }
     end
   end
 
   def change_cart
     @cart = Cart.find(params[:cart]) || current_cart
-    @current_session = ResearchSession.find(params[:current_session_id]) || nil if params[:current_session_id].present?
+    if params[:current_session_id].present?
+      @current_session = ResearchSession.find(params[:current_session_id]) || nil
+    end
     current_user.current_cart = @cart
     respond_to do |format|
       format.html { redirect_to cart_path(@cart) }
@@ -191,7 +195,6 @@ class CartController < ApplicationController
   end
 
   private
-
     def cart_update_params
       params.require(:cart).permit(:description,
                                    :name,
@@ -218,7 +221,7 @@ class CartController < ApplicationController
 
     def type_init
       # type is if it's mini or not, for views
-      @type = cart_params[:type].presence || 'full'
+      @type = cart_params[:type].presence || "full"
     end
 
     def cart_init

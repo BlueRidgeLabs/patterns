@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Addteamandfinancecodetogiftcard < ActiveRecord::Migration[5.1]
   def change
     add_column :gift_cards, :team_id, :bigint, default: nil

@@ -14,10 +14,10 @@ class TeamsController < ApplicationController
   def show
     @sessions = @team.research_sessions.includes(:invitations, :people).order(created_at: :desc).page(params[:sessions_page]).limit(5)
     @people = @sessions.map(&:people).flatten.uniq
-    @changes = PaperTrail::Version.all.where(whodunnit: @team.users.map(&:id)).
-               order(created_at: :desc).
-               page(params[:changes_page]).
-               limit(10)
+    @changes = PaperTrail::Version.all.where(whodunnit: @team.users.map(&:id))
+                                  .order(created_at: :desc)
+                                  .page(params[:changes_page])
+                                  .limit(10)
   end
 
   # GET /teams/new
@@ -35,7 +35,7 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       if @team.save
-        format.html { redirect_to @team, notice: 'Team was successfully created.' }
+        format.html { redirect_to @team, notice: "Team was successfully created." }
         format.json { render :show, status: :created, location: @team }
       else
         format.html { render :new }
@@ -55,7 +55,7 @@ class TeamsController < ApplicationController
   def update
     respond_to do |format|
       if @team.update(team_params)
-        format.html { redirect_to @team, notice: 'Team was successfully updated.' }
+        format.html { redirect_to @team, notice: "Team was successfully updated." }
       else
         flash[:error] = @team.errors
         format.html { render :edit }
@@ -70,14 +70,13 @@ class TeamsController < ApplicationController
   def destroy
     @team.destroy
     respond_to do |format|
-      format.html { redirect_to teams_url, notice: 'Team was successfully destroyed.' }
+      format.html { redirect_to teams_url, notice: "Team was successfully destroyed." }
       format.json { head :no_content }
       format.js { head :no_content }
     end
   end
 
   private
-
     # Use callbacks to share common setup or constraints between actions.
     def set_team
       redirect_to root_url unless @current_user.admin? # admin only

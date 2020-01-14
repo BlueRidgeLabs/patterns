@@ -22,7 +22,6 @@
 
 # records card details for activation and check calls
 class GiftCard < ApplicationRecord
-
   include AASM
   include Rewardable
 
@@ -51,13 +50,13 @@ class GiftCard < ApplicationRecord
 
   default_scope { order(sequence_number: :asc) }
 
-  scope :preloaded, -> {
-                      where(full_card_number: [nil, ''],
-                            secure_code: [nil, ''],
-                            status: 'preload')
+  scope :preloaded, lambda {
+                      where(full_card_number: [nil, ""],
+                            secure_code: [nil, ""],
+                            status: "preload")
                     }
 
-  scope :ready, -> { where.not(status: ['preload']) }
+  scope :ready, -> { where.not(status: ["preload"]) }
   # see force_immutable below. do we not want to allow people to
   # change the assigned activation to gift card? unclear
   # IMMUTABLE = %w{gift_card_id}
@@ -75,12 +74,16 @@ class GiftCard < ApplicationRecord
   def self.import(file, user)
     errored_cards = []
     xls =  Roo::Spreadsheet.open(file)
-    cols = { full_card_number: 'full_card_number', expiration_date: 'expiration_date', amount: 'amount', sequence_number: 'sequence_number', secure_code: 'secure_code', batch_id: 'batch_id' }
+    cols = { full_card_number: "full_card_number", expiration_date: "expiration_date", amount: "amount", sequence_number: "sequence_number", secure_code: "secure_code", batch_id: "batch_id" }
     xls.sheet(0).each(cols) do |row|
-      next if row[:full_card_number].blank? || row[:full_card_number] == 'full_card_number' # empty rows
-      next if GiftCard.where(sequence_number: row[:sequence_number], batch_id: row[:batch_id]).present?
+      if row[:full_card_number].blank? || row[:full_card_number] == "full_card_number"
+        next
+      end # empty rows
+      if GiftCard.where(sequence_number: row[:sequence_number], batch_id: row[:batch_id]).present?
+        next
+      end
 
-      row[:full_card_number].delete!('-')
+      row[:full_card_number].delete!("-")
 
       ca = GiftCard.new(row)
       ca.user_id = user.id
@@ -103,7 +106,7 @@ class GiftCard < ApplicationRecord
     current_user.admin? ? GiftCard.active.unassigned.size : GiftCard.active.unassigned.where(user_id: current_user.id).size
   end
 
-  aasm column: 'status', requires_lock: true do
+  aasm column: "status", requires_lock: true do
     state :preload, initial: true
     state :ready_to_activate
     state :activate_started
@@ -145,12 +148,14 @@ class GiftCard < ApplicationRecord
   end
 
   def create_activation_call
-    ActivationCall.create(gift_card_id: id, call_type: 'activate')
+    ActivationCall.create(gift_card_id: id, call_type: "activate")
   end
 
   # override allows manual check calls
   def create_check_call(override: false)
-    ActivationCall.create(gift_card_id: id, call_type: 'check') if override || activation_calls.where(call_type: 'check').size < 5
+    if override || activation_calls.where(call_type: "check").size < 5
+      ActivationCall.create(gift_card_id: id, call_type: "check")
+    end
   end
 
   def do_success_notification
@@ -186,19 +191,19 @@ class GiftCard < ApplicationRecord
 
   def sort_helper
     case status
-    when 'active'
+    when "active"
       id.to_i
-    when 'activate_started'
+    when "activate_started"
       -6
-    when 'check_started'
+    when "check_started"
       -7
-    when 'ready'
+    when "ready"
       -8
-    when 'activate_errored'
+    when "activate_errored"
       -9
-    when 'check_errored'
+    when "check_errored"
       -10
-    when 'preload'
+    when "preload"
       -12
     else
       -13
@@ -207,20 +212,20 @@ class GiftCard < ApplicationRecord
 
   def label
     case status
-    when 'active'
-      'success'
-    when 'activate_started'
-      'warning'
-    when 'check_started'
-      'warning'
-    when 'preload'
-      'warning'
-    when 'ready_to_activate'
-      'success'
-    when 'activate_errored'
-      'important'
-    when 'check_errored'
-      'important'
+    when "active"
+      "success"
+    when "activate_started"
+      "warning"
+    when "check_started"
+      "warning"
+    when "preload"
+      "warning"
+    when "ready_to_activate"
+      "success"
+    when "activate_errored"
+      "important"
+    when "check_errored"
+      "important"
     end
   end
 
@@ -245,22 +250,21 @@ class GiftCard < ApplicationRecord
   def scrub_input
     self.sequence_number = sequence_number&.to_i
     self.batch_id = batch_id&.to_i
-    self.full_card_number = full_card_number&.delete('-')
-    self.secure_code = secure_code&.delete('.0', '')
+    self.full_card_number = full_card_number&.delete("-")
+    self.secure_code = secure_code&.delete(".0", "")
     if secure_code.present?
       # sometimes we drop leading 0's in csv
-      secure_code.prepend('0') while secure_code.length < 3
+      secure_code.prepend("0") while secure_code.length < 3
     end
   end
 
   private
-
     def set_created_by
       self.created_by = user_id
     end
 
     def broadcast_update(c_user = nil)
-      return if status == 'preload' # instead, we should manage this
+      return if status == "preload" # instead, we should manage this
 
       current_user = c_user.nil? ? user : c_user
       ActionCable.server.broadcast "gift_card_event_#{current_user.id}_channel",
@@ -283,21 +287,25 @@ class GiftCard < ApplicationRecord
 
     def render_large_gift_card(c_user = nil)
       current_user = c_user.nil? ? user : c_user
-      ApplicationController.render partial: 'gift_cards/single_gift_card',
-        locals: { gift_card: self, current_user: current_user, approved_users: User.approved.all }
+      ApplicationController.render partial: "gift_cards/single_gift_card",
+                                   locals: { gift_card: self, current_user: current_user, approved_users: User.approved.all }
     end
 
     def render_mini_gift_card(c_user = nil)
       current_user = c_user.nil? ? user : c_user
-      ApplicationController.render partial: 'gift_cards/gift_card_mini',
-      locals: { gift_card: self, current_user: current_user }
+      ApplicationController.render partial: "gift_cards/gift_card_mini",
+                                   locals: { gift_card: self, current_user: current_user }
     end
 
     def luhn_number_valid
       return true if full_card_number.blank?
 
-      errors[:base].push('Card Number is not long enough.') if full_card_number.length != 16
-      errors[:base].push("Card number #{full_card_number} is not valid.") unless CreditCardValidations::Luhn.valid?(full_card_number)
+      if full_card_number.length != 16
+        errors[:base].push("Card Number is not long enough.")
+        end
+      unless CreditCardValidations::Luhn.valid?(full_card_number)
+        errors[:base].push("Card number #{full_card_number} is not valid.")
+        end
     end
 
     def can_activate?

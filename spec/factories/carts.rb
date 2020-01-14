@@ -15,7 +15,7 @@
 #  rapidpro_sync :boolean          default(FALSE)
 #
 
-require 'faker'
+require "faker"
 
 FactoryBot.define do
   factory :cart do

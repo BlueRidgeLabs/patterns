@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Make some dummy people
 
 Person.create(
@@ -14,7 +16,7 @@ Person.create(
   secondary_device_id: 2,
   secondary_device_description: 'Samsung Galaxy',
   primary_connection_id: 1,
-  primary_connection_description:'cable internet',
+  primary_connection_description: 'cable internet',
   phone_number: '312-555-9090',
   participation_type: 'in-person',
   preferred_contact_method: 'EMAIL',
@@ -35,14 +37,14 @@ Person.create(
   secondary_device_id: 2,
   secondary_device_description: 'Apple laptop',
   primary_connection_id: 1,
-  primary_connection_description:'cable internet',
+  primary_connection_description: 'cable internet',
   phone_number: '312-555-8888',
   participation_type: 'remote',
   preferred_contact_method: 'SMS',
   token: 'thisismytoken'
 )
 
-team = Team.create(name:'patterns',finance_code:'BRL')
+team = Team.create(name: 'patterns', finance_code: 'BRL')
 user = User.create(
   email: 'user@example.com',
   password: 'foobar123!01203$#$%R',
@@ -54,7 +56,7 @@ user = User.create(
   phone_number: '555-555-5555'
 )
 
-admin_team = Team.create(name:'Admin Team',finance_code:'BRL')
+admin_team = Team.create(name: 'Admin Team', finance_code: 'BRL')
 admin = User.create(
   email: 'admin@example.com',
   password: 'foobar123!01203$#$%R',
@@ -65,5 +67,3 @@ admin = User.create(
   team_id: admin_team.id,
   phone_number: '555-555-5555'
 )
-
-

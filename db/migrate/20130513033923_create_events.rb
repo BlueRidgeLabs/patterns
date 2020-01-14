@@ -1,5 +1,6 @@
-class CreateEvents < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class CreateEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :events do |t|
       t.string :name
@@ -14,5 +15,4 @@ class CreateEvents < ActiveRecord::Migration[4.2]
       t.timestamps
     end
   end
-
 end

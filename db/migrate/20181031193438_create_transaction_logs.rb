@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTransactionLogs < ActiveRecord::Migration[5.2]
   def change
     create_table :transaction_logs do |t|
@@ -12,7 +14,7 @@ class CreateTransactionLogs < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :transaction_logs, [:from_id, :from_type]
-    add_index :transaction_logs, [:recipient_id, :recipient_type]
+    add_index :transaction_logs, %i[from_id from_type]
+    add_index :transaction_logs, %i[recipient_id recipient_type]
   end
 end

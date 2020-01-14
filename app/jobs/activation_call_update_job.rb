@@ -15,7 +15,7 @@ class ActivationCallUpdateJob
     return if activation_call.nil? # what?
     return if activation_call.card.nil? # also wat?
     return if activation_call.card.active? # our work here is done.
-    return if activation_call.call_status == 'completed'
+    return if activation_call.call_status == "completed"
 
     # update!
     activation_call.call_status = activation_call.call.update.status

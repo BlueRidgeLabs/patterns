@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: cash_cards
@@ -15,4 +17,4 @@
 #  updated_at        :datetime         not null
 #
 
-require 'faker'
+require "faker"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://gist.github.com/defunkt/206253/raw/7c5895310a5e932e001381d0b47c7746e1e18d09/gistfile1.rb
 # unicorn_rails -c config/unicorn.rb -E production -D
 
@@ -5,8 +7,8 @@ rails_env = ENV['RAILS_ENV'] || 'production'
 working_directory "/var/www/patterns-#{rails_env}/current"
 # 16 workers and 1 master
 # worker_processes (rails_env == 'production' ? 16 : 4)
-#worker_processes 4
-worker_processes Integer(ENV["WEB_CONCURRENCY"] || 4)
+# worker_processes 4
+worker_processes Integer(ENV['WEB_CONCURRENCY'] || 4)
 
 # Load rails+github.git into the master before forking workers
 # for super-fast worker spawn times

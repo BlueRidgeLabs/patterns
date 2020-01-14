@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: people
@@ -50,7 +52,7 @@
 #  cached_tag_list                  :text(65535)
 #
 
-require 'faker'
+require "faker"
 
 # this is unused....
 devices = Patterns::Application.config.device_mappings
@@ -66,22 +68,22 @@ FactoryBot.define do
     address_2         { Faker::Address.secondary_address }
     city              { Faker::Address.city }
     state             { Faker::Address.state }
-    postal_code       { 11222 }
+    postal_code       { 11_222 }
     low_income        true
     signup_at         Time.current
     primary_device_id devices[:desktop]
-    primary_device_description 'crawling'
+    primary_device_description "crawling"
 
     secondary_device_id devices[:tablet]
-    secondary_device_description 'nice'
-    verified 'Verified' # means we can get in touch
+    secondary_device_description "nice"
+    verified "Verified" # means we can get in touch
     primary_connection_id connections[:phone]
-    primary_connection_description 'so so'
+    primary_connection_description "so so"
     secondary_connection_id connections[:public_wifi]
-    secondary_connection_description 'worse'
+    secondary_connection_description "worse"
     trait :not_dig do
       # tagged with 'not dig' stops a whole bunch of things from happening
-      after(:create) { |person| person.update_attributes(tag_list: 'not dig') }
+      after(:create) { |person| person.update_attributes(tag_list: "not dig") }
     end
 
     trait :rapidpro_syncable do

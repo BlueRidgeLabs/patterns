@@ -103,7 +103,6 @@ class ActivationCallsController < ApplicationController
   # end
 
   private
-
     # Use callbacks to share common setup or constraints between actions.
     def set_secret_activation_call
       @activation_call = ActivationCall.find_by(token: params[:token])

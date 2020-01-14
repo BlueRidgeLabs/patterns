@@ -1,73 +1,74 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
-Patterns::Application.routes.draw do  
-  
+Patterns::Application.routes.draw do
   resources :cash_cards
   resources :budgets do
     collection do
       post '/transaction/create',
-        action: :create_transaction,
-        as: :create_transaction,
-        defaults: {format: 'js' }
+           action: :create_transaction,
+           as: :create_transaction,
+           defaults: { format: 'js' }
     end
   end
   resources :digital_gifts do
     resources :comments, controller: 'comments'
-    collection do 
+    collection do
       post 'sent/:id',
-            action: :sent,
-            as: :sent,
-            defaults: {format: 'js'}
+           action: :sent,
+           as: :sent,
+           defaults: { format: 'js' }
 
-      get 'api_create', 
-          action: :api_create, 
-          as: :api_create, 
+      get 'api_create',
+          action: :api_create,
+          as: :api_create,
           defaults: { format: 'json' }
-          
-      post 'webhook', 
-          action: :webhook, 
-          as: :webhook, 
-          defaults: { format:'json' }
+
+      post 'webhook',
+           action: :webhook,
+           as: :webhook,
+           defaults: { format: 'json' }
     end
   end
 
   resources :activation_calls do
     collection do
-      get 'activate/:token', 
-           action: :activate,
-           as: :activate,
-           defaults: { format: 'xml' }
+      get 'activate/:token',
+          action: :activate,
+          as: :activate,
+          defaults: { format: 'xml' }
       get 'check/:token',
-           action: :check, 
-           as: :check,
-           defaults: {format:'xml'}
+          action: :check,
+          as: :check,
+          defaults: { format: 'xml' }
       post 'callback/:token',
            action: :callback,
            as: :callback,
-           defaults: {format:'xml'}
+           defaults: { format: 'xml' }
     end
   end
-  
+
   resources :gift_cards do
     collection do
-      get 'template', 
-          action: :template, 
-          as: :template, 
-          defaults: {format: 'xlsx'}
-      get 'signout_sheet', 
-          action: :signout_sheet, 
-          as: :signout_sheet, 
-          defaults: {format: 'xlsx'}    
+      get 'template',
+          action: :template,
+          as: :template,
+          defaults: { format: 'xlsx' }
+      get 'signout_sheet',
+          action: :signout_sheet,
+          as: :signout_sheet,
+          defaults: { format: 'xlsx' }
       post 'upload',
            action: :upload,
            as: :upload
       post 'check/:id',
            action: :check,
            as: :check,
-           defaults: {format: 'json'}
+           defaults: { format: 'json' }
       post 'change_user/:id',
            action: :change_user,
            as: :change_user,
-           defaults: {format: 'json'}
+           defaults: { format: 'json' }
       get 'preloaded',
           action: :preloaded,
           as: :preloaded
@@ -75,12 +76,12 @@ Patterns::Application.routes.draw do
            action: 'preload',
            as: 'preload'
       post 'activate',
-           action:'activate',
+           action: 'activate',
            as: 'activate'
     end
   end
 
-  resource :inbox, :controller => 'inbox', :only => [:show,:create]
+  resource :inbox, controller: 'inbox', only: %i[show create]
   resources :rewards do
     collection do
       post 'assign', action: :assign, as: :assign
@@ -91,8 +92,8 @@ Patterns::Application.routes.draw do
 
   resources :mailchimp_updates
   namespace :public do
-    resources :people, only: [:new, :create, :deactivate] do
-      get '/deactivate/:token', to:'people#deactivate', as: :deactivate
+    resources :people, only: %i[new create deactivate] do
+      get '/deactivate/:token', to: 'people#deactivate', as: :deactivate
     end
   end
 
@@ -104,35 +105,34 @@ Patterns::Application.routes.draw do
     get 'clone', to: 'research_sessions#clone', as: :clone
     resources :comments, controller: 'comments'
     get 'invitations_panel',
-      to: 'research_sessions#invitations_panel',
-      as: :invitations_panel
+        to: 'research_sessions#invitations_panel',
+        as: :invitations_panel
     get 'add_person/:person_id',
-      to: 'research_sessions#add_person',
-      as: :add_person
+        to: 'research_sessions#add_person',
+        as: :add_person
     get 'remove_person/:person_id',
-      to: 'research_sessions#remove_person',
-      as: :remove_person
+        to: 'research_sessions#remove_person',
+        as: :remove_person
 
     resources :invitations do
       collection do
         post ':id/event/:event',
-              to: 'invitations#event',
-              as: :event
+             to: 'invitations#event',
+             as: :event
 
         get ':id/confirm/(:token)',
-              to: 'invitations#confirm',
-              as: :remote_confirm
+            to: 'invitations#confirm',
+            as: :remote_confirm
 
         get ':id/cancel/(:token)',
-              to: 'invitations#cancel',
-              as: :remote_cancel
+            to: 'invitations#cancel',
+            as: :remote_cancel
       end
       resources :comments, controller: 'comments'
     end
   end
 
   resources :sms_invitations, only: [:create]
-
 
   # simple session based cart for storing people ids.
   resources :cart, path: :cart do
@@ -146,11 +146,9 @@ Patterns::Application.routes.draw do
 
       post '(:id)/change', to: 'cart#change_cart', as: :change
       get 'change(/:id)', to: 'cart#change_cart', as: :change_get
-      
     end
     resources :comments, controller: 'comments'
   end
-  
 
   get 'registration', to: 'public/people#new'
 
@@ -170,10 +168,10 @@ Patterns::Application.routes.draw do
 
   devise_for :users
 
-  scope "/admin" do
+  scope '/admin' do
     resources :teams
     resources :users
-    get 'map', to:'people#map', as: :people_map
+    get 'map', to: 'people#map', as: :people_map
     get 'people_amount', to: 'people#amount', as: :people_amount
     get 'finance', to: 'users#finance', as: :finance_code
     get 'changes', to: 'users#changes', as: :user_changes
@@ -182,7 +180,7 @@ Patterns::Application.routes.draw do
   get 'dashboard/index'
 
   resources :comments
-  resources :taggings, only: [:create, :destroy]
+  resources :taggings, only: %i[create destroy]
 
   get 'calendar/event_slots.json(:token)', to: 'calendar#event_slots', defaults: { format: 'json' }
 
@@ -191,9 +189,9 @@ Patterns::Application.routes.draw do
 
   get '/calendar/(:id)', to: 'calendar#show', as: :calendar
   get '/calendar/(:token)/feed/', to: 'calendar#feed', defaults: { format: 'ics' }
-  
+
   get '/calendar/(:token)/admin_feed/', to: 'calendar#admin_feed', defaults: { format: 'ics' }
-  
+
   get '/calendar/show_actions/:id/(:token)',
       to: 'calendar#show_actions',
       defaults: { format: 'js' },
@@ -214,8 +212,6 @@ Patterns::Application.routes.draw do
       defaults: { format: 'js' },
       as: :calendar_show_event
 
-
-
   get  'search/index'
   get  'search/index_ransack'
   post 'search/index_ransack'
@@ -223,8 +219,8 @@ Patterns::Application.routes.draw do
   post 'search/export' # send search results elsewhere, i.e. Mailchimp
   post 'search/exportTwilio'
   get 'search/add_to_cart', to: 'search#add_to_cart', as: :search_add_to_cart
-  get  'search/advanced', to: 'search#advanced', as: :advanced_search
-  post  'search/advanced', to: 'search#advanced', as: :advanced_search_post
+  get 'search/advanced', to: 'search#advanced', as: :advanced_search
+  post 'search/advanced', to: 'search#advanced', as: :advanced_search_post
 
   get 'mailchimp_exports/index'
 
@@ -241,25 +237,25 @@ Patterns::Application.routes.draw do
   # post "people/create_sms"
 
   get 'activate/:number/:code',
-    to: 'gift_cards#activate',
-    defaults: { format: 'xml' }
+      to: 'gift_cards#activate',
+      defaults: { format: 'xml' }
 
   post 'activate/:number/:code',
-    to: 'gift_cards#activate',
-    defaults: { format: 'xml' }
+       to: 'gift_cards#activate',
+       defaults: { format: 'xml' }
 
   get 'card_check/:number/:code/:expiration',
-    to: 'gift_cards#card_check',
-    defaults: { format: 'xml' }
+      to: 'gift_cards#card_check',
+      defaults: { format: 'xml' }
 
   post 'card_check/:number/:code/:expiration',
-    to: 'gift_cards#card_check',
-    defaults: { format: 'xml' }
+       to: 'gift_cards#card_check',
+       defaults: { format: 'xml' }
 
-  authenticate :user, lambda { |u| u.admin? } do
+  authenticate :user, ->(u) { u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
-  
+
   root to: 'dashboard#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

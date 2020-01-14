@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddScreeningToPeople < ActiveRecord::Migration[5.2]
   def change
     add_column :people, :screening_status, :string, default: 'new'

@@ -16,12 +16,12 @@
 #  token        :string(255)
 #
 
-require 'faker'
+require "faker"
 
 FactoryBot.define do
   factory :activation_call do
     gift_card
-    sid { "CA#{SecureRandom.hex(10)}"}
+    sid { "CA#{SecureRandom.hex(10)}" }
     transcript { Faker::Lorem.paragraph }
     audio_url { "#{Faker::Internet.url}.mp3" }
     call_type { ActivationCall::CALL_TYPE_ACTIVATE }

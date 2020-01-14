@@ -1,5 +1,6 @@
-class CreateReservations < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class CreateReservations < ActiveRecord::Migration[4.2]
   def change
     create_table :reservations do |t|
       t.integer :person_id
@@ -11,5 +12,4 @@ class CreateReservations < ActiveRecord::Migration[4.2]
       t.timestamps
     end
   end
-
 end
