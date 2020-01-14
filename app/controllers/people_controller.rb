@@ -36,7 +36,7 @@
 #
 
 # FIXME: Refactor and re-enable cop
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 class PeopleController < ApplicationController
   before_action :set_person, only: %i[show edit update destroy]
   helper_method :sort_column, :sort_direction
@@ -235,4 +235,4 @@ class PeopleController < ApplicationController
       %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
     end
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength

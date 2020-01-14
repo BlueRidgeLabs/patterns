@@ -53,7 +53,7 @@
 #
 
 # FIXME: Refactor and re-enable cop
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 class Person < ApplicationRecord
   has_paper_trail
 
@@ -402,4 +402,4 @@ class Person < ApplicationRecord
     end
   end
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength
