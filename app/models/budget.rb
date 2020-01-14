@@ -20,15 +20,15 @@ class Budget < ApplicationRecord
   validates :team_id, uniqueness: true
   delegate :name, to: :team
 
-  has_many :debits, -> { where(from_type: 'Budget') },
-           class_name: 'TransactionLog',
-           foreign_key: 'from_id'
+  has_many :debits, -> { where(from_type: "Budget") },
+           class_name: "TransactionLog",
+           foreign_key: "from_id"
 
-  has_many :credits, -> { where(recipient_type: 'Budget') },
-           class_name: 'TransactionLog',
-           foreign_key: 'recipient_id'
+  has_many :credits, -> { where(recipient_type: "Budget") },
+           class_name: "TransactionLog",
+           foreign_key: "recipient_id"
 
   def transactions
-    TransactionLog.where(recipient_type: 'Budget', recipient_id: id).or(TransactionLog.where(from_type: 'Budget', from_id: id)).order(id: 'desc')
+    TransactionLog.where(recipient_type: "Budget", recipient_id: id).or(TransactionLog.where(from_type: "Budget", from_id: id)).order(id: "desc")
   end
 end

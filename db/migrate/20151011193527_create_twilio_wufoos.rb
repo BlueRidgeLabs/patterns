@@ -1,5 +1,6 @@
-class CreateTwilioWufoos < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class CreateTwilioWufoos < ActiveRecord::Migration[4.2]
   def change
     create_table :twilio_wufoos do |t|
       t.string :name
@@ -9,5 +10,4 @@ class CreateTwilioWufoos < ActiveRecord::Migration[4.2]
       t.timestamps
     end
   end
-
 end

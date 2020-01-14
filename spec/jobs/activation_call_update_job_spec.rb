@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.describe ActivationCallUpdateJob, :type => :job do
+RSpec.describe ActivationCallUpdateJob, type: :job do
   let(:sut) { ActivationCallUpdateJob }
   let(:action) { sut.perform_async }
   let(:redis_double) { double(:redis) }
@@ -11,7 +13,7 @@ RSpec.describe ActivationCallUpdateJob, :type => :job do
   before { allow(Redis).to receive(:current).and_return(redis_double) }
 
   context "redis response not nil" do
-    before { allow(redis_double).to receive(:get).with('ActivationCallUpdateLock').and_return(nil) }
+    before { allow(redis_double).to receive(:get).with("ActivationCallUpdateLock").and_return(nil) }
 
     it "does nothing" do
       expect_any_instance_of(ActivationCall).not_to receive(:update_front_end)
@@ -23,7 +25,7 @@ RSpec.describe ActivationCallUpdateJob, :type => :job do
 
   xcontext "redis response is nil" do
     it "goes through each ongoing call, destroys all with no gift card, handles all failures, updates front end, and updates redis" do
-      expect(redis_double).to receive(:setex).with('ActivationCallUpdateLock', 5, true)
+      expect(redis_double).to receive(:setex).with("ActivationCallUpdateLock", 5, true)
       expect(call_1).to receive(:update_front_end)
       expect(call_2).not_to receive(:update_front_end)
       expect(call_3).not_to receive(:update_front_end)

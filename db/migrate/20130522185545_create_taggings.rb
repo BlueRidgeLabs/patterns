@@ -1,5 +1,6 @@
-class CreateTaggings < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class CreateTaggings < ActiveRecord::Migration[4.2]
   def change
     create_table :taggings do |t|
       t.string :taggable_type
@@ -9,5 +10,4 @@ class CreateTaggings < ActiveRecord::Migration[4.2]
       t.timestamps
     end
   end
-
 end

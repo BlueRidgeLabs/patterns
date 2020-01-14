@@ -1,5 +1,6 @@
-class AddCreatedByUpdatedByToModels < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class AddCreatedByUpdatedByToModels < ActiveRecord::Migration[4.2]
   def change
     add_column :applications, :created_by, :integer
     add_column :applications, :updated_by, :integer
@@ -14,5 +15,4 @@ class AddCreatedByUpdatedByToModels < ActiveRecord::Migration[4.2]
 
     add_column :reservations, :updated_by, :integer
   end
-
 end

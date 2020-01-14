@@ -4,8 +4,8 @@ class SearchService
   class << self
     def parse_tags(query_params)
       params = Hashie::Mash.new(query_params)
-      ransack_tags = params&.ransack_tagged_with || ''
-      tag_array = ransack_tags.split(',').map(&:strip)
+      ransack_tags = params&.ransack_tagged_with || ""
+      tag_array = ransack_tags.split(",").map(&:strip)
       Person.active.tag_counts.where(name: tag_array).order(taggings_count: :desc)
     end
 
@@ -13,7 +13,9 @@ class SearchService
       return if query_params.blank?
 
       phone = query_params[:phone_number_eq]
-      query_params[:phone_number_eq] = PhonyRails.normalize_number(phone) if phone
+      if phone
+        query_params[:phone_number_eq] = PhonyRails.normalize_number(phone)
+      end
       active = query_params[:active_eq]
       query_params[:active_eq] = true if active.blank?
       query_params

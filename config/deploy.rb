@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler/capistrano'
 require 'capistrano'
 require 'capistrano/sidekiq'
@@ -8,16 +10,17 @@ require 'rvm/capistrano'
 require 'rvm/capistrano/gem_install_uninstall'
 
 # loading environment variables so we can all use the same deployment
-YAML.load(File.open(File.dirname(__FILE__) + '/local_env.yml')).each do |key, value|
-  ENV[key.to_s] = value
-  puts ENV[key.to_s]
-end if File.exist?(File.dirname(__FILE__) + '/local_env.yml')
-
-# loading in defaults
-YAML.load(File.open(File.dirname(__FILE__) + '/sample.local_env.yml')).each do |key, value|
-  ENV[key.to_s] = value unless ENV[key]
+if File.exist?(File.dirname(__FILE__) + '/local_env.yml')
+  YAML.safe_load(File.open(File.dirname(__FILE__) + '/local_env.yml')).each do |key, value|
+    ENV[key.to_s] = value
+    puts ENV[key.to_s]
+  end
 end
 
+# loading in defaults
+YAML.safe_load(File.open(File.dirname(__FILE__) + '/sample.local_env.yml')).each do |key, value|
+  ENV[key.to_s] = value unless ENV[key]
+end
 
 set :repository, ENV['GIT_REPOSITORY']
 
@@ -27,7 +30,7 @@ set :deploy_via, :remote_cache
 set :use_sudo, false
 set :user, 'patterns'
 set :keep_releases, 10
-set :stages, %w(production staging)
+set :stages, %w[production staging]
 set :default_stage, 'staging'
 
 set :sidekiq_config, 'config/sidekiq.yml'
@@ -36,26 +39,25 @@ set :sidekiq_processes, 2
 set :bundle_flags, '--deployment --quiet'
 
 # more info: rvm help autolibs
-set :rvm_autolibs_flag, "read-only"
+set :rvm_autolibs_flag, 'read-only'
 
 # install/update RVM
-before 'deploy', 'rvm:install_rvm'  
+before 'deploy', 'rvm:install_rvm'
 
-ENV['GEM'] = "bundler"
- # Make sure Bundler is installed for gemset
+ENV['GEM'] = 'bundler'
+# Make sure Bundler is installed for gemset
 before 'bundle:install', 'rvm:install_gem'
 
 # install Ruby and create gemset (both if missing)
 before 'deploy', 'rvm:install_ruby'
 
-set :ssh_options, { forward_agent: true }
+set :ssh_options, forward_agent: true
 # set :shared_children, fetch(:shared_children) + ["sharedconfig"]
 
-before  'deploy:finalize_update', "deploy:create_shared_directories", 'deploy:link_db_config', 'deploy:link_env_var'
+before  'deploy:finalize_update', 'deploy:create_shared_directories', 'deploy:link_db_config', 'deploy:link_env_var'
 # before  'deploy:finalize_update', 'deploy:link_db_config', 'deploy:link_env_var'
 
 after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:reload_nginx', 'deploy:cleanup'
-
 
 namespace :deploy do
   task :start do
@@ -117,5 +119,4 @@ namespace :deploy do
   # task :generate_delayed_job do
   #   run "cd #{latest_release.shellescape} && RAILS_ENV=#{rails_env.to_s.shellescape} bundle exec rails generate delayed_job && RAILS_ENV=#{rails_env.to_s.shellescape} bin/delayed_job -n4 restart"
   # end
-
 end

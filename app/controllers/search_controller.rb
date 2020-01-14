@@ -20,7 +20,7 @@ class SearchController < ApplicationController
           csv = SearchService.to_csv(@q)
           send_data csv, filename: "Search-#{Time.zone.today}.csv"
         else
-          flash[:error] = 'Not permitted'
+          flash[:error] = "Not permitted"
         end
       end
     end
@@ -38,7 +38,7 @@ class SearchController < ApplicationController
     if @mce.with_user(current_user).save
       Rails.logger.info("[SearchController#export] Sent #{@mce.recipients.size} email addresses to a static segment named #{@mce.name}")
       respond_to do |format|
-        format.js {}
+        format.js { }
       end
     else
       Rails.logger.error("[SearchController#export] failed to send event to mailchimp: #{@mce.errors.inspect}")
@@ -56,7 +56,7 @@ class SearchController < ApplicationController
     if @mce.with_user(current_user).save
       Rails.logger.info("[SearchController#export] Sent #{@mce.recipients.size} email addresses to a static segment named #{@mce.name}")
       respond_to do |format|
-        format.js {}
+        format.js { }
       end
     else
       Rails.logger.error("[SearchController#export] failed to send event to mailchimp: #{@mce.errors.inspect}")
@@ -74,7 +74,7 @@ class SearchController < ApplicationController
     current_cart.people << people
     flash[:notice] = "#{new_pids.size} people added to #{current_cart.name}."
     respond_to do |format|
-      format.js {}
+      format.js { }
       format.json { render json: { success: true } }
     end
   end
@@ -86,7 +86,6 @@ class SearchController < ApplicationController
   end
 
   private
-
     def ransack_params
       Person.includes(:tags, :comments).ransack(params[:q])
     end

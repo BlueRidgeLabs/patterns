@@ -44,33 +44,33 @@ class Invitation < ApplicationRecord
            :sms_description,
            :duration, to: :research_session
 
-  scope :today, -> {
-    joins(:research_session).
-      where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day })
+  scope :today, lambda {
+    joins(:research_session)
+      .where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day })
   }
 
-  scope :future, -> {
-    joins(:research_session).
-      where('research_sessions.start_datetime > ?',
-            Time.zone.today.end_of_day)
+  scope :future, lambda {
+    joins(:research_session)
+      .where("research_sessions.start_datetime > ?",
+             Time.zone.today.end_of_day)
   }
 
-  scope :past, -> {
-    joins(:research_session).
-      where('research_sessions.start_datetime < ?',
-            Time.zone.today.beginning_of_day)
+  scope :past, lambda {
+    joins(:research_session)
+      .where("research_sessions.start_datetime < ?",
+             Time.zone.today.beginning_of_day)
   }
 
-  scope :upcoming, ->(d = 7) {
-    joins(:research_session).
-      where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days })
+  scope :upcoming, lambda { |d = 7|
+    joins(:research_session)
+      .where(research_sessions: { start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day + d.days })
   }
 
-  scope :remindable, -> {
+  scope :remindable, lambda {
     where(aasm_state: %w[invited reminded confirmed])
   }
 
-  scope :confirmable, -> {
+  scope :confirmable, lambda {
     where.not(aasm_state: %w[attended
                              cancelled
                              created
@@ -155,7 +155,9 @@ class Invitation < ApplicationRecord
   end
 
   def can_destroy?
-    throw(:abort) unless rewards.empty? && !%w[attended missed].include?(aasm_state)
+    unless rewards.empty? && !%w[attended missed].include?(aasm_state)
+      throw(:abort)
+    end
   end
 
   def can_miss?

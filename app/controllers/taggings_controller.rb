@@ -14,10 +14,9 @@
 #
 
 class TaggingsController < ApplicationController
-
   TAGGABLE_TYPES = {
-    'Person'          => Person.active,
-    'ResearchSession' => ResearchSession
+    "Person" => Person.active,
+    "ResearchSession" => ResearchSession
   }.freeze
 
   # FIXME: Refactor and re-enable cop
@@ -27,7 +26,7 @@ class TaggingsController < ApplicationController
   def create
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
 
-    if klass && params[:tag].present? && params[:tag] != ''
+    if klass && params[:tag].present? && params[:tag] != ""
       obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag].downcase
       # if we want owned tags. Not sure we do...
@@ -40,12 +39,14 @@ class TaggingsController < ApplicationController
           found_tag = klass.tagged_with(tag).first.tags.detect { |t| t.name == tag }
           @tagging = obj.taggings.find_by(tag_id: found_tag.id)
         else
-          flash[:error] = "Oops, can't add that tag: #{obj.errors.messages unless obj.valid?}"
+          flash[:error] = "Oops, can't add that tag: #{unless obj.valid?
+                                                         obj.errors.messages
+                                                       end}"
         end
       end
     end
     respond_to do |format|
-      format.js {}
+      format.js { }
     end
   end
   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
@@ -71,19 +72,18 @@ class TaggingsController < ApplicationController
   end
 
   def index
-    @tags = Person.active.tag_counts_on(:tags).order('taggings_count DESC')
+    @tags = Person.active.tag_counts_on(:tags).order("taggings_count DESC")
   end
 
   # rubocop:enable Metrics/MethodLength
   def search
     klass = params[:type].blank? ? Person.active : TAGGABLE_TYPES.fetch(params[:type])
 
-    @tags = klass.tag_counts.where('name like ?', "%#{params[:q].downcase}%").
-            order(taggings_count: :desc)
+    @tags = klass.tag_counts.where("name like ?", "%#{params[:q].downcase}%")
+                 .order(taggings_count: :desc)
 
     # the methods=> :value is needed for tokenfield.
     # https://github.com/sliptree/bootstrap-tokenfield/issues/189
     render json: @tags.to_json
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 HealthCheck.setup do |config|
   config.success = 'success'
   config.http_status_for_error_text = 500

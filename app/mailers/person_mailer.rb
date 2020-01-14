@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class PersonMailer < ApplicationMailer
-
   # how to get the groovy "accept/decline" thingy...
   # http://stackoverflow.com/questions/27514552/how-to-get-rsvp-buttons-through-icalendar-gem
   # I beleive we will likely have to have inbound email for it to work
@@ -11,12 +10,12 @@ class PersonMailer < ApplicationMailer
     @email_address = @person.email_address
     @invitation = invitation
 
-    attachments['event.ics'] = { mime_type: 'application/ics',
+    attachments["event.ics"] = { mime_type: "application/ics",
                                  content: generate_ical(invitation) }
 
     mail(to: @email_address,
          subject: @invitation.title,
-         content_type: 'multipart/mixed')
+         content_type: "multipart/mixed")
   end
 
   def remind(email_address:, invitations:)
@@ -25,7 +24,7 @@ class PersonMailer < ApplicationMailer
     @invitations = invitations
 
     mail(to: @email_address,
-         subject: 'Today\'s Interview Reminders')
+         subject: "Today's Interview Reminders")
   end
 
   def cancel(email_address:, invitation:)
@@ -45,7 +44,6 @@ class PersonMailer < ApplicationMailer
   end
 
   private
-
     def generate_ical(invitation)
       cal = Icalendar::Calendar.new
       cal.add_event(invitation.to_ics)

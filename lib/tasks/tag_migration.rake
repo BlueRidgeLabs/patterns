@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :tag_migration do
   desc 'Bulk add taggings by Id'
   task migrate: :environment  do
@@ -15,22 +17,19 @@ namespace :tag_migration do
     end
     errors = []
     people_tags.each do |person_id, tags|
-      begin
-        person = people.find { |p| p.id == person_id }
-        # use below if we want owned tags.
-        #		user = user.find{|u| u.id == v.created_by}
-        #		user.tag(person, with: v, on: 'tags') # keeps the relationships
-        next if person.nil? || tags.blank?
-        # person.tag_list.add(v)
-        # person.save
-        TagPersonJob.perform_async(person_id, tags)
-      rescue Exception => e
-        errors << [person_id, e]
-      end
+      person = people.find { |p| p.id == person_id }
+      # use below if we want owned tags.
+      #    user = user.find{|u| u.id == v.created_by}
+      #    user.tag(person, with: v, on: 'tags') # keeps the relationships
+      next if person.nil? || tags.blank?
+
+      # person.tag_list.add(v)
+      # person.save
+      TagPersonJob.perform_async(person_id, tags)
+    rescue Exception => e
+      errors << [person_id, e]
     end
     PaperTrail.enable
     puts errors
-  
   end
-
 end

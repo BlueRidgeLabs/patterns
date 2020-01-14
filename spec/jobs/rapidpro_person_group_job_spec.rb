@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.describe RapidproPersonGroupJob, :type => :job do
+RSpec.describe RapidproPersonGroupJob, type: :job do
   let(:sut) { RapidproPersonGroupJob }
   let(:people) do
     _p = FactoryBot.create_list(:person, 110, :rapidpro_syncable)
@@ -37,12 +39,12 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
 
   context "rapidpro returns status 429" do
     it "enqueues job to be re-run later, with remaining people" do
-      rapidpro_409_res = Hashie::Mash.new({ code: 429, headers: { 'retry-after': 100 } })
+      rapidpro_409_res = Hashie::Mash.new(code: 429, headers: { 'retry-after': 100 })
       action = "add"
       last_100 = people.last(100)
       first_10 = people.first(10)
       request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+      request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
       request_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_409_res)
@@ -57,10 +59,10 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
       not_dig_people = FactoryBot.create_list(:person, 10, :rapidpro_syncable, :not_dig).to_a.sort_by(&:id)
       all_people = (dig_people + not_dig_people).sort_by(&:id)
 
-      rapidpro_ok_res = Hashie::Mash.new({ code: 200 })
+      rapidpro_ok_res = Hashie::Mash.new(code: 200)
       action = "add"
       request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+      request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
       request_body = { action: action, contacts: dig_people .map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_ok_res)
@@ -69,12 +71,12 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
 
     context "action is 'add'" do
       it "adds people to rapidpro" do
-        rapidpro_ok_res = Hashie::Mash.new({ code: 200 })
+        rapidpro_ok_res = Hashie::Mash.new(code: 200)
         action = "add"
         last_100 = people.last(100)
         first_10 = people.first(10)
         request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+        request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
         request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
         request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
@@ -87,12 +89,12 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
 
     context "action is 'remove'" do
       it "removes people from rapidpro" do
-        rapidpro_ok_res = Hashie::Mash.new({ code: 200 })
+        rapidpro_ok_res = Hashie::Mash.new(code: 200)
         action = "remove"
         last_100 = people.last(100)
         first_10 = people.first(10)
         request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' }
+        request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
         request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
         request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
@@ -103,5 +105,4 @@ RSpec.describe RapidproPersonGroupJob, :type => :job do
       end
     end
   end
-
 end

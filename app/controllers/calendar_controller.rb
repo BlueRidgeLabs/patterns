@@ -13,9 +13,9 @@ class CalendarController < ApplicationController
   def feed # TODO: refactor into calendarable.
     calendar = Icalendar::Calendar.new
     case visitor.class.to_s
-    when 'Person'
+    when "Person"
       visitor.invitations.each { |i| calendar.add_event(i.to_ics) }
-    when 'User'
+    when "User"
       visitor.research_sessions.each { |r| calendar.add_event(r.to_ics) }
     end
     calendar.publish
@@ -25,16 +25,15 @@ class CalendarController < ApplicationController
   def admin_feed
     calendar = Icalendar::Calendar.new
     if visitor&.admin?
-      ResearchSession.includes(:invitations, user: :team).
-        in_range(6.months.ago..3.months.from_now).
-        find_each { |e| calendar.add_event(e.to_ics) }
+      ResearchSession.includes(:invitations, user: :team)
+                     .in_range(6.months.ago..3.months.from_now)
+                     .find_each { |e| calendar.add_event(e.to_ics) }
     end
     calendar.publish
     render plain: calendar.to_ical
   end
 
   private
-
     # this does the token based auth for users and persons
     def person?
       @person = nil
@@ -70,24 +69,26 @@ class CalendarController < ApplicationController
     end
 
     def default_time
-      return invitation.start_datetime.strftime('%F') if invitation
-      return research_session.start_datetime.strftime('%F') if research_session
-      return Time.zone.parse(allowed_params['default_time']).strftime('%F') if allowed_params['default_time']
+      return invitation.start_datetime.strftime("%F") if invitation
+      return research_session.start_datetime.strftime("%F") if research_session
+      if allowed_params["default_time"]
+        return Time.zone.parse(allowed_params["default_time"]).strftime("%F")
+        end
 
-      Time.current.strftime('%F')
+      Time.current.strftime("%F")
     end
 
     def cal_params
       # default the start of our calendar to today.
-      end_time = (Time.zone.today + 7.days).strftime('%m/%d/%Y')
-      start_time = Time.zone.today.strftime('%m/%d/%Y')
+      end_time = (Time.zone.today + 7.days).strftime("%m/%d/%Y")
+      start_time = Time.zone.today.strftime("%m/%d/%Y")
 
       defaults = { start: start_time, end: end_time }
       params.permit(:token, :start, :end).reverse_merge(defaults)
 
       # full calendar uses dashes, not slashes. argh.
       params.transform_values do |v|
-        /\d{4}-\d{2}-\d{2}/.match?(v) ? Time.zone.parse(v).strftime('%m/%d/%Y') : v
+        /\d{4}-\d{2}-\d{2}/.match?(v) ? Time.zone.parse(v).strftime("%m/%d/%Y") : v
       end
     end
 end

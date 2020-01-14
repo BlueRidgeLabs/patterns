@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 feature "pools" do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
@@ -18,7 +20,7 @@ feature "pools" do
     end
 
     def go_to_current_pool
-      cart_btn = page.find('.current_cart_link')
+      cart_btn = page.find(".current_cart_link")
       click_with_js(cart_btn)
       expect(page.current_path).to eq(cart_path(current_pool))
     end
@@ -29,8 +31,8 @@ feature "pools" do
       # confirm that current pool is empty
       visit people_path
       expect(page).to have_content(person.email_address)
-      expect(page.find('.badge.cart-size').text).to have_content("0")
-      expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("0")
+      expect(page.find(".badge.cart-size").text).to have_content("0")
+      expect(page.find("#pool-list").find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("0")
 
       # add person to current pool
       add_btn = add_person_btn_for(person)
@@ -38,7 +40,7 @@ feature "pools" do
       add_btn.click
       wait_for_ajax
       expect(page).to have_content("1 people added to #{current_pool.name}")
-      expect(page.find('.badge.cart-size')).to have_content("1")
+      expect(page.find(".badge.cart-size")).to have_content("1")
       delete_btn = delete_person_btn_for(person)
       expect(delete_btn).to have_content("Remove")
       # TODO: the test below currently fails. it asserts that when a person is added
@@ -52,8 +54,8 @@ feature "pools" do
       # current pool page reflects recent addition
       go_to_current_pool
       expect(page).to have_content(person.email_address)
-      within('.well') do
-        expect(page.find('.cart-size')).to have_content("1")
+      within(".well") do
+        expect(page.find(".cart-size")).to have_content("1")
       end
     end
 
@@ -64,24 +66,24 @@ feature "pools" do
       # confirm that pool is initialized with one person
       visit people_path
       expect(page).to have_content(person.email_address)
-      expect(page.find('.badge.cart-size').text).to have_content("1")
-      expect(page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
+      expect(page.find(".badge.cart-size").text).to have_content("1")
+      expect(page.find("#pool-list").find(:xpath, ".//a[@href='#{cart_path(current_pool)}']")).to have_content("1")
 
       # remove person from pool
       delete_btn = delete_person_btn_for(person)
       expect(delete_btn).to have_content("Remove")
       delete_btn.click
       wait_for_ajax
-      expect(page.find('.badge.cart-size')).to have_content("0")
-      expect(page).to have_content(I18n.t('cart.delete_person_success', person_name: person.full_name, cart_name: current_pool.name))
+      expect(page.find(".badge.cart-size")).to have_content("0")
+      expect(page).to have_content(I18n.t("cart.delete_person_success", person_name: person.full_name, cart_name: current_pool.name))
       add_btn = add_person_btn_for(person)
       expect(add_btn).to have_content("Add")
 
       # current pool page reflects recent removal
       go_to_current_pool
       expect(page).not_to have_content(person.email_address)
-      within('.well') do
-        expect(page.find('.cart-size')).to have_content("0")
+      within(".well") do
+        expect(page.find(".cart-size")).to have_content("0")
       end
     end
   end
@@ -97,10 +99,10 @@ feature "pools" do
 
       # create new pool
       visit cart_path(current_pool)
-      click_link 'New Pool'
-      fill_in 'name', with: pool_name
-      fill_in 'description', with: pool_description
-      click_button 'Save changes'
+      click_link "New Pool"
+      fill_in "name", with: pool_name
+      fill_in "description", with: pool_description
+      click_button "Save changes"
 
       # verify pool initialized correctly
       new_pool = Cart.find_by(name: pool_name, description: pool_description)
@@ -117,8 +119,8 @@ feature "pools" do
       expect(page).to have_content(admin_user.name)
 
       # verify pool added to list of pools in nav bar
-      expect(page.find('.current_cart')).to have_content(pool_name)
-      expect(page.find('#pool-list')).to have_content(pool_name)
+      expect(page.find(".current_cart")).to have_content(pool_name)
+      expect(page.find("#pool-list")).to have_content(pool_name)
 
       # can add user
       other_user = FactoryBot.create(:user)
@@ -126,17 +128,17 @@ feature "pools" do
       expect(page).to have_content(other_user.name)
       select other_user.name, from: "user_id"
       wait_for_ajax
-      within('#users-list') do
+      within("#users-list") do
         expect(page.find("#user-#{other_user.id}")).to have_content(other_user.name)
       end
       expect(new_pool.reload.users.size).to eq(2)
 
       # can remove user
       within("#users-list #user-#{other_user.id}") do
-        click_button('remove')
+        click_button("remove")
       end
       wait_for_ajax
-      within('#users-list') do
+      within("#users-list") do
         expect(page).not_to have_content(other_user.name)
       end
       expect(new_pool.reload.users.size).to eq(1)
@@ -144,12 +146,12 @@ feature "pools" do
       # can search for person and add them to pool
       new_person = FactoryBot.create(:person)
       visit current_path
-      fill_in 'cart-typeahead', with: new_person.first_name
+      fill_in "cart-typeahead", with: new_person.first_name
       wait_for_ajax
-      page.find('.tt-dataset-People', text: new_person.full_name).click
+      page.find(".tt-dataset-People", text: new_person.full_name).click
       wait_for_ajax
       expect(page).to have_content("1 people added to #{new_pool.name}")
-      within('#full-cart') do
+      within("#full-cart") do
         expect(page).to have_content(new_person.email_address)
       end
       expect(new_pool.people.size).to eq(1)
@@ -158,8 +160,8 @@ feature "pools" do
       remove_btn = page.find("#cart-#{new_person.id}").find(".btn", text: "Remove")
       click_with_js(remove_btn)
       wait_for_ajax
-      expect(page).to have_content(I18n.t('cart.delete_person_success', person_name: new_person.full_name, cart_name: new_pool.name))
-      within('#full-cart') do
+      expect(page).to have_content(I18n.t("cart.delete_person_success", person_name: new_person.full_name, cart_name: new_pool.name))
+      within("#full-cart") do
         expect(page).not_to have_content(new_person.email_address)
       end
       expect(new_pool.people.size).to eq(0)
@@ -170,9 +172,9 @@ feature "pools" do
       new_people.each { |person| new_pool.people << person }
       visit current_path
       new_people.each { |person| expect(page).to have_content(person.email_address) }
-      click_link('Remove All')
+      click_link("Remove All")
       wait_for_ajax
-      expect(page).to have_content(I18n.t('cart.delete_all_people_success', cart_name: new_pool.name))
+      expect(page).to have_content(I18n.t("cart.delete_all_people_success", cart_name: new_pool.name))
       new_people.each { |person| expect(page).not_to have_content(person.email_address) }
       new_pool.reload
       expect(new_pool.people.size).to eq(0)
@@ -191,31 +193,30 @@ feature "pools" do
       # cart_person.destroy if cart_person.present?
       # delete_btn.click
 
-
       # can switch pool
       other_pool = admin_user.carts.where.not(id: new_pool.id).first
-      other_pool_btn = page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(other_pool)}']")
+      other_pool_btn = page.find("#pool-list").find(:xpath, ".//a[@href='#{cart_path(other_pool)}']")
       click_with_js(other_pool_btn)
-      expect(page.find('.current_cart_link')).to have_content(other_pool.name)
+      expect(page.find(".current_cart_link")).to have_content(other_pool.name)
       expect(page.current_path).to eq(cart_path(other_pool))
     end
 
     scenario "pool page csv export" do
       # as admin
       visit cart_path(current_pool)
-      click_link 'Export to CSV'
-      header = page.response_headers['Content-Disposition']
+      click_link "Export to CSV"
+      header = page.response_headers["Content-Disposition"]
       expect(header).to match(/^attachment/)
       expect(header).to match(/filename="Pool-#{current_pool.name}.csv"$/)
 
       # as non-admin
       admin_user.update(new_person_notification: false)
       visit cart_path(current_pool)
-      expect(page).not_to have_content('Export to CSV')
+      expect(page).not_to have_content("Export to CSV")
     end
-    
+
     scenario "cart index" do
-      visit '/cart'
+      visit "/cart"
       expect(page).to have_content current_pool.name
     end
   end

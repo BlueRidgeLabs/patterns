@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 set :application, 'patterns-production'
 set :branch, fetch(:branch, ENV['PRODUCTION_BRANCH'])
 # use the same ruby as used locally for deployment

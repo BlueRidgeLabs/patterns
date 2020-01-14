@@ -60,11 +60,11 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.balance_funding_source
-    DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }
+    DigitalGift.funding_sources.find { |fs| fs.method == "balance" }
   end
 
   def self.current_budget
-    (DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }.available_cents / 100).to_money
+    (DigitalGift.funding_sources.find { |fs| fs.method == "balance" }.available_cents / 100).to_money
   end
 
   def self.orders
@@ -100,12 +100,12 @@ class DigitalGift < ApplicationRecord
     self.funding_source_id = DigitalGift.balance_funding_source.id
 
     self.campaign_id = if amount.to_i < 20
-                         # small dollar amounts, no fee
-                         ENV['GIFTROCKET_LOW_CAMPAIGN']
-                       else
-                         # high dolalr amounts, $2 fee
-                         ENV['GIFTROCKET_HIGH_CAMPAIGN']
-                       end
+      # small dollar amounts, no fee
+      ENV["GIFTROCKET_LOW_CAMPAIGN"]
+    else
+      # high dolalr amounts, $2 fee
+      ENV["GIFTROCKET_HIGH_CAMPAIGN"]
+    end
 
     generate_external_id
 
@@ -115,7 +115,7 @@ class DigitalGift < ApplicationRecord
 
     gift = my_order.gifts.first
     self.gift_id = gift.id
-    self.link = gift.raw['recipient']['link']
+    self.link = gift.raw["recipient"]["link"]
     self.order_details = Base64.encode64(Marshal.dump(my_order))
   end
 
@@ -154,7 +154,6 @@ class DigitalGift < ApplicationRecord
   def update_frontend_failure; end
 
   private
-
     def generate_gifts
       raise if person.nil?
 
@@ -163,7 +162,7 @@ class DigitalGift < ApplicationRecord
           amount: amount.to_s,
           recipient: {
             name: person.full_name,
-            delivery_method: 'LINK'
+            delivery_method: "LINK"
           }
         }
       ]
@@ -179,13 +178,12 @@ class DigitalGift < ApplicationRecord
     end
 
     def save_transaction
-      TransactionLog.create(transaction_type: 'DigitalGift',
-                           from_id: user.budget.id,
-                           user_id: user.id,
-                           amount: total_for_budget,
-                           from_type: 'Budget',
-                           recipient_id: id,
-                           recipient_type: 'DigitalGift')
+      TransactionLog.create(transaction_type: "DigitalGift",
+                            from_id: user.budget.id,
+                            user_id: user.id,
+                            amount: total_for_budget,
+                            from_type: "Budget",
+                            recipient_id: id,
+                            recipient_type: "DigitalGift")
     end
-
 end

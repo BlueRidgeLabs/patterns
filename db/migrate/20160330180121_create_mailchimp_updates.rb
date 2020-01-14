@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateMailchimpUpdates < ActiveRecord::Migration[4.2]
   def change
     create_table :mailchimp_updates do |t|

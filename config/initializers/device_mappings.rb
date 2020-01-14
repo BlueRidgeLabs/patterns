@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Patterns::Application.config.device_mappings = {
   desktop: 0, laptop: 1, smartphone: 2, tablet: 3
 }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/concern'
+require "active_support/concern"
 
 module Rewardable
   # a rewardable object can be assigned and unassigned.
@@ -24,7 +24,7 @@ module Rewardable
 
   # may not be necessary because of dependent :nullify
   def unassign
-    return if self.class.to_s == 'DigitalGift' # can't unassign
+    return if self.class.to_s == "DigitalGift" # can't unassign
 
     self.reward_id = nil
     save
@@ -35,7 +35,7 @@ module Rewardable
 
     if self.reward_id.present?
       errors.add(:base, "This #{self.class.downcase} has already been assigned")
-      raise ActiveRecord::RecordInvalid.new(self)
+      raise ActiveRecord::RecordInvalid, self
     else
       self.reward_id = reward_id
       save

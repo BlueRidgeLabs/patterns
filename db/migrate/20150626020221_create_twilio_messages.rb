@@ -1,5 +1,6 @@
-class CreateTwilioMessages < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class CreateTwilioMessages < ActiveRecord::Migration[4.2]
   def change
     create_table :twilio_messages do |t|
       t.string :message_sid
@@ -25,5 +26,4 @@ class CreateTwilioMessages < ActiveRecord::Migration[4.2]
       t.timestamps
     end
   end
-
 end
