@@ -263,7 +263,6 @@ group :development, :test do
   gem "rspec"
   gem "rspec-rails"
   gem "rubocop", require: false
-  gem "rubocop-performance"
   gem "rubocop-rails_config"
   gem "selenium-webdriver"
   gem "webdrivers", "~> 3.8"
