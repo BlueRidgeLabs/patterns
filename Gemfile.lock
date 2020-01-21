@@ -710,7 +710,6 @@ DEPENDENCIES
   rspec-retry
   rspec-sidekiq
   rubocop
-  rubocop-performance
   rubocop-rails_config
   ruby-prof
   rubyzip
