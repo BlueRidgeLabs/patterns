@@ -3,11 +3,13 @@
 source "https://rubygems.org"
 ruby "~> 2.6.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "actioncable"
+
+gem 'rack', "2.1.2"
 gem "airbrake", "~> 5.0" # sends errors to external service
 gem "bootsnap", require: false
 gem "rack-cache"
 gem "rails", "~> 5.2.0"
+
 gem "rails-i18n"
 # gem 'pg' # soooooon!
 gem "mysql2"
@@ -69,11 +71,13 @@ group :assets do
   gem "uglifier"
 end
 
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem "turbolinks", '~> 5.2.0'
+
 gem "jquery-rails"
 gem "jquery-turbolinks"
 
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem "turbolinks"
+
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder"
@@ -93,7 +97,7 @@ gem "momentjs-rails" # sane time management in js
 
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
 gem "will_paginate"
-gem "will_paginate-bootstrap"
+gem 'will_paginate-bootstrap4'
 
 # include health_check, for system monitoring
 gem "health_check"
