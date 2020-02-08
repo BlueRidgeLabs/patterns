@@ -5,11 +5,12 @@ ruby "~> 2.6.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 
 gem 'rack', "2.1.2"
+
 gem "airbrake", "~> 5.0" # sends errors to external service
 gem "bootsnap", require: false
 gem "rack-cache"
 gem "rails", "~> 5.2.0"
-
+gem 'webpacker', '~> 4.x' #bundle exec rails webpacker:install:stimulus #sooon
 gem "rails-i18n"
 # gem 'pg' # soooooon!
 gem "mysql2"
@@ -92,6 +93,7 @@ gem "glyphicons-rails"
 gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.1'
 gem "momentjs-rails" # sane time management in js
 
+
 # want to switch pagination to kaminari
 # http://blogs.element-labs.com/2015/10/replacing-will_paginate-with-kaminari/
 
@@ -165,7 +167,7 @@ gem "paper_trail-globalid"
 
 gem "fast_blank" # blank? rewritten in c
 
-# gem 'faster_path' #if !`which rustc`.empty?
+gem 'faster_path' # will break without rustc
 
 # storing money with money-rails
 gem "money-rails"
