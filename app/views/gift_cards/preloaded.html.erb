@@ -47,7 +47,7 @@ table tr {
   </div>
   <div class='row'>
     <div class='span6' id='preloaded-cards'>
-      <h2>Preloaded Cards <span class='badge' id='active-unassigned-cards-count'><%=@preloaded_cards.size%></span></h2>
+      <h2>Preloaded Cards <span class='badge badge-dark' id='active-unassigned-cards-count'><%=@preloaded_cards.size%></span></h2>
       
       <%= select_tag :user_id,
             options_from_collection_for_select(User.approved.all,
@@ -94,7 +94,7 @@ table tr {
             <th colspan="1" id='sequence-title'>Sequence</th>
             <th colspan="1">Amount</th>
             <th colspan="1">Status</th>
-            <th colspan="1">Re-Run Check <%= content_tag :span,'?',class: 'badge', data:{
+            <th colspan="1">Re-Run Check <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Sometimes, this process fails, even though the card is good, and may in fact be activated. If this isn't working, ping KT or Bill on slack",
@@ -102,7 +102,7 @@ table tr {
           original_title:"Check Cards"} %></th>
             <% if current_user.admin? %>
             <th colspan='1' id='user-title'>User</th>
-            <th colspan='3'><input type='checkbox' id='card-all'></input>&nbsp;Admin&nbsp;<span class='badge' id='checkedcount'>0</span></th>
+            <th colspan='3'><input type='checkbox' id='card-all'></input>&nbsp;Admin&nbsp;<span class='badge dark' id='checkedcount'>0</span></th>
             <% end %>
           </tr>
         </thead>

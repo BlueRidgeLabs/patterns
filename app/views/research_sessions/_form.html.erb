@@ -32,7 +32,7 @@
     <%= f.label :title, 'Session Title',  :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, placeholder: 'short and descriptive', :class => 'text_field' %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
           content: "User Testing session #4 is not useful nor informative. This is internal only, so use your own name,team name, and the purpose.",
@@ -44,7 +44,7 @@
     <%= f.label :location, 'Session Location', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :location, placeholder: "leave empty for call", :class => 'text_field' %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
           content: "Where is this taking place? May be seen by DIG members",
@@ -56,7 +56,7 @@
     <%= f.label :description, 'Session description', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :description, :class => 'text_area' %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
           content: "DIG members may see this, so keep it informative for them and for yourself",
@@ -79,7 +79,7 @@
     <%= f.label "Duration in minutes", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :duration, ResearchSession::DURATION_OPTIONS %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
           content: "usefull so we know how much h",
@@ -98,7 +98,7 @@
                                     pre_populate: @tags.to_json
                                   }
                           %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
           content: "These are different than people tags. Use thises so we know why you had your session, what it was meant to learn, the topic, what you tested, etc.",

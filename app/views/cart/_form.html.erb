@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :name %> <%= content_tag :span,'?',class: 'badge', data:{
+    <%= f.label :name %> <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Must be unique on Patterns. Keep it informative!",
@@ -22,7 +22,7 @@
   </div>
   <div class="field">
     <%= f.label :Description %>
-    <%= content_tag :span,'?',class: 'badge', data:{
+    <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Not seen by anyone outside of Patterns. for internal use to keep track of pools.",

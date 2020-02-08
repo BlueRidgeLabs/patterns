@@ -9,7 +9,7 @@
 
     <tr class='tag' id='tag-<%=tag.id%>'>
       <a href='<%= research_sessions_path(q:{ransack_tagged_with: tag.name}) %>'>
-        <td><span class='badge'><%=tag.taggings_count%></span></td>
+        <td><span class='badge badge-dark'><%=tag.taggings_count%></span></td>
         <td><%= tag.name %></td>
       </a>
     </tr>

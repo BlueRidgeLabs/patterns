@@ -49,46 +49,6 @@ gem "hashie"
 
 # generate capybara tests
 
-group :development do
-  # gem 'capistrano'
-  # mainline cap is busted w/r/t Rails 4. Try this fork instead.
-  # src: https://github.com/capistrano/capistrano/pull/412
-  gem "capistrano", "~> 2.15.4"
-  gem "capistrano-sidekiq"
-  gem "ed25519"
-  gem "heavens_door" # recording capybara tests
-  gem "lol_dba" # find columns that should have indices
-  gem "rbnacl", "~> 4.0.0" # for modern ssh keys
-  gem "rvm-capistrano", require: false
-  # gem 'rbnacl-libsodium' # same as above
-  gem "bcrypt_pbkdf" # same as above
-  # this whole group makes finding performance issues much friendlier
-  gem "bundler-audit", ">= 0.5.0", require: false
-  gem "flamegraph"
-  gem "memory_profiler"
-  gem "rack-mini-profiler"
-  gem "ruby-prof"
-  gem "stackprof" # ruby 2.1+ only
-  # n+1 killer.
-  # gem 'bullet'
-
-  # what attributes does this model actually have?
-  gem "annotate"
-
-  # a console in your tests, to find out what's actually happening
-  gem "pry-rails"
-
-  # a console in your browser, when you want to interrogate views.
-  gem "web-console"
-
-  gem "rails-erd"
-  # silences logging of requests for assets
-  # gem 'quiet_assets'
-
-  # enabling us to deploy via travis and encrypted keys!
-  # gem 'travis'
-  gem "spring"
-end
 
 group :production do
   # gem 'newrelic_rpm'
@@ -105,7 +65,7 @@ group :assets do
   gem "sassc-rails"
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem "therubyracer", platforms: :ruby
+  gem 'mini_racer'
   gem "uglifier"
 end
 
@@ -121,21 +81,20 @@ gem "jbuilder"
 # To use ActiveModel has_secure_password
 gem "bcrypt"
 
-# To use debugger
-# gem 'debugger'
-
-# https://coderwall.com/p/fnfdgw/useful-regular-expressions-to-update-to-bootstrap-3
-gem "bootstrap3-datetimepicker-rails"
+# bootstrapping
+gem 'bootstrap', '~> 4.4.1'
+gem 'bootstrap4-datetime-picker-rails'
 gem "glyphicons-rails"
+gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.1'
 gem "momentjs-rails" # sane time management in js
-gem "twitter-bootstrap-rails", "~> 2.2.0"
+
 
 # want to switch pagination to kaminari
 # http://blogs.element-labs.com/2015/10/replacing-will_paginate-with-kaminari/
 
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
 gem "will_paginate"
-gem "will_paginate-bootstrap", "~> 0.2.5" # Bootstrap 2 support breaks at v1.0
+gem "will_paginate-bootstrap"
 
 # include health_check, for system monitoring
 gem "health_check"
@@ -216,6 +175,48 @@ gem "acts-as-taggable-on"
 
 # mapping, because maps rock and google sucks
 gem "leaflet-rails"
+
+group :development do
+  # gem 'capistrano'
+  # mainline cap is busted w/r/t Rails 4. Try this fork instead.
+  # src: https://github.com/capistrano/capistrano/pull/412
+  gem "capistrano", "~> 2.15.4"
+  gem "capistrano-sidekiq"
+  gem "ed25519"
+  gem "heavens_door" # recording capybara tests
+  gem "lol_dba" # find columns that should have indices
+  gem "rbnacl", "~> 4.0.0" # for modern ssh keys
+  gem "rvm-capistrano", require: false
+  # gem 'rbnacl-libsodium' # same as above
+  gem "bcrypt_pbkdf" # same as above
+  # this whole group makes finding performance issues much friendlier
+  gem "bundler-audit", ">= 0.5.0", require: false
+  gem "flamegraph"
+  gem "memory_profiler"
+  gem "rack-mini-profiler"
+  gem "ruby-prof"
+  gem "stackprof" # ruby 2.1+ only
+  # n+1 killer.
+  # gem 'bullet'
+
+  # what attributes does this model actually have?
+  gem "annotate"
+
+  # a console in your tests, to find out what's actually happening
+  gem "pry-rails"
+
+  # a console in your browser, when you want to interrogate views.
+  gem "web-console"
+
+  gem "rails-erd"
+  # silences logging of requests for assets
+  # gem 'quiet_assets'
+
+  # enabling us to deploy via travis and encrypted keys!
+  # gem 'travis'
+  gem "spring"
+end
+
 
 group :test do
   # mock tests w/mocha

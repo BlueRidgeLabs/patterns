@@ -1,4 +1,4 @@
-<div class="upcoming-participant well" id='person-<%=person.id%>'>
+<div class="upcoming-participant card card-body bg-light m-2" id='person-<%=person.id%>'>
   <% 
     upcoming =  person.research_sessions.where('start_datetime between NOW() and ?', 1.week.from_now).last 
      invite = upcoming.invitations.find_by(person_id: person.id)

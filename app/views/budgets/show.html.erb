@@ -1,7 +1,7 @@
 <%= render partial: 'layouts/admin_menu' %>
 <div class='row'>
 
-  <div class='well'>
+  <div class='card'>
     <dl >
       <dt>Money in Budget</dt>
       <dd id='budget_amount_<%= @budget.id %>'><%= humanized_money_with_symbol @budget.amount %></dd>

@@ -1,7 +1,7 @@
 <table class="table table-hover invitees" id='dynamic-invitation-panel' >
   <tbody>
     <tr>
-      <th>Remove<%= content_tag :span,'?',class: 'badge', data:{
+      <th>Remove<%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Cannot remove someone with an assigned gift card. unassign the card and then delete.",
@@ -9,7 +9,7 @@
           original_title:"Assigned Gift Card"} %></th>
       <th>Name</th>
       <th>Phone</th>
-      <th>Action <%= content_tag :span,'?',class: 'badge', data:{
+      <th>Action <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "This is meant for you, personally, to track if you have invited people, have they confirmed, did they cancel or attend.",
