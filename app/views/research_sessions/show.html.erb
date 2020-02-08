@@ -15,10 +15,11 @@ research_session_id = <%= @research_session.id%>;
   </h1>
 </div>
 <div class="row">
-  <div class="col-4">
-    <div class="card card-body bg-light p-2">
+  <div class="span4">
+    <div class="card">
       <dl>
-        
+        <dt>Clone</dt>
+        <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-small' %></dd>
         <dt>Description</dt>
 
         <dd><%= best_in_place @research_session, :description %>
@@ -47,10 +48,8 @@ research_session_id = <%= @research_session.id%>;
         <dd><%= @research_session.invitations.where(aasm_state:'attended').size %></p>
         <% if @research_session.people.size > 0 %>
         <dt>Add to Pool: <span class='current_cart'><%= current_cart.name %></span></dt>
-        <dd><%= link_to "Add all to pool", add_person_cart_index_path(@research_session.people.map(&:id)), remote: true, class: 'btn btn-sm btn-secondary' %></dd>
+        <dd><%= link_to "Add all to pool", add_person_cart_index_path(@research_session.people.map(&:id)), remote: true, class: 'btn' %></dd>
         <% end %>
-        <dt>Clone</dt>
-        <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-sm btn-secondary' %></dd>
       </dl>
     </div>
     <h3>Tags</h3>
@@ -67,8 +66,8 @@ research_session_id = <%= @research_session.id%>;
     <%= form_for([@research_session, Comment.new], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
       <%= form.hidden_field :commentable_id, :value => @research_session.id %>
-      <%= form.text_area :content, rows: 6, class: "span4 input-block-level form-control" %>
-      <%= form.submit 'Add note', :class => "btn btn-primary mt-2" %>
+      <%= form.text_area :content, rows: 6, class: "span4 input-block-level" %>
+      <%= form.submit 'Add note', :class => "btn" %>
       <%= content_tag :span,'?', class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
@@ -84,11 +83,9 @@ research_session_id = <%= @research_session.id%>;
     </div>
   </div>
   <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
-  <div class="col-8">
+  <div class="span8">
     <h3>Invitees</h3>
-    <div class='form-group'>
-      <input id='invitees-typeahead' type="text" placeholder="People Search" class='form-control'>
-    </div>
+    <input id='invitees-typeahead' type="text" placeholder="People Search">
     <%= render partial: 'invitations_panel',
           locals: { invitations: @research_session.invitations } %>
 
@@ -102,7 +99,7 @@ research_session_id = <%= @research_session.id%>;
 
 
 <div class="row">
-  <div class="col-lg">
+  <div class="span12">
     <%= link_to "Sessions", "/sessions", class: 'btn btn-default '%>
     <%= link_to "Back", :back, class: 'btn'%>
   </div>

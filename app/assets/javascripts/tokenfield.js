@@ -115,7 +115,7 @@ $(document).on('turbolinks:load', function() {
           templates: {
             empty: 'Not Found',
             suggestion: function(data) {
-              return '<div>' + data.name + ' - <span class="badge badge-dark">' + data.count + '</badge></div>';
+              return '<div>' + data.name + ' - <span class="badge">' + data.count + '</badge></div>';
             }
           }
         }

@@ -47,7 +47,7 @@
   </div>
   <div class='span9' style='overflow: auto, height:400px'>
   <h3> Recent Sessions</h3>
-  <%= will_paginate @sessions, param_name: 'sessions_page',  remote: true ,renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <%= will_paginate @sessions, param_name: 'sessions_page',  remote: true ,renderer: BootstrapPagination::Rails %>
     <table class="table table-striped" >
       <thead>
         <tr>
@@ -74,7 +74,7 @@
   <%= will_paginate @changes,
           remote: true,
           param_name: 'changes_page',
-          renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+          renderer: BootstrapPagination::Rails %>
     <table class="table table-striped">
       <thead>
         <tr>
