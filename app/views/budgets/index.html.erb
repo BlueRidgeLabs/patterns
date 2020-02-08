@@ -2,7 +2,7 @@
 
 <h1>Budgets</h1>
 <div class='row'>
-  <dl class='well'>
+  <dl class='card'>
     <% if current_user.admin? %>
       <dt>Money in GiftRocket Account:</dt>
       <dd> <%= humanized_money_with_symbol DigitalGift.current_budget %></dd>

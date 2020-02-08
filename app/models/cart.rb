@@ -44,6 +44,7 @@ class Cart < ApplicationRecord
     user
   end
 
+  # this looks like a decorator, should be elsewhere.
   def name_and_count
     "#{name}: #{people.size}"
   end

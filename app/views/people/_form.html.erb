@@ -64,7 +64,7 @@
     <%= f.label :landline, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :landline, :class => 'text_field' %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Some folks have a landline, and so don't respond to texts, or only use their landline at night.",
@@ -76,7 +76,7 @@
     <%= f.label :participation_type, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :participation_type, %w(in-person remote) %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Do they like to come to the office or do we meet them where they live?",
@@ -89,7 +89,7 @@
     <%= f.label :active, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :active, %w(true false) %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Set this person back to active",
@@ -101,7 +101,7 @@
     <%= f.label :deactivated_method, :class => 'control-label' %>
     <div class="controls">
       <%= f.select :deactivated_method, Person.distinct(:deactivated_method).map(&:deactivated_method) %>
-      <%= content_tag :span,'?',class: 'badge', data:{
+      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Set this person back to active",

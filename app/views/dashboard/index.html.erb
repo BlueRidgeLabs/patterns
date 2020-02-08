@@ -1,5 +1,67 @@
 <div class="row">
-  <div class="span4">
+  <div class="col-md">
+    <div class="card bg-light p-1">
+      <div class="card-header">
+        Stats
+      </div>
+       <div class="card-body">
+        <dl>
+          <dt>Total Verified count:</dt> 
+          <dd><%=@verified_count%></dd>
+          <dt>Total Unverified count:</dt> 
+          <dd><%=@unverified_count%></dd>
+          <dt>Last Month's Deactivation Count:</dt>
+          <dd><%= @deactivated_count %></dd>
+          <dt>Active People in 1,6,12 months:</dt>
+          <dd><%= @one_month_people%>, <%= @six_month_people%>, <%= @twelve_month_people%></dd>
+          <dt>Total Reward $ in 1,6,12 months:</dt>
+          <dd><%= @one_month_reward %>, <%= @six_month_reward%>, <%= @twelve_month_reward %></dd>
+        </dl>
+        <% if current_user.admin? %>
+        <h4>Last Logins, count</h4>
+        <ul id='user-list'>
+          <% @last_logins.each do |user| %>
+          <li><%= link_to user.name, user %>: <%= user&.last_sign_in_at&.to_s :short%>, <%= user.sign_in_count%></li>
+          <% end %>
+        </ul>
+        <% end %>
+        <h4>Newest tags</h4>
+        <ul id="tag-list">
+          <%= render partial: 
+                'taggings/tag', 
+                collection: @new_tags, 
+                as: :tag,
+                cached: true %>
+
+        </ul>
+        <h4>Most popular tags</h4>
+        <ul id="tag-list">
+          <%= render partial: 'taggings/tag', 
+                collection: @popular_tags,
+                as: :tag,
+                cached: true %>
+
+        </ul>
+      </div>
+      <h4>Pool Activity:</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Person</th>
+            <th>Pool</th>
+            <th>User</th>
+          </tr>
+        </thead>
+        <tbody>
+        <%= render partial: 'cart_activity', 
+              collection: @cart_people, 
+              as: :cart_person,
+              cached: true %> 
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-sm">
     <h4>Recent Signups</h4>
     <table class="table table-striped">
       <thead>
@@ -16,87 +78,31 @@
       </tbody>
     </table>
   </div>
-  <div class="span2">
+  <div class="col-sm">
     <h4> Upcoming Sessions</h4>
     <%= render partial: 'upcoming_session', 
           collection: @upcoming_sessions, as: :session, cached: true %>
   </div>
-  <div class='span2'>
+  <div class='col-sm'>
     <h4>Upcoming Participants</h4>
     <%= render partial: 'upcoming_participant', 
           collection: @upcoming_participants, as: :person, cached: true  %>
   </div>
-  <div class="span4">
-    <div class="well">
-      <dl>
-        <dt>Total Verified count:</dt> 
-        <dd><%=@verified_count%></dd>
-        <dt>Total Unverified count:</dt> 
-        <dd><%=@unverified_count%></dd>
-        <dt>Last Month's Deactivation Count:</dt>
-        <dd><%= @deactivated_count %></dd>
-        <dt>Active People in 1,6,12 months:</dt>
-        <dd><%= @one_month_people%>, <%= @six_month_people%>, <%= @twelve_month_people%></dd>
-        <dt>Total Reward $ in 1,6,12 months:</dt>
-        <dd><%= @one_month_reward %>, <%= @six_month_reward%>, <%= @twelve_month_reward %></dd>
-      </dl>
-      <% if current_user.admin? %>
-      <h4>Last Logins, count</h4>
-      <ul id='user-list'>
-        <% @last_logins.each do |user| %>
-        <li><%= link_to user.name, user %>: <%= user&.last_sign_in_at&.to_s :short%>, <%= user.sign_in_count%></li>
-        <% end %>
-      </ul>
-      <% end %>
-      <h4>Newest tags</h4>
-      <ul id="tag-list">
-        <%= render partial: 
-              'taggings/tag', 
-              collection: @new_tags, 
-              as: :tag,
-              cached: true %>
-
-      </ul>
-      <h4>Most popular tags</h4>
-      <ul id="tag-list">
-        <%= render partial: 'taggings/tag', 
-              collection: @popular_tags,
-              as: :tag,
-              cached: true %>
-
-      </ul>
-    </div>
-    <h4>Pool Activity:</h4>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Person</th>
-          <th>Pool</th>
-          <th>User</th>
-        </tr>
-      </thead>
-      <tbody>
-      <%= render partial: 'cart_activity', 
-            collection: @cart_people, 
-            as: :cart_person,
-            cached: true %> 
-      </tbody>
-    </table>
-  </div>
+  
 </div>
 <div class='row'>
-  <div class='span4'>
+  <div class='col-md'>
     <h4> Recent Sessions</h4>
     <%= render partial: 'recent_session', 
           collection: @recent_sessions, as: :session, cached: true  %>
   </div>
   
-  <div class='span4'>
+  <div class='col-md'>
     <h4> Recent Participants</h4>
     <%= render partial: 'recent_participant', 
           collection: @recent_participants, as: :person, cached: true  %>
   </div>
-  <div class='span4'>
+  <div class='col-md'>
     <h4>Recent Deactivated People</h4>
     <%= render partial: 'deactivated_person', collection: @deactivated_people, as: :person, cached: true  %>
   </div>
