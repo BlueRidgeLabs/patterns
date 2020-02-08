@@ -88,7 +88,6 @@ gem "glyphicons-rails"
 gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.1'
 gem "momentjs-rails" # sane time management in js
 
-
 # want to switch pagination to kaminari
 # http://blogs.element-labs.com/2015/10/replacing-will_paginate-with-kaminari/
 

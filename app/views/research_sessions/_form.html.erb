@@ -1,37 +1,35 @@
+
+
 <%= form_for @research_session,
              url: research_sessions_path,
              method: :POST,
              remote: false,
              html: { class: 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :people, "People", :class => 'control-label' %>
-    <div class="controls" id='people-store'>
+  <div class="form-group">
+    <%= f.label :people, "People" %>
+    <div id='people-store'>
 
     </div>
     <%= f.hidden_field :people_ids, multiple: true %>
   </div>
-  <div class="control-group">
-      <%= f.label :people, "Manage", :class => 'control-label' %>
-      <div class="controls">
-        <a href='#' id='add_all' class='btn btn-mini'>Add All</a>
-        <a href='#' id='remove_all' class='btn btn-mini btn-danger'>Remove All</a>
-      </div>
+  <div class="form-group">
+      <%= f.label :people, "Manage" %>
+      <a href='#' id='add_all' class='btn btn-sm btn-primary'>Add All</a>
+      <a href='#' id='remove_all' class='btn btn-sm btn-warning'>Remove All</a>
     </div>
  <% if current_user.admin? %>
-  <div class="control-group">
-  <%= f.label :user, :class =>'control-label' %>
-    <div class="controls">
-      <% users = User.where(approved: true).all.map{|u| [u.name,u.id]} %>
-      <%= f.select :user_id, options_for_select(users, current_user.id) %>
-    </div>
+  <div class="form-group">
+    <%= f.label :user %>
+    <% users = User.where(approved: true).all.map{|u| [u.name,u.id]} %>
+    <%= f.select :user_id, options_for_select(users, current_user.id), {}, {class: 'form-control'} %>
   </div>
   <% else %>
   <%= f.hidden_field :user_id, value: current_user.id %>
   <% end %>
-  <div class="control-group">
-    <%= f.label :title, 'Session Title',  :class => 'control-label' %>
+  <div class="form-group">
+    <%= f.label :title, 'Session Title' %>
     <div class="controls">
-      <%= f.text_field :title, placeholder: 'short and descriptive', :class => 'text_field' %>
+      <%= f.text_field :title, placeholder: 'short and descriptive', class: 'text_field form-control' %>
       <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
@@ -40,10 +38,10 @@
           original_title:"Informative title please!"} %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :location, 'Session Location', :class => 'control-label' %>
+  <div class="form-group">
+    <%= f.label :location, 'Session Location' %>
     <div class="controls">
-      <%= f.text_field :location, placeholder: "leave empty for call", :class => 'text_field' %>
+      <%= f.text_field :location, placeholder: "leave empty for call",  class: 'text_field form-control' %>
       <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
@@ -52,10 +50,10 @@
           original_title:"Location"} %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :description, 'Session description', :class => 'control-label' %>
+  <div class="form-group">
+    <%= f.label :description, 'Session description' %>
     <div class="controls">
-      <%= f.text_area :description, :class => 'text_area' %>
+      <%= f.text_area :description, :class => 'text_area form-control' %>
       <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
@@ -68,17 +66,17 @@
 
   <h2>Time</h2>
 
-  <div class="control-group" style="position: relative">
-    <%= f.label :start_datetime, :class => 'control-label' %>
+  <div class="form-group" style="position: relative">
+    <%= f.label :start_datetime %>
     <div class="controls">
-      <%= f.text_field :start_datetime, :class => 'text_area' %>
+      <%= f.text_field :start_datetime, :class => 'text_area form-control' %>
     </div>
   </div>
 
-  <div class="control-group">
-    <%= f.label "Duration in minutes", :class => 'control-label' %>
+  <div class="form-group">
+    <%= f.label "Duration in minutes" %>
     <div class="controls">
-      <%= f.select :duration, ResearchSession::DURATION_OPTIONS %>
+      <%= f.select :duration, ResearchSession::DURATION_OPTIONS, {},{class:'form-control'} %>
       <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover",
           placement: "top",
@@ -87,15 +85,14 @@
           original_title:"Informative title please!"} %>
     </div>
   </div>
-
-  <div class="control-group">
-    <%= f.label "Tags", :class => 'control-label' %>
-    <div class="controls">
+<!--
+  <div class="form-group">
+    <%= f.label "Tags" %>
       <%= f.text_field :tags,
-                            class: 'tokenfield input-large span3',
+                            class: 'tokenfield input-large span3 form-control',
                             data: { search_url: '/taggings/search?type=ResearchSession&q=%QUERY',
                                     submit_id: 'search-tag-hidden-input',
-                                    pre_populate: @tags.to_json
+                                    pre_populate: @tags&.to_json
                                   }
                           %>
       <%= content_tag :span,'?',class: 'badge badge-dark', data:{
@@ -104,15 +101,14 @@
           content: "These are different than people tags. Use thises so we know why you had your session, what it was meant to learn, the topic, what you tested, etc.",
           title: 'popover',
           original_title:"Tag your sessions!"} %>
-    </div>
   </div>
-
+-->
   <!--
-  <div class="control-group">
-    <%= f.label "Send Invitations?", :class => 'control-label' %>
+  <div class="form-group">
+    <%= f.label "Send Invitations?" %>
 
    <label class="controls toggle-check">
-      <%= check_box :send_invites, 'boolean_attribute', {class: 'toggle-check-input hidden'}, 'true', 'false' %>
+      <%= check_box :send_invites, 'boolean_attribute', {class: 'toggle-check-input hidden form-control'}, 'true', 'false' %>
       <span class="toggle-check-text"></span>
     </label>
   </div>
@@ -120,6 +116,6 @@
   <div class="form-actions">
     <%= f.submit 'Create', class: 'btn btn-primary', id: 'submit' %>
     <%= link_to t('.cancel', default: t("helpers.links.cancel")),
-                people_path, class: 'btn' %>
+                people_path, class: 'btn btn-secondary' %>
   </div>
 <% end %>

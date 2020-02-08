@@ -1,12 +1,8 @@
 <%= render :partial => 'layouts/research_sessions_menu' %>
 <div class='row'>
-  <div class='span6'>
-    <div class='row'>
-      <div class='span4'>
-        <input id='cart-typeahead' type="text" placeholder="People Search" >  
-      </div>
-      <div class='span2'>
-      </div>
+  <div class='col-12 col-md-8'>
+    <div class='input-group mb-3'>
+      <input id='cart-typeahead' class="form-control" aria-label="people" type="text" placeholder="People Search" >  
     </div>
     <table class="table table-striped">
       <thead>
@@ -24,9 +20,8 @@
       </tbody>
     </table>
   </div>
-  <div class='span4 offset2'>
-    <div class='card'>
-
+  <div class='col-6 col-md-4'>
+    <div class='card card-body bg-light m-2'>
       <dl>
         <dt>Current Pool <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
@@ -58,32 +53,36 @@
         <dt>Sync to Rapidpro</dt>
         <dd><%= best_in_place @cart, :rapidpro_sync, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
         <dt>Export:</dt>
-        <dd><%= link_to "Export to CSV", cart_path(@cart,format: :csv), class:'btn' %></dd>
+        <dd><%= link_to "Export to CSV", cart_path(@cart,format: :csv), class:'btn btn-secondary' %></dd>
         <% end %>
         <dt>Remove all people:</dt>
         <dd><%= link_to "Remove All", delete_person_cart_index_path({all: true}),
-                            class: "btn",
+                            class: "btn btn-warning",
                             remote: true, method: :get %></dd>
         <dt>create a new pool:</dt>
-        <dd><%= link_to "New Pool",new_cart_path, method: 'get', class:'btn' %> </dd>
+        <dd><%= link_to "New Pool", new_cart_path, method: 'get', class:'btn btn-secondary' %> </dd>
       </dl>
     </div>
 
-    <h4>Add users to this pool:</h4>
+    <h4>Add users to this pool:<%= content_tag :span,'?',class: 'badge badge-dark', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "You can invite other patterns users, KT, Bill, fellows, etc. to participate in your pool.",
+          title: 'popover',
+          original_title:"invite others to your pool"} %></h4>
+     <div class="form-group">
     <%= select_tag "user_id", 
           options_from_collection_for_select(@selectable_users, "id", "name"),
           include_blank: true,
+          class: "form-control",
           data: {
             remote: true,
             method: 'post',
             url: add_user_cart_index_path(id: @cart.id)
           }
-    %> <%= content_tag :span,'?',class: 'badge badge-dark', data:{
-          toggle: "popover", 
-          placement: "top", 
-          content: "You can invite other patterns users, KT, Bill, fellows, etc. to participate in your pool.",
-          title: 'popover',
-          original_title:"invite others to your pool"} %>
+    %> 
+    </div>
+    
   
     <h4>Users</h4>
     <table class="table table-striped">
@@ -97,18 +96,17 @@
         <%= render partial: 'cart/cart_user', collection: @users, as: :user, locals: {cart: @cart} %>
       </tbody>
     </table>
-    <h3>Notes</h3>
-    <%= form_for([@cart, @comment], remote: true) do |form| %>
-      <%= form.hidden_field :commentable_type, :value => 'Cart' %>
-      <%= form.hidden_field :commentable_id, :value => @cart.id %>
-      <%= form.text_area :content, rows: 3, class: "span4 input-block-level" %>
-      <%= form.submit 'Add note', :class => "btn" %>
-      <%= content_tag :span,'?',class: 'badge badge-dark', data:{
+    <h3>Notes <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "This is where to capture information that other people might want to know about this pool. Why you set it up, who is in it, etc. Markdown Friendly",
           title: 'popover',
-          original_title:"Add Notes!"} %>
+          original_title:"Add Notes!"} %></h3>
+    <%= form_for([@cart, @comment], remote: true) do |form| %>
+      <%= form.hidden_field :commentable_type, :value => 'Cart' %>
+      <%= form.hidden_field :commentable_id, :value => @cart.id %>
+      <%= form.text_area :content, rows: 3, class: "form-control" %>
+      <%= form.submit 'Add note', :class => "btn btn-primary" %>
     <% end %>
 
     <div id="comments">

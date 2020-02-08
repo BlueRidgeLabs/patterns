@@ -24,7 +24,7 @@
         <td><%= link_to "X", 
                   research_session_remove_person_path(@research_session, person), 
                   remote: true, 
-                  class: 'btn btn-danger btn-mini' %> </td>
+                  class: 'btn btn-danger btn-sm' %> </td>
         <td><%= link_to person.full_name, 
                 person_path(person), 
                 id: "person-#{person.id}" %></td>
@@ -43,7 +43,7 @@
                   :id => "add-reward-#{invitation.id}",
                   'data-toggle' =>  "modal",
                   'data-target' => '#modal-window',
-                  class: 'btn btn-mini'} %>
+                  class: 'btn btn-sm'} %>
         </td>
       </tr>
     <% end if @research_session.invitations.size > 0 %>
