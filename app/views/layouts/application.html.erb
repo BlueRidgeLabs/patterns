@@ -75,7 +75,7 @@
   <% end %>
 </nav>
 
-<div id="page-container" class="container-fluid">
+<div id="page-container" class="container">
     <div id="notifications">
         <% if flash[:notice] || flash[:alert] || flash[:error] || flash[:success] %>
             <div class="alert fade show <%= flash[:notice].present? ? "alert-success" : "alert-danger" %>">

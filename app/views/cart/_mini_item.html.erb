@@ -10,7 +10,7 @@ current_session ||= @current_session
   <td><%= number_to_phone(person.phone_number&.gsub('+1',''), area_code: true) %></td> 
   <td>
     <% if current_session.nil? %> <!-- new session -->
-    <a class='btn btn-mini add-to-session'
+    <a class='btn btn-sm btn-primary add-to-session'
        data-fullname='<%= person.full_name %>'
        data-personid='<%= person.id %>'
        id='add-<%= person.id%>'>add</a>
