@@ -122,7 +122,7 @@ Search Parameters:
 </div>
 
 <div class="row">
-  <div class="offset4 span8"><%= will_paginate @results, :renderer => BootstrapPagination::Rails %></div>
+  <div class="offset4 span8"><%= will_paginate @results, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %></div>
 </div>
 
 <div class="row">
