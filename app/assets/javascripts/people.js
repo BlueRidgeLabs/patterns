@@ -49,7 +49,7 @@ $(document).on('turbolinks:load', function () {
     templates: {
             empty: "Enter to add tag",
             suggestion: function(data) {
-              return "<div>" + data.name + ' - <span class="badge badge-dark">' + data.count + "</badge></div>";
+              return "<div>" + data.name + ' - <span class="badge">' + data.count + "</badge></div>";
             }
           }
   });

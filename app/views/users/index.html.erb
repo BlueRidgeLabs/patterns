@@ -2,7 +2,7 @@
 <h1>Listing Users</h1>
   <%= will_paginate @users,
           remote: true,
-          renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+          renderer: BootstrapPagination::Rails %>
 <div class="row">
   <div class="span12">
     <table class="table table-striped" id='users-table'>

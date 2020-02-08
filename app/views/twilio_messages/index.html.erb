@@ -60,7 +60,7 @@
 </div>
 <div class="row">
   <div class="span12" style="text-align:center">
-    <%= will_paginate @twilio_messages, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <%= will_paginate @twilio_messages, :renderer => BootstrapPagination::Rails %>
   </div>
 </div>
 

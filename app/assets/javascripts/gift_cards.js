@@ -99,7 +99,7 @@ $(document).on('turbolinks:load', function() {
         new_card_val = $(old_card).val();
       }
       $(trNew).find("td:eq(1) input[type='text']").val(new_card_val);
-      $(trNew).find('td:last').html("<span class='badge badge-primary remove-ngcf-row'>X</span>");
+      $(trNew).find('td:last').html("<span class='badge badge-important remove-ngcf-row'>X</span>");
       $(trNew).appendTo(tableBody);
       
       addCardValidation();

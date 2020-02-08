@@ -1,4 +1,4 @@
-<section class="comment card card-body bg-light mb-2" id="comment-<%= comment.id %>">
+<section class="comment" id="comment-<%= comment.id %>">
   <a id="comment-<%= comment.id %>"></a>
   <% if current_user.admin? || current_user == comment.creator %>
   <%= best_in_place comment, :content, ok_button: 'Save', cancel_button: 'Cancel',as: :textarea, display_with: lambda { |v| markdown(v) } %>

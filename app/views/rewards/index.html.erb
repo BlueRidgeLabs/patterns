@@ -14,7 +14,7 @@
     <%= link_to 'Clear Search', request.path, class:"btn" %>
   <% end %>
   </div>
-<%= will_paginate @rewards, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
+<%= will_paginate @rewards, :renderer => BootstrapPagination::Rails %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -67,7 +67,7 @@
     <% end %>
   </tbody>
 </table>
-<%= will_paginate @rewards, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
+<%= will_paginate @rewards, :renderer => BootstrapPagination::Rails %>
 <br>
 
 <%= link_to "Save this list as CSV", rewards_path(format: :csv, params: params.permit!), :class => "btn"  %>
