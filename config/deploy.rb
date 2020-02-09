@@ -9,19 +9,6 @@ require 'whenever/capistrano'
 require 'rvm/capistrano'
 require 'rvm/capistrano/gem_install_uninstall'
 
-# loading environment variables so we can all use the same deployment
-if File.exist?(File.dirname(__FILE__) + '/local_env.yml')
-  YAML.safe_load(File.open(File.dirname(__FILE__) + '/local_env.yml')).each do |key, value|
-    ENV[key.to_s] = value
-    puts ENV[key.to_s]
-  end
-end
-
-# loading in defaults
-YAML.safe_load(File.open(File.dirname(__FILE__) + '/sample.local_env.yml')).each do |key, value|
-  ENV[key.to_s] = value unless ENV[key]
-end
-
 set :repository, ENV['GIT_REPOSITORY']
 
 set :scm, :git

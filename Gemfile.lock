@@ -10,7 +10,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (5.0.6)
+    aasm (5.0.7)
+      after_commit_action (~> 1.0)
       concurrent-ruby (~> 1.0)
     actioncable (5.2.4.1)
       actionpack (= 5.2.4.1)
@@ -57,6 +58,9 @@ GEM
       activerecord (>= 5.0, < 6.1)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    after_commit_action (1.1.0)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
     airbrake (5.8.1)
       airbrake-ruby (~> 1.8)
     airbrake-ruby (1.8.0)
@@ -70,7 +74,7 @@ GEM
     ast (2.4.0)
     awesome_print (1.8.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.278.0)
+    aws-partitions (1.279.0)
     aws-sdk-core (3.90.1)
       aws-eventstream (~> 1.0, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -171,6 +175,10 @@ GEM
     docile (1.3.2)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.7.5)
+    dotenv-rails (2.7.5)
+      dotenv (= 2.7.5)
+      railties (>= 3.2, < 6.1)
     ed25519 (1.2.4)
     emoji (1.0.7)
       json
@@ -328,7 +336,7 @@ GEM
       net-ssh (>= 4.0.0)
     netrc (0.11.0)
     nio4r (2.5.2)
-    nokogiri (1.10.8)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     notiffany (0.1.3)
       nenv (~> 0.1)
@@ -344,7 +352,7 @@ GEM
     parallel (1.19.1)
     parallel_tests (2.31.0)
       parallel
-    parser (2.7.0.3)
+    parser (2.7.0.4)
       ast (~> 2.4.0)
     phony (2.18.12)
     phony_rails (0.14.13)
@@ -358,7 +366,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.3)
-    puma (4.3.2)
+    puma (4.3.3)
       nio4r (~> 2.0)
     rack (2.2.2)
     rack-cache (1.11.0)
@@ -474,7 +482,7 @@ GEM
       rspec-core (~> 3.0, >= 3.0.0)
       sidekiq (>= 2.4.0)
     rspec-support (3.9.2)
-    rubocop (0.80.0)
+    rubocop (0.80.1)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.7.0.1)
@@ -657,6 +665,7 @@ DEPENDENCIES
   devise
   devise_invitable
   devise_zxcvbn
+  dotenv-rails
   ed25519
   emoji
   factory_bot_rails (= 4.10.0)
