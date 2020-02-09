@@ -1,7 +1,7 @@
 <table class="table table-hover invitees" id='dynamic-invitation-panel' >
   <tbody>
     <tr>
-      <th>Remove<%= content_tag :span,'?',class: 'badge badge-dark', data:{
+      <th>Remove <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Cannot remove someone with an assigned gift card. unassign the card and then delete.",
@@ -41,9 +41,7 @@
               modal_rewards_path(invitation.class.to_s, invitation.id),
                 {:remote => true,
                   :id => "add-reward-#{invitation.id}",
-                  'data-toggle' =>  "modal",
-                  'data-target' => '#modal-window',
-                  class: 'btn btn-sm'} %>
+                  class: 'btn btn-sm btn-primary'} %>
         </td>
       </tr>
     <% end if @research_session.invitations.size > 0 %>
