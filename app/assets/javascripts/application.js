@@ -32,6 +32,7 @@
 //= require tempusdominus-bootstrap-4.js
 //= require_tree .
 
+
 $(document).on('turbolinks:load',function() {
   $.jMaskGlobals.watchDataMask = true;
   

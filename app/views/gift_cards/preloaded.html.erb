@@ -17,76 +17,100 @@ table tr {
 </div>
 <h1>Preload a batch</h1>
 <div class='container'>
-  <div class='row preload-cards'>
-    <%= form_tag preload_gift_cards_path do %>
-      <%= number_field_tag :seq_start, {in: (1..499), step:1} %>
-      <%= number_field_tag :seq_end, { in: (2..500), step:1} %>
-      <%= text_field_tag :batch_id,nil,{
+  <div class='preload-cards form-row'>
+    <%= form_tag preload_gift_cards_path, class: 'form-inline' do %>
+      <div class="col-auto mb-1">
+        <%= label :seq_start,'Seq Start' %>
+        <%= number_field_tag :seq_start, {in: (1..499), step:1}, class:'form-control' %>
+      </div>
+      <div class="col-auto mb-1">
+        <%= label :seq_end,'Seq end' %>
+        <%= number_field_tag :seq_end, { in: (2..500), step:1}, class: 'form-control' %>
+      </div>
+      <div class="col-auto mb-1">
+        <%= label :batch_id,'Batch ID' %>
+        <%= text_field_tag :batch_id,nil,{
                           placeholder: 'Batch ID',
-                          class: 'input-mini',
+                          class: 'form-control',
                           'data-mask':'999999'} %>
-      <%= text_field_tag :expiration_date,nil, 
+      </div>
+      <div class="col-auto mb-1">
+        <%= label :expiration_date,'Expiration' %>
+        <%= text_field_tag :expiration_date,nil, 
                          {placeholder: 'MM/YY', 
-                         class: 'input-mini',
+                         class: 'form-control',
                          'data-mask': '00/00'} %>
-       <%= text_field_tag :amount,nil,
+      </div>
+      <div class="col-auto mb-1">
+        <%= label :amount, :old_name,'Amount' %>
+        <%= text_field_tag :amount,nil,
                           {placeholder: '$25.00', 
-                          class: 'input-mini',
+                          class: 'form-control',
                           'data-mask': '$999.99'} %>
-       <%= submit_tag "Preload",{ 
+      </div>
+      <div class="col-auto mb-1">
+        <%= submit_tag "Preload",{ 
                       id: 'preload-button',
-                      class: 'btn'} %>
+                      class: 'btn btn-sm btn-primary'} %>
+      </div>
     <% end %>
   </div>
 </div>
 <div class='container'>
   <div class='row'>
-    <div class='span1'>
+    <div class='col-auto'>
       <hr>
     </div>
   </div>
   <div class='row'>
-    <div class='span6' id='preloaded-cards'>
+
+    <div class='col-auto' id='preloaded-cards'>
       <h2>Preloaded Cards <span class='badge badge-dark' id='active-unassigned-cards-count'><%=@preloaded_cards.size%></span></h2>
-      
+    </div>
+    <div class='col-auto'>
       <%= select_tag :user_id,
             options_from_collection_for_select(User.approved.all,
                                           'id',
                                           'name'),
-            class: 'input',
+            class: 'input form-control',
             prompt: 'Bulk Assign To:', 
             id: 'select_user_for_cards',
             onchange: 'assign_cards_to_user()' %>
 
       
     </div>
-    <div class='span6'>
-      <div class="input-group">
-        <%= number_field_tag :low_seq, @low_seq, {min: @low_seq,max: @high_seq, class:'form-control has-clear preload-filter input-mini'} 
+  </div>
+  <div class='row'>
+    <div class='col-auto card card-body bg-light'>
+
+      <div class="form-inline">
+        <%= label :low_seq,'Start' %>
+        <%= number_field_tag :low_seq, @low_seq, {min: @low_seq,max: @high_seq, class:'form-control has-clear preload-filter input-mini mx-2'} 
 
         %>
-        ->
-        <%= number_field_tag :high_seq, @high_seq, {min: @low_seq,max: @high_seq, class:'form-control has-clear preload-filter input-mini'} 
+        <h4><i class="fas fa-arrow-right m-2"></i></h4>
+        <%= label :high,'End' %>
+        <%= number_field_tag :high_seq, @high_seq, {min: @low_seq,max: @high_seq, class:'form-control has-clear preload-filter input-mini mx-2'} 
 
         %>
         <%= select_tag :batch_id,
               options_from_collection_for_select(GiftCard.unscoped.preloaded.distinct.pluck(:batch_id),'to_i','to_i'),
-              class: 'input',
+              class: 'input form-control mx-2',
               include_blank:'All Batches',
               id: 'batch-id-filter'%>
          <%= select_tag :user_id,
               options_from_collection_for_select(User.approved.all,
                                           'id',
                                           'name'),
-              class: 'input',
+              class: 'input form-control mx-2',
               include_blank:'All Users', 
               id: 'preload-user-filter'%>
       </div>
     </div>
   </div>
   <div class='row'>
-    <div class='span12'>
-      <table class="table">
+    <div class='col-12'>
+      <table class="table tabe-striped">
         <thead>
           <tr>
             <th colspan="1">Last 4</th>
