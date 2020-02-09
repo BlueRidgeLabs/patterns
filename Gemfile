@@ -17,8 +17,6 @@ gem "redis" # ephemeral storage and caching
 gem "redis-rails" # for session store, I think deprecated in rails 5.2
 gem "validates_overlap" # to ensure we don't double book people
 
-# gem 'rails_12factor' # don't need this. yet. soon!
-
 gem "mail"
 
 gem "ransack" # rad searching.
@@ -121,9 +119,6 @@ gem "jbuilder"
 
 # To use ActiveModel has_secure_password
 gem "bcrypt"
-
-# To use debugger
-# gem 'debugger'
 
 # https://coderwall.com/p/fnfdgw/useful-regular-expressions-to-update-to-bootstrap-3
 gem "bootstrap3-datetimepicker-rails"
@@ -268,7 +263,10 @@ group :development, :test do
   gem "rubocop-faker", require: false
   gem "selenium-webdriver"
   gem "webdrivers", "~> 3.8"
-
+  gem 'dotenv-rails'
   gem "byebug", "~> 11.0"
   gem "sms-spec"
+  # To use debugger
+  # gem 'debugger'
+
 end

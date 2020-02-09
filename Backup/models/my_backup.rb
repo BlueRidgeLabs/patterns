@@ -11,20 +11,8 @@
 # http://backup.github.io/backup
 #
 require "yaml"
+
 Model.new(:my_backup, "Description for my_backup") do
-  env_file = File.dirname(__FILE__) + "/../../config/local_env.yml"
-  defaults = File.dirname(__FILE__) + "/../../config/sample.local_env.yml"
-
-  if File.exist?(env_file)
-    YAML.safe_load(File.open(env_file)).each do |key, value|
-      ENV[key.to_s] = value
-    end
-  end
-
-  # load in defaults unless they are already set
-  YAML.safe_load(File.open(defaults)).each do |key, value|
-    ENV[key.to_s] = value unless ENV[key]
-  end
   ##
   # Archive [Archive]
   #
