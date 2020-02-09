@@ -308,6 +308,14 @@ feature "research sessions" do
     invitation_2 = research_session.reload.invitations.find_by(person: person_2)
     assert_invitee_actions_exist(["invite"])
 
+    click_with_js(page.find("#add-reward-#{invitation_2.id}"))
+    expect(page).to have_content("Rewards:#{invitation_2.person.full_name}")
+    
+    click_with_js(page.find("#modal-footer-close"))
+    
+    expect(page).not_to have_selector('#modal-window', visible: true)
+
+
     # travel far past the session date
     Timecop.freeze(start_datetime + 1.day) do
       visit current_path
