@@ -253,7 +253,7 @@ class Person < ApplicationRecord
           cart.remove_person(id) # no-op if person not in cart
         end
       end # end cart update
-      return { pid: id, old: old_level, new: new_level }
+      { pid: id, old: old_level, new: new_level }
     end
   end
 

@@ -31,10 +31,10 @@ module ApplicationHelper
   end
 
   def nav_link(text, path, options = { class: "" })
-    active = current_page?(path) ? 'active' : ''
+    active = current_page?(path) ? "active" : ""
     options[:class] = "nav-item #{active} #{options[:class]}"
     content_tag(:li, options) do
-      link_to text, path,{class:'nav-link'}
+      link_to text, path, { class: "nav-link" }
     end
   end
 

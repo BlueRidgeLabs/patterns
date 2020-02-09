@@ -4,13 +4,13 @@ source "https://rubygems.org"
 ruby "~> 2.6.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 
-gem 'rack'
+gem "rack"
 gem "airbrake", "~> 5.0" # sends errors to external service
 gem "bootsnap", require: false
 gem "rack-cache"
 gem "rails", "~> 5.2.0"
 
-#gem 'webpacker', '~> 4.x' #bundle exec rails webpacker:install:stimulus #sooon
+# gem 'webpacker', '~> 4.x' #bundle exec rails webpacker:install:stimulus #sooon
 
 gem "rails-i18n"
 # gem 'pg' # soooooon!
@@ -69,7 +69,7 @@ group :assets do
   gem "sassc-rails"
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem 'mini_racer'
+  gem "mini_racer"
   gem "uglifier"
 end
 
@@ -86,10 +86,10 @@ gem "jbuilder"
 gem "bcrypt"
 
 # bootstrapping
-gem 'bootstrap', '~> 4.4.1'
-gem 'bootstrap4-datetime-picker-rails'
+gem "bootstrap", "~> 4.4.1"
+gem "bootstrap4-datetime-picker-rails"
 gem "glyphicons-rails"
-gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.1'
+gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.1"
 gem "momentjs-rails" # sane time management in js
 
 
@@ -98,7 +98,7 @@ gem "momentjs-rails" # sane time management in js
 
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
 gem "will_paginate"
-gem 'will_paginate-bootstrap4'
+gem "will_paginate-bootstrap4"
 
 # include health_check, for system monitoring
 gem "health_check"
@@ -166,7 +166,7 @@ gem "paper_trail-globalid"
 
 gem "fast_blank" # blank? rewritten in c
 
-gem 'faster_path' # will break without rustc
+gem "faster_path" # will break without rustc
 
 # storing money with money-rails
 gem "money-rails"
@@ -262,7 +262,7 @@ group :development, :test do
   gem "guard-minitest"
   gem "guard-rspec", require: false
   gem "guard-rubocop"
-  gem 'rubocop-faker'
+  gem "rubocop-faker"
   gem "holder_rails"
   gem "parallel_tests" # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
   gem "pry" # a console anywhere!
