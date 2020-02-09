@@ -98,7 +98,7 @@ gem "momentjs-rails" # sane time management in js
 
 # pagniate with will_paginate: https://github.com/mislav/will_paginate
 gem "will_paginate"
-gem "will_paginate-bootstrap"
+gem 'will_paginate-bootstrap4'
 
 # include health_check, for system monitoring
 gem "health_check"

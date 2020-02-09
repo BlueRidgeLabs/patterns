@@ -13,7 +13,7 @@ feature "search using ransack" do
   scenario "with no parameters" do
     login_with_admin_user
     visit "/search/index_ransack"
-    click_button "Search"
+    page.find('#ransack-search').click
     count = Person.all.size
     expect(page).to have_text("Showing #{count} results of #{count} total")
   end
@@ -22,7 +22,7 @@ feature "search using ransack" do
     login_with_admin_user
     visit "/search/index_ransack"
     fill_in "q_postal_code_start", with: "606"
-    click_button "Search"
+    page.find('#ransack-search').click
     expect(page).to have_text(@person_one.first_name)
     expect(page).to have_text("Showing 1 results of 1 total")
   end
@@ -31,8 +31,8 @@ feature "search using ransack" do
     login_with_admin_user
     visit "/search/index_ransack"
     fill_in "q_postal_code_start", with: "901"
-    click_button "Search"
-    expect(page).to have_text("There are no CUTGroup members that match your search")
+    page.find('#ransack-search').click
+    expect(page).to have_text("There is no one that match your search")
   end
 
   # scenario 'export search results to csv' do

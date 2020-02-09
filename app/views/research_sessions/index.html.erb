@@ -24,7 +24,7 @@
 <% end %>
 <div class="row">
   <div class="span12" style="text-align:center">
-    <%= will_paginate @research_sessions, :renderer => BootstrapPagination::Rails %>
+    <%= will_paginate @research_sessions, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>
 <div class="row">
@@ -70,7 +70,7 @@
 
 <div class="row">
   <div class="span12" style="text-align:center">
-    <%= will_paginate @research_sessions, :renderer => BootstrapPagination::Rails %>
+    <%= will_paginate @research_sessions, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>
 

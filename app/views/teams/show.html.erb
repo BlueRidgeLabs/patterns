@@ -42,7 +42,7 @@
    <%= will_paginate @sessions,
           remote: true,
           param_name: 'sessions_page',
-          renderer: BootstrapPagination::Rails %>
+          renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
     <table class="table table-striped" >
       <thead>
         <tr>
@@ -104,7 +104,7 @@
    <%= will_paginate @changes,
           remote: true,
           param_name: 'changes_page',
-          renderer: BootstrapPagination::Rails %>
+          renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
     <table class="table table-striped">
       <thead>
         <tr>
