@@ -16,7 +16,6 @@
 //= require jquery.turbolinks
 //= require best_in_place
 //= require moment
-//= require fullcalendar
 //= require popper
 //= require bootstrap-sprockets
 //= require twitter/typeahead.min
@@ -33,7 +32,7 @@
 //= require_tree .
 
 
-$(document).on('turbolinks:load',function() {
+$(document).on('turbolinks:load ready',function() {
   $.jMaskGlobals.watchDataMask = true;
   
   /* Activating Best In Place */
