@@ -45,7 +45,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Your Pools
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="pool-list">
           <% current_user.carts.each do |cart| %>
             <%= link_to cart.name_and_count, cart_path(cart.id), class: 'dropdown-item' %>
           <% end %>
@@ -69,7 +69,7 @@
 
     <%= search_form_for @q, url: search_index_ransack_path, method: :get, class: "form-inline my-2 my-lg-0" do |f| %>
       <%= f.search_field :nav_bar_search_cont, :class => "form-control mr-sm-2", placeholder: "search" %>
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
     <% end %> 
   </div>
   <% end %>

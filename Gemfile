@@ -3,11 +3,14 @@
 source "https://rubygems.org"
 ruby "~> 2.6.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rack', "2.1.2"
+
+gem 'rack'
 gem "airbrake", "~> 5.0" # sends errors to external service
 gem "bootsnap", require: false
 gem "rack-cache"
 gem "rails", "~> 5.2.0"
+
+#gem 'webpacker', '~> 4.x' #bundle exec rails webpacker:install:stimulus #sooon
 
 gem "rails-i18n"
 # gem 'pg' # soooooon!
@@ -70,6 +73,11 @@ group :assets do
   gem "uglifier"
 end
 
+<<<<<<< HEAD
+=======
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem "turbolinks", '~> 5.2.0'
+>>>>>>> bt4-webpack
 gem "jquery-rails"
 gem "jquery-turbolinks"
 
@@ -259,6 +267,7 @@ group :development, :test do
   gem "guard-minitest"
   gem "guard-rspec", require: false
   gem "guard-rubocop"
+  gem 'rubocop-faker'
   gem "holder_rails"
   gem "parallel_tests" # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
   gem "pry" # a console anywhere!

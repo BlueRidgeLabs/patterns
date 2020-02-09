@@ -27,7 +27,7 @@ FactoryBot.define do
     expiration_date "05/20"
     user
     created_by 1
-    batch_id { Faker::Number.number(8) }
+    batch_id { Faker::Number.number(digits: 8) }
     amount_cents 2500
     amount_currency "USD"
     active
@@ -35,7 +35,7 @@ FactoryBot.define do
     trait :active do
       status "active"
       full_card_number { CreditCardValidations::Factory.random(:mastercard) }
-      secure_code { Faker::Number.number(3) }
+      secure_code { Faker::Number.number(digits: 3) }
     end
 
     trait :preloaded do

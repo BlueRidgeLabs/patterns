@@ -1,15 +1,15 @@
 <!-- giftable here really is only ever an invitation. -->
-<div id="reward-modal" class="modal" 
+<div id="reward-modal"
   data-giftable-type='<%= @giftable.class %>'
   data-giftable-id='<%= @giftable.id %>'
   data-person-id='<%= @giftable.person.id%>'
   >
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class='modal-header'>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Gift Cards:<%= @giftable.person.full_name %></h3>
+        <h4>Rewards:<%= @giftable.person.full_name %></h4>
         <h5>YTD Total: <span id='rewards_total'><%= @giftable.person.rewards_total %></span>
+        <button type="button" class="close btn btn-sm btn-danger" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
         <div id="modal-notifications"></div>
@@ -50,18 +50,18 @@
                   <td>
                   <%= select_tag :reason,
                           options_for_select(Reward.reasons.keys.to_a, 'interview'),
-                            {class: 'input-small',id: "new-reason"}
+                            {class: 'input-small form-control',id: "new-reason"}
                            %>
                   </td>
                   <td>
                   <%= text_field_tag :amount,"",
                           {placeholder: "####",
-                          class: 'input-mini',
+                          class: 'input-mini form-control',
                           id: "new-amount"} %>
                   </td>
                   <td>
                     <%= text_field_tag :notes,"",
-                          {class: 'input-small',
+                          {class: 'input-small form-control',
                           id: "new-notes" }%>
                   </td>
                   <td>
@@ -69,7 +69,7 @@
                   <%= hidden_field_tag :giftable_id, @giftable.id %>
                   <%= hidden_field_tag :giftable_type, @giftable.class.to_s %> 
                   <%= submit_tag 'Add Digital Gift', 
-                        class: "btn btn-small", 
+                        class: "btn btn-sm btn-primary", 
                         id: 'add-digital-gift-button',
                         data: { confirm: 'Are you sure? This is not reversable.' } %>
                   </td>
@@ -156,7 +156,7 @@
         <% end %>
       </div> <!-- modal body end -->
       <div class="modal-footer">
-        <a href="#" class="btn close" data-dismiss="modal" aria-hidden="true">  Close
+        <a href="#" class="btn btn-primary close" data-dismiss="modal" aria-hidden="true">  Close
         </a>
       </div>
     </div>

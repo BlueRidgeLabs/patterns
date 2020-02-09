@@ -14,9 +14,9 @@
 </div>
 <% end %>
 <div class="row">
-  <div class="span6">
+  <div class="col-lg">
     <div class="row">
-      <div class="span3">
+      <div class="col-sm">
         <h3>About</h3>
         <dl>
           <dt>Add/Remove from Pool: <%= content_tag :span,'?',class: 'badge badge-dark', data:{
@@ -25,7 +25,7 @@
           content: "Pools are handy ways to keep track of a group of people. you can add and remove a person from your current pool with this button.",
           title: 'popover',
           original_title:"Pools"} %></dt>
-          <dd><span id='current_pool'><%= link_to current_cart.name, cart_index_path(current_cart) %></span>: <%= render partial: 'add_remove_cart', locals: {person: @person} %></dd>
+          <dd><br><span id='current_pool' class=''><%= link_to current_cart.name, cart_index_path(current_cart) %></span>: <%= render partial: 'add_remove_cart', locals: {person: @person} %></dd>
           
           <dt>Verified? <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
@@ -92,7 +92,7 @@
         </dl>
       </div>
 
-      <div class="span3">
+      <div class="col-sm">
         <h3>Contact</h3>
 
         <dl>
@@ -142,7 +142,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="span6">
+      <div class="col-sm">
         <h3>Tags</h3>
         <ul id="tag-list">
         <%= render partial: 'taggings/tagging', collection: @person.taggings %>
@@ -152,7 +152,7 @@
     </div>
   </div>
 
-  <div class="span6">
+  <div class="col-sm">
     <div class='row'>
       <h3>Location <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
@@ -178,14 +178,14 @@
     <% end %>
     </div>
     <div class='row'>
-      <div class='span6'>
+      <div class='col-sm'>
         <h3> Research Sessions</h3>
         <%= render partial: 'research_sessions/mini_view',
             locals: {person: @person} %>
       </div>
     </div>
     <div class='row'>
-      <div class='span6'>
+      <div class='col-sm'>
         <h3>Pools</h3>
         <ul id='cart-list'>
         <% @person.carts.each do |cart| %>
@@ -204,12 +204,12 @@
 </div>
 
 <div class="row">
-  <div class="span6">
+  <div class="col-sm">
     <h3>Notes</h3>
     <%= form_for([@person, @comment], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'Person' %>
       <%= form.hidden_field :commentable_id, :value => @person.id %>
-      <%= form.text_area :content, rows: 3, class: "span6 input-block-level" %>
+      <%= form.text_area :content, rows: 3, class: "col-sm input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
       <%= content_tag :span,'?', class: 'badge badge-dark', data:{
           toggle: "popover", 
@@ -229,7 +229,7 @@
 
 
 
-  <div class="span12">
+  <div class="col-12">
     <h3>Rewards - Total: <span id='gift_card_total'><%= humanized_money_with_symbol @person.rewards_total %></span></h3>
     <table class="table table-striped">
       <tr>
@@ -253,9 +253,9 @@
 <div class="row">
   <div class="form-actions span12">
     <%= link_to t('.back', default: t("helpers.links.back")),
-                people_path, :class => 'btn'  %>
+                people_path, :class => 'btn btn-dark'  %>
     <%= link_to t('.edit', default: t("helpers.links.edit")),
-                edit_person_path(@person), :class => 'btn' %>
+                edit_person_path(@person), :class => 'btn btn-primary' %>
     <% if current_user.admin? %>
       <%= link_to t('.destroy', default: t("helpers.links.destroy")),
                 person_path(@person),
