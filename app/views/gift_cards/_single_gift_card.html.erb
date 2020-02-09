@@ -1,5 +1,5 @@
 <tr id='gift-card-<%=gift_card.id%>' 
-  class='card card-small gift-card <%= cycle('dark', 'light') %>'
+  class='gift-card <%= cycle('dark', 'light') %>'
   data-user-name='<%= gift_card.user.name %>'
   data-user-id='<%= gift_card.user.id %>'
   data-id='<%=gift_card.id%>' 
@@ -26,7 +26,7 @@
       <%= button_to "Check", 
             check_gift_cards_path(gift_card),
             remote: true, 
-            class: 'btn btn-small', 
+            class: 'btn btn-sm btn-secondary', 
             id: "check-card-#{gift_card.id}" %>
     <% elsif gift_card.ongoing_call? %>
       <%= image_tag("/spinner.gif",size: '20x20') %>
@@ -42,7 +42,7 @@
         options_from_collection_for_select(approved_users,
                                           'id',
                                           'name', gift_card.user_id),
-          class: 'input-small',
+          class: 'input-small form-control',
           id: "user_change_gift_card_#{gift_card.id}",
           data: {
            remote: true,
@@ -52,7 +52,8 @@
     <td>
     <%= check_box_tag "gift_card_id_change[]", 
           gift_card.id, false,
-          id: "gift_card_id_change_#{gift_card.id}" %> |
+          id: "gift_card_id_change_#{gift_card.id}",
+          class: "" %> |
     <%= link_to 'Show', gift_card %> | 
     <%= link_to 'Edit', edit_gift_card_path(gift_card) %>
     <!--

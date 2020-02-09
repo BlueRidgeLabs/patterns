@@ -37,7 +37,7 @@ Lint/BooleanSymbol:
 
 # Offense count: 1
 # Configuration parameters: AllowComments.
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Exclude:
     - 'config/unicorn.rb'
 

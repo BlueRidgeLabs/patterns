@@ -10,23 +10,18 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-import "moment/moment"
-import "fastclick/fastclick"
 //= require jquery3
 //= require jquery_ujs
 //= require turbolinks
 //= require jquery.turbolinks
-
 //= require best_in_place
+//= require moment
 //= require popper
 //= require bootstrap-sprockets
 //= require twitter/typeahead.min
 //= require tokenfield/bootstrap-tokenfield.js
 //= require jquery.validate
 //= require jquery.validate.additional-methods
-//= require fullcalendar/fullcalendar.min
 //= require jquery-touchswipe/jquery.touchSwipe.min
 //= require jquery-creditcardvalidator/jquery.creditCardValidator.js
 //= require cable
@@ -36,10 +31,10 @@ import "fastclick/fastclick"
 //= require tempusdominus-bootstrap-4.js
 //= require_tree .
 
-$(document).on('turbolinks:load',function() {
+
+$(document).on('turbolinks:load ready',function() {
   $.jMaskGlobals.watchDataMask = true;
   
-  FastClick.attach(document.body);  
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();
 

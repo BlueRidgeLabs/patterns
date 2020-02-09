@@ -14,9 +14,9 @@
  *= require fullcalendar/fullcalendar.min
  *= require font-awesome
  *= require leaflet
- 
  *= require_tree .
  */
+
 
 @import "bootstrap";
 @import "tempusdominus-bootstrap-4.css";
@@ -38,3 +38,5 @@
 .select_auto{
   width:auto;
 }
+
+
