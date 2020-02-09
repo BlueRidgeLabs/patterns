@@ -266,6 +266,7 @@ group :development, :test do
   gem 'dotenv-rails'
   gem "byebug", "~> 11.0"
   gem "sms-spec"
+  gem 'foreman', require: false #for procfile
   # To use debugger
   # gem 'debugger'
 

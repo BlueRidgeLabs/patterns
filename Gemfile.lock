@@ -196,6 +196,7 @@ GEM
     fast_stack (0.2.0)
     ffi (1.12.2)
     flamegraph (0.9.5)
+    foreman (0.87.0)
     formatador (0.2.5)
     fuzzy_match (2.1.0)
     gibbon (3.3.3)
@@ -672,6 +673,7 @@ DEPENDENCIES
   faker
   fast_stack
   flamegraph
+  foreman
   fuzzy_match
   gibbon
   giftrocket_ruby!
