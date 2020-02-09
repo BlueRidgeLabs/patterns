@@ -73,11 +73,6 @@ group :assets do
   gem "uglifier"
 end
 
-<<<<<<< HEAD
-=======
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem "turbolinks", '~> 5.2.0'
->>>>>>> bt4-webpack
 gem "jquery-rails"
 gem "jquery-turbolinks"
 
