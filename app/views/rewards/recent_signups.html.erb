@@ -1,5 +1,5 @@
 <%= render :partial => 'layouts/reward_menu' %>
-<%= will_paginate @recent_signups, :renderer => BootstrapPagination::Rails %>
+<%= will_paginate @recent_signups, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
 <h1>Recent sign-ups who need gift cards</h1>
 <%= search_form_for @q_recent_signups, as: :q_signups, url: recent_signups_rewards_path, method: :get, class: 'form-inline' do |f_rs| %>
 <label for='created_at_date_gteq'>People created on or after</label>
