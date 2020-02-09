@@ -45,7 +45,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Your Pools
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="pool-list">
           <% current_user.carts.each do |cart| %>
             <%= link_to cart.name_and_count, cart_path(cart.id), class: 'dropdown-item' %>
           <% end %>
