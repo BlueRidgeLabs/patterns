@@ -24,6 +24,6 @@
 # For further information see the following documentation:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only
 # Rails.application.config.content_security_policy_report_only = true
-Rails.application.config.content_security_policy do |policy|
-  policy.connect_src :self, :https, "http://127.0.0.1:3035", "ws://127.0.0.1:3035" if Rails.env.development?
-end
+# Rails.application.config.content_security_policy do |policy|
+#   policy.connect_src  'default-src', :self,:http, :https, "http://127.0.0.1:3035", "ws://127.0.0.1:3035","http://localhost:3035","ws://localhost:3035" if Rails.env.development?
+# end

@@ -10,15 +10,13 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-import "moment/moment"
-
 //= require jquery3
 //= require jquery_ujs
 //= require turbolinks
 //= require jquery.turbolinks
 //= require best_in_place
+//= require moment
+//= require fullcalendar
 //= require popper
 //= require bootstrap-sprockets
 //= require twitter/typeahead.min
@@ -37,7 +35,6 @@ import "moment/moment"
 $(document).on('turbolinks:load',function() {
   $.jMaskGlobals.watchDataMask = true;
   
-  FastClick.attach(document.body);  
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();
 
