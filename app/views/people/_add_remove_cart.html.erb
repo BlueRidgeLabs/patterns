@@ -11,12 +11,12 @@
   <!-- <%= in_cart %> -->
               <%= link_to t('.cart', default: "Add"),
                           add_person_cart_index_path(person_id: person.id),
-                          class: "btn btn-primary#{add_button_class}",
+                          class: "mt-2 btn btn-primary#{add_button_class}",
                           id: "#{person.id}-cart-add",
                           remote: true %>
 
               <%= link_to t('.cart', default: "Remove"),
                           delete_person_cart_index_path(person_id: person.id),
                           id: "#{person.id}-cart-delete",
-                          class: "btn btn-dark #{remove_button_class}",
+                          class: "mt-2 btn btn-dark #{remove_button_class}",
                           remote: true %>

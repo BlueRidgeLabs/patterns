@@ -6,8 +6,8 @@
     $('a.add_fields').click();
     $('input#cart-typeahead').val('');
   })
-  $('#<%= add %>-cart-delete').show();
-  $('#<%= add %>-cart-add').hide();
+  $('#<%= add %>-cart-delete').removeClass('d-none').addClass('d-inline');
+  $('#<%= add %>-cart-add').removeClass('d-inline').addClass('d-none');
 <% end %>
 
 if(typeof research_session_id !== "undefined")

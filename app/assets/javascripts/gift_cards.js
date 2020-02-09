@@ -1,5 +1,5 @@
 $(document).on('turbolinks:load', function() {
-
+  console.log('loading giftcards.js');
   assign_cards_to_user = function(){
     console.log('called assign cards to user');
     var user_id = document.getElementById('select_user_for_cards').value;
@@ -250,12 +250,12 @@ $(document).on('turbolinks:load', function() {
      update_checkbox_count();
   });
   
-  $('#card-search').on('focus', function(){
+  $('#card-search').focus(function(){
     console.log('focus');
     filter_setup();
   });
 
-  $("#modal-window").on('shown', function(){
+  $("#modal-window").on('show.bs.modal', function(){
     // thank you javascript for arbitrary timing.
     console.log('shown');
     window.setTimeout(filter_setup, 450);

@@ -50,18 +50,18 @@
                   <td>
                   <%= select_tag :reason,
                           options_for_select(Reward.reasons.keys.to_a, 'interview'),
-                            {class: 'input-small',id: "new-reason"}
+                            {class: 'input-small form-control',id: "new-reason"}
                            %>
                   </td>
                   <td>
                   <%= text_field_tag :amount,"",
                           {placeholder: "####",
-                          class: 'input-mini',
+                          class: 'input-mini form-control',
                           id: "new-amount"} %>
                   </td>
                   <td>
                     <%= text_field_tag :notes,"",
-                          {class: 'input-small',
+                          {class: 'input-small form-control',
                           id: "new-notes" }%>
                   </td>
                   <td>
@@ -69,7 +69,7 @@
                   <%= hidden_field_tag :giftable_id, @giftable.id %>
                   <%= hidden_field_tag :giftable_type, @giftable.class.to_s %> 
                   <%= submit_tag 'Add Digital Gift', 
-                        class: "btn btn-small", 
+                        class: "btn btn-sm btn-primary", 
                         id: 'add-digital-gift-button',
                         data: { confirm: 'Are you sure? This is not reversable.' } %>
                   </td>
