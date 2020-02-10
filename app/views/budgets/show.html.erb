@@ -27,8 +27,8 @@
           <td><%= trans.id %></td>
           <td><%= humanized_money_with_symbol trans.amount %></td>
           <td><%= link_to trans.user.name, trans.user %></td>
-          <td><%= link_to trans.from_type, trans.from %></td>
-          <td><%= link_to trans.recipient_type, trans.recipient %></td>
+          <td><%= link_to trans.from.name, trans.from %></td>
+          <td><%= link_to trans.recipient.name, trans.recipient %></td>
           <td><%= trans.transaction_type %></td>
         </tr>
         <% end %>

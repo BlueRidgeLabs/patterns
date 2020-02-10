@@ -45,7 +45,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-lg">
+  <div class="col-auto">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -71,7 +71,7 @@
             <td><%= link_to "#{person.first_name} #{person.last_name}", person_path(person) %></td>
             <td><%= person.address_fields_to_sentence %></td>
             <td><%= best_in_place person, :email_address %></td>
-            <td><%= best_in_place person, :phone_number, display_with: lambda {|p| number_to_phone(p,area_code: true) } %></td>
+            <td style='white-space: nowrap;'><%= best_in_place person, :phone_number, display_with: lambda {|p| number_to_phone(p,area_code: true) } %></td>
             <td><%= best_in_place person, :verified, as: :select, collection: Person::VERIFIED_TYPES.map{|p| [p,p]} %></td>
             <td><%= person.low_income %></td>
             <td><%= person.created_at.to_s(:short) %></td>
