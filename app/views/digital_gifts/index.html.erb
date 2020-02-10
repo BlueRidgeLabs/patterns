@@ -4,12 +4,12 @@
 <h1>Digital Gifts</h1>
 <h6>Available Digital Budget: <%= current_user.available_budget %></h6>
 <div class="row">
-  <div class="span12">
+  <div class="col-lg">
 <%= will_paginate @digital_gifts, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>
 <div class="row">
-  <div class="span12">
+  <div class="col-lg">
     <table class='table table-striped'>
       <thead>
         <tr>
@@ -27,7 +27,7 @@
       <tbody>
         <% @digital_gifts.each do |digital_gift| %>
         <tr id='digital-gift-<%=digital_gift.id%>' 
-          class='card card-small digital-gift <%= cycle('dark', 'light') %>'
+          class=' digital-gift <%= cycle('dark', 'light') %>'
           data-user-name='<%= digital_gift.user.name %>'
           data-id='<%=digital_gift.id%>' >
           <td><%= link_to digital_gift.id, digital_gift %></td>
