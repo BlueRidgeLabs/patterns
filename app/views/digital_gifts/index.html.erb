@@ -27,7 +27,7 @@
       <tbody>
         <% @digital_gifts.each do |digital_gift| %>
         <tr id='digital-gift-<%=digital_gift.id%>' 
-          class=' digital-gift <%= cycle('dark', 'light') %>'
+          class='digital-gift <%= cycle('dark', 'light') %>'
           data-user-name='<%= digital_gift.user.name %>'
           data-id='<%=digital_gift.id%>' >
           <td><%= link_to digital_gift.id, digital_gift %></td>
