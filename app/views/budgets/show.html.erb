@@ -1,15 +1,18 @@
 <%= render partial: 'layouts/admin_menu' %>
 <div class='row'>
+  <div class='col-sm'>
+    <div class='card carb-body bg-light'>
+      <dl >
+        <dt>Money in Budget</dt>
+        <dd id='budget_amount_<%= @budget.id %>'><%= humanized_money_with_symbol @budget.amount %></dd>
+      </dl>
+      <%= link_to 'Back to Budgets', budgets_path %>
+    </div>
 
-  <div class='card carb-body bg-light'>
-    <dl >
-      <dt>Money in Budget</dt>
-      <dd id='budget_amount_<%= @budget.id %>'><%= humanized_money_with_symbol @budget.amount %></dd>
-    </dl>
+    <div id='error_explanation' style="display: none;"></div>
   </div>
-  <div id='error_explanation' style="display: none;"></div>
-  
-
+</div>
+<div class='row'>
   <div class='col-12'>
     <h5> transactions</h5>
     <table class='table table-striped'>
