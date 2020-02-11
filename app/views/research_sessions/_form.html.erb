@@ -67,9 +67,10 @@
   <h2>Time</h2>
 
   <div class="form-group" style="position: relative">
-    <%= f.label :start_datetime %>
-    <div class="controls">
-      <%= f.text_field :start_datetime, :class => 'text_area form-control' %>
+    <%= f.label :start_time%>
+      <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+      <%= f.text_field :start_datetime, 
+                       :class => 'd-none form-control datetimepicker-input'%>
     </div>
   </div>
 

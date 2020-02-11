@@ -2,8 +2,11 @@ $(document).on('page:load turbolinks:load ready', function() {
   
   // on add is clicked, find all adds, filter unique, then click them all
   
-  //https://eonasdan.github.io/bootstrap-datetimepicker/
+  
+  //https://tempusdominus.github.io/bootstrap-4/
   $('#research_session_start_datetime').datetimepicker({
+    inline: true,
+    sideBySide: true,
     format: 'YYYY-MM-DD hh:mm A',
     stepping: 15,
     maxDate: moment().add(60, 'days') // 30 days from the current day
