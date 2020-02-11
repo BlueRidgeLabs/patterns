@@ -64,12 +64,13 @@
                                     pre_populate: @tags.to_json
                                   }
                           %>
-    <%= select_tag :per_page, options_for_select([30,60,100,200,500,1000,1500],Person.per_page) %>
-    <%= f.submit 'Search', id:'ransack-search', class: "btn btn-primary" %>
-    <%= link_to 'Clear Search', request.path, class:"btn btn-secondary" %>
+    <%= f.label :per_page %>
+    <%= select_tag :per_page, options_for_select([30,60,100,200,500,1000,1500],Person.per_page), class:'' %>
+    <%= f.submit 'Search', id:'ransack-search', class: "btn btn-primary mt-2" %>
+    <%= link_to 'Clear Search', request.path, class:"btn btn-secondary mt-2" %>
     <br>
     <h5>Save all people in search to a pool:</h5>
-    <span><%= link_to "Save to pool: #{current_cart.name}", search_add_to_cart_path(params.permit!), remote: true, class:'btn btn-sm btn-secondary', id:'save-to-pool' %></span>
+    <span><%= link_to "Save to pool: #{current_cart.name}", search_add_to_cart_path(params.permit!), remote: true, class:'btn btn-sm btn-secondary mt-2 mb-2', id:'save-to-pool' %></span>
   </div>
 <% end %>
 
