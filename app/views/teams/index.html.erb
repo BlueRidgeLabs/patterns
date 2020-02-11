@@ -2,7 +2,7 @@
 <h1>Teams</h1>
 
 <div class="row">
-  <div class="span12">
+  <div class="col-12">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -24,9 +24,9 @@
                       collection: {'BRL': 'BRL', 'CATA1':'CATA1','CATA2':'CATA2', 'FELL':'FELL'} %></td>
             <td><%= humanized_money_with_symbol team.rewards_total %></td>
             <td><%= humanized_money_with_symbol team.budget.amount %></td>
-            <td><%= link_to 'Show', team, class: 'btn' %>
-            <%= link_to 'Edit', edit_team_path(team), class: 'btn' %>
-            <%= link_to 'Destroy', team, class: 'btn btn-warn', method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Show', team, class: 'btn btn-primary' %>
+            <%= link_to 'Edit', edit_team_path(team), class: 'btn btn-secondary' %>
+            <%= link_to 'Destroy', team, class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
         <% end %>
       </tbody>
@@ -35,4 +35,4 @@
 </div>
 
 
-<%= link_to 'New Team', new_team_path, class: 'btn' %>
+<%= link_to 'New Team', new_team_path, class: 'btn btn-primary' %>

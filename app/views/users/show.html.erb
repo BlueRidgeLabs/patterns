@@ -1,7 +1,7 @@
 <%= render partial: 'layouts/admin_menu' %>
 <div class='row'>
-  <div class='span3'>
-    <div class="card">
+  <div class='col-auto'>
+    <div class="card card-body bg-light mt-4">
       <dl>
         <dt>Name</dt>
         <dd><%= best_in_place @user, :name,
@@ -43,9 +43,9 @@
         <% end %>
       </dl>
     </div>
-    <%= link_to 'Back', users_path %> | <%= link_to 'Edit', edit_user_path(@user) %>
+    <%= link_to 'Back', users_path, class:'btn btn-secondary mt-1 mb-2' %> | <%= link_to 'Edit', edit_user_path(@user), class:'btn btn-secondary  mt-1 mb-2' %>
   </div>
-  <div class='span9' style='overflow: auto, height:400px'>
+  <div class='col-auto mt-4' >
   <h3> Recent Sessions</h3>
   <%= will_paginate @sessions, param_name: 'sessions_page',  remote: true ,renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
     <table class="table table-striped" >
@@ -69,7 +69,7 @@
   </div>
 </div>
 <div class='row'>
-  <div class='span12'>
+  <div class='col-auto'>
   <h3>Recent actions</h3>
   <%= will_paginate @changes,
           remote: true,
