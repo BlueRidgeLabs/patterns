@@ -1,7 +1,7 @@
 <%= render partial: 'layouts/admin_menu' %>
 <div class='row'>
-  <div class='span3'>
-    <div class="card">
+  <div class='col-2'>
+    <div class="card card-body bg-light">
       <dl>
         <dt>Name</dt>
         <dd><%= best_in_place @team, :name,
@@ -18,26 +18,15 @@
 
         <dt>YTD Rewards $</dt>
         <dd><%= @team.rewards_total %></dd>
-
+        <dt>Users</dt>
+        <% @team.users.each do |user| %>
+          <dd> <%=link_to user.name, user_path(user) %> </dd>
+        <% end %>
       </dl>
     </div>
 
   </div>
-  <div class='span3'>
-    <table class="table table-striped" >
-      <thead>
-        <th>Users</th>
-      </thead>
-      <tbody>
-        <% @team.users.each do |user| %>
-        <tr>
-          <td> <%=link_to user.name, user_path(user) %> </td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-  <div class='span6' style='overflow: auto, height:400px'>
+  <div class='col-10' style='overflow: auto, height:400px'>
   <h3> Recent Sessions</h3>
    <%= will_paginate @sessions,
           remote: true,
@@ -99,7 +88,7 @@
   </div>
 </div>
 <div class='row'>
-  <div class='span12'>
+  <div class='col-auto'>
   <h3>Recent actions</h3>
    <%= will_paginate @changes,
           remote: true,
@@ -137,5 +126,5 @@
     </table>
   </div>
 </div>
-<%= link_to 'Edit', edit_team_path(@team), class: 'btn' %> |
-<%= link_to 'Back', teams_path, class: 'btn' %>
+<%= link_to 'Edit', edit_team_path(@team), class: 'btn btn-default' %> |
+<%= link_to 'Back', teams_path, class: 'btn btn-default' %>
