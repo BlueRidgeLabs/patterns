@@ -87,7 +87,9 @@ Patterns::Application.configure do
   # Set to :debug to see everything in the log.
   config.log_level = :info
   config.lograge.enabled = true
-
+  config.lograge.custom_options = lambda do |event|
+    {remote_ip: event.payload[:remote_ip], user_id: event.payload[:user_id], params: event.payload[:params].except('controller', 'action', 'format', 'utf8')}
+  end
   # Analytics
   config.google_analytics_enabled = true
 
