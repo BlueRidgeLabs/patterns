@@ -1,26 +1,6 @@
 <%= render :partial => 'layouts/research_sessions_menu' %>
 <div class='row'>
-  <div class='col-9'>
-    <div class='input-group mb-3'>
-      <input id='cart-typeahead' class="form-control" aria-label="people" type="text" placeholder="People Search" >  
-    </div>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email address</th>
-          <th>Phone&nbsp;Number</th>
-          <th>Preferred Contact Method</th>
-          <th>Tag Count</th>
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody id='full-cart' class='cart-container'>
-        <%= render partial: 'cart/full_item', collection: @people, as: :person %>
-      </tbody>
-    </table>
-  </div>
-  <div class='col-3'>
+<div class='col-sm'>
     <div class='card card-body bg-light m-2'>
       <dl>
         <dt>Current Pool <%= content_tag :span,'?',class: 'badge badge-dark', data:{
@@ -115,4 +95,25 @@
             as: :comment %>
     </div>
   </div>
+  <div class='col-lg'>
+    <div class='input-group mb-3'>
+      <input id='cart-typeahead' class="form-control" aria-label="people" type="text" placeholder="People Search" >  
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email address</th>
+          <th>Phone&nbsp;Number</th>
+          <th>Preferred Contact Method</th>
+          <th>Tag Count</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody id='full-cart' class='cart-container'>
+        <%= render partial: 'cart/full_item', collection: @people, as: :person %>
+      </tbody>
+    </table>
+  </div>
+
 </div>
