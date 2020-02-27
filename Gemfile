@@ -164,8 +164,6 @@ gem "paper_trail"
 gem "paper_trail-association_tracking"
 gem "paper_trail-globalid"
 
-gem "fast_blank" # blank? rewritten in c
-
 gem "faster_path" # will break without rustc
 
 # storing money with money-rails

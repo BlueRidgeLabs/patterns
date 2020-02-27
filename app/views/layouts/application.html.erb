@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Patterns | <%= title = yield(:page_title); title.present? ? title : controller_name.humanize.titlecase %></title>
+  <% # for some reason, asset gems aren't working %>
+  <title>Patter ns | <%= title = yield(:page_title); title.present? ? title : controller_name.humanize.titlecase %></title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
