@@ -106,7 +106,8 @@ class Person < ApplicationRecord
 
   if ENV["RAILS_ENV"] == "production"
     if ENV["MAILCHIMP_API_KEY"]
-      after_commit :send_to_mailchimp, on: %i[update create]
+      # no mailchimping
+      # after_commit :send_to_mailchimp, on: %i[update create]
     end
 
     if ENV["RAPIDPRO_TOKEN"]

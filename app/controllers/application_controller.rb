@@ -60,6 +60,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def route_not_found
+    Rails.logger.error "Route not found from #{ip} at #{Time.now.utc.iso8601}"
+    render 'error_pages/404', status: :not_found
+  end
+
   private
     def flash_message
       %i[error warning notice].each do |type|
