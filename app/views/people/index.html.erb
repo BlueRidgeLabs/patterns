@@ -55,13 +55,15 @@
           <th>Email address</th>
           <th>Phone number</th>
           <th><%= sortable 'verified','Verified?'%></th>
-          <th><%= sortable 'low_income','Low Income?'%></th>
           <th><%= sortable 'created_at', 'Signup date' %></th>
           <th>Preferred Contact Method</th>
-          <th><%= sortable 'tag_count_cache', 'Tag Count' %></th>
-          <th>Rewards</th>
-          <th>Sessions Attended</th>
-          <th conspan="3">&nbsp;</th>
+          <th>T|R|S <%= content_tag :span,'?',class: 'badge badge-dark', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Tag Count | Rewards | Sessions attended",
+          title: 'popover',
+          original_title:"Data"} %></th>
+          <th conspan="2">&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -73,7 +75,6 @@
             <td><%= best_in_place person, :email_address %></td>
             <td style='white-space: nowrap;'><%= best_in_place person, :phone_number, display_with: lambda {|p| number_to_phone(p,area_code: true) } %></td>
             <td><%= best_in_place person, :verified, as: :select, collection: Person::VERIFIED_TYPES.map{|p| [p,p]} %></td>
-            <td><%= person.low_income %></td>
             <td><%= person.created_at.to_s(:short) %></td>
             <td><%= best_in_place person, :preferred_contact_method,
                                           as: :select,
@@ -81,18 +82,11 @@
                                                         'EMAIL'=>'EMAIL'} %>
             </td>
             <td>
-            <%= person.tag_count %>
+            <%= person.tag_count %>|<%= person.rewards.size %>|<%= person.invitations.where(aasm_state:'attended').size %>
             </td>
-            <td>
-              <%= person.rewards.size %>
-            </td>
-            <td>
-              <%= person.invitations.where(aasm_state:'attended').size %>
-            </td>
-
             <td>
               <%= link_to t('.edit', :default => t('helpers.links.edit')),
-                          edit_person_path(person), :class => 'btn btn-dark mb-1' %>
+                          edit_person_path(person), :class => 'btn btn-dark btn-sm mb-1' %>
               <% if current_user.admin? %>
               <%= link_to t('.destroy', :default => t('helpers.links.destroy')),
                           person_path(person),
