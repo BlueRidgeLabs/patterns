@@ -20,7 +20,11 @@ feature "research sessions" do
     fill_in "Session Title", with: title
     fill_in "Session Location", with: location
     fill_in "Session description", with: description
-    fill_in "Start datetime", with: start_datetime.strftime("%Y-%m-%d %H:%M %p")
+    # we use a datepicker, so we hide the actual datetime field
+    # first('#research_session_start_datetime', visible: false).set(start_datetime.strftime("%Y-%m-%d %H:%M %p"))
+    # fill_in "Start datetime",disabled: true, with: start_datetime.strftime("%Y-%m-%d %H:%M %p")
+    find('//*[@id="research_session_start_datetime"]').set(start_datetime.strftime("%Y-%m-%d %H:%M %p"))
+    #page.execute_script("document.getElementById('research_session_start_datetime').value = '#{start_datetime.strftime("%Y-%m-%d %H:%M %p")}';")    
     select duration, from: "research_session_duration"
   end
 
