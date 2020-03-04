@@ -264,7 +264,8 @@ group :development, :test do
   gem "rspec"
   gem "rspec-rails"
   gem "rubocop", require: false
-  gem "rubocop-rails_config"
+  gem "rubocop-rails_config", require: false
+  gem "rubocop-faker", require: false
   gem "selenium-webdriver"
   gem "webdrivers", "~> 3.8"
 
