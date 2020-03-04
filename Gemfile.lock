@@ -193,6 +193,7 @@ GEM
       i18n (>= 1.6, < 2)
     faraday (1.0.0)
       multipart-post (>= 1.2, < 3)
+    fast_blank (1.0.0)
     faster_path (0.1.8)
       ffi (~> 1.9)
     ffi (1.12.2)
@@ -668,6 +669,7 @@ DEPENDENCIES
   emoji
   factory_bot_rails (= 4.10.0)
   faker
+  fast_blank
   faster_path
   flamegraph
   font-awesome-rails (~> 4.7, >= 4.7.0.1)
