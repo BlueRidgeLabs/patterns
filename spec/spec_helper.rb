@@ -15,7 +15,7 @@
 # it.
 
 require "coveralls"
-Coveralls.wear_merge!("rails")
+Coveralls.wear_merged!("rails")
 
 require "simplecov"
 SimpleCov.start
