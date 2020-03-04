@@ -3,7 +3,8 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  # https://github.com/heartcombo/devise/pull/4033/files
+  protect_from_forgery with: :exception, prepend: true
 
   after_action :flash_to_headers
   after_action :update_user_activity
