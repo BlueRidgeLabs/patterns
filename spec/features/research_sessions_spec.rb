@@ -21,9 +21,11 @@ feature "research sessions" do
     fill_in "Session Location", with: location
     fill_in "Session description", with: description
     # we use a datepicker, so we hide the actual datetime field
-    # first('#research_session_start_datetime', visible: false).set(start_datetime.strftime("%Y-%m-%d %H:%M %p"))
-    # fill_in "Start datetime",disabled: true, with: start_datetime.strftime("%Y-%m-%d %H:%M %p")
-    find('//*[@id="research_session_start_datetime"]').set(start_datetime.strftime("%Y-%m-%d %H:%M %p"))
+    if page.driver.class == Capybara::Selenium::Driver # dumb, but the element doesn't appear otherwise
+      find('.today').click()
+    else
+      find("//*[@id=\'research_session_start_datetime\']", visible: false).set(start_datetime.strftime("%Y-%m-%d %H:%M %p"))
+    end
     #page.execute_script("document.getElementById('research_session_start_datetime').value = '#{start_datetime.strftime("%Y-%m-%d %H:%M %p")}';")    
     select duration, from: "research_session_duration"
   end
