@@ -15,10 +15,10 @@ class RapidproDeleteJob
 
       case res.code
       when 404
-        return false
+        false
       when 204, 201, 200 # successful delete
         person.update_column(:rapidpro_uuid, nil) # skip callbacks
-        return true
+        true
       when 429 # rapidpro rate limiting us.
         retry_delay = res.headers["retry-after"].to_i + 5
         RapidproDeleteJob.perform_in(retry_delay, id)

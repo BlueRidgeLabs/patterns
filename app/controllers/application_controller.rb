@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
 
   def route_not_found
     Rails.logger.error "Route not found from #{ip} at #{Time.now.utc.iso8601}"
-    render 'error_pages/404', status: :not_found
+    render "error_pages/404", status: :not_found
   end
 
   private

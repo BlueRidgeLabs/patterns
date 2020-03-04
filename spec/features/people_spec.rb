@@ -154,7 +154,7 @@ feature "people page" do
     new_tag = "TeSt TaG"
     normalized_new_tag = new_tag.downcase
     fill_in with: new_tag, id: "tag-typeahead"
-    find('.tag-form input[type="submit"]').click
+    find('.tag-form input[type="submit"]').native.send_keys(:return)
     wait_for_ajax
     person.reload
     expect(person.tag_list).to include(normalized_new_tag)

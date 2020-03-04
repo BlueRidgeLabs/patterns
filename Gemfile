@@ -68,6 +68,7 @@ group :development do
   gem "memory_profiler"
   gem "rack-mini-profiler"
   gem "ruby-prof"
+  gem "fast_stack"
   gem "stackprof" # ruby 2.1+ only
   # n+1 killer.
   # gem 'bullet'
@@ -201,7 +202,7 @@ gem "paper_trail"
 gem "paper_trail-association_tracking"
 gem "paper_trail-globalid"
 
-gem "fast_blank" # blank? rewritten in c
+# gem "fast_blank" # blank? rewritten in c
 
 # gem 'faster_path' #if !`which rustc`.empty?
 
