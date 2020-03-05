@@ -67,7 +67,7 @@ research_session_id = <%= @research_session.id%>;
       <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
       <%= form.hidden_field :commentable_id, :value => @research_session.id %>
       <%= form.text_area :content, rows: 6, class: "span4 input-block-level form-control" %>
-      <%= form.submit 'Add note', :class => "btn btn-sm btn-primary" %>
+      <%= form.submit 'Add note', :class => "btn btn-sm btn-primary mt-1" %>
       <%= content_tag :span,'?', class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
