@@ -45,7 +45,7 @@ set :ssh_options, forward_agent: true
 before  'deploy:finalize_update', 'deploy:create_shared_directories', 'deploy:link_db_config'
 
 
-after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:reload_nginx', 'deploy:cleanup'
+after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:cleanup'
 
 namespace :deploy do
   task :start do
