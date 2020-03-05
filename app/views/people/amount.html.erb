@@ -2,7 +2,7 @@
 <h3>YTD Gift Card Amounts</h3>
 <div class="row">
   <div class="span12" style="text-align:center">
-    <%= will_paginate @people, :renderer => BootstrapPagination::Rails %>
+    <%= will_paginate @people, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>
 <div class="row">
@@ -34,6 +34,6 @@
 
 <div class="row">
   <div class="span12" style="text-align:center">
-    <%= will_paginate @people, :renderer => BootstrapPagination::Rails %>
+    <%= will_paginate @people, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>

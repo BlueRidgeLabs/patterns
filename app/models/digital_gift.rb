@@ -47,7 +47,7 @@ class DigitalGift < ApplicationRecord
   validate :can_order? # doesn't actually validate
 
   after_create :save_transaction
-
+  delegate :name, to: :person
   attr_accessor :giftable_id
   attr_accessor :giftable_type
 

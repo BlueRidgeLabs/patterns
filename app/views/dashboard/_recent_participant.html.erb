@@ -1,4 +1,4 @@
-<div class="recent-participant well">
+<div class="recent-participant card card-body bg-light m-2">
   <%
     recent =  person.research_sessions.where('start_datetime < ?', Time.current).last 
      invite = recent.invitations.find_by(person_id: person.id)

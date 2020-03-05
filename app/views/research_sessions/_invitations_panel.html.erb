@@ -1,7 +1,7 @@
 <table class="table table-hover invitees" id='dynamic-invitation-panel' >
   <tbody>
     <tr>
-      <th>Remove<%= content_tag :span,'?',class: 'badge', data:{
+      <th>Remove <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Cannot remove someone with an assigned gift card. unassign the card and then delete.",
@@ -9,7 +9,7 @@
           original_title:"Assigned Gift Card"} %></th>
       <th>Name</th>
       <th>Phone</th>
-      <th>Action <%= content_tag :span,'?',class: 'badge', data:{
+      <th>Action <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "This is meant for you, personally, to track if you have invited people, have they confirmed, did they cancel or attend.",
@@ -24,7 +24,7 @@
         <td><%= link_to "X", 
                   research_session_remove_person_path(@research_session, person), 
                   remote: true, 
-                  class: 'btn btn-danger btn-mini' %> </td>
+                  class: 'btn btn-danger btn-sm' %> </td>
         <td><%= link_to person.full_name, 
                 person_path(person), 
                 id: "person-#{person.id}" %></td>
@@ -41,12 +41,10 @@
               modal_rewards_path(invitation.class.to_s, invitation.id),
                 {:remote => true,
                   :id => "add-reward-#{invitation.id}",
-                  'data-toggle' =>  "modal",
-                  'data-target' => '#modal-window',
-                  class: 'btn btn-mini'} %>
+                  class: 'btn btn-sm btn-primary'} %>
         </td>
       </tr>
     <% end if @research_session.invitations.size > 0 %>
   </tbody>
 </table>
-<div id="modal-window" class="modal hide" role="dialog" aria-labelledby="GiftCardModal" aria-hidden="true"></div>
+<div id="modal-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="RewardModal" aria-hidden="true"></div>

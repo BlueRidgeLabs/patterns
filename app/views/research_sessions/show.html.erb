@@ -16,7 +16,7 @@ research_session_id = <%= @research_session.id%>;
 </div>
 <div class="row">
   <div class="span4">
-    <div class="well">
+    <div class="card">
       <dl>
         <dt>Clone</dt>
         <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-small' %></dd>
@@ -57,7 +57,7 @@ research_session_id = <%= @research_session.id%>;
     <%= render partial: 'taggings/tagging', collection: @research_session.taggings %>
     </ul>
     <%= render partial: 'taggings/tag_form', locals: { taggable_obj: @research_session } %>
-    <h3>Notes&nbsp;<%= content_tag :span,'?',class: 'badge', data:{
+    <h3>Notes&nbsp;<%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Markdown friendly: https://daringfireball.net/projects/markdown/",
@@ -66,9 +66,9 @@ research_session_id = <%= @research_session.id%>;
     <%= form_for([@research_session, Comment.new], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'ResearchSession' %>
       <%= form.hidden_field :commentable_id, :value => @research_session.id %>
-      <%= form.text_area :content, rows: 6, class: "span4 input-block-level" %>
-      <%= form.submit 'Add note', :class => "btn" %>
-      <%= content_tag :span,'?', class: 'badge', data:{
+      <%= form.text_area :content, rows: 6, class: "span4 input-block-level form-control" %>
+      <%= form.submit 'Add note', :class => "btn btn-sm btn-primary" %>
+      <%= content_tag :span,'?', class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "This is where to capture information that other people might want to know about what happened. Who had particularly good insight, what was it? etc. Markdown Friendly",
@@ -99,8 +99,8 @@ research_session_id = <%= @research_session.id%>;
 
 
 <div class="row">
-  <div class="span12">
-    <%= link_to "Sessions", "/sessions", class: 'btn btn-default '%>
-    <%= link_to "Back", :back, class: 'btn'%>
+  <div class="col-lg">
+    <%= link_to "Sessions", "/sessions", class: 'btn btn-primary '%>
+    <%= link_to "Back", :back, class: 'btn btn-secondary'%>
   </div>
 </div>

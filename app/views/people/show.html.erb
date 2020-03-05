@@ -14,20 +14,20 @@
 </div>
 <% end %>
 <div class="row">
-  <div class="span6">
+  <div class="col-lg">
     <div class="row">
-      <div class="span3">
+      <div class="col-sm">
         <h3>About</h3>
         <dl>
-          <dt>Add/Remove from Pool: <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Add/Remove from Pool: <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Pools are handy ways to keep track of a group of people. you can add and remove a person from your current pool with this button.",
           title: 'popover',
           original_title:"Pools"} %></dt>
-          <dd><span id='current_pool'><%= link_to current_cart.name, cart_index_path(current_cart) %></span>: <%= render partial: 'add_remove_cart', locals: {person: @person} %></dd>
+          <dd><br><span id='current_pool' class=''><%= link_to current_cart.name, cart_index_path(current_cart) %></span>: <%= render partial: 'add_remove_cart', locals: {person: @person} %></dd>
           
-          <dt>Verified? <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Verified? <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "This means that the name and contact info has been verified. We know this person is an actual person, and at one point the phone number/email address was correct.",
@@ -35,7 +35,7 @@
           original_title:"Verification"} %></dt>
           <dd><%= best_in_place @person, :verified, as: :select, collection: Person::VERIFIED_TYPES.map{|p| [p,p]} %></dd>
 
-          <dt>Low Income? <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Low Income? <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "An optional question we ask when people sign up. Self reported.",
@@ -43,7 +43,7 @@
           original_title:"Low Income"} %></dt>
           <dd><%= best_in_place @person, :low_income, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
 
-          <dt>DIG Level <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>DIG Level <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "'New' = Just joined. 'Active' = Participated in 3+ sessions. 'Regular' = Participated in at least one season in 6 months or with 2 teams. DIG Ambassador = active for at least one year, 2+ projects/teams",
@@ -53,7 +53,7 @@
           <dt>Preferred participation method</dt>
           <dd><%= best_in_place @person, :participation_type, as: :select, collection: %w(in-person remote) %></dd>
           
-          <dt>Preferred Language <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Preferred Language <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "EN = english, ES = Spanish, ZH = Chinese.",
@@ -61,28 +61,28 @@
           original_title:"Preferred Language"} %></dt>
           <dd><%= best_in_place @person, :locale, as: :select, collection: {en: 'english', es:'spanish',zh: 'chinese'} %></dd>
    
-          <dt>Session Invitations <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Session Invitations <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: 'How many sessions have they been invited to?',
           title: 'popover',
           original_title:"Invitations"} %></dt>
           <dd><%= @person.invitations.invited.size %></dd>
-          <dt>Missed <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Missed <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: 'How many sessions have they been missed without cancelling in advance?',
           title: 'popover',
           original_title:"Misses"} %></dt>
           <dd><%=@person.invitations.missed.size %></dd>
-          <dt>Cancel <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Cancel <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: 'How many sessions have they cancelled in advance?',
           title: 'popover',
           original_title:"Cancels"} %></dt>
           <dd><%= @person.invitations.cancelled.size %> </dd>
-          <dt>Attended <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Attended <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: 'How many sessions have they attended?',
@@ -92,7 +92,7 @@
         </dl>
       </div>
 
-      <div class="span3">
+      <div class="col-sm">
         <h3>Contact</h3>
 
         <dl>
@@ -105,7 +105,7 @@
           <dt>Preferred Contact Method</dt>
           <dd><%= best_in_place @person, :preferred_contact_method, as: :select, collection: [['SMS','SMS'], ['EMAIL','EMAIL']] %></dd>
           
-          <dt>Landline <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Landline <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Some people have a landline that can't receive texts. Or maybe they like to get calls at night on their landline.",
@@ -114,7 +114,7 @@
           <dd><%= best_in_place @person, :landline %></dd>
           <dt>Postal Code</dt>
           <dd><%= best_in_place @person, :postal_code %></dd>
-          <dt>Neighborhood <%= content_tag :span,'?',class: 'badge', data:{
+          <dt>Neighborhood <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "Usually a guess based on zip code. Please update!",
@@ -142,7 +142,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="span6">
+      <div class="col-sm">
         <h3>Tags</h3>
         <ul id="tag-list">
         <%= render partial: 'taggings/tagging', collection: @person.taggings %>
@@ -152,9 +152,9 @@
     </div>
   </div>
 
-  <div class="span6">
+  <div class="col-sm">
     <div class='row'>
-      <h3>Location <%= content_tag :span,'?',class: 'badge', data:{
+      <h3>Location <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "A rough estimate based on zip code",
@@ -178,14 +178,14 @@
     <% end %>
     </div>
     <div class='row'>
-      <div class='span6'>
+      <div class='col-sm'>
         <h3> Research Sessions</h3>
         <%= render partial: 'research_sessions/mini_view',
             locals: {person: @person} %>
       </div>
     </div>
     <div class='row'>
-      <div class='span6'>
+      <div class='col-sm'>
         <h3>Pools</h3>
         <ul id='cart-list'>
         <% @person.carts.each do |cart| %>
@@ -204,14 +204,14 @@
 </div>
 
 <div class="row">
-  <div class="span6">
+  <div class="col-sm">
     <h3>Notes</h3>
     <%= form_for([@person, @comment], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'Person' %>
       <%= form.hidden_field :commentable_id, :value => @person.id %>
-      <%= form.text_area :content, rows: 3, class: "span6 input-block-level" %>
+      <%= form.text_area :content, rows: 3, class: "col-sm input-block-level" %>
       <%= form.submit 'Add note', :class => "btn" %>
-      <%= content_tag :span,'?', class: 'badge', data:{
+      <%= content_tag :span,'?', class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "This is where to capture information that other people might want to know about what happened. Who had particularly good insight, what was it? etc. Markdown Friendly",
@@ -229,7 +229,7 @@
 
 
 
-  <div class="span12">
+  <div class="col-12">
     <h3>Rewards - Total: <span id='gift_card_total'><%= humanized_money_with_symbol @person.rewards_total %></span></h3>
     <table class="table table-striped">
       <tr>
@@ -253,9 +253,9 @@
 <div class="row">
   <div class="form-actions span12">
     <%= link_to t('.back', default: t("helpers.links.back")),
-                people_path, :class => 'btn'  %>
+                people_path, :class => 'btn btn-dark'  %>
     <%= link_to t('.edit', default: t("helpers.links.edit")),
-                edit_person_path(@person), :class => 'btn' %>
+                edit_person_path(@person), :class => 'btn btn-primary' %>
     <% if current_user.admin? %>
       <%= link_to t('.destroy', default: t("helpers.links.destroy")),
                 person_path(@person),

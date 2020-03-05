@@ -3,25 +3,32 @@
 <span id='cart_mini_view'>
     <h3> People in Pool</h3>
     <% if current_session.nil? %>
+    <div class='form-group'>
+    <label for="cart">Select a different pool</label>
     <%= select_tag "cart",
               options_from_collection_for_select(current_user.carts,'id','name_and_count'),
+              class:"form-control",
               prompt: "#{current_cart.name}: #{current_cart.people.count}",
               data:{
                 remote: true,
                 url: change_cart_index_path(format: :js),
-                method: 'post'
-              }
+                method: 'post'}
               %>
+    </div>
     <% else %>
+    <div class='form-group'>
+    <label for="cart">Select a different pool</label>
     <%= select_tag "cart",
               options_from_collection_for_select(current_user.carts,'id','name_and_count'),
               prompt: "#{current_cart.name}: #{current_cart.people.count}",
+              class:'form-control',
               data:{
                 remote: true,
                 url: change_cart_index_path(current_session_id: current_session.id, format: :js),
                 method: 'post'
               }
               %>
+    </div>
     <% end %>
     <!-- <input id='cart-typeahead' type="text" placeholder="People Search"> -->
     <table class="table table-striped">
@@ -30,7 +37,7 @@
           <th>Name</th>
           <th>Contact Method</th>
           <th>Phone&nbsp;Number</th>
-          <th>Session <%= content_tag :span,'?',class: 'badge', data:{
+          <th>Session <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
           content: "This is to add or remove people from the current session.",

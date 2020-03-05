@@ -3,7 +3,7 @@
 module ApplicationHelper
   delegate :current_cart, to: :current_user
 
-  def nav_bar(classes = "nav navbar-nav")
+  def nav_bar(classes = "nav")
     content_tag(:ul, class: classes) do
       yield
     end
@@ -31,9 +31,10 @@ module ApplicationHelper
   end
 
   def nav_link(text, path, options = { class: "" })
-    options[:class].prepend(current_page?(path) ? "active " : "")
+    active = current_page?(path) ? "active" : ""
+    options[:class] = "nav-item #{active} #{options[:class]}"
     content_tag(:li, options) do
-      link_to text, path
+      link_to text, path, { class: "nav-link" }
     end
   end
 

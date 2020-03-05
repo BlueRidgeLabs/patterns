@@ -1,6 +1,6 @@
 <% @deleted.each do |delete| %>
-  $('#<%= delete %>-cart-delete').hide();
-  $('#<%= delete %>-cart-add').show();
+  $('#<%= delete %>-cart-delete').removeClass('d-inline').addClass('d-none');
+  $('#<%= delete %>-cart-add').removeClass('d-none').addClass('d-inline');
   $('#cart-<%= delete %>').remove();
 <% end %>
 
