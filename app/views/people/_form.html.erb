@@ -34,11 +34,10 @@
       <%= f.text_field :email_address, :class => 'text_field' %>
     </div>
   </div>
-  <div class="control-group">
+  <div class="control-group d-none">
     <%= f.label :verified, :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :verified,
-            options_for_select(Person::VERIFIED_TYPES, Person::VERIFIED_TYPE) %> (Start with 'Verified' to save as verified)
+      <%= f.text_field :verified, value: 'Verified'%> 
     </div>
   </div>
   <div class="control-group">
