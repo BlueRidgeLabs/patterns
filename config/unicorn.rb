@@ -8,7 +8,7 @@ working_directory "/var/www/patterns-#{rails_env}/current"
 # 16 workers and 1 master
 # worker_processes (rails_env == 'production' ? 16 : 4)
 # worker_processes 4
-worker_processes ENV['WEB_CONCURRENCY'].to_i || 4
+worker_processes ENV['WEB_CONCURRENCY'].to_i || (rails_env == 'production' ? 16 : 4)
 
 # Load rails+github.git into the master before forking workers
 # for super-fast worker spawn times
