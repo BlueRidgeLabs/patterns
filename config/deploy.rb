@@ -78,17 +78,6 @@ namespace :deploy do
     run "rm -f #{release_path}/config/database.yml && ln -s #{deploy_to}/shared/database.yml #{release_path}/config/database.yml"
   end
 
-  task :link_env_var do
-    # pull in database.yml on server
-    run "rm -f #{release_path}/config/local_env.yml && ln -s #{deploy_to}/shared/local_env.yml #{release_path}/config/local_env.yml"
-  end
-
-  task :reload_nginx do
-    # i don't like this sudo here.
-    # SChi- we don't want to restart nginx right now
-    # run "sudo service nginx restart"
-  end
-
   # https://github.com/capistrano/capistrano/issues/362#issuecomment-14158487
   namespace :assets do
     task :precompile, roles: assets_role, except: { no_release: true } do
@@ -103,8 +92,4 @@ namespace :deploy do
   task :create_binstubs do
     run "cd #{latest_release.shellescape} && bundle binstubs unicorn --force --path ./bin"
   end
-
-  # task :generate_delayed_job do
-  #   run "cd #{latest_release.shellescape} && RAILS_ENV=#{rails_env.to_s.shellescape} bundle exec rails generate delayed_job && RAILS_ENV=#{rails_env.to_s.shellescape} bin/delayed_job -n4 restart"
-  # end
 end
