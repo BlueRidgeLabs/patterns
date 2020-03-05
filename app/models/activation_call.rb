@@ -81,7 +81,7 @@ class ActivationCall < ApplicationRecord
   end
 
   def timeout_error?
-    call.update.status == "completed" && (Time.current - updated_at) > 2.minute && !%w[success failure].include?(call_status)
+    call.update.status == "completed" && (Time.current - updated_at) > 2.minutes && !%w[success failure].include?(call_status)
   end
 
   def success

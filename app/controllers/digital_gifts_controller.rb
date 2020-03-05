@@ -50,58 +50,26 @@ class DigitalGiftsController < ApplicationController
   end
 
   def create
-    # this is kinda horrific
-    # TODO REFACTOR
-    klass = GIFTABLE_TYPES.fetch(dg_params[:giftable_type])
-    @giftable = klass.find(dg_params[:giftable_id])
     @success = true
-    if @giftable.nil?
-      flash[:error] = "No giftable object present"
-      @success = false
-    end
-
-    if params[:giftable_type] == "Invitation" && !@giftable&.attended?
-      flash[:error] = "#{@giftable.person.full_name} isn't marked as 'attended'."
-      @success = false
-    end
-
-    if params[:giftable_type] == "Invitation" && @giftable.rewards.find { |r| r.rewardable_type == "DigitalGift" }.present?
-      flash[:error] = "#{@giftable.person.full_name} Already has a digital gift"
-      @success = false
-    end
-
-    # cover fees
-    if params[:amount].to_money + 2.to_money >= current_user.available_budget
-      flash[:error] = "Insufficient Team Budget"
-      @success = false # placeholder for now
-    end
-
-    # so, the APIs are wonky
-    # if params[:amount].to_money >= DigitalGift.current_budget
-    #   flash[:error] = 'Insufficient Gift Rocket Budget'
-    #   @success = false # placeholder for now
-    # end
-    if @success
+    begin
+      DigitalGiftService.validate_params(current_user, params)
       @dg = DigitalGift.new(user_id: current_user.id,
-                            created_by: current_user.id,
-                            amount: dg_params["amount"],
-                            person_id: dg_params["person_id"],
-                            giftable_type: dg_params["giftable_type"],
-                            giftable_id: dg_params["giftable_id"])
-
+                          created_by: current_user.id,
+                          amount: dg_params["amount"],
+                          person_id: dg_params["person_id"])
       @reward = Reward.new(user_id: current_user.id,
-                           created_by: current_user.id,
-                           person_id: dg_params["person_id"],
-                           amount: dg_params["amount"],
-                           reason: dg_params["reason"],
-                           notes: dg_params["notes"],
-                           giftable_type: dg_params["giftable_type"],
-                           giftable_id: dg_params["giftable_id"],
-                           finance_code: current_user&.team&.finance_code,
-                           team: current_user&.team,
-                           rewardable_type: "DigitalGift")
-      if @dg.valid? && @dg.can_order? # if it's not valid, error out
-        @dg.request_link # do the thing!
+                         created_by: current_user.id,
+                         amount: dg_params["amount"],
+                         person_id: dg_params["person_id"],
+                         reason: dg_params["reason"],
+                         notes: dg_params["notes"],
+                         giftable_type: dg_params["giftable_type"],
+                         giftable_id: dg_params["giftable_id"],
+                         finance_code: current_user&.team&.finance_code,
+                         team: current_user&.team,
+                         rewardable_type: "DigitalGift")
+      if @dg.valid? # if it's not valid, error out
+        @dg.create_order_on_giftrocket!(@reward) # do the thing!
         if @dg.save
           @reward.rewardable_id = @dg.id
           @success = @reward.save
@@ -109,9 +77,12 @@ class DigitalGiftsController < ApplicationController
           @dg.save
         end
       else
-        flash[:error] = @dg.errors
+        flash[:error] = @dg.errors.full_messages
         @success = false
       end
+    rescue StandardError => e
+      @success = false
+      flash[:error] = e.message
     end
 
     respond_to do |format|
@@ -132,12 +103,11 @@ class DigitalGiftsController < ApplicationController
     if @research_session.can_survey? && !@research_session.is_invited?(@person)
       @invitation = Invitation.new(aasm_state: "attended", person_id: @person.id, research_session_id: @research_session.id)
       @invitation.save
-
-      @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params["amount"], person_id: @person.id, giftable_type: "Invitation", giftable_id: @invitation.id)
+      @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params["amount"], person_id: @person.id)
 
       @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params["amount"], reason: "survey", giftable_type: "Invitation", giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: "DigitalGift")
-      if @digital_gift.valid? && @digital_gift.can_order?
-        @digital_gift.request_link # do the thing!
+      if @digital_gift.valid?
+        @digital_gift.create_order_on_giftrocket!(@reward) # do the thing!
         if @digital_gift.save
           @reward.rewardable_id = @digital_gift.id
           @success = @reward.save
@@ -183,50 +153,6 @@ class DigitalGiftsController < ApplicationController
     end
     #  should check if we've already given a digital gift for this research session
   end
-  # GET /digital_gifts/1/edit
-  # def edit; end
-
-  # we don't create, destroy or update these via controller
-
-  # # POST /digital_gifts
-  # # POST /digital_gifts.json
-  # def create
-  #   @digital_gift = DigitalGift.new(digital_gift_params)
-
-  #   respond_to do |format|
-  #     if @digital_gift.save
-  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was @successfully created.' }
-  #       format.json { render :show, status: :created, location: @digital_gift }
-  #     else
-  #       format.html { render :new }
-  #       format.json { render json: @digital_gift.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
-  # # PATCH/PUT /digital_gifts/1
-  # # PATCH/PUT /digital_gifts/1.json
-  # def update
-  #   respond_to do |format|
-  #     if @digital_gift.update(digital_gift_params)
-  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was @successfully updated.' }
-  #       format.json { render :show, status: :ok, location: @digital_gift }
-  #     else
-  #       format.html { render :edit }
-  #       format.json { render json: @digital_gift.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
-  # DELETE /digital_gifts/1
-  # DELETE /digital_gifts/1.json
-  # def destroy
-  #   @digital_gift.destroy
-  #   respond_to do |format|
-  #     format.html { redirect_to digital_gifts_url, notice: 'DigitalGift was @successfully destroyed.' }
-  #     format.json { head :no_content }
-  #   end
-  # end
 
   private
     def webhook_params

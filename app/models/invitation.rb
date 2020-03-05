@@ -171,4 +171,8 @@ class Invitation < ApplicationRecord
   def in_past?
     Time.zone.now > start_datetime
   end
+
+  def has_digitable_gift?
+    rewards.find { |r| r.rewardable_type == "DigitalGift" }.present?
+  end
 end
