@@ -5,7 +5,7 @@ require "rails_helper"
 feature "digital gifts page" do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:user) { FactoryBot.create(:user) }
-  let(:rs) { FactoryBot.create(:research_session, user: admin_user)}
+  let(:rs) { FactoryBot.create(:research_session, user: admin_user) }
   let(:invitation) { FactoryBot.create(:invitation,
                                         research_session: rs)}
   let(:now) { DateTime.current }
@@ -13,10 +13,10 @@ feature "digital gifts page" do
     {
       "ACCEPT" => "application/json", # This is what Rails 4 accepts
       "HTTP_ACCEPT" => "application/json",
-      'AUTHORIZATION' => admin_user.token # This is what Rails 3 accepts
+      "AUTHORIZATION" => admin_user.token # This is what Rails 3 accepts
     }
   end
-  
+
   let(:invalid_headers) do
     {
       "ACCEPT" => "application/json", # This is what Rails 4 accepts
@@ -40,7 +40,7 @@ feature "digital gifts page" do
     expect(Budget.all.sum(&:amount)).to eq(expected_amount)
   end
 
-  scenario 'transfer to user', :vcr, :js do
+  scenario "transfer to user", :vcr, :js do
     # don't like this whole bit here creating a budget.
     # should have a factory for this
 
@@ -61,7 +61,7 @@ feature "digital gifts page" do
     expect(budget.amount).to eq(original_amount + 100.to_money)
   end
 
-  scenario 'add to invitation', :vcr, :js do
+  scenario "add to invitation", :vcr, :js do
     research_session = invitation.research_session
     person = invitation.person
 
@@ -75,7 +75,7 @@ feature "digital gifts page" do
     Timecop.travel(research_session.end_datetime + 24.hours)
     visit "/sessions/#{research_session.id}"
 
-    click_button 'attend'
+    click_button "attend"
 
     wait_for_ajax
     invitation.reload
@@ -83,7 +83,7 @@ feature "digital gifts page" do
     find("#add-reward-#{invitation.id}").click
     wait_for_ajax
 
-    fill_in('new-amount', visible: true, with: 100)
+    fill_in("new-amount", visible: true, with: 100)
 
     accept_alert do
       click_button "Add Digital Gift"
@@ -91,7 +91,7 @@ feature "digital gifts page" do
     wait_for_ajax
     person.reload
 
-    expect(person.rewards_total.to_s).to eq('100.00')
+    expect(person.rewards_total.to_s).to eq("100.00")
 
     dg = person.rewards.last.rewardable
     expect(dg.sent).to_not eq(true)

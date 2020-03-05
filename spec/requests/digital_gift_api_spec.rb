@@ -33,10 +33,10 @@ describe "digital_gift_api", type: :request do
   end
 
 
-  it 'creates a digital gift for a research session with budget', :vcr do
+  it "creates a digital gift for a research session with budget", :vcr do
     get "/digital_gifts/api_create",
       headers: headers,
-      params:{
+      params: {
         phone_number: person.phone_number,
         research_session_id: research_session.id,
         amount: 25
@@ -54,10 +54,10 @@ describe "digital_gift_api", type: :request do
   end
 
 
-  it 'cannot create a digital gift: insufficient budget',:vcr do
+  it "cannot create a digital gift: insufficient budget", :vcr do
     get "/digital_gifts/api_create",
       headers: headers,
-      params:{
+      params: {
         phone_number: person.phone_number,
         research_session_id: research_session.id,
         amount: 250
@@ -71,14 +71,14 @@ describe "digital_gift_api", type: :request do
     expect(person.rewards_total.to_s).to_not eq("250.00")
   end
 
-  it 'cannot create a digital gift for a non-admin', :vcr do
+  it "cannot create a digital gift for a non-admin", :vcr do
     get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json",
-        'AUTHORIZATION' => regular_user.token # This is what Rails 3 accepts
+        "AUTHORIZATION" => regular_user.token # This is what Rails 3 accepts
       },
-      params:{
+      params: {
         phone_number: person.phone_number,
         research_session_id: research_session.id,
         amount: 25
@@ -89,14 +89,14 @@ describe "digital_gift_api", type: :request do
     expect(person.rewards_total.to_s).to_not eq("250.00")
   end
 
-  it 'cannot create a digital gift for a non-existant user', :vcr do
+  it "cannot create a digital gift for a non-existant user", :vcr do
     get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json",
-        'AUTHORIZATION' => 'bogustoken' # This is what Rails 3 accepts
+        "AUTHORIZATION" => "bogustoken" # This is what Rails 3 accepts
       },
-      params:{
+      params: {
         phone_number: person.phone_number,
         research_session_id: research_session.id,
         amount: 25
@@ -108,13 +108,13 @@ describe "digital_gift_api", type: :request do
   end
 
 
-  it 'cannot create a digital gift without a token', :vcr do
+  it "cannot create a digital gift without a token", :vcr do
     get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json"
       },
-      params:{
+      params: {
         phone_number: person.phone_number,
         research_session_id: research_session.id,
         amount: 25
@@ -126,14 +126,14 @@ describe "digital_gift_api", type: :request do
     expect(person.rewards_total.to_s).to_not eq("250.00")
   end
 
-  it 'cannot create a digital gift for an inactive person', :vcr do
+  it "cannot create a digital gift for an inactive person", :vcr do
     get "/digital_gifts/api_create",
       headers: {
         "ACCEPT" => "application/json",     # This is what Rails 4 accepts
         "HTTP_ACCEPT" => "application/json",
-        'AUTHORIZATION' => regular_user.token
+        "AUTHORIZATION" => regular_user.token
       },
-      params:{
+      params: {
         phone_number: inactive_person.phone_number,
         research_session_id: research_session.id,
         amount: 25
@@ -145,10 +145,10 @@ describe "digital_gift_api", type: :request do
     expect(person.rewards_total.to_s).to_not eq("250.00")
   end
 
-  it 'cannot create a digital gift for a non-existant research session', :vcr do
+  it "cannot create a digital gift for a non-existant research session", :vcr do
     get "/digital_gifts/api_create",
       headers: headers,
-      params:{
+      params: {
         phone_number: person.phone_number,
         research_session_id: research_session.id + 1,
         amount: 25

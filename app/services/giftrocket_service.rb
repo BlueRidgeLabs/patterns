@@ -23,23 +23,22 @@ class GiftrocketService
         fee: order.payment.fees,
         order_id: order.id,
         gift_id: gift.id,
-        link: gift.raw['recipient']['link'],
+        link: gift.raw["recipient"]["link"],
         order_details: Base64.encode64(Marshal.dump(order))
       }
     end
 
     def balance_funding_source
-      Giftrocket::FundingSource.list.find { |fs| fs.method == 'balance' }
+      Giftrocket::FundingSource.list.find { |fs| fs.method == "balance" }
     end
 
     private
-
       def validate_orderable!(digital_gift, reward)
         user = digital_gift.user
         associations_are_invalid = digital_gift.person_id.nil? || reward.giftable_id.nil? || reward.giftable_type.nil?
         budget_sufficient = (digital_gift.amount + expected_fee_for(digital_gift)) <= user.available_budget
         raise if associations_are_invalid
-        raise 'Insufficient budget to order from Giftrocket' unless budget_sufficient
+        raise "Insufficient budget to order from Giftrocket" unless budget_sufficient
       end
 
       def expected_fee_for(digital_gift)
@@ -49,10 +48,10 @@ class GiftrocketService
       def campaign_id_for(digital_gift)
         if digital_gift.amount.to_i < SMALL_DOLLAR_THRESHOLD
           # small dollar amounts, no fee
-          ENV['GIFTROCKET_LOW_CAMPAIGN']
+          ENV["GIFTROCKET_LOW_CAMPAIGN"]
         else
           # high dolalr amounts, $2 fee
-          ENV['GIFTROCKET_HIGH_CAMPAIGN']
+          ENV["GIFTROCKET_HIGH_CAMPAIGN"]
         end
       end
 
@@ -71,11 +70,10 @@ class GiftrocketService
             amount: digital_gift.amount.to_s,
             recipient: {
               name: person.full_name,
-              delivery_method: 'LINK'
+              delivery_method: "LINK"
             }
           }
         ]
       end
-
   end
 end

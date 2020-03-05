@@ -173,6 +173,6 @@ class Invitation < ApplicationRecord
   end
 
   def has_digitable_gift?
-    rewards.find { |r| r.rewardable_type == 'DigitalGift' }.present?
+    rewards.find { |r| r.rewardable_type == "DigitalGift" }.present?
   end
 end

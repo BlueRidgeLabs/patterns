@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 RSpec.describe DigitalGiftsController, type: :controller do
   describe "#create" do
@@ -8,7 +10,7 @@ RSpec.describe DigitalGiftsController, type: :controller do
     let(:notes) { "Covfefe Notes" }
     let(:reason) { "focus_group" }
     let(:amount) { 20 }
-    let(:params) {{
+    let(:params) { {
       person_id: person.id,
       user_id: user.id,
       notes: notes,
@@ -20,8 +22,8 @@ RSpec.describe DigitalGiftsController, type: :controller do
     before { sign_in user }
 
     describe "error handling" do
-      it 'errors if giftable is nil' do
-        params.merge!({ giftable_id: 20000000000 })
+      it "errors if giftable is nil" do
+        params[:giftable_id] = 20000000000
         post :create, params: params, xhr: true
         expect(flash[:error]).to eq("No giftable object present")
         expect(DigitalGift.count).to eq(0)
@@ -36,7 +38,7 @@ RSpec.describe DigitalGiftsController, type: :controller do
         expect(Reward.count).to eq(0)
       end
 
-      it 'errors if giftable is Invitation that already has a digitable gift' do
+      it "errors if giftable is Invitation that already has a digitable gift" do
         reward = FactoryBot.create(:reward, :digital_gift)
         invitation.update(aasm_state: "attended")
         expect(DigitalGift.count).to eq(1)
