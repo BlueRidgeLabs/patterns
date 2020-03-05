@@ -15,11 +15,11 @@ research_session_id = <%= @research_session.id%>;
   </h1>
 </div>
 <div class="row">
-  <div class="span4">
-    <div class="card">
+  <div class="col-4">
+    <div class="card card-body bg-light m-2">
       <dl>
         <dt>Clone</dt>
-        <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-small' %></dd>
+        <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-sm btn-primary' %></dd>
         <dt>Description</dt>
 
         <dd><%= best_in_place @research_session, :description %>
@@ -48,7 +48,7 @@ research_session_id = <%= @research_session.id%>;
         <dd><%= @research_session.invitations.where(aasm_state:'attended').size %></p>
         <% if @research_session.people.size > 0 %>
         <dt>Add to Pool: <span class='current_cart'><%= current_cart.name %></span></dt>
-        <dd><%= link_to "Add all to pool", add_person_cart_index_path(@research_session.people.map(&:id)), remote: true, class: 'btn' %></dd>
+        <dd><%= link_to "Add all to pool", add_person_cart_index_path(@research_session.people.map(&:id)), remote: true, class: 'btn btn-sm btn-primary' %></dd>
         <% end %>
       </dl>
     </div>
@@ -83,7 +83,7 @@ research_session_id = <%= @research_session.id%>;
     </div>
   </div>
   <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
-  <div class="span8">
+  <div class="col-sm">
     <h3>Invitees</h3>
     <input id='invitees-typeahead' type="text" placeholder="People Search">
     <%= render partial: 'invitations_panel',
