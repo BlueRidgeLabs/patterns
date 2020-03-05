@@ -44,18 +44,16 @@ class DigitalGift < ApplicationRecord
   has_one :transaction_log, as: :recipient
   has_many :comments, as: :commentable, dependent: :destroy
 
-  after_create :save_transaction
-  # TODO: (EL) move all of this into GiftrocketService
+  validate :can_order? # doesn't actually validate
 
+  after_create :save_transaction
   delegate :name, to: :person
   attr_accessor :giftable_id
   attr_accessor :giftable_type
 
-
   def self.campaigns
     Giftrocket::Campaign.list
   end
-
 
   def self.funding_sources
     Giftrocket::FundingSource.list
@@ -94,10 +92,52 @@ class DigitalGift < ApplicationRecord
     fetch_gift.status
   end
 
-  # TODO: (EL) probably move into digital_gift_service
-  def create_order_on_giftrocket!(reward)
-    order_params = GiftrocketService.create_order!(self, reward)
-    update(order_params)
+  # is this really how I want to do it?
+  def request_link
+    raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
+    raise unless can_order?
+
+    self.funding_source_id = DigitalGift.balance_funding_source.id
+
+    self.campaign_id = if amount.to_i < 20
+      # small dollar amounts, no fee
+      ENV["GIFTROCKET_LOW_CAMPAIGN"]
+    else
+      # high dolalr amounts, $2 fee
+      ENV["GIFTROCKET_HIGH_CAMPAIGN"]
+    end
+
+    generate_external_id
+
+    my_order = Giftrocket::Order.create!(generate_order)
+    self.fee = my_order.payment.fees
+    self.order_id = my_order.id
+
+    gift = my_order.gifts.first
+    self.gift_id = gift.id
+    self.link = gift.raw["recipient"]["link"]
+    self.order_details = Base64.encode64(Marshal.dump(my_order))
+  end
+
+  def expected_fee
+    # fee is $3 if amount is less than $20
+    amount.to_i < 20 ? 0.to_money : 3.to_money
+  end
+
+  # this is where we check if we can actually request this gift
+  # first from our user's team budget
+  # then from giftrocket, and then we make the request
+  def can_order?
+    (amount + expected_fee) <= user.available_budget
+  end
+
+  # maybe this is just a
+  def generate_external_id
+    self.external_id = { person_id: person_id,
+                         giftable_id: giftable_id,
+                         giftable_type: giftable_type }.to_json
+
+    external_id
   end
 
   # rubocop:disable Security/MarshalLoad
@@ -114,6 +154,29 @@ class DigitalGift < ApplicationRecord
   def update_frontend_failure; end
 
   private
+    def generate_gifts
+      raise if person.nil?
+
+      [
+        {
+          amount: amount.to_s,
+          recipient: {
+            name: person.full_name,
+            delivery_method: "LINK"
+          }
+        }
+      ]
+    end
+
+    def generate_order
+      {
+        external_id: external_id,
+        funding_source_id: funding_source_id,
+        campaign_id: campaign_id,
+        gifts: generate_gifts
+      }
+    end
+
     def save_transaction
       TransactionLog.create(transaction_type: "DigitalGift",
                             from_id: user.budget.id,
