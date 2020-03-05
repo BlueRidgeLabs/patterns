@@ -4,6 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+#ignore .env
+.env
+
 # Ignore bundler config.
 /.bundle
 /bin
@@ -20,16 +23,11 @@
 /config/initializers/env.rb
 /config/local_env.yml
 
-# otto config folder
-.otto/
-
 # personal environment variables.
 .env
 
 # vagrant instance folder
 .vagrant
-
-Procfile
 
 # weird mac files.
 .DS_STORE
@@ -39,7 +37,7 @@ Procfile
 
 # screenshots
 screenshot*
-.flynn_env
+
 
 # ignore backups and DB dumps
 *.sql
