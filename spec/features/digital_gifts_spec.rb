@@ -6,10 +6,8 @@ feature "digital gifts page" do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:user) { FactoryBot.create(:user) }
   let(:rs) { FactoryBot.create(:research_session, user: admin_user) }
-  let(:invitation) do
-    FactoryBot.create(:invitation,
-                      research_session: rs)
-  end
+  let(:invitation) { FactoryBot.create(:invitation,
+                                        research_session: rs)}
   let(:now) { DateTime.current }
   let(:rapidpro_headers) do
     {
@@ -26,6 +24,7 @@ feature "digital gifts page" do
       "AUTHORIZATION" => user.token # This is what Rails 3 accepts
     }
   end
+
   before do
     Timecop.freeze(now)
     login_with_admin_user(admin_user)
@@ -75,18 +74,23 @@ feature "digital gifts page" do
 
     Timecop.travel(research_session.end_datetime + 24.hours)
     visit "/sessions/#{research_session.id}"
+
     click_button "attend"
+
     wait_for_ajax
     invitation.reload
     expect(invitation.aasm_state).to eq("attended")
     find("#add-reward-#{invitation.id}").click
     wait_for_ajax
+
     fill_in("new-amount", visible: true, with: 100)
+
     accept_alert do
       click_button "Add Digital Gift"
     end
     wait_for_ajax
     person.reload
+
     expect(person.rewards_total.to_s).to eq("100.00")
 
     dg = person.rewards.last.rewardable
@@ -111,13 +115,17 @@ feature "digital gifts page" do
 
     Timecop.travel(research_session.end_datetime + 24.hours)
     visit "/sessions/#{research_session.id}"
+
     click_button "attend"
+
     wait_for_ajax
     invitation.reload
     expect(invitation.aasm_state).to eq("attended")
     find("#add-reward-#{invitation.id}").click
     wait_for_ajax
+
     fill_in("new-amount", visible: true, with: 100)
+
     accept_alert do
       click_button "Add Digital Gift"
     end
