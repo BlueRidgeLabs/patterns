@@ -5,7 +5,7 @@ cache:
     - /home/travis/.rvm/
     - /home/travis/vendor/bundle
     - /home/travis/.webdrivers/
-sudo: required
+os: linux
 dist: bionic
 git:
   depth: 1
