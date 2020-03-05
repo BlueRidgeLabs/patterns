@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 Patterns::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # base url for emails
-  config.action_mailer.default_url_options = { host:  ENV['PRODUCTION_SERVER']}
+  config.action_mailer.default_url_options = { host: ENV['PRODUCTION_SERVER'] }
 
   # Code is not reloaded between requests.
   config.cache_classes = true
@@ -41,7 +43,7 @@ Patterns::Application.configure do
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
-  
+
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :amazon
 
@@ -85,21 +87,34 @@ Patterns::Application.configure do
   # Set to :debug to see everything in the log.
   config.log_level = :info
   config.lograge.enabled = true
-
+  # this doesn't do what i had hoped it would do.
+  config.lograge.custom_options = lambda do |event|
+    {remote_ip: event.payload[:remote_ip]}
+  end
   # Analytics
   config.google_analytics_enabled = true
 
-
   config.action_mailer.smtp_settings = {
-    :address   => ENV["SMTP_HOST"],
-    :port      => ENV["SMTP_PORT"],
-    :user_name => ENV["SMTP_USERNAME"],
-    :password  => ENV["SMTP_PASSWORD"]
+    address: ENV['SMTP_HOST'],
+    port: ENV['SMTP_PORT'],
+    user_name: ENV['SMTP_USERNAME'],
+    password: ENV['SMTP_PASSWORD']
   }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true # we want to know whats up
-  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.default charset: 'utf-8'
 
   config.middleware.use Rack::TwilioWebhookAuthentication, ENV['TWILIO_AUTH_TOKEN'], '/receive_text/index'
+
+  #12 factor
+  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
+
+
 end

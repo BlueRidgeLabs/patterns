@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 class RenamingV2EventsToResearchSessions < ActiveRecord::Migration[4.2]
   def change
     rename_table :v2_event_invitations, :research_sessions
     rename_table :v2_reservations, :invitations
     drop_table :v2_events
     drop_table :v2_time_slots
-
 
     add_column :research_sessions, :start_datetime, :datetime
     add_column :research_sessions, :end_datetime, :datetime
@@ -23,6 +24,5 @@ class RenamingV2EventsToResearchSessions < ActiveRecord::Migration[4.2]
     remove_column :invitations, :user_id
 
     rename_column :invitations, :event_invitation_id, :research_session_id
-
   end
 end

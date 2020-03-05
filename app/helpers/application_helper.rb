@@ -3,7 +3,7 @@
 module ApplicationHelper
   delegate :current_cart, to: :current_user
 
-  def nav_bar(classes = 'nav navbar-nav')
+  def nav_bar(classes = "nav")
     content_tag(:ul, class: classes) do
       yield
     end
@@ -13,7 +13,7 @@ module ApplicationHelper
     options = {
       filter_html: true,
       hard_wrap: true,
-      link_attributes: { rel: 'nofollow', target: '_blank' },
+      link_attributes: { rel: "nofollow", target: "_blank" },
       space_after_headers: true,
       fenced_code_blocks: true
     }
@@ -30,19 +30,20 @@ module ApplicationHelper
     markdown.render(text).html_safe
   end
 
-  def nav_link(text, path, options = { class: '' })
-    options[:class].prepend(current_page?(path) ? 'active ' : '')
+  def nav_link(text, path, options = { class: "" })
+    active = current_page?(path) ? "active" : ""
+    options[:class] = "nav-item #{active} #{options[:class]}"
     content_tag(:li, options) do
-      link_to text, path
+      link_to text, path, { class: "nav-link" }
     end
   end
 
   # currently busted. gotta figure out why never descending
   def sortable(column, title = nil)
     title ||= column.titleize
-    sort_direction = params['direction']
+    sort_direction = params["direction"]
     css_class = column == sort_column ? "current #{sort_direction}" : nil
-    direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
-    link_to title, { sort: column, direction: direction }, { class: css_class }
+    direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
+    link_to title, { sort: column, direction: direction }, class: css_class
   end
 end

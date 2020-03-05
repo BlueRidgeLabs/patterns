@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: teams
@@ -10,7 +12,7 @@
 #  updated_at   :datetime         not null
 #
 
-require 'faker'
+require "faker"
 
 FactoryBot.define do
   factory :team do

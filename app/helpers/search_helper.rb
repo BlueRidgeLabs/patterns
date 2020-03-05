@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module SearchHelper
-
   def search_result_field(value, search_facet = nil)
     Rails.logger.debug("search_result_field: \n\tvalue:#{value}\n\tsearch_facet:#{search_facet}\n\tparams[:#{search_facet}]:#{params[search_facet]}")
     # given a value and an optional search facet, highlight the value in the string
@@ -11,7 +10,7 @@ module SearchHelper
   end
 
   def action
-    if action_name == 'advanced_search'
+    if action_name == "advanced_search"
       :post
     else
       :get
@@ -41,8 +40,8 @@ module SearchHelper
 
   def display_distinct_label_and_check_box
     tag.section do
-      check_box_tag(:distinct, '1', user_wants_distinct_results?, class: :cbx) +
-        label_tag(:distinct, 'Return distinct records')
+      check_box_tag(:distinct, "1", user_wants_distinct_results?, class: :cbx) +
+        label_tag(:distinct, "Return distinct records")
     end
   end
 
@@ -51,33 +50,32 @@ module SearchHelper
   end
 
   def display_query_sql(people)
-    tag.p('SQL:') + tag.code(people.to_sql)
+    tag.p("SQL:") + tag.code(people.to_sql)
   end
 
   def display_sort_column_headers(search)
-    person_column_headers.reduce('') do |string, field|
+    person_column_headers.reduce("") do |string, field|
       string << (tag.th sort_link(search, field, {}, method: action))
     end
   end
 
   def display_search_results(objects)
-    objects.limit(results_limit).reduce('') do |string, object|
+    objects.limit(results_limit).reduce("") do |string, object|
       string << (tag.tr display_search_results_row(object))
     end
   end
 
   def display_search_results_row(object)
-    person_column_fields.reduce('') do |string, field|
+    person_column_fields.reduce("") do |string, field|
       string << (tag.td object.send(field))
-    end.
-      html_safe
+    end
+                        .html_safe
   end
 
   def display_people_comments(comments)
-    comments.reduce('') do |string, _post|
+    comments.reduce("") do |string, _post|
       string << (tag.td truncate(comments.title, length: comments_title_length))
-    end.
-      html_safe
+    end
+            .html_safe
   end
-
 end

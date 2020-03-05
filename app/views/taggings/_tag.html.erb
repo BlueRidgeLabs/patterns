@@ -1,12 +1,7 @@
 <li id="tag-<%= tag.id %>">
-  <% params = [tag.id] 
-    if current_user.admin? # maybe everyone sees tag counts here?
-      tag_name = raw "#{tag.name} <span class='badge'>#{tag.taggings_count}</span>"
-    else
-      tag_name = tag.name
-    end
+  <% 
+    params = [tag.id] 
+    tag_name = raw "#{tag.name} <span class='badge badge-dark'>#{tag.taggings_count}</span>"
   %>
-
   <%= link_to tag_name, search_index_ransack_path("q[tags_id_eq_all]" => params) %>
-
 </li>

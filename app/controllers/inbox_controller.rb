@@ -15,16 +15,16 @@ class InboxController < ApplicationController
   # To enable authentication, uncomment this line and set your API key.
   # It is recommended you pull your API keys from environment settings,
   # or use some other means to avoid committing the API keys in your source code.
-  authenticate_with_mandrill_keys! ENV['MANDRILL_WEBHOOK_SECRET_KEY']
+  authenticate_with_mandrill_keys! ENV["MANDRILL_WEBHOOK_SECRET_KEY"]
 
   def handle_inbound(event_payload)
     head(:ok)
     msg = event_payload.msg
 
-    from = msg['from_email']
+    from = msg["from_email"]
     if Person.find_by(email_address: from) || User.find_by(email_address: from)
-      text = msg['text']
-      subject = msg['subject']
+      text = msg["text"]
+      subject = msg["subject"]
       ::AdminMailer.inbound_email(from: from, subject: subject, text: text).deliver_later
     end
   end

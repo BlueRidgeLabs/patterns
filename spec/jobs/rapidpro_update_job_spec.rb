@@ -1,13 +1,17 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.describe RapidproUpdateJob, :type => :job do
+RSpec.describe RapidproUpdateJob, type: :job do
   let(:sut) { RapidproUpdateJob }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:action) { sut.new.perform(person.id) }
-  let(:rapidpro_req_headers) { { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type'  => 'application/json' } }
-  let(:rapidpro_res) { Hashie::Mash.new({
-    code: 200
-  }) }
+  let(:rapidpro_req_headers) { { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" } }
+  let(:rapidpro_res) do
+    Hashie::Mash.new(
+      code: 200
+    )
+  end
 
   before { allow(HTTParty).to receive(:post).and_return(rapidpro_res) }
 
@@ -50,7 +54,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
             urns: ["tel:#{person.phone_number}", "mailto:#{person.email_address}"],
             groups: ["DIG"],
             fields: {
-              tags: "tag_1 tag_2"
+              tags: "tag_1 tag_2",
+              verified: person.verified
             }
           }.to_json
         )
@@ -71,7 +76,8 @@ RSpec.describe RapidproUpdateJob, :type => :job do
             urns: ["tel:#{person.phone_number}"],
             groups: ["DIG"],
             fields: {
-              tags: "tag_1 tag_2"
+              tags: "tag_1 tag_2",
+              verified: person.verified
             }
           }.to_json
         )
@@ -97,12 +103,14 @@ RSpec.describe RapidproUpdateJob, :type => :job do
   end
 
   context "rapidpro responds with 201" do
-    let(:rapidpro_res) { Hashie::Mash.new({
-      code: 201,
-      parsed_response: {
-        uuid: 'fakeuuid'
-      }
-    }) }
+    let(:rapidpro_res) do
+      Hashie::Mash.new(
+        code: 201,
+        parsed_response: {
+          uuid: "fakeuuid"
+        }
+      )
+    end
 
     context "person has rapidpro_uuid" do
       it "does nothing" do
@@ -116,18 +124,20 @@ RSpec.describe RapidproUpdateJob, :type => :job do
         person.update(rapidpro_uuid: nil)
         expect(sut).not_to receive(:perform_in)
         action
-        expect(person.reload.rapidpro_uuid).to eq('fakeuuid')
+        expect(person.reload.rapidpro_uuid).to eq("fakeuuid")
       end
     end
   end
 
   context "rapidpro responds with 429" do
-    let(:rapidpro_res) { Hashie::Mash.new({
-      code: 429,
-      headers: {
-        'retry-after': 100
-      }
-    }) }
+    let(:rapidpro_res) do
+      Hashie::Mash.new(
+        code: 429,
+        headers: {
+          'retry-after': 100
+        }
+      )
+    end
 
     it "enqueues job to be retried" do
       expect(sut).to receive(:perform_in).with(100 + 5, person.id)
@@ -136,9 +146,11 @@ RSpec.describe RapidproUpdateJob, :type => :job do
   end
 
   context "rapidpro responds with 200" do
-    let(:rapidpro_res) { Hashie::Mash.new({
-      code: 200
-    }) }
+    let(:rapidpro_res) do
+      Hashie::Mash.new(
+        code: 200
+      )
+    end
 
     it "does nothing and returns true" do
       expect(sut).not_to receive(:perform_in)
@@ -147,9 +159,11 @@ RSpec.describe RapidproUpdateJob, :type => :job do
   end
 
   context "rapidpro responds with unknown status" do
-    let(:rapidpro_res) { Hashie::Mash.new({
-      code: 666
-    }) }
+    let(:rapidpro_res) do
+      Hashie::Mash.new(
+        code: 666
+      )
+    end
 
     it "raises error" do
       expect(sut).not_to receive(:perform_in)

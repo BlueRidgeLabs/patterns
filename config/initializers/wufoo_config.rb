@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # # requests from Wufoo will include this token to prove authenticity
 # Patterns::Application.config.wufoo_handshake_key = ENV['WUFOO_HANDSHAKE_KEY']
 

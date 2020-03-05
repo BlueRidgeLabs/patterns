@@ -15,7 +15,7 @@
 #
 
 class MailchimpUpdatesController < ApplicationController
-  require 'will_paginate/array'
+  require "will_paginate/array"
   before_action :set_mailchimp_update, only: %i[show edit update destroy]
   skip_before_action :authenticate_user!, if: :should_skip_janky_auth?
   skip_before_action :verify_authenticity_token, only: [:create]
@@ -23,7 +23,7 @@ class MailchimpUpdatesController < ApplicationController
   # GET /mailchimp_updates
   # GET /mailchimp_updates.json
   def index
-    @mailchimp_updates = MailchimpUpdate.order('fired_at DESC').paginate(page: params[:page])
+    @mailchimp_updates = MailchimpUpdate.order("fired_at DESC").paginate(page: params[:page])
   end
 
   # GET /mailchimp_updates/1
@@ -42,27 +42,27 @@ class MailchimpUpdatesController < ApplicationController
   # POST /mailchimp_updates.json
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def create
-    if params['mailchimpkey'].present? && params['mailchimpkey'] == ENV['MAILCHIMP_WEBHOOK_SECRET_KEY']
+    if params["mailchimpkey"].present? && params["mailchimpkey"] == ENV["MAILCHIMP_WEBHOOK_SECRET_KEY"]
       @mailchimp_update = MailchimpUpdate.new(
-        email:        params['data']['email'],
-        update_type:  params['type'],
-        fired_at:     params['fired_at'],
-        raw_content:  params.to_json,
-        reason:       params['data']['reason'] || nil
+        email: params["data"]["email"],
+        update_type: params["type"],
+        fired_at: params["fired_at"],
+        raw_content: params.to_json,
+        reason: params["data"]["reason"] || nil
       )
 
       respond_to do |format|
         if @mailchimp_update.save
-          format.html { redirect_to @mailchimp_update, notice: 'Mailchimp update was successfully created.' }
-          format.json { render action: 'show', status: :created, location: @mailchimp_update }
+          format.html { redirect_to @mailchimp_update, notice: "Mailchimp update was successfully created." }
+          format.json { render action: "show", status: :created, location: @mailchimp_update }
 
         else
-          Rails.logger.warn('MailchimpUpdatesController#create: Received new update with invalid data')
+          Rails.logger.warn("MailchimpUpdatesController#create: Received new update with invalid data")
           render nothing: true, status: :bad_request
         end
       end
     else
-      Rails.logger.warn('MailchimpUpdatesController#create: Received new update with bad secret key.')
+      Rails.logger.warn("MailchimpUpdatesController#create: Received new update with bad secret key.")
       render nothing: true, status: :bad_request
     end
   end
@@ -73,10 +73,10 @@ class MailchimpUpdatesController < ApplicationController
   def update
     respond_to do |format|
       if @mailchimp_update.update(mailchimp_update_params)
-        format.html { redirect_to @mailchimp_update, notice: 'Mailchimp update was successfully updated.' }
+        format.html { redirect_to @mailchimp_update, notice: "Mailchimp update was successfully updated." }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: "edit" }
         format.json { render json: @mailchimp_update.errors, status: :unprocessable_entity }
       end
     end
@@ -93,7 +93,6 @@ class MailchimpUpdatesController < ApplicationController
   end
 
   private
-
     # Use callbacks to share common setup or constraints between actions.
     def set_mailchimp_update
       @mailchimp_update = MailchimpUpdate.find(params[:id])
@@ -106,6 +105,6 @@ class MailchimpUpdatesController < ApplicationController
 
     def should_skip_janky_auth?
       # don't attempt authentication on reqs from wufoo
-      params[:action] == 'create'
+      params[:action] == "create"
     end
 end

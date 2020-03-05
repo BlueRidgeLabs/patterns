@@ -5,25 +5,25 @@ class RapidproDeleteJob
   sidekiq_options retry: 5
 
   def perform(id)
-    Rails.logger.info '[RapidProDelete] job enqueued'
+    Rails.logger.info "[RapidProDelete] job enqueued"
     person = Person.unscoped.find id
     if person.rapidpro_uuid.present?
-      headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-                  'Content-Type'  => 'application/json' }
+      headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}",
+                  "Content-Type" => "application/json" }
       url = "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}"
       res = HTTParty.delete(url, headers: headers)
 
       case res.code
       when 404
-        return false
+        false
       when 204, 201, 200 # successful delete
         person.update_column(:rapidpro_uuid, nil) # skip callbacks
-        return true
+        true
       when 429 # rapidpro rate limiting us.
-        retry_delay = res.headers['retry-after'].to_i + 5
+        retry_delay = res.headers["retry-after"].to_i + 5
         RapidproDeleteJob.perform_in(retry_delay, id)
       else
-        raise 'RapidPro Web request Error. Is Rapidpro Up?'
+        raise "RapidPro Web request Error. Is Rapidpro Up?"
       end
     end
   end

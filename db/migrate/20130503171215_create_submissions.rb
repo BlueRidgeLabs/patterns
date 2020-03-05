@@ -1,5 +1,6 @@
-class CreateSubmissions < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class CreateSubmissions < ActiveRecord::Migration[4.2]
   def change
     create_table :submissions do |t|
       t.text    :raw_content
@@ -11,5 +12,4 @@ class CreateSubmissions < ActiveRecord::Migration[4.2]
       t.timestamps
     end
   end
-
 end

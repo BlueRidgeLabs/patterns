@@ -15,7 +15,6 @@
 #
 
 class CommentsController < ApplicationController
-
   before_action :set_comment, only: %i[show edit update destroy]
 
   # GET /comments
@@ -44,11 +43,11 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.with_user(current_user).save
         # format.html { redirect_to @comment, notice: 'Comment was successfully created.' }
-        format.js   {}
+        format.js   { }
         # format.json { render action: 'show', status: :created, location: @comment }
       else
         # format.html { render action: 'new' }
-        format.js   { escape_javascript("console.log('error saving comment: #{comment.errors.inpsect}');") }
+        format.js   { render js: "console.log('error saving comment: #{@comment.errors.inspect}');" }
         # format.json { render json: @comment.errors, status: :unprocessable_entity }
       end
     end
@@ -59,10 +58,10 @@ class CommentsController < ApplicationController
   def update
     respond_to do |format|
       if @comment.with_user(current_user).update(comment_params)
-        format.html { redirect_to @comment, notice: 'Comment was successfully updated.' }
+        format.html { redirect_to @comment, notice: "Comment was successfully updated." }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: "edit" }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
       end
     end
@@ -75,12 +74,11 @@ class CommentsController < ApplicationController
     respond_to do |format|
       # format.html { redirect_to comments_url }
       # format.json { head :no_content }
-      format.js {}
+      format.js { }
     end
   end
 
   private
-
     # Use callbacks to share common setup or constraints between actions.
     def set_comment
       @comment = Comment.find(params[:id])
@@ -90,5 +88,4 @@ class CommentsController < ApplicationController
     def comment_params
       params.require(:comment).permit(:content, :user_id, :commentable_type, :commentable_id)
     end
-
 end

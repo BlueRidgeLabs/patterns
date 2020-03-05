@@ -15,12 +15,12 @@
 #  rapidpro_sync :boolean          default(FALSE)
 #
 
-require 'faker'
+require "faker"
 
 FactoryBot.define do
   factory :cart do
     user
-    name { Faker::Lorem.words(2).join(" ") }
+    name { Faker::Lorem.words(number: 2).join(" ") }
     description { Faker::Lorem.sentence }
   end
 end

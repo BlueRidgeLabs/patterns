@@ -4,7 +4,7 @@
   <h3>Recent actions</h3>
   <%= will_paginate @changes,
           remote: true,
-          renderer: BootstrapPagination::Rails %>
+          renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -39,6 +39,6 @@
     </table>
     <%= will_paginate @changes,
           remote: true,
-          renderer: BootstrapPagination::Rails %>
+          renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>

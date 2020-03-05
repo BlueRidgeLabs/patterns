@@ -2,7 +2,7 @@
       data-sequence-number='<%= gift_card.sequence_number%>'
       data-last-4='<%= gift_card.sequence_number.to_s %>'
       data-user-name='<%= gift_card.user.name %>'
-      class='well well-small gift-card'>
+      class='gift-card'>
     <td class='batch_id'>
       <%= gift_card.batch_id %>
     </td>
@@ -22,7 +22,7 @@
     <% end %>
     <td>
       <%= select_tag :reason,  options_for_select(Reward.reasons.keys.to_a,'interview'),
-                      { class: 'input-small',
+                      { class: 'input-small form-control',
                         id: "reward-reason-#{gift_card.id}" }
         %>
     </td>
@@ -33,7 +33,7 @@
               rewardable_id: gift_card.id
             },
             id: "add-reward-#{gift_card.id}",
-            class: 'add-reward' ,
+            class: 'add-reward btn btn-sm btn-primary' ,
             onclick: "add_reward(this);"  %>
     </td>
   </tr>

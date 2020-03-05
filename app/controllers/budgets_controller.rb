@@ -23,33 +23,33 @@ class BudgetsController < ApplicationController
 
   def create_transaction
     case transaction_log_params[:transaction_type]
-    when 'Topup'
-      from_type = 'User'
+    when "Topup"
+      from_type = "User"
       from_id = current_user.id
       recipient_id = current_user.budget.id
-    when 'Transfer'
-      from_type = 'Budget'
+    when "Transfer"
+      from_type = "Budget"
       recipient_id = transaction_log_params[:recipient_id]
       from_id = transaction_log_params[:from_id].presence || current_user.budget.id
     end
 
     @transaction_log = TransactionLog.new(amount: transaction_log_params[:amount],
-                                   transaction_type: transaction_log_params[:transaction_type],
-                                   # all recipients here are budgets. No Digital Gifts
-                                   recipient_type: 'Budget',
-                                   recipient_id: recipient_id,
-                                   from_id: from_id,
-                                   from_type: from_type,
-                                   user_id: current_user.id)
+                                          transaction_type: transaction_log_params[:transaction_type],
+                                          # all recipients here are budgets. No Digital Gifts
+                                          recipient_type: "Budget",
+                                          recipient_id: recipient_id,
+                                          from_id: from_id,
+                                          from_type: from_type,
+                                          user_id: current_user.id)
     respond_to do |format|
       if @transaction_log.save
-        flash[:success] = 'Transaction Created'
+        flash[:success] = "Transaction Created"
         format.json { render json: @transaction_log }
       else
         flash[:error] = "Transaction failed: #{@transaction_log.errors.full_messages.join(' ')}"
         format.json { render json: @transaction_log.errors, status: :unprocessable_entity }
       end
-      format.js {}
+      format.js { }
     end
   end
 
@@ -63,7 +63,7 @@ class BudgetsController < ApplicationController
 
     respond_to do |format|
       if @budget.save
-        format.html { redirect_to @budget, notice: 'Budget was successfully created.' }
+        format.html { redirect_to @budget, notice: "Budget was successfully created." }
         format.json { render :show, status: :created, location: @budget }
       else
         format.html { render :new }
@@ -77,7 +77,7 @@ class BudgetsController < ApplicationController
   def update
     respond_to do |format|
       if @budget.update(budget_params)
-        format.html { redirect_to @budget, notice: 'Budget was successfully updated.' }
+        format.html { redirect_to @budget, notice: "Budget was successfully updated." }
         format.json { render :show, status: :ok, location: @budget }
       else
         format.html { render :edit }
@@ -91,13 +91,12 @@ class BudgetsController < ApplicationController
   def destroy
     @budget.destroy
     respond_to do |format|
-      format.html { redirect_to budgets_url, notice: 'Budget was successfully destroyed.' }
+      format.html { redirect_to budgets_url, notice: "Budget was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
-
     def check_transaction_type
       @transaction_type = transaction_log_params[:transaction_type]
       %w[Transfer Topup].include? @transaction_typez

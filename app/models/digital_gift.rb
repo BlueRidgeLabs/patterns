@@ -45,14 +45,28 @@ class DigitalGift < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
 
   after_create :save_transaction
-
   # TODO: (EL) move all of this into GiftrocketService
+
+  delegate :name, to: :person
+  attr_accessor :giftable_id
+  attr_accessor :giftable_type
+
+
   def self.campaigns
     Giftrocket::Campaign.list
   end
 
+
+  def self.funding_sources
+    Giftrocket::FundingSource.list
+  end
+
+  def self.balance_funding_source
+    DigitalGift.funding_sources.find { |fs| fs.method == "balance" }
+  end
+
   def self.current_budget
-    (GiftrocketService.balance_funding_source.available_cents / 100).to_money
+    (DigitalGift.funding_sources.find { |fs| fs.method == "balance" }.available_cents / 100).to_money
   end
 
   def self.orders
@@ -100,14 +114,13 @@ class DigitalGift < ApplicationRecord
   def update_frontend_failure; end
 
   private
-
     def save_transaction
-      TransactionLog.create(transaction_type: 'DigitalGift',
-                           from_id: user.budget.id,
-                           user_id: user.id,
-                           amount: total_for_budget,
-                           from_type: 'Budget',
-                           recipient_id: id,
-                           recipient_type: 'DigitalGift')
+      TransactionLog.create(transaction_type: "DigitalGift",
+                            from_id: user.budget.id,
+                            user_id: user.id,
+                            amount: total_for_budget,
+                            from_type: "Budget",
+                            recipient_id: id,
+                            recipient_type: "DigitalGift")
     end
 end

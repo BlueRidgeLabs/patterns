@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 namespace :bulk_fix_numbers do
-  desc 'Normalize PeopleNumbers'
+  desc "Normalize PeopleNumbers"
   task PeopleNumbers: :environment do
     Person.find_each do |person|
       if person.phone_number.present?
@@ -8,7 +10,7 @@ namespace :bulk_fix_numbers do
         if person.phone_number != new_num
           if new_num_length == 12
             puts "Old Number: #{person.phone_number} | New Number: #{new_num} | New Number Length: #{new_num_length}"
-            person.phone_number= new_num
+            person.phone_number = new_num
             person.save
         end
         end
@@ -16,7 +18,7 @@ namespace :bulk_fix_numbers do
     end
   end
 
-  desc 'Normalize twilio message phone numbers'
+  desc "Normalize twilio message phone numbers"
   task TwilioMessageNumbers: :environment do
     TwilioMessage.find_each do |message|
       if message.to.present?
@@ -28,7 +30,7 @@ namespace :bulk_fix_numbers do
         end
         end
       end
-      new_num = ''
+      new_num = ""
       if message.from.present?
         new_num = message.normalized_from
         if message.from != new_num

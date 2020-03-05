@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # # config/initializers/delayed_job_config.rb
 # Delayed::Worker.destroy_failed_jobs = false
 # Delayed::Worker.sleep_delay = 1 # sms needs to be speedy

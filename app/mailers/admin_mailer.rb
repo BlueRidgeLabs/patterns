@@ -2,7 +2,7 @@
 
 class AdminMailer < ApplicationMailer
   def deactivate(person:)
-    admin_email = ENV['MAIL_ADMIN']
+    admin_email = ENV["MAIL_ADMIN"]
     @person = person
     mail(to: admin_email,
          from: admin_email,
@@ -10,7 +10,7 @@ class AdminMailer < ApplicationMailer
   end
 
   def inbound_email(from:, subject:, text:)
-    mail(to: ENV['MAIL_ADMIN'],
+    mail(to: ENV["MAIL_ADMIN"],
          reply_to: from,
          subject: "from: #{from}, subj:#{subject}",
          body: text)
@@ -26,7 +26,7 @@ class AdminMailer < ApplicationMailer
         msg += %(*   #{person.full_name} changed from #{r[:old]} to #{r[:new]}. link: https://#{HOSTNAME}/people/#{person.id} \n)
       end
       msg += "\nthanks"
-      mail(to: to, from: ENV['MAIL_ADMIN'], subject: 'Participation level changes', body: msg)
+      mail(to: to, from: ENV["MAIL_ADMIN"], subject: "Participation level changes", body: msg)
     end
   end
 end

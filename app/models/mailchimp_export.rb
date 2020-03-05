@@ -13,7 +13,6 @@
 #
 
 class MailchimpExport < ApplicationRecord # largely unused
-
   validates :name, :body, presence: true
   validates :name, length: { in: 1..50 }
 
@@ -23,7 +22,6 @@ class MailchimpExport < ApplicationRecord # largely unused
   after_create        :send_to_mailchimp
 
   private
-
     def serialize_recipients_to_body
       self.body = recipients.to_json
     end
@@ -45,5 +43,4 @@ class MailchimpExport < ApplicationRecord # largely unused
       Rails.logger.fatal("[MailchimpExport#send_to_mailchimp] mce_id: #{id} fatal error exporting to Mailchimp: #{e.message}")
       false
     end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -183,7 +185,7 @@ Devise.setup do |config|
   config.timeout_in = 240.minutes
 
   # If true, expires auth token on session timeout.
-  #config.expire_auth_token_on_timeout = false
+  # config.expire_auth_token_on_timeout = false
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
@@ -289,11 +291,15 @@ Devise.setup do |config|
   # config.omniauth_path_prefix = "/my_engine/users/auth"
 end
 
-#Fail2ban
+# Fail2ban
 Warden::Manager.before_failure do |env, opts|
-  if opts[:action] == 'unauthenticated' and opts[:attempted_path] == '/users/sign_in'
+  if (opts[:action] == 'unauthenticated') && (opts[:attempted_path] == '/users/sign_in')
     ip = env['action_dispatch.remote_ip'] || env['REMOTE_ADDR']
-    user = env['action_dispatch.request.parameters']['user']['email'] rescue 'unknown'
+    user = begin
+             env['action_dispatch.request.parameters']['user']['email']
+           rescue StandardError
+             'unknown'
+           end
     Rails.logger.error "Failed login for '#{user}' from #{ip} at #{Time.now.utc.iso8601}"
   end
 end

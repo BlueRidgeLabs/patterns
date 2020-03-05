@@ -67,9 +67,7 @@
   transition: left 0.15s, margin-left 0.15s;
 }
 
-.toggle-check-text:before {
-  content: 'No';
-}
+
 
 .toggle-check-input:checked ~ .toggle-check-text {
   background: #8ad869;
@@ -80,6 +78,10 @@
   padding-right: 2em;
 }
 
+.toggle-check-text:before {
+  content: 'No';
+}
+
 .toggle-check-input:checked ~ .toggle-check-text:before {
   content: 'Yes';
 }
@@ -88,4 +90,5 @@
   left: 100%;
   margin-left: -1.4em;
 }
+
 

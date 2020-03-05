@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDigitalGifts < ActiveRecord::Migration[5.2]
   def change
     create_table :digital_gifts do |t|

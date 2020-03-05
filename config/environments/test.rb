@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Patterns::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -18,7 +20,7 @@ Patterns::Application.configure do
   config.active_storage.service = :test
 
   config.action_mailer.perform_caching = false
-  
+
   # Configure static asset server for tests with Cache-Control for performance.
   config.serve_static_files = true
   config.static_cache_control = 'public, max-age=3600'
@@ -43,6 +45,6 @@ Patterns::Application.configure do
 
   config.active_support.test_order = :random
 
-   # no audits needed in tests. yet.
+  # no audits needed in tests. yet.
   PaperTrail.config.enabled = false
 end

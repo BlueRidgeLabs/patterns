@@ -36,9 +36,8 @@
 #
 
 # FIXME: Refactor and re-enable cop
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 class PeopleController < ApplicationController
-
   before_action :set_person, only: %i[show edit update destroy]
   helper_method :sort_column, :sort_direction
 
@@ -51,16 +50,16 @@ class PeopleController < ApplicationController
 
     # this could be cleaner...
     search = if params[:tags].blank?
-               Person.active.includes(:taggings).paginate(page: params[:page]).
-                 order(sort_column + ' ' + sort_direction)
-             else
-               tags =  params[:tags].split(',').map(&:strip)
-               @tags = Person.active.tag_counts.where(name: tags)
+      Person.active.includes(:taggings).paginate(page: params[:page])
+            .order(sort_column + " " + sort_direction)
+    else
+      tags =  params[:tags].split(",").map(&:strip)
+      @tags = Person.active.tag_counts.where(name: tags)
 
-               Person.active.includes(:taggings).paginate(page: params[:page]).
-                 order(sort_column + ' ' + sort_direction).
-                 tagged_with(tags)
-             end
+      Person.active.includes(:taggings).paginate(page: params[:page])
+            .order(sort_column + " " + sort_direction)
+            .tagged_with(tags)
+    end
     # only show verified people to non-admins
     @people = current_user.admin? ? search : search.verified
     @tags ||= []
@@ -110,7 +109,7 @@ class PeopleController < ApplicationController
   # POST /people/:person_id/deactivate
   def deactivate
     @person = Person.find_by id: params[:person_id]
-    @person.deactivate!('admin_interface')
+    @person.deactivate!("admin_interface")
     flash[:notice] = "#{@person.full_name} deactivated"
     respond_to do |format|
       format.js
@@ -144,7 +143,7 @@ class PeopleController < ApplicationController
     if @person.errors.present?
       errors = []
       @person.errors.full_messages.each { |m| errors.push m }
-      flash[:error] = errors.join(', ')
+      flash[:error] = errors.join(", ")
     end
     if @person.save
       redirect_to person_path(@person)
@@ -159,11 +158,11 @@ class PeopleController < ApplicationController
   def update
     respond_to do |format|
       if @person.with_user(current_user).update(person_params)
-        format.html { redirect_to @person, notice: 'Person was successfully updated.' }
+        format.html { redirect_to @person, notice: "Person was successfully updated." }
         format.json { respond_with_bip(@person) }
       else
-        flash[:error] = @person.errors.full_messages.join(', ')
-        format.html { render action: 'edit' }
+        flash[:error] = @person.errors.full_messages.join(", ")
+        format.html { render action: "edit" }
         format.json { render json: @person.errors, status: :unprocessable_entity }
       end
     end
@@ -180,7 +179,6 @@ class PeopleController < ApplicationController
   end
 
   private
-
     # Use callbacks to share common setup or constraints between actions.
     def set_person
       @person = Person.includes(:tags, :taggings).find(params[:id])
@@ -230,12 +228,11 @@ class PeopleController < ApplicationController
     # rubocop:enable Metrics/MethodLength
 
     def sort_column
-      Person.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'
+      Person.column_names.include?(params[:sort]) ? params[:sort] : "people.id"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
     end
-
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength

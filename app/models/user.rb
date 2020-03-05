@@ -57,12 +57,12 @@ class User < ApplicationRecord
   belongs_to :team
 
   after_commit :create_cart, on: :create
-  phony_normalize :phone_number, default_country_code: 'US'
-  phony_normalized_method :phone_number, default_country_code: 'US'
+  phony_normalize :phone_number, default_country_code: "US"
+  phony_normalized_method :phone_number, default_country_code: "US"
 
   has_secure_token # for calendar feeds
 
-  scope :upcoming_sessions, ->(d = 7) {
+  scope :upcoming_sessions, lambda { |d = 7|
     joins(:research_sessions).merge(ResearchSession.upcoming(d))
   }
 
@@ -80,18 +80,22 @@ class User < ApplicationRecord
 
   def approve!
     update(approved: true)
-    Rails.logger.info(I18n.t('user.approved', email: email))
+    Rails.logger.info(I18n.t("user.approved", email: email))
   end
 
   def unapprove!
     update(approved: false)
-    Rails.logger.info(I18n.t('user.unapproved', email: email))
+    Rails.logger.info(I18n.t("user.unapproved", email: email))
   end
 
   def rewards_total
     end_of_last_year = Time.zone.today.beginning_of_year - 1.day
-    total = rewards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
-    Money.new(total, 'USD')
+    total = rewards.where("created_at > ?", end_of_last_year).sum(:amount_cents)
+    Money.new(total, "USD")
+  end
+
+  def unassigned_gift_cards_count
+    GiftCard.unassigned.where(user_id: id).size
   end
 
   delegate :budget, to: :team
@@ -139,7 +143,7 @@ class User < ApplicationRecord
   end
 
   def current_cart=(cart) # this is tedious. could be better
-    cart = Cart.find cart if cart.class.to_s != 'Cart'
+    cart = Cart.find cart if cart.class.to_s != "Cart"
     return if cart == current_cart
 
     cart_id = cart.id
@@ -157,6 +161,6 @@ class User < ApplicationRecord
   end
 
   def weak_words
-    ['patterns', ENV['SITE_NAME'], name, email]
+    ["patterns", ENV["SITE_NAME"], name, email]
   end
 end

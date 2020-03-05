@@ -111,7 +111,7 @@ $(document).on('turbolinks:load',function() {
         current_ids = $.unique(current_ids).filter(function(el){ return el != ''})
         $('#research_session_people_ids').val(current_ids.join(','));
         // this is an ugly hack, shoudl be a partial that gets rendered.
-        $('#people-store').append("<div class='added_person' data-personid="+id+" id='person-"+ id +"'><span class='btn btn-danger btn-mini' id='remove-person-" + id + "'>X</span>&nbsp;&nbsp;<span class='person-name'>"+name+"</span></div>")
+        $('#people-store').append("<div class='added_person' data-personid="+id+" id='person-"+ id +"'><span class='badge badge-danger' id='remove-person-" + id + "'>X</span>&nbsp;&nbsp;<span class='person-name'>"+name+"</span></div>")
         $('#person-'+id).on('click',function(e){
           var pid = $(this).data('personid');
           remove_person(pid);

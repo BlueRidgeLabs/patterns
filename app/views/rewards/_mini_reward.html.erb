@@ -12,6 +12,16 @@
     %>        
     </td>
     <td><%= humanized_money_with_symbol reward.amount %></td>
+    <% if current_user.admin? %>
+    <td>
+        <%= best_in_place reward, 
+                          :finance_code, 
+                          place_holder: reward.finance_code, 
+                          as: :select, 
+                          collection: %w[BRL CATA1 CATA2 FELL],
+                          inner_class: 'select_auto' %>
+    </td>
+    <% end %>
     <td><%= link_to 'Show', reward %></td>
     <td><%= link_to 'Edit', edit_reward_path(reward) %></td>
     <!-- Can't delete a digital gift -->
