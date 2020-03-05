@@ -248,11 +248,11 @@ group :development, :test do
   gem "concurrent-ruby"
   gem "database_cleaner"
   gem "factory_bot_rails", "4.10.0", require: false
-  gem "guard"
+  gem "guard", require: false
   gem "guard-bundler", require: false
-  gem "guard-minitest"
+  gem "guard-minitest", require: false
   gem "guard-rspec", require: false
-  gem "guard-rubocop"
+  gem "guard-rubocop", require: false
   gem "holder_rails"
   gem "parallel_tests" # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
   gem "pry" # a console anywhere!
