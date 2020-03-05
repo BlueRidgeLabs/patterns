@@ -30,7 +30,6 @@ class SearchController < ApplicationController
   # FIXME: Refactor and re-enable cop
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   #
-  # TODO: delete mailchimp shit?
   def export_ransack
     list_name = params.delete(:segment_name)
     @q = Person.ransack(params[:q])

@@ -159,8 +159,8 @@ gem "paper_trail"
 gem "paper_trail-association_tracking"
 gem "paper_trail-globalid"
 
-# gem "faster_path" # will break without rustc
-gem "fast_blank"
+#gem "faster_path" # will break without rustc
+gem 'fast_blank'
 
 # storing money with money-rails
 gem "money-rails"
@@ -266,10 +266,11 @@ group :development, :test do
   gem "rubocop-faker", require: false
   gem "selenium-webdriver"
   gem "webdrivers", "~> 3.8"
-  gem "dotenv-rails"
+  gem 'dotenv-rails'
   gem "byebug", "~> 11.0"
   gem "sms-spec"
-  gem "foreman", require: false # for procfile
+  gem 'foreman', require: false #for procfile
   # To use debugger
   # gem 'debugger'
+
 end
