@@ -54,7 +54,7 @@ feature "pools" do
       # current pool page reflects recent addition
       go_to_current_pool
       expect(page).to have_content(person.email_address)
-      within(".well") do
+      within(".card") do
         expect(page.find(".cart-size")).to have_content("1")
       end
     end
@@ -82,7 +82,7 @@ feature "pools" do
       # current pool page reflects recent removal
       go_to_current_pool
       expect(page).not_to have_content(person.email_address)
-      within(".well") do
+      within(".card") do
         expect(page.find(".cart-size")).to have_content("0")
       end
     end

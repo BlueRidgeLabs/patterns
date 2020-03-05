@@ -304,6 +304,7 @@ class Person < ApplicationRecord
   def full_name
     [first_name, last_name].join(" ")
   end
+  alias_method :name, :full_name
 
   def address_fields_to_sentence
     [address_1, address_2, city, state, postal_code].reject(&:blank?).join(", ")

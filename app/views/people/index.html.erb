@@ -1,6 +1,6 @@
 <%- model_class = Person -%>
 <div class="row page-header">
-  <div class="span2">
+  <div class="col-2">
     <h1><%=t '.title', :default => "People" %></h1>
     <h5 >Count:<%= Person.active.count %></h5>
     <br/>
@@ -13,37 +13,39 @@
                   url: people_path
                 } %>
     <br/> -->
-    <%= link_to "New Person", new_person_path, class: 'btn btn-small' %>
+    <%= link_to "New Person", new_person_path, class: 'btn btn-sm btn-primary m-4' %>
   </div>
 
-  <div class='span3'>
-   <label for="tags">Tags</label>
-      <%= form_tag '/people', method: :get %>
-      <%= text_field_tag :tags,
-                            params[:tags],
-                            class: 'tokenfield input-small span4',
-                            id:'tag-field',
-                            data: { search_url: '/taggings/search?type=Person&q=%QUERY',
-                                    submit_id: 'tag-field',
-                                    submit_on_tag: true,
-                                    pre_populate: @tags
-                                  }
-                          %>
-      <%= submit_tag "Search", :name => nil, :class => 'btn btn-primary' %>
+  <div class='col-auto'>
+      <div class='form-inline'>
+        <label for="tags" class='m-4'>Tags</label>
+        <%= form_tag '/people', method: :get %>
+        <%= text_field_tag :tags,
+                              params[:tags],
+                              class: 'tokenfield form-control',
+                              id:'tag-field',
+                              data: { search_url: '/taggings/search?type=Person&q=%QUERY',
+                                      submit_id: 'tag-field',
+                                      submit_on_tag: true,
+                                      pre_populate: @tags
+                                    }
+                            %>
+        <%= submit_tag "Search", :name => nil, :class => 'btn btn-primary' %>
+      </div>
   </div>
 
-  <div class='span2'>
+  <div class='col-2'>
 
   </div>
 </div>
 
 <div class="row">
-  <div class="span12" style="text-align:center">
-    <%= will_paginate @people, :renderer => BootstrapPagination::Rails %>
+  <div class="col-2" style="text-align:center">
+    <%= will_paginate @people, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>
 <div class="row">
-  <div class="span12">
+  <div class="col-auto">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -53,13 +55,15 @@
           <th>Email address</th>
           <th>Phone number</th>
           <th><%= sortable 'verified','Verified?'%></th>
-          <th><%= sortable 'low_income','Low Income?'%></th>
           <th><%= sortable 'created_at', 'Signup date' %></th>
           <th>Preferred Contact Method</th>
-          <th><%= sortable 'tag_count_cache', 'Tag Count' %></th>
-          <th>Rewards</th>
-          <th>Sessions Attended</th>
-          <th conspan="3">&nbsp;</th>
+          <th>T|R|S <%= content_tag :span,'?',class: 'badge badge-dark', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Tag Count | Rewards | Sessions attended",
+          title: 'popover',
+          original_title:"Data"} %></th>
+          <th conspan="2">&nbsp;</th>
         </tr>
       </thead>
       <tbody>
@@ -69,9 +73,8 @@
             <td><%= link_to "#{person.first_name} #{person.last_name}", person_path(person) %></td>
             <td><%= person.address_fields_to_sentence %></td>
             <td><%= best_in_place person, :email_address %></td>
-            <td><%= best_in_place person, :phone_number, display_with: lambda {|p| number_to_phone(p,area_code: true) } %></td>
+            <td style='white-space: nowrap;'><%= best_in_place person, :phone_number, display_with: lambda {|p| number_to_phone(p,area_code: true) } %></td>
             <td><%= best_in_place person, :verified, as: :select, collection: Person::VERIFIED_TYPES.map{|p| [p,p]} %></td>
-            <td><%= person.low_income %></td>
             <td><%= person.created_at.to_s(:short) %></td>
             <td><%= best_in_place person, :preferred_contact_method,
                                           as: :select,
@@ -79,30 +82,23 @@
                                                         'EMAIL'=>'EMAIL'} %>
             </td>
             <td>
-            <%= person.tag_count %>
+            <%= person.tag_count %>|<%= person.rewards.size %>|<%= person.invitations.where(aasm_state:'attended').size %>
             </td>
-            <td>
-              <%= person.rewards.size %>
-            </td>
-            <td>
-              <%= person.invitations.where(aasm_state:'attended').size %>
-            </td>
-
             <td>
               <%= link_to t('.edit', :default => t('helpers.links.edit')),
-                          edit_person_path(person), :class => 'btn btn-mini btn-block' %>
+                          edit_person_path(person), :class => 'btn btn-dark btn-sm mb-1' %>
               <% if current_user.admin? %>
               <%= link_to t('.destroy', :default => t('helpers.links.destroy')),
                           person_path(person),
                           :method => :delete,
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          :class => 'btn btn-mini btn-danger btn-block' %>
+                          :class => 'btn btn-sm btn-danger btn-block' %>
                 <%= link_to I18n.t('deactivate'),
                           deactivate_people_path(person),
                           remote: true,
                           method: :post,
                           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                          :class => 'btn btn-mini btn-danger btn-block' %>
+                          :class => 'btn btn-sm btn-danger btn-block' %>
               <% end %>
             </td>
           </tr>
@@ -113,7 +109,7 @@
 </div>
 
 <div class="row">
-  <div class="span12" style="text-align:center">
-    <%= will_paginate @people, :renderer => BootstrapPagination::Rails %>
+  <div class="col-12" style="text-align:center">
+    <%= will_paginate @people, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>

@@ -20,7 +20,13 @@ feature "research sessions" do
     fill_in "Session Title", with: title
     fill_in "Session Location", with: location
     fill_in "Session description", with: description
-    fill_in "Start datetime", with: start_datetime.strftime("%Y-%m-%d %H:%M %p")
+    # we use a datepicker, so we hide the actual datetime field
+    if page.driver.class == Capybara::Selenium::Driver # dumb, but the element doesn't appear otherwise
+      find('.today').click()
+    else
+      find("//*[@id=\'research_session_start_datetime\']", visible: false).set(start_datetime.strftime("%Y-%m-%d %H:%M %p"))
+    end
+    #page.execute_script("document.getElementById('research_session_start_datetime').value = '#{start_datetime.strftime("%Y-%m-%d %H:%M %p")}';")    
     select duration, from: "research_session_duration"
   end
 
@@ -307,6 +313,14 @@ feature "research sessions" do
     add_invitee(person_2)
     invitation_2 = research_session.reload.invitations.find_by(person: person_2)
     assert_invitee_actions_exist(["invite"])
+
+    click_with_js(page.find("#add-reward-#{invitation_2.id}"))
+    expect(page).to have_content("Rewards:#{invitation_2.person.full_name}")
+    
+    click_with_js(page.find("#modal-footer-close"))
+    
+    expect(page).not_to have_selector('#modal-window', visible: true)
+
 
     # travel far past the session date
     Timecop.freeze(start_datetime + 1.day) do

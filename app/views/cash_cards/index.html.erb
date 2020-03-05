@@ -1,6 +1,6 @@
 <%= render :partial => 'layouts/reward_menu' %>
 <p id="notice"><%= notice %></p>
-<%= will_paginate @cash_cards, :renderer => BootstrapPagination::Rails %>
+<%= will_paginate @cash_cards, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
 
 <h1>Cash Cards</h1>
 
@@ -46,7 +46,7 @@
     <% end %>
   </tbody>
 </table>
-<%= will_paginate @casgh_cards, :renderer => BootstrapPagination::Rails %>
+<%= will_paginate @casgh_cards, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
 <br>
 
 <%= link_to 'New Cash Card', new_cash_card_path %>

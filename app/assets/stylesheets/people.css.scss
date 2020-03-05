@@ -29,4 +29,10 @@ a.comment-delete-link {
 }
 
 
-#mapid { height: 300px;}
+#mapid {
+  position: relative;
+  border: 1px solid black;
+  border-radius: 8px;
+  height: 25em;  /* or as desired */
+  width: 100%;
+}
