@@ -55,19 +55,19 @@ class DigitalGiftsController < ApplicationController
       DigitalGiftService.validate_params(current_user, params)
       @dg = DigitalGift.new(user_id: current_user.id,
                           created_by: current_user.id,
-                          amount: dg_params['amount'],
-                          person_id: dg_params['person_id'])
+                          amount: dg_params["amount"],
+                          person_id: dg_params["person_id"])
       @reward = Reward.new(user_id: current_user.id,
                          created_by: current_user.id,
-                         amount: dg_params['amount'],
-                         person_id: dg_params['person_id'],
-                         reason: dg_params['reason'],
-                         notes: dg_params['notes'],
-                         giftable_type: dg_params['giftable_type'],
-                         giftable_id: dg_params['giftable_id'],
+                         amount: dg_params["amount"],
+                         person_id: dg_params["person_id"],
+                         reason: dg_params["reason"],
+                         notes: dg_params["notes"],
+                         giftable_type: dg_params["giftable_type"],
+                         giftable_id: dg_params["giftable_id"],
                          finance_code: current_user&.team&.finance_code,
                          team: current_user&.team,
-                         rewardable_type: 'DigitalGift')
+                         rewardable_type: "DigitalGift")
       if @dg.valid? # if it's not valid, error out
         @dg.create_order_on_giftrocket!(@reward) # do the thing!
         if @dg.save
@@ -103,9 +103,9 @@ class DigitalGiftsController < ApplicationController
     if @research_session.can_survey? && !@research_session.is_invited?(@person)
       @invitation = Invitation.new(aasm_state: "attended", person_id: @person.id, research_session_id: @research_session.id)
       @invitation.save
-      @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params['amount'], person_id: @person.id)
+      @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params["amount"], person_id: @person.id)
 
-      @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params['amount'], reason: 'survey', giftable_type: 'Invitation', giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: 'DigitalGift')
+      @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params["amount"], reason: "survey", giftable_type: "Invitation", giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: "DigitalGift")
       if @digital_gift.valid?
         @digital_gift.create_order_on_giftrocket!(@reward) # do the thing!
         if @digital_gift.save

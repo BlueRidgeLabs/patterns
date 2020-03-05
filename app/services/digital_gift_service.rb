@@ -22,7 +22,7 @@ class DigitalGiftService
       user_id = user.id
       team = user&.team
       dg_params = params.slice(:amount, :person_id).merge({ user_id: user_id, created_by: user_id })
-      reward_params = params.merge({ finance_code: team&.finance_code, team: team, rewardable_type: 'DigitalGift' })
+      reward_params = params.merge({ finance_code: team&.finance_code, team: team, rewardable_type: "DigitalGift" })
       digital_gift = DigitalGift.new(dg_params)
       reward = Reward.new(reward_params)
 
@@ -39,18 +39,18 @@ class DigitalGiftService
 
     def validate_giftable!(params)
       giftable = giftable_for(params)
-      raise 'No giftable object present' if giftable.nil?
+      raise "No giftable object present" if giftable.nil?
 
       person_name = giftable.person.full_name
-      if params[:giftable_type] == 'Invitation'
+      if params[:giftable_type] == "Invitation"
         raise "#{person_name} isn't marked as 'attended'." unless giftable.attended?
         raise "#{person_name} Already has a digital gift" if giftable.has_digitable_gift?
       end
     end
 
     def validate_amount!(user, params)
-      budget_insufficient = params['amount'].to_money + 2.to_money >= user.available_budget
-      raise 'Insufficient Team Budget' if budget_insufficient
+      budget_insufficient = params["amount"].to_money + 2.to_money >= user.available_budget
+      raise "Insufficient Team Budget" if budget_insufficient
     end
 
     def giftable_for(params)

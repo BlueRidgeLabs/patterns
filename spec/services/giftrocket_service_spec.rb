@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe GiftrocketService do
@@ -8,10 +10,10 @@ RSpec.describe GiftrocketService do
     let(:person) { FactoryBot.create(:person) }
     let(:digital_gift) { FactoryBot.create(:digital_gift, amount_cents: GiftrocketService::SMALL_DOLLAR_THRESHOLD * 100 + 1_00, person: person, user: user) }
     let(:reward) { FactoryBot.create(:reward, :digital_gift) }
-    let(:gr_gift_id) { 'covfefe_gift_id' }
-    let(:gr_order_id) { 'covfefe_order_id' }
-    let(:gr_funding_source_id) { 'covfefe_fs_id' }
-    let(:gr_recipient_link) { 'https://covfefe.com' }
+    let(:gr_gift_id) { "covfefe_gift_id" }
+    let(:gr_order_id) { "covfefe_order_id" }
+    let(:gr_funding_source_id) { "covfefe_fs_id" }
+    let(:gr_recipient_link) { "https://covfefe.com" }
     let(:gr_fee) { 1_00 }
     let(:mock_order) {
       Hashie::Mash.new({
@@ -32,17 +34,17 @@ RSpec.describe GiftrocketService do
 
     before do
       mock_balance_funding_source = double("mock_balance_funding_source")
-      allow(mock_balance_funding_source).to receive(:method).and_return('balance')
+      allow(mock_balance_funding_source).to receive(:method).and_return("balance")
       allow(mock_balance_funding_source).to receive(:id).and_return(gr_funding_source_id)
       mock_funding_sources = [mock_balance_funding_source]
       allow(Giftrocket::FundingSource).to receive(:list).and_return(mock_funding_sources)
     end
 
-    def assert_order_created(campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'], error_raised: false, user_budget: 1000000.to_money)
+    def assert_order_created(campaign_id: ENV["GIFTROCKET_HIGH_CAMPAIGN"], error_raised: false, user_budget: 1000000.to_money)
       allow(user).to receive(:available_budget).and_return(user_budget)
 
       if error_raised
-        expect{ sut.create_order!(digital_gift, reward) }.to raise_error
+        expect { sut.create_order!(digital_gift, reward) }.to raise_error
         return
       end
 
@@ -59,7 +61,7 @@ RSpec.describe GiftrocketService do
           amount: digital_gift.amount.to_s,
           recipient: {
             name: person.full_name,
-            delivery_method: 'LINK'
+            delivery_method: "LINK"
           }
         ]
       }).and_return(mock_order)
@@ -77,13 +79,13 @@ RSpec.describe GiftrocketService do
     end
 
     it "creates a giftrocket order and returns params to be persisted on digital gift" do
-      assert_order_created(campaign_id: ENV['GIFTROCKET_HIGH_CAMPAIGN'])
+      assert_order_created(campaign_id: ENV["GIFTROCKET_HIGH_CAMPAIGN"])
     end
 
     context "amount is small dollar amount" do
       it "uses gf low campaign" do
         digital_gift.update(amount_cents: GiftrocketService::SMALL_DOLLAR_THRESHOLD * 100 - 1)
-        assert_order_created(campaign_id: ENV['GIFTROCKET_LOW_CAMPAIGN'])
+        assert_order_created(campaign_id: ENV["GIFTROCKET_LOW_CAMPAIGN"])
       end
     end
 
