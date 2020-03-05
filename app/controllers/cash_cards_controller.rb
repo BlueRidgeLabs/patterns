@@ -7,10 +7,10 @@ class CashCardsController < ApplicationController
   # GET /cash_cards.json
   def index
     if current_user.admin?
-      @cash_cards = CashCard.order(id: 'desc').includes(:reward).page(params[:page])
+      @cash_cards = CashCard.order(id: "desc").includes(:reward).page(params[:page])
     else
       team_ids = current_user.team.users.map(&:id)
-      @cash_cards = CashCard.where(user_id: team_ids).order(id: 'desc').includes(:reward).page(params[:page])
+      @cash_cards = CashCard.where(user_id: team_ids).order(id: "desc").includes(:reward).page(params[:page])
     end
   end
 
@@ -33,7 +33,7 @@ class CashCardsController < ApplicationController
 
     respond_to do |format|
       if @cash_card.save
-        format.html { redirect_to @cash_card, notice: 'Cash card was successfully created.' }
+        format.html { redirect_to @cash_card, notice: "Cash card was successfully created." }
         format.json { render :show, status: :created, location: @cash_card }
       else
         format.html { render :new }
@@ -47,7 +47,7 @@ class CashCardsController < ApplicationController
   def update
     respond_to do |format|
       if @cash_card.update(cash_card_params)
-        format.html { redirect_to @cash_card, notice: 'Cash card was successfully updated.' }
+        format.html { redirect_to @cash_card, notice: "Cash card was successfully updated." }
         format.json { render :show, status: :ok, location: @cash_card }
       else
         format.html { render :edit }
@@ -61,13 +61,12 @@ class CashCardsController < ApplicationController
   def destroy
     @cash_card.destroy
     respond_to do |format|
-      format.html { redirect_to cash_cards_url, notice: 'Cash card was successfully destroyed.' }
+      format.html { redirect_to cash_cards_url, notice: "Cash card was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
-
     # Use callbacks to share common setup or constraints between actions.
     def set_cash_card
       @cash_card = CashCard.find(params[:id])

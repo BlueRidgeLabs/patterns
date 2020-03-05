@@ -8,10 +8,10 @@ class DigitalGiftsController < ApplicationController
   # GET /digital_gifts.json
   def index
     if current_user.admin?
-      @digital_gifts = DigitalGift.order(id: 'desc').includes(:reward).page(params[:page])
+      @digital_gifts = DigitalGift.order(id: "desc").includes(:reward).page(params[:page])
     else
       team_ids = current_user.team.users.map(&:id)
-      @digital_gifts = DigitalGift.where(user_id: team_ids).order(id: 'desc').includes(:reward).page(params[:page])
+      @digital_gifts = DigitalGift.where(user_id: team_ids).order(id: "desc").includes(:reward).page(params[:page])
     end
   end
 
@@ -20,8 +20,8 @@ class DigitalGiftsController < ApplicationController
     if @digtial_gift.nil? || !valid_request?(request)
       render json: { success: false }
     else
-      if params[:event].match? 'gift'
-        @digital_gift.giftrocket_status = params[:event].delete('gift.')
+      if params[:event].match? "gift"
+        @digital_gift.giftrocket_status = params[:event].delete("gift.")
         @digital_gift.save
       end
       render json: { success: true }
@@ -34,7 +34,7 @@ class DigitalGiftsController < ApplicationController
     @digital_gift.sent_at = Time.current
     @digital_gift.save
     respond_to do |format|
-      format.js {}
+      format.js { }
     end
   end
 
@@ -86,7 +86,7 @@ class DigitalGiftsController < ApplicationController
     end
 
     respond_to do |format|
-      format.js {}
+      format.js { }
     end
   end
 
@@ -101,9 +101,8 @@ class DigitalGiftsController < ApplicationController
     return if performed?
 
     if @research_session.can_survey? && !@research_session.is_invited?(@person)
-      @invitation = Invitation.new(aasm_state: 'attended', person_id: @person.id, research_session_id: @research_session.id)
+      @invitation = Invitation.new(aasm_state: "attended", person_id: @person.id, research_session_id: @research_session.id)
       @invitation.save
-
       @digital_gift = DigitalGift.new(user_id: @user.id, created_by: @user.id, amount: api_params['amount'], person_id: @person.id)
 
       @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params['amount'], reason: 'survey', giftable_type: 'Invitation', giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: 'DigitalGift')
@@ -117,25 +116,29 @@ class DigitalGiftsController < ApplicationController
           @digital_gift.sent_at = Time.current
           @digital_gift.sent_by = @user.id
           @digital_gift.save
-          render status: :created, json: { success: true, link: @digital_gift.link, msg: 'Successfully created a gift card for you!' }.to_json
+          render status: :created, json: { success: true, link: @digital_gift.link, msg: "Successfully created a gift card for you!" }.to_json
         end
       else
         Airbrake.notify("Can't create Digital Gift, not valid #{api_params}")
-        render status: :unprocessable_entity, json: { success: false, msg: 'digital gift invalid' }.to_json
+        render status: :unprocessable_entity, json: { success: false, msg: "digital gift invalid" }.to_json
       end
     else
       Airbrake.notify("Can't create Digital Gift, research_session busted: #{api_params}")
-      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong. we will be in touch soon! research_session invalid' }.to_json
+      render status: :unprocessable_entity, json: { success: false, msg: "Something has gone wrong. we will be in touch soon! research_session invalid" }.to_json
     end
   end
 
   def validate_api_args
-    @user = User.where(token: request.headers['AUTHORIZATION']).first if request.headers['AUTHORIZATION'].present?
+    if request.headers["AUTHORIZATION"].present?
+      @user = User.where(token: request.headers["AUTHORIZATION"]).first
+    end
 
-    render(status: :unauthorized, json: { success: false }.to_json) && return if @user.blank? || !@user.admin?
+    if @user.blank? || !@user.admin?
+      render(status: :unauthorized, json: { success: false }.to_json) && return
+    end
 
-    @research_session = ResearchSession.where(api_params['research_session_id']).first
-    phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))
+    @research_session = ResearchSession.where(api_params["research_session_id"]).first
+    phone = PhonyRails.normalize_number(CGI.unescape(api_params["phone_number"]))
     @person = Person.active.where(phone_number: phone).first
 
     if @person.blank? || @research_session.blank? || @user.blank?
@@ -144,59 +147,14 @@ class DigitalGiftsController < ApplicationController
     end
 
     # $2 fee possibly
-    if @user.available_budget + 2.to_money < api_params['amount'].to_money
+    if @user.available_budget + 2.to_money < api_params["amount"].to_money
       Airbrake.notify("Can't create Digital Gift, insufficient budget! #{api_params}")
-      render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon: insufficent budget' }.to_json) && return
+      render(status: :unprocessable_entity, json: { success: false, msg: "Something has gone wrong, we will be in touch soon: insufficent budget" }.to_json) && return
     end
     #  should check if we've already given a digital gift for this research session
   end
-  # GET /digital_gifts/1/edit
-  # def edit; end
-
-  # we don't create, destroy or update these via controller
-
-  # # POST /digital_gifts
-  # # POST /digital_gifts.json
-  # def create
-  #   @digital_gift = DigitalGift.new(digital_gift_params)
-
-  #   respond_to do |format|
-  #     if @digital_gift.save
-  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was @successfully created.' }
-  #       format.json { render :show, status: :created, location: @digital_gift }
-  #     else
-  #       format.html { render :new }
-  #       format.json { render json: @digital_gift.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
-  # # PATCH/PUT /digital_gifts/1
-  # # PATCH/PUT /digital_gifts/1.json
-  # def update
-  #   respond_to do |format|
-  #     if @digital_gift.update(digital_gift_params)
-  #       format.html { redirect_to @digital_gift, notice: 'DigitalGift was @successfully updated.' }
-  #       format.json { render :show, status: :ok, location: @digital_gift }
-  #     else
-  #       format.html { render :edit }
-  #       format.json { render json: @digital_gift.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
-  # DELETE /digital_gifts/1
-  # DELETE /digital_gifts/1.json
-  # def destroy
-  #   @digital_gift.destroy
-  #   respond_to do |format|
-  #     format.html { redirect_to digital_gifts_url, notice: 'DigitalGift was @successfully destroyed.' }
-  #     format.json { head :no_content }
-  #   end
-  # end
 
   private
-
     def webhook_params
       params.permit(:payload, :event, :digital_gift)
     end
@@ -230,13 +188,13 @@ class DigitalGiftsController < ApplicationController
     end
 
     def valid_request?(request)
-      signature_header = request.headers['GiftRocket-Webhook-Signature']
-      algorithm, received_signature = signature_header.split('=', 2)
+      signature_header = request.headers["GiftRocket-Webhook-Signature"]
+      algorithm, received_signature = signature_header.split("=", 2)
 
-      raise Exception.new('Invalid algorithm') if algorithm != 'sha256'
+      raise Exception, "Invalid algorithm" if algorithm != "sha256"
 
       expected_signature = OpenSSL::HMAC.hexdigest(
-        OpenSSL::Digest.new(algorithm), ENV['GIFT_ROCKET_WEBHOOK'], request.body.read
+        OpenSSL::Digest.new(algorithm), ENV["GIFT_ROCKET_WEBHOOK"], request.body.read
       )
       received_signature == expected_signature
     end

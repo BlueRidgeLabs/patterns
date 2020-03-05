@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/concern'
+require "active_support/concern"
 
 # to be "calendarable", must have or delegate to
 # start_datetime
@@ -16,17 +16,17 @@ module Calendarable
   included do
     # doesn't work if you delegate start_datetime etc.
     # how do we fix?
-    scope :in_range, ->(range) {
+    scope :in_range, lambda { |range|
       where("(#{table_name}.start_datetime BETWEEN ? AND ? OR #{table_name}.end_datetime BETWEEN ? AND ?) OR (#{table_name}.start_datetime <= ? AND #{table_name}.end_datetime >= ?)", range.first, range.last, range.first, range.last, range.first, range.last)
     }
 
-    scope :for_today, -> {
+    scope :for_today, lambda {
       where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
             Time.zone.now.beginning_of_day,
             Time.zone.now.end_of_day)
     }
 
-    scope :for_today_and_tomorrow, -> {
+    scope :for_today_and_tomorrow, lambda {
       where("#{table_name}.start_datetime >= ? and #{table_name}.end_datetime <= ?",
             Time.zone.now.beginning_of_day,
             Time.zone.now.end_of_day + 1.day)
@@ -77,7 +77,6 @@ module Calendarable
   end
 
   private
-
     def cal_description
       if defined? person # it's an invitation
         res = description + %(
@@ -97,9 +96,9 @@ tags: #{cached_tag_list})
     end
 
     def generate_url
-      if self.class.to_s == 'Invitation'
+      if self.class.to_s == "Invitation"
         "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{research_session.id}"
-      elsif self.class.to_s == 'ResearchSession'
+      elsif self.class.to_s == "ResearchSession"
         "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{id}"
       end
     end
@@ -107,7 +106,7 @@ tags: #{cached_tag_list})
     def add_alarm(event)
       # only add alarms for the actual reservation
       case self.class.name.demodulize
-      when 'ResearchSession'
+      when "ResearchSession"
         generate_alarm(event)
       else
         event
@@ -115,17 +114,17 @@ tags: #{cached_tag_list})
     end
 
     def generate_alarm(event)
-      user_email = defined?(user) ? user.email : ENV['MAIL_ADMIN']
+      user_email = defined?(user) ? user.email : ENV["MAIL_ADMIN"]
       event.alarm do |alarm|
         alarm.attendee = "mailto:#{user_email}"
         alarm.summary  = description
-        alarm.trigger  = '-P1DT0H0M0S' # 1 day before
+        alarm.trigger  = "-P1DT0H0M0S" # 1 day before
       end
       event
     end
 
     def date_plus_time(date, time)
-      (Date.strptime(date, '%m/%d/%Y') + Time.zone.parse(time).seconds_since_midnight.seconds)
+      (Date.strptime(date, "%m/%d/%Y") + Time.zone.parse(time).seconds_since_midnight.seconds)
     end
 
     # must by reasonably unique

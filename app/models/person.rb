@@ -53,15 +53,15 @@
 #
 
 # FIXME: Refactor and re-enable cop
-# rubocop:disable ClassLength
+# rubocop:disable Metrics/ClassLength
 class Person < ApplicationRecord
   has_paper_trail
 
   acts_as_taggable
 
   VERIFIED_TYPES = [
-    VERIFIED_TYPE = 'Verified',
-    NOT_VERIFIED_TYPE = 'No'
+    VERIFIED_TYPE = "Verified",
+    NOT_VERIFIED_TYPE = "No"
   ].freeze
 
   # * Active DIG member =“Participated in 3+ sessions” = invited to join FB group;
@@ -73,11 +73,11 @@ class Person < ApplicationRecord
   # and notify me when new person gets added-- that would be amazing
 
   PARTICIPATION_LEVELS = [
-    PARTICIPATION_LEVEL_NEW = 'new',
-    PARTICIPATION_LEVEL_INACTIVE = 'inactive',
-    PARTICIPATION_LEVEL_PARTICIPANT = 'participant',
-    PARTICIPATION_LEVEL_ACTIVE = 'active',
-    PARTICIPATION_LEVEL_AMBASSADOR = 'ambassador'
+    PARTICIPATION_LEVEL_NEW = "new",
+    PARTICIPATION_LEVEL_INACTIVE = "inactive",
+    PARTICIPATION_LEVEL_PARTICIPANT = "participant",
+    PARTICIPATION_LEVEL_ACTIVE = "active",
+    PARTICIPATION_LEVEL_AMBASSADOR = "ambassador"
   ].freeze
 
   page 50
@@ -86,8 +86,8 @@ class Person < ApplicationRecord
   include ExternalDataMappings
   include Neighborhoods
 
-  phony_normalize :phone_number, default_country_code: 'US'
-  phony_normalized_method :phone_number, default_country_code: 'US'
+  phony_normalize :phone_number, default_country_code: "US"
+  phony_normalized_method :phone_number, default_country_code: "US"
 
   has_many :comments, as: :commentable, dependent: :destroy
 
@@ -104,11 +104,16 @@ class Person < ApplicationRecord
 
   has_secure_token :token
 
-  if ENV['RAILS_ENV'] == 'production'
-    after_commit :send_to_mailchimp, on: %i[update create] if ENV['MAILCHIMP_API_KEY']
+  if ENV["RAILS_ENV"] == "production"
+    if ENV["MAILCHIMP_API_KEY"]
+      # no mailchimping
+      # after_commit :send_to_mailchimp, on: %i[update create]
+    end
 
-    after_commit :update_rapidpro, on: %i[update create] if ENV['RAPIDPRO_TOKEN']
-    before_destroy :delete_from_rapidpro if ENV['RAPIDPRO_TOKEN']
+    if ENV["RAPIDPRO_TOKEN"]
+      after_commit :update_rapidpro, on: %i[update create]
+    end
+    before_destroy :delete_from_rapidpro if ENV["RAPIDPRO_TOKEN"]
   end
 
   after_create  :update_neighborhood
@@ -121,13 +126,13 @@ class Person < ApplicationRecord
   validates :postal_code, zipcode: { country_code: :us }
 
   # phony validations and normalization
-  phony_normalize :phone_number, default_country_code: 'US'
-  phony_normalize :landline, default_country_code: 'US'
+  phony_normalize :phone_number, default_country_code: "US"
+  phony_normalize :landline, default_country_code: "US"
 
   validates :phone_number, presence: true, length: { in: 9..15 },
-    unless: proc { |person| person.email_address.present? }
+                           unless: proc { |person| person.email_address.present? }
   validates :email_address, presence: true,
-    unless: proc { |person| person.phone_number.present? }
+                            unless: proc { |person| person.phone_number.present? }
 
   validates :email_address,
             format: { with: Devise.email_regexp,
@@ -141,19 +146,19 @@ class Person < ApplicationRecord
   # scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM rewards where rewards.reason = 1)') }
   # scope :signup_card_needed, -> { joins(:rewards).where('rewards.reason !=1') }
 
-  scope :verified, -> { where('verified like ?', '%Verified%') }
-  scope :not_verified, -> { where.not('verified like ?', '%Verified%') }
+  scope :verified, -> { where("verified like ?", "%Verified%") }
+  scope :not_verified, -> { where.not("verified like ?", "%Verified%") }
   scope :active, -> { where(active: true) }
   scope :deactivated, -> { where(active: false) }
 
-  scope :order_by_reward_sum, -> { joins(:rewards).includes(:research_sessions).where('rewards.created_at >= ?', Time.current.beginning_of_year).select('people.id, people.first_name,people.last_name, people.active,sum(rewards.amount_cents) as total_rewards').group('people.id').order('total_rewards desc') }
+  scope :order_by_reward_sum, -> { joins(:rewards).includes(:research_sessions).where("rewards.created_at >= ?", Time.current.beginning_of_year).select("people.id, people.first_name,people.last_name, people.active,sum(rewards.amount_cents) as total_rewards").group("people.id").order("total_rewards desc") }
   # no longer using this. now managing active elsewhere
   # default_scope { where(active:
 
   ransacker :full_name, formatter: proc { |v| v.mb_chars.downcase.to_s } do |parent|
-    Arel::Nodes::NamedFunction.new('lower',
-                                   [Arel::Nodes::NamedFunction.new('concat_ws',
-                                                                   [Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]])])
+    Arel::Nodes::NamedFunction.new("lower",
+                                   [Arel::Nodes::NamedFunction.new("concat_ws",
+                                                                   [Arel::Nodes.build_quoted(" "), parent.table[:first_name], parent.table[:last_name]])])
   end
 
   scope :ransack_tagged_with, ->(*tags) { tagged_with(tags) }
@@ -163,7 +168,9 @@ class Person < ApplicationRecord
   end
 
   def self.locale_name_to_locale(locale_name)
-    obj = { 'english' => 'en', 'spanish' => 'es', 'chinese' => 'zh' }
+    obj = { "english" => "en",
+            "spanish" => "es", "spa" => "es",
+            "chinese" => "zh" }
     obj[locale_name.to_s.downcase]
   end
 
@@ -190,26 +197,26 @@ class Person < ApplicationRecord
   end
 
   def inactive_criteria
-    at_least_one_reward_older_than_a_year = rewards.where('created_at < ?', 1.year.ago).size >= 1
-    no_rewards_in_the_past_year = rewards.where('created_at >= ?', 1.year.ago).empty?
+    at_least_one_reward_older_than_a_year = rewards.where("created_at < ?", 1.year.ago).size >= 1
+    no_rewards_in_the_past_year = rewards.where("created_at >= ?", 1.year.ago).empty?
     at_least_one_reward_older_than_a_year && no_rewards_in_the_past_year
   end
 
   def participant_criteria
     # gotten a gift card in the past year.
-    rewards.where('created_at > ?', 1.year.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
+    rewards.where("created_at > ?", 1.year.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
   end
 
   def active_criteria
-    at_least_one_reward_in_past_six_months = rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
+    at_least_one_reward_in_past_six_months = rewards.where("created_at > ?", 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
     at_least_one_reward_in_past_six_months
   end
 
   def ambassador_criteria
-    if tag_list.include?('brl special ambassador')
+    if tag_list.include?("brl special ambassador")
       true
     else
-      sessions_with_two_or_more_teams_in_the_past_year = rewards.where('created_at > ?', 1.year.ago).map(&:team).uniq.size >= 2
+      sessions_with_two_or_more_teams_in_the_past_year = rewards.where("created_at > ?", 1.year.ago).map(&:team).uniq.size >= 2
       at_least_three_sessions_ever = rewards.map { |g| g&.research_session&.id }.compact.uniq.size >= 3
       sessions_with_two_or_more_teams_in_the_past_year && at_least_three_sessions_ever
     end
@@ -225,7 +232,7 @@ class Person < ApplicationRecord
   end
 
   def update_participation_level
-    return if tag_list.include? 'not dig'
+    return if tag_list.include? "not dig"
 
     new_level = calc_participation_level
 
@@ -247,14 +254,14 @@ class Person < ApplicationRecord
           cart.remove_person(id) # no-op if person not in cart
         end
       end # end cart update
-      return { pid: id, old: old_level, new: new_level }
+      { pid: id, old: old_level, new: new_level }
     end
   end
 
   def rewards_total
     end_of_last_year = Time.zone.today.beginning_of_year - 1.day
-    total = rewards.where('created_at > ?', end_of_last_year).sum(:amount_cents)
-    Money.new(total, 'USD')
+    total = rewards.where("created_at > ?", end_of_last_year).sum(:amount_cents)
+    Money.new(total, "USD")
   end
 
   def rewards_count
@@ -270,11 +277,11 @@ class Person < ApplicationRecord
   end
 
   def screened?
-    tag_list.include?('screened')
+    tag_list.include?("screened")
   end
 
   def send_to_mailchimp
-    status = active? ? 'subscribed' : 'unsubscribed'
+    status = active? ? "subscribed" : "unsubscribed"
     MailchimpUpdateJob.perform_async(id, status)
   end
 
@@ -283,9 +290,9 @@ class Person < ApplicationRecord
   end
 
   def update_rapidpro
-    if active && !tag_list.include?('not dig')
+    if active && !tag_list.include?("not dig")
       RapidproUpdateJob.perform_async(id)
-    elsif !active || tag_list.include?('not dig')
+    elsif !active || tag_list.include?("not dig")
       delete_from_rapidpro
     end
   end
@@ -295,11 +302,12 @@ class Person < ApplicationRecord
   end
 
   def full_name
-    [first_name, last_name].join(' ')
+    [first_name, last_name].join(" ")
   end
+  alias_method :name, :full_name
 
   def address_fields_to_sentence
-    [address_1, address_2, city, state, postal_code].reject(&:blank?).join(', ')
+    [address_1, address_2, city, state, postal_code].reject(&:blank?).join(", ")
   end
 
   # def send_invitation_reminder
@@ -324,38 +332,38 @@ class Person < ApplicationRecord
   # end
 
   def self.csv_headers
-    Person.column_names + ['tags']
+    Person.column_names + ["tags"]
   end
 
   def self.human_device_type_name(device_id)
     device_mappings = Patterns::Application.config.device_mappings
     device_mappings.rassoc(device_id)[0].to_s
   rescue StandardError
-    'Unknown/No selection'
+    "Unknown/No selection"
   end
 
   def self.human_connection_type_name(connection_id)
     connection_mappings = Patterns::Application.config.connection_mappings
     friendly_name_mappings = {
-      phone: 'Phone with data plan',
-      home_broadband: 'Home broadband (cable, DSL)',
-      other: 'Other',
-      public_computer: 'Public computer',
-      public_wifi: 'Public wifi'
+      phone: "Phone with data plan",
+      home_broadband: "Home broadband (cable, DSL)",
+      other: "Other",
+      public_computer: "Public computer",
+      public_wifi: "Public wifi"
     }
     friendly_name_mappings[connection_mappings.rassoc(connection_id)[0]]
   rescue StandardError
-    'Unknown/No selection'
+    "Unknown/No selection"
   end
 
   def to_csv_row
     Person.csv_headers.map do |field|
       field_value = send(field.to_sym)
       case field
-      when 'primary_device_id', 'secondary_device_id' then Person.human_device_type_name(field_value)
-      when 'primary_connection_id', 'secondary_connection_id' then Person.human_connection_type_name(field_value)
-      when 'phone_number' then field_value&.phony_formatted(format: :national, spaces: '-')
-      when 'tags' then tag_values&.join('|')
+      when "primary_device_id", "secondary_device_id" then Person.human_device_type_name(field_value)
+      when "primary_connection_id", "secondary_connection_id" then Person.human_connection_type_name(field_value)
+      when "phone_number" then field_value&.phony_formatted(format: :national, spaces: "-")
+      when "tags" then tag_values&.join("|")
       else field_value
       end
     end
@@ -396,4 +404,4 @@ class Person < ApplicationRecord
     end
   end
 end
-# rubocop:enable ClassLength
+# rubocop:enable Metrics/ClassLength

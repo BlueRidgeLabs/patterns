@@ -8,7 +8,7 @@
 <div class='tag-cloud'>
 <% tag_cloud(@tags, %w(css1 css2 css3 css4)) do |tag, css_class| %>
   <span class='tag'>
-  <%= link_to tag.name, people_path(tags: tag.name), class: css_class %><span class='badge'><%= tag.taggings_count %></span>
+  <%= link_to tag.name, people_path(tags: tag.name), class: css_class %><span class='badge badge-dark'><%= tag.taggings_count %></span>
   </span>
 <% end %>
 </div>

@@ -21,12 +21,12 @@ class ActivationCall < ApplicationRecord
   has_secure_token
 
   CALL_TYPES = [
-    CALL_TYPE_ACTIVATE = 'activate',
-    CALL_TYPE_CHECK = 'check'
+    CALL_TYPE_ACTIVATE = "activate",
+    CALL_TYPE_CHECK = "check"
     # CALL_TYPE_BALANCE = 'balance' # balance soon
   ].freeze
 
-  CALL_STATUS_STARTED = 'started'
+  CALL_STATUS_STARTED = "started"
 
   validates :gift_card_id, presence: true
   validates :call_type, presence: true
@@ -55,9 +55,9 @@ class ActivationCall < ApplicationRecord
   def type_transcript
     case call_type
     when CALL_TYPE_ACTIVATE
-      I18n.t('activation_call.transcript.activate')
+      I18n.t("activation_call.transcript.activate")
     when CALL_TYPE_CHECK
-      I18n.t('activation_call.transcript.check')
+      I18n.t("activation_call.transcript.check")
       # when 'balance' # not yet implemented. but could be
       #   'the available balance'
     end
@@ -68,9 +68,9 @@ class ActivationCall < ApplicationRecord
   # end
 
   def balance
-    if transcript.present? && call_type == 'check'
+    if transcript.present? && call_type == "check"
       regex = Regexp.new('\$\ ?[+-]?[0-9]{1,3}(?:,?[0-9])*(?:\.[0-9]{1,2})?')
-      transcript.scan(regex)[0]&.delete('$')&.to_money || gift_card.amount
+      transcript.scan(regex)[0]&.delete("$")&.to_money || gift_card.amount
     else
       gift_card.amount
     end
@@ -85,12 +85,12 @@ class ActivationCall < ApplicationRecord
   end
 
   def success
-    self.call_status = 'success'
+    self.call_status = "success"
     gift_card.success!
   end
 
   def failure
-    self.call_status = 'failure'
+    self.call_status = "failure"
     # some gift cards get deleted, hence check
     gift_card.send("#{call_type}_error!".to_sym) if gift_card.present?
   end
@@ -102,7 +102,6 @@ class ActivationCall < ApplicationRecord
   delegate :update_front_end, to: :gift_card
 
   private
-
     def create_twilio
       @twilio = Twilio::REST::Client.new
     end

@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 # https://gist.github.com/defunkt/206253/raw/7c5895310a5e932e001381d0b47c7746e1e18d09/gistfile1.rb
 # unicorn_rails -c config/unicorn.rb -E production -D
 
 rails_env = ENV['RAILS_ENV'] || 'production'
-working_directory "/var/www/logan-#{rails_env}/current"
+working_directory "/var/www/patterns-#{rails_env}/current"
 # 16 workers and 1 master
 # worker_processes (rails_env == 'production' ? 16 : 4)
-#worker_processes 4
-worker_processes Integer(ENV["WEB_CONCURRENCY"] || 4)
+# worker_processes 4
+worker_processes ENV['WEB_CONCURRENCY'].to_i || (rails_env == 'production' ? 16 : 4)
 
 # Load rails+github.git into the master before forking workers
 # for super-fast worker spawn times
@@ -16,10 +18,10 @@ preload_app true
 timeout 30
 
 # Listen on a Unix data socket
-listen "/tmp/logan-#{rails_env}.sock", backlog: 2048
+listen "/tmp/patterns-#{rails_env}.sock", backlog: 2048
 
 before_exec do |_server|
-  ENV['BUNDLE_GEMFILE'] = "/var/www/logan-#{rails_env}/current/Gemfile"
+  ENV['BUNDLE_GEMFILE'] = "/var/www/patterns-#{rails_env}/current/Gemfile"
 end
 
 before_fork do |server, _worker|
@@ -34,7 +36,7 @@ before_fork do |server, _worker|
   #
   # Using this method we get 0 downtime deploys.
 
-  old_pid = "/var/www/logan-#{rails_env}/current/tmp/pids/unicorn.pid.oldbin"
+  old_pid = "/var/www/patterns-#{rails_env}/current/tmp/pids/unicorn.pid.oldbin"
   if File.exist?(old_pid) && server.pid != old_pid
     begin
       Process.kill('QUIT', File.read(old_pid).to_i)

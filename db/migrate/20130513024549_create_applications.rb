@@ -1,5 +1,6 @@
-class CreateApplications < ActiveRecord::Migration[4.2]
+# frozen_string_literal: true
 
+class CreateApplications < ActiveRecord::Migration[4.2]
   def change
     create_table :applications do |t|
       t.string :name
@@ -11,5 +12,4 @@ class CreateApplications < ActiveRecord::Migration[4.2]
       t.timestamps
     end
   end
-
 end

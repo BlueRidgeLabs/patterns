@@ -1,12 +1,16 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.describe RapidproGroupJob, :type => :job do
+RSpec.describe RapidproGroupJob, type: :job do
   let(:sut) { RapidproGroupJob }
-  let(:rapidpro_base_uri) { 'https://rapidpro.brl.nyc/api/v2/' }
-  let(:rapidpro_headers) { {
-    'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
-    'Content-Type'  => 'application/json'
-  } }
+  let(:rapidpro_base_uri) { "https://rapidpro.brl.nyc/api/v2/" }
+  let(:rapidpro_headers) do
+    {
+      "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}",
+      "Content-Type" => "application/json"
+    }
+  end
 
   let(:person_on_rapidpro) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:person_not_on_rapidpro) { FactoryBot.create(:person, phone_number: nil) }
@@ -24,7 +28,7 @@ RSpec.describe RapidproGroupJob, :type => :job do
       it "doesn't do a damn thing" do
         expect(HTTParty).not_to receive(:delete)
         expect(sut).not_to receive(:perform_in)
-        sut.new.perform(cart.id, 'create')
+        sut.new.perform(cart.id, "create")
       end
     end
 
@@ -36,17 +40,17 @@ RSpec.describe RapidproGroupJob, :type => :job do
           headers: rapidpro_headers,
           body: { name: cart.name }.to_json
         ).and_return(
-          Hashie::Mash.new({
+          Hashie::Mash.new(
             code: 201,
             parsed_response: {
-              'uuid' => 'newrapidprouuid'
+              "uuid" => "newrapidprouuid"
             }
-          })
+          )
         )
         expect(sut).not_to receive(:perform_in)
-        expect(RapidproPersonGroupJob).to receive(:perform_async).with([person_on_rapidpro.id], cart.id, 'add')
-        sut.new.perform(cart.id, 'create')
-        expect(cart.reload.rapidpro_uuid).to eq('newrapidprouuid')
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with([person_on_rapidpro.id], cart.id, "add")
+        sut.new.perform(cart.id, "create")
+        expect(cart.reload.rapidpro_uuid).to eq("newrapidprouuid")
       end
     end
 
@@ -55,8 +59,8 @@ RSpec.describe RapidproGroupJob, :type => :job do
         allow_any_instance_of(sut).to receive(:find_group).and_return(true, true)
         expect(HTTParty).not_to receive(:post)
         expect(sut).not_to receive(:perform_in)
-        expect(RapidproPersonGroupJob).to receive(:perform_async).with([person_on_rapidpro.id], cart.id, 'add')
-        sut.new.perform(cart.id, 'create')
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with([person_on_rapidpro.id], cart.id, "add")
+        sut.new.perform(cart.id, "create")
       end
     end
 
@@ -70,16 +74,16 @@ RSpec.describe RapidproGroupJob, :type => :job do
           headers: rapidpro_headers,
           body: { name: cart.name }.to_json
         ).and_return(
-          Hashie::Mash.new({
+          Hashie::Mash.new(
             code: 429,
             headers: {
               'retry-after': 100
             }
-          })
+          )
         )
-        expect(sut).to receive(:perform_in).with(100 + 5, cart.id, 'create')
+        expect(sut).to receive(:perform_in).with(100 + 5, cart.id, "create")
         expect(RapidproPersonGroupJob).not_to receive(:perform_async)
-        sut.new.perform(cart.id, 'create')
+        sut.new.perform(cart.id, "create")
         expect(cart.reload.rapidpro_uuid).to be_nil
       end
     end
@@ -94,17 +98,17 @@ RSpec.describe RapidproGroupJob, :type => :job do
           headers: rapidpro_headers,
           body: { name: cart.name }.to_json
         ).and_return(
-          Hashie::Mash.new({
+          Hashie::Mash.new(
             code: 201,
             parsed_response: {
-              'uuid' => 'newrapidprouuid'
+              "uuid" => "newrapidprouuid"
             }
-          })
+          )
         )
         expect(sut).not_to receive(:perform_in)
-        expect(RapidproPersonGroupJob).to receive(:perform_async).with([person_on_rapidpro.id], cart.id, 'add')
-        sut.new.perform(cart.id, 'create')
-        expect(cart.reload.rapidpro_uuid).to eq('newrapidprouuid')
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with([person_on_rapidpro.id], cart.id, "add")
+        sut.new.perform(cart.id, "create")
+        expect(cart.reload.rapidpro_uuid).to eq("newrapidprouuid")
       end
     end
   end
@@ -116,38 +120,38 @@ RSpec.describe RapidproGroupJob, :type => :job do
       it "doesn't do a damn thing" do
         expect(HTTParty).not_to receive(:delete)
         expect(sut).not_to receive(:perform_in)
-        sut.new.perform(cart.id, 'delete')
+        sut.new.perform(cart.id, "delete")
       end
     end
 
     context "unknown status returned from rapidpro" do
       it "raises error" do
-        rapidpro_ok_res = Hashie::Mash.new({ code: 666 })
+        rapidpro_ok_res = Hashie::Mash.new(code: 666)
         rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
         expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res)
         expect(sut).not_to receive(:perform_in)
-        expect { sut.new.perform(cart.id, 'delete') }.to raise_error(RuntimeError)
+        expect { sut.new.perform(cart.id, "delete") }.to raise_error(RuntimeError)
       end
     end
 
     context "rate limit hit" do
       it "re-queues job" do
         retry_delay = 100
-        rapidpro_429_res = Hashie::Mash.new({ code: 429, headers: { 'retry-after' => retry_delay } })
+        rapidpro_429_res = Hashie::Mash.new(code: 429, headers: { "retry-after" => retry_delay })
         rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
         expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_429_res)
-        expect(sut).to receive(:perform_in).with(retry_delay + 5, cart.id, 'delete')
-        sut.new.perform(cart.id, 'delete')
+        expect(sut).to receive(:perform_in).with(retry_delay + 5, cart.id, "delete")
+        sut.new.perform(cart.id, "delete")
       end
     end
 
     context "rate limit not hit" do
       it "does not requeue job" do
-        rapidpro_ok_res = Hashie::Mash.new({ code: 204 })
+        rapidpro_ok_res = Hashie::Mash.new(code: 204)
         rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
         expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res)
         expect(sut).not_to receive(:perform_in)
-        sut.new.perform(cart.id, 'delete')
+        sut.new.perform(cart.id, "delete")
       end
     end
   end
@@ -156,52 +160,52 @@ RSpec.describe RapidproGroupJob, :type => :job do
     describe "#find_group" do
       context "a matching group exists" do
         it "runs through all pages until it finds a matching group" do
-          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new({
-            parsed_response: {
-              'results' => [{
-                'uuid' => 'otheruuid'
-              }],
-              'next' => 'nexturl'
-            }
-          }))
-          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new({
-            parsed_response: {
-              'results' => [{
-                'uuid' => cart.rapidpro_uuid
-              }],
-              'next' => 'nexturl2'
-            }
-          }))
-          expect(HTTParty).not_to receive(:get).with('nexturl2', headers: rapidpro_headers)
+          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new(
+                                                                                                                            parsed_response: {
+                                                                                                                              "results" => [{
+                                                                                                                                "uuid" => "otheruuid"
+                                                                                                                              }],
+                                                                                                                              "next" => "nexturl"
+                                                                                                                            }
+                                                                                                                          ))
+          expect(HTTParty).to receive(:get).with("nexturl", headers: rapidpro_headers).and_return(Hashie::Mash.new(
+                                                                                                    parsed_response: {
+                                                                                                      "results" => [{
+                                                                                                        "uuid" => cart.rapidpro_uuid
+                                                                                                      }],
+                                                                                                      "next" => "nexturl2"
+                                                                                                    }
+                                                                                                  ))
+          expect(HTTParty).not_to receive(:get).with("nexturl2", headers: rapidpro_headers)
           _sut = sut.new
           # just calling this to initialize instance vars
-          _sut.perform(cart.id, 'stub')
+          _sut.perform(cart.id, "stub")
           expect(_sut.find_group).to eq(true)
         end
       end
 
       context "a matching group does not exist" do
         it "returns false" do
-          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new({
-            parsed_response: {
-              'results' => [{
-                'uuid' => 'otheruuid'
-              }],
-              'next' => 'nexturl'
-            }
-          }))
-          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new({
-            parsed_response: {
-              'results' => [{
-                'uuid' => "otherotheruuid"
-              }],
-              'next' => nil
-            }
-          }))
-          expect(HTTParty).not_to receive(:get).with('nexturl2', headers: rapidpro_headers)
+          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new(
+                                                                                                                            parsed_response: {
+                                                                                                                              "results" => [{
+                                                                                                                                "uuid" => "otheruuid"
+                                                                                                                              }],
+                                                                                                                              "next" => "nexturl"
+                                                                                                                            }
+                                                                                                                          ))
+          expect(HTTParty).to receive(:get).with("nexturl", headers: rapidpro_headers).and_return(Hashie::Mash.new(
+                                                                                                    parsed_response: {
+                                                                                                      "results" => [{
+                                                                                                        "uuid" => "otherotheruuid"
+                                                                                                      }],
+                                                                                                      "next" => nil
+                                                                                                    }
+                                                                                                  ))
+          expect(HTTParty).not_to receive(:get).with("nexturl2", headers: rapidpro_headers)
           _sut = sut.new
           # just calling this to initialize instance vars
-          _sut.perform(cart.id, 'stub')
+          _sut.perform(cart.id, "stub")
           expect(_sut.find_group).to eq(false)
         end
       end

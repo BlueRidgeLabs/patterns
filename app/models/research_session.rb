@@ -58,12 +58,12 @@ class ResearchSession < ApplicationRecord
 
   scope :today, -> { where(start_datetime: Time.zone.today.beginning_of_day..Time.zone.today.end_of_day) }
 
-  scope :future, -> {
-    where('start_datetime > ?',
+  scope :future, lambda {
+    where("start_datetime > ?",
           Time.zone.today.end_of_day)
   }
-  scope :past, -> {
-    where('start_datetime < ?',
+  scope :past, lambda {
+    where("start_datetime < ?",
           Time.zone.today.beginning_of_day)
   }
 
@@ -87,7 +87,7 @@ class ResearchSession < ApplicationRecord
   end
 
   def can_survey?
-    tag_list.include? 'survey'
+    tag_list.include? "survey"
   end
 
   def is_invited?(person)
@@ -99,11 +99,10 @@ class ResearchSession < ApplicationRecord
   end
 
   def send_invitation_notifications
-    invitations.where(aasm_state: 'created').find_each(&:invite!)
+    invitations.where(aasm_state: "created").find_each(&:invite!)
   end
 
   private
-
     def update_missing_attributes
       self.end_datetime = start_datetime + duration.minutes if end_datetime.nil?
     end
@@ -111,5 +110,4 @@ class ResearchSession < ApplicationRecord
     def clean_invitations
       invitations.each { |inv| inv.delete unless inv.valid? }
     end
-
 end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # require 'capybara/selenium-webdriver'
-Capybara.save_path = 'tmp/capybara/'
+Capybara.save_path = "tmp/capybara/"
 
 Capybara.default_driver = :rack_test
-Capybara.javascript_driver = :selenium_chrome_headless 
+Capybara.javascript_driver = :selenium_chrome_headless
 # allows all elements to be seen by capybara, when js: true is set
 Capybara.ignore_hidden_elements = false
 # rubocop:disable all

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateActivationCalls < ActiveRecord::Migration[5.2]
   def change
     create_table :activation_calls do |t|

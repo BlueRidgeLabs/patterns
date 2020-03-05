@@ -27,7 +27,7 @@
   </thead>
   <tbody> 
     <tr id='digital-gift-<%=@digital_gift.id%>' 
-  class='well well-small digital-gift'>
+  class='card card-small digital-gift'>
       <td><%= @digital_gift.order_id %></td>
       <td><%= humanized_money_with_symbol @digital_gift.amount %></td>
       <td><%= @digital_gift.giftrocket_status %></td>
@@ -49,7 +49,7 @@
   </tbody>
 </table>
 
-<div class='well well-small'>
+<div class='card card-small'>
   <dl class='dl-horizontal'>
     <dt>Transaction</dt>
     <dd><%= link_to @digital_gift.transaction_log.from.team.name, @digital_gift.transaction_log.from %></dd>
@@ -64,7 +64,7 @@
   <%= form.hidden_field :commentable_id, :value => @digital_gift.id %>
   <%= form.text_area :content, rows: 3, class: "span4 input-block-level" %>
   <%= form.submit 'Add note', :class => "btn" %>
-  <%= content_tag :span,'?',class: 'badge', data:{
+  <%= content_tag :span,'?',class: 'badge badge-dark', data:{
       toggle: "popover", 
       placement: "top", 
       content: "This is where to capture information that other people might want to know about this gift card.",

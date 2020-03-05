@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: research_sessions
@@ -18,7 +20,7 @@
 #  cached_tag_list :string(255)
 #
 
-require 'faker'
+require "faker"
 FactoryBot.define do
   factory :research_session do
     user
@@ -27,6 +29,6 @@ FactoryBot.define do
     start_datetime { DateTime.now + 5.days }
     duration 60
     session_type 1
-    location { Faker::Boolean.boolean ? Faker::Address.full_address : Faker::PhoneNumber.phone_number}
+    location { Faker::Boolean.boolean ? Faker::Address.full_address : Faker::PhoneNumber.phone_number }
   end
 end

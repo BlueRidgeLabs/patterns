@@ -8,11 +8,13 @@ class RewardsController < ApplicationController
   # GET /rewards.csv
   def index
     @q_rewards = if current_user.admin?
-                   Reward.includes(:user, :rewardable).ransack(params[:q])
-                 else
-                   Reward.includes(:user, :rewardable).where(created_by: current_user.id).ransack(params[:q])
-                 end
-    @q_rewards.sorts = [sort_column + ' ' + sort_direction] if @q_rewards.sorts.empty?
+      Reward.includes(:user, :rewardable).ransack(params[:q])
+    else
+      Reward.includes(:user, :rewardable).where(created_by: current_user.id).ransack(params[:q])
+    end
+    if @q_rewards.sorts.empty?
+      @q_rewards.sorts = [sort_column + " " + sort_direction]
+    end
     respond_to do |format|
       format.html do
         @rewards = @q_rewards.result.includes(:person, :rewardable, :giftable).order(id: :desc).page(params[:page])
@@ -91,20 +93,20 @@ class RewardsController < ApplicationController
   def assign
     ## todo, gotta find the right class and object
 
-    klass = reward_params['rewardable_type'].classify.constantize
-    @rewardable = klass.find(reward_params['rewardable_id'])
+    klass = reward_params["rewardable_type"].classify.constantize
+    @rewardable = klass.find(reward_params["rewardable_id"])
     @success = false
     # TODO: Refactor
     if @rewardable && Reward.find_by(rewardable_type: @rewardable.class.to_s,
-                           rewardable_id: @rewardable.id).nil?
+                                     rewardable_id: @rewardable.id).nil?
       @reward = Reward.new(rewardable_type: @rewardable.class,
                            rewardable_id: @rewardable.id,
                            amount: @rewardable.amount,
-                           reason: reward_params['reason'],
+                           reason: reward_params["reason"],
                            user_id: current_user.id,
-                           person_id: reward_params['person_id'],
-                           giftable_type: reward_params['giftable_type'],
-                           giftable_id: reward_params['giftable_id'],
+                           person_id: reward_params["person_id"],
+                           giftable_type: reward_params["giftable_type"],
+                           giftable_id: reward_params["giftable_id"],
                            finance_code: current_user&.team&.finance_code,
                            team: current_user&.team,
                            created_by: current_user.id)
@@ -112,19 +114,19 @@ class RewardsController < ApplicationController
       @rewardable.reward_id = @reward.id
       @rewardable.save
     else
-      flash[:error] = 'Reward doesn\'t exist'
+      flash[:error] = "Reward doesn't exist"
     end
-    @person = Person.find reward_params['person_id']
+    @person = Person.find reward_params["person_id"]
     @total = @person.rewards_total
 
     respond_to do |format|
       if @success
         format.js { render action: :create }
-        format.json {}
-        format.html { redirect_to @reward, notice: 'Reward was successfully created.' }
+        format.json { }
+        format.html { redirect_to @reward, notice: "Reward was successfully created." }
       else
-        format.js {}
-        format.html { render action: 'edit' }
+        format.js { }
+        format.html { render action: "edit" }
         format.json { render json: @reward.errors, status: :unprocessable_entity }
       end
     end
@@ -135,10 +137,10 @@ class RewardsController < ApplicationController
   def update
     respond_to do |format|
       if @reward.update(reward_params)
-        format.html { redirect_to @reward, notice: 'Reward was successfully updated.' }
+        format.html { redirect_to @reward, notice: "Reward was successfully updated." }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: "edit" }
         format.json { render json: @reward.errors, status: :unprocessable_entity }
       end
     end
@@ -153,7 +155,7 @@ class RewardsController < ApplicationController
     respond_to do |format|
       format.html { redirect_back(fallback_location: rewards_path) }
       format.json { head :no_content }
-      format.js {}
+      format.js { }
     end
   end
 
@@ -161,10 +163,10 @@ class RewardsController < ApplicationController
     klass = GIFTABLE_TYPES.fetch(params[:giftable_type])
     @giftable = klass.find(params[:giftable_id])
     @gift_cards = if current_user.admin?
-                    GiftCard.unassigned.active
-                  else
-                    GiftCard.unassigned.active.where(user_id: current_user.id)
-                  end
+      GiftCard.unassigned.active
+    else
+      GiftCard.unassigned.active.where(user_id: current_user.id)
+    end
     @reward = Reward.new
     @cash_card = CashCard.new
     @digital_gift = DigitalGift.new
@@ -176,15 +178,14 @@ class RewardsController < ApplicationController
   end
 
   def sort_column
-    Reward.column_names.include?(params[:sort]) ? params[:sort] : 'people.id'
+    Reward.column_names.include?(params[:sort]) ? params[:sort] : "people.id"
   end
 
   def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
   end
 
   private
-
     # Use callbacks to share common setup or constraints between actions.
     def set_reward
       @reward = Reward.find(params[:id])

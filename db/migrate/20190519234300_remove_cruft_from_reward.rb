@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveCruftFromReward < ActiveRecord::Migration[5.2]
   def change
     remove_column :rewards, :gift_card_number

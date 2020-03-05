@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Patterns::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -13,7 +15,7 @@ Patterns::Application.configure do
 
   # Do not eager load code on boot.
   config.eager_load = false
-  ips = %w(192.168.0.0/16 172.0.0.0/8)
+  ips = %w[192.168.0.0/16 172.0.0.0/8]
   ips.append *ENV['WEBCONSOLE_IPS'].split(',') if ENV['WEBCONSOLE_IPS'].present?
   config.web_console.whitelisted_ips = ips
 
@@ -26,11 +28,11 @@ Patterns::Application.configure do
   config.action_mailer.perform_caching = false
   config.action_dispatch.default_headers = {
     'Access-Control-Allow-Origin' => '*',
-    'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(",")
+    'Access-Control-Request-Method' => %w[GET POST OPTIONS].join(',')
   }
 
   config.sass.inline_source_maps = true
-  
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
   config.log_formatter = ::Logger::Formatter.new
@@ -54,7 +56,7 @@ Patterns::Application.configure do
   config.assets.raise_runtime_errors = true
 
   config.active_storage.service = :local
-  
+
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker

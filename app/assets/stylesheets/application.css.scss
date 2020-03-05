@@ -9,14 +9,18 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require datepicker/bootstrap-datetimepicker.min
  *= require tokenfield/bootstrap-tokenfield
  *= require tokenfield/tokenfield-typeahead
  *= require fullcalendar/fullcalendar.min
- *= require twitter-bootstrap-static/fontawesome
+ *= require font-awesome
  *= require leaflet
  *= require_tree .
  */
+
+
+@import "bootstrap";
+@import "tempusdominus-bootstrap-4.css";
+
 
 .brl{
   color: #BDE724 !important;
@@ -28,4 +32,9 @@
 
 #notifications {
   z-index:10000;
+}
+
+
+.select_auto{
+  width:auto;
 }

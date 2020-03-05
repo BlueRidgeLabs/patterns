@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 feature "people page" do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
@@ -29,24 +31,24 @@ feature "people page" do
   def add_new_person(verified:)
     visit people_path
 
-    click_link 'New Person'
-    expect(page).to have_selector(:link_or_button, 'Create Person')
+    click_link "New Person"
+    expect(page).to have_selector(:link_or_button, "Create Person")
 
-    fill_in 'First name', with: first_name
-    fill_in 'Last name', with: last_name
-    fill_in 'Phone number', with: phone_number
-    fill_in 'Email address', with: email_address
-    fill_in 'Postal code', with: postal_code
-    fill_in 'Landline', with: landline
-    check('Low income')
-    select preferred_contact_method[:label], from: 'Preferred contact method'
-    select participation_type, from: 'Participation type'
-    select verified, from: 'Verified'
-    click_button 'Create Person'
+    fill_in "First name", with: first_name
+    fill_in "Last name", with: last_name
+    fill_in "Phone number", with: phone_number
+    fill_in "Email address", with: email_address
+    fill_in "Postal code", with: postal_code
+    fill_in "Landline", with: landline
+    check("Low income")
+    select preferred_contact_method[:label], from: "Preferred contact method"
+    select participation_type, from: "Participation type"
+    select verified, from: "Verified"
+    click_button "Create Person"
 
     expect(page).to have_content(email_address)
     expect(page).to have_content(first_name)
-    expect(page).to have_selector(:link_or_button, 'Edit')
+    expect(page).to have_selector(:link_or_button, "Edit")
 
     visit people_path
   end
@@ -70,7 +72,7 @@ feature "people page" do
     expect(new_person.low_income).to eq(low_income)
   end
 
-  scenario 'create new, verified person, and edit their information' do
+  scenario "create new, verified person, and edit their information" do
     add_new_person(verified: Person::VERIFIED_TYPE)
     assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
@@ -85,9 +87,9 @@ feature "people page" do
     updated_email_address = "eugeneupdated@asdf.com"
     find(:xpath, "//a[@href='#{edit_person_path(person.id)}']").click
 
-    fill_in 'Email address', with: updated_email_address
-    click_button 'Update Person'
-    expect(page).to have_content('Person was successfully updated.')
+    fill_in "Email address", with: updated_email_address
+    click_button "Update Person"
+    expect(page).to have_content("Person was successfully updated.")
     expect(page.current_path).to eq(person_path(person.id))
     expect(person.reload.email_address).to eq(updated_email_address)
     visit people_path
@@ -96,19 +98,19 @@ feature "people page" do
     # non-admin can't reactivate/delete person
     admin_user.update(new_person_notification: false)
     visit people_path
-    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content(I18n.t("deactivate"))
     expect(page).not_to have_content("Delete")
     visit person_path(person.id)
-    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content(I18n.t("deactivate"))
     expect(page).not_to have_content("Delete")
 
     # admin can reactivate/delete person
     admin_user.update(new_person_notification: true)
     visit people_path
-    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content(I18n.t("deactivate"))
     expect(page).to have_content("Delete")
     visit person_path(person.id)
-    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content(I18n.t("deactivate"))
     expect(page).to have_content("Delete")
 
     # deactivate person
@@ -119,7 +121,7 @@ feature "people page" do
     person.reload
     expect(person.active).to eq(false)
     expect(person.deactivated_at).to be_truthy
-    expect(person.deactivated_method).to eq('admin_interface')
+    expect(person.deactivated_method).to eq("admin_interface")
 
     # reactivate person
     expect(RapidproUpdateJob).to receive(:perform_async).with(person.id)
@@ -149,10 +151,10 @@ feature "people page" do
     expect(page.current_path).to eq(person_path(person.id))
 
     # add tag
-    new_tag = 'TeSt TaG'
+    new_tag = "TeSt TaG"
     normalized_new_tag = new_tag.downcase
-    fill_in with: new_tag, id: 'tag-typeahead'
-    find('.tag-form input[type="submit"]').click
+    fill_in with: new_tag, id: "tag-typeahead"
+    find('.tag-form input[type="submit"]').native.send_keys(:return)
     wait_for_ajax
     person.reload
     expect(person.tag_list).to include(normalized_new_tag)
@@ -173,7 +175,7 @@ feature "people page" do
     expect(page).not_to have_content(normalized_new_tag)
   end
 
-  scenario 'create new, unverified person' do
+  scenario "create new, unverified person" do
     add_new_person(verified: Person::NOT_VERIFIED_TYPE)
     assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
 

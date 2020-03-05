@@ -1,16 +1,19 @@
 <%= render partial: 'layouts/admin_menu' %>
 <div class='row'>
+  <div class='col-sm'>
+    <div class='card carb-body bg-light'>
+      <dl >
+        <dt>Money in Budget</dt>
+        <dd id='budget_amount_<%= @budget.id %>'><%= humanized_money_with_symbol @budget.amount %></dd>
+      </dl>
+      <%= link_to 'Back to Budgets', budgets_path %>
+    </div>
 
-  <div class='well'>
-    <dl >
-      <dt>Money in Budget</dt>
-      <dd id='budget_amount_<%= @budget.id %>'><%= humanized_money_with_symbol @budget.amount %></dd>
-    </dl>
+    <div id='error_explanation' style="display: none;"></div>
   </div>
-  <div id='error_explanation' style="display: none;"></div>
-  
-
-  <div class='span12'>
+</div>
+<div class='row'>
+  <div class='col-12'>
     <h5> transactions</h5>
     <table class='table table-striped'>
       <thead>
@@ -27,8 +30,8 @@
           <td><%= trans.id %></td>
           <td><%= humanized_money_with_symbol trans.amount %></td>
           <td><%= link_to trans.user.name, trans.user %></td>
-          <td><%= link_to trans.from_type, trans.from %></td>
-          <td><%= link_to trans.recipient_type, trans.recipient %></td>
+          <td><%= link_to trans.from.name, trans.from %></td>
+          <td><%= link_to trans.recipient.name, trans.recipient %></td>
           <td><%= trans.transaction_type %></td>
         </tr>
         <% end %>

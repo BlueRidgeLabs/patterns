@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <% # for some reason, asset gems aren't working %>
   <title>Patterns | <%= title = yield(:page_title); title.present? ? title : controller_name.humanize.titlecase %></title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
@@ -21,93 +22,85 @@
   <% end %>
 </head>
 <body>
-    <div class="navbar navbar-inverse">
-      <div class="navbar-inner">
-        <div class="container">
-          <% if current_user %>
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <% end %>
-          <a class="brand" href="<%= root_path %>"><%= ENV['SITE_NAME'] %></a>
-          <div class="nav-collapse collapse">
-             <% if current_user %>
 
-            <ul class="nav">
-              <li><%= link_to "People <span class='badge'>#{Person.where(active: true).count}</span>".html_safe, people_path %></li>
-              <li><%= link_to 'Rewards', rewards_path%></li>
-              <li><%= link_to "New Session", new_research_session_path %></li>
-              <li><%= link_to "Session List", research_sessions_path %></li>
-              <li>
-                <%= link_to cart_path(current_user.current_cart), class: "current_cart_link" do %>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <a class="navbar-brand" href="<%= root_path %>"><%= ENV['SITE_NAME'] %></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<% if current_user.present? %>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <%= nav_link 'People', people_path %>
+      <%= nav_link 'Rewards', rewards_path %>
+      <%= nav_link "New Session", new_research_session_path %>
+      <%= nav_link "Session List", research_sessions_path %>
+      <li class='nav-item'>
+        <%= link_to cart_path(current_user.current_cart), class: "current_cart_link nav-link" do %>
                   Pool:&nbsp;
                   <span class='current_cart'><%= current_user.current_cart.name %></span>&nbsp;
-                  <span class='badge cart-size'><%= current_user.current_cart.people.size %></span>
-                <% end %>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Your Pools<b class="caret"></b></a>
-                <ul class="dropdown-menu" id="pool-list">
-                <% current_user.carts.each do |cart| %>
-                  <li><%= link_to cart.name_and_count, cart_path(cart.id) %></li>
-                <% end %>
-                </ul>
-              </li>
-            </ul>
-
-            <!-- account dropdown -->
-            <ul class="nav pull-right" id="account-dropdown">
-                <li class="dropdown">
-                    <%= link_to current_user.email, '#', class: 'dropdown-toggle current-user-name', 'data-toggle' => 'dropdown' %>
-                    <ul class="dropdown-menu">
-                        <li><%= link_to 'Profile', edit_user_registration_path %></li>
-                        <% if current_user.admin? %>
-                          <li><%= link_to 'Admin Page', users_path %></li>
-                          <% end %>
-                        <li><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></li>
-                    </ul>
-                </li>
-            </ul>
-            <p class="navbar-text pull-right"><%= link_to "search", search_index_ransack_path, class: "muted navbar-text", id: 'adv-search' %></p>
-            <%= search_form_for @q, url: search_index_ransack_path, method: :get, class: "navbar-search pull-right" do |f| %>
-              <%= f.search_field :nav_bar_search_cont, :class => "span2 search-query", placeholder: "query" %>
-            <% end %>
-            <% else %>
-            <p class="navbar-text pull-right"><%= link_to 'Sign in', new_user_session_path %></p>
-            <% end %>
-
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-
-    <div id="page-container" class="container">
-        <div id="notifications">
-            <% if flash[:notice] || flash[:alert] || flash[:error] || flash[:success] %>
-                <div class="alert <%= flash[:notice].present? ? "alert-success" : "alert-error" %>">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <%= flash[:alert] %>
-                    <%= flash[:notice] %>
-                    <%= flash[:error] %>
-                    <%= flash[:success] %>
-                </div>
-            <% end %>
-        </div> <!-- notifications -->
-
-        <%= yield %>
-    </div> <!-- /container -->
-
-    <footer>
-      <span class='copyright'>
-        &copy; 2019 Robin Hood Foundation, all rights reserved.
-        <% unless Rails.env.production? %>
-          <span class="pull-right" style="color:red;">
-            <%= Rails.env.to_s %>
-          </span>
+                  <span class='badge badge-light cart-size'><%= current_user.current_cart.people.size %></span>
         <% end %>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Your Pools
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" id="pool-list">
+          <% current_user.carts.each do |cart| %>
+            <%= link_to cart.name_and_count, cart_path(cart.id), class: 'dropdown-item' %>
+          <% end %>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= current_user.email %>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to 'Edit Profile', edit_user_registration_path, class:'dropdown-item'%>
+          <%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class:'dropdown-item'  %>
+        </div>
+      </li>
+      <% if current_user.admin? %>
+      <li class='nav-item'>
+        <%= link_to 'Admin Page', users_path, class:'nav-link' %>
+      </li>
+      <% end %>
+    </ul>
+
+    <%= search_form_for @q, url: search_index_ransack_path, method: :get, class: "form-inline my-2 my-lg-0" do |f| %>
+      <%= f.search_field :nav_bar_search_cont, :class => "form-control mr-sm-2", placeholder: "search" %>
+      <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+    <% end %> 
+  </div>
+  <% end %>
+</nav>
+
+<div id="page-container" class="container">
+    <div id="notifications">
+        <% if flash[:notice] || flash[:alert] || flash[:error] || flash[:success] %>
+            <div class="alert fade show <%= flash[:notice].present? ? "alert-success" : "alert-danger" %>">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <%= flash[:alert] %>
+                <%= flash[:notice] %>
+                <%= flash[:error] %>
+                <%= flash[:success] %>
+            </div>
+        <% end %>
+    </div> <!-- notifications -->
+
+    <%= yield %>
+</div> <!-- /container -->
+
+<footer>
+  <span class='copyright'>
+    &copy; <%= Time.zone.now.year.to_s %> Robin Hood Foundation, all rights reserved.
+    <% unless Rails.env.production? %>
+      <span class="pull-right" style="color:red;">
+        <%= Rails.env.to_s %>
       </span>
-    </footer>
+    <% end %>
+  </span>
+</footer>
 </body>
 </html>

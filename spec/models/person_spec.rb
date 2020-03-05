@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: people
@@ -50,7 +52,7 @@
 #  cached_tag_list                  :text(65535)
 #
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Person do
   subject { FactoryBot.build(:person) }
@@ -61,21 +63,21 @@ describe Person do
   let(:less_than_six_months_ago) { now - 6.months + 1.day }
 
   describe "validations" do
-    it 'validates uniqueness of phone_number' do
+    it "validates uniqueness of phone_number" do
       expect(subject).to be_valid
       another_person = FactoryBot.create(:person)
       subject.phone_number = another_person.phone_number
       expect(subject).to_not be_valid
     end
 
-    it 'requires either a phone number or an email to be present' do
+    it "requires either a phone number or an email to be present" do
       expect(subject).to be_valid
-      subject.email_address = ''
+      subject.email_address = ""
       expect(subject).to be_valid
-      subject.phone_number = ''
+      subject.phone_number = ""
 
       expect(subject).to_not be_valid
-      subject.email_address = 'jessica@jones.com'
+      subject.email_address = "jessica@jones.com"
       expect(subject).to be_valid
     end
   end
@@ -102,12 +104,12 @@ describe Person do
 
         [unapproved_admin_user, approved_non_admin_user, unapproved_non_admin_user].each do |user|
           expect(AdminMailer).not_to receive(:participation_level_change).with(
-            results: [{:pid=>active_person.id, :old=>"new", :new=>"ambassador"}],
+            results: [{ pid: active_person.id, old: "new", new: "ambassador" }],
             to: user.email
           )
         end
 
-        #expect(mail_double).to receive(:deliver_later)
+        # expect(mail_double).to receive(:deliver_later)
         Person.update_all_participation_levels
       end
 
@@ -124,12 +126,12 @@ describe Person do
 
     describe "#locale_name_to_locale(locale_name)" do
       it "works" do
-        expect(Person.locale_name_to_locale('english')).to eq('en')
-        expect(Person.locale_name_to_locale('ENgliSh')).to eq('en')
-        expect(Person.locale_name_to_locale('spanish')).to eq('es')
-        expect(Person.locale_name_to_locale('spanisH')).to eq('es')
-        expect(Person.locale_name_to_locale('chinese')).to eq('zh')
-        expect(Person.locale_name_to_locale('covfefe')).to be_nil
+        expect(Person.locale_name_to_locale("english")).to eq("en")
+        expect(Person.locale_name_to_locale("ENgliSh")).to eq("en")
+        expect(Person.locale_name_to_locale("spanish")).to eq("es")
+        expect(Person.locale_name_to_locale("spanisH")).to eq("es")
+        expect(Person.locale_name_to_locale("chinese")).to eq("zh")
+        expect(Person.locale_name_to_locale("covfefe")).to be_nil
       end
     end
   end
@@ -169,7 +171,7 @@ describe Person do
           new_level = Person::PARTICIPATION_LEVEL_AMBASSADOR
           expect(person).to receive(:calc_participation_level).and_return(new_level)
 
-          expect(action).to eq({ pid: person.id, old: Person::PARTICIPATION_LEVEL_NEW, new: Person::PARTICIPATION_LEVEL_AMBASSADOR })
+          expect(action).to eq(pid: person.id, old: Person::PARTICIPATION_LEVEL_NEW, new: Person::PARTICIPATION_LEVEL_AMBASSADOR)
           expect(person.reload.participation_level).to eq(Person::PARTICIPATION_LEVEL_AMBASSADOR)
           expect(new_cart.reload.people.find_by_id(person.id)).to be_nil
           expect(ambassador_cart.reload.people.find_by_id(person.id)).to be_truthy

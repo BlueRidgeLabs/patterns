@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIndicesForResearchAndInvitations < ActiveRecord::Migration[4.2]
   def change
     add_index :invitations, :person_id

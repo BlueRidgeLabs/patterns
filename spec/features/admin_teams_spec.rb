@@ -1,9 +1,11 @@
-require 'rails_helper'
-require 'faker'
+# frozen_string_literal: true
 
-feature 'Team Management' do
+require "rails_helper"
+require "faker"
+
+feature "Team Management" do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
-  let(:user) {FactoryBot.create(:user)}
+  let(:user) { FactoryBot.create(:user) }
   let(:now) { DateTime.current }
 
   before do
@@ -17,23 +19,23 @@ feature 'Team Management' do
     Timecop.return
   end
 
-  scenario 'lists teams' do
-    visit '/admin/teams'
+  scenario "lists teams" do
+    visit "/admin/teams"
     expect(page).to have_content(admin_user.team.name)
     visit "/admin/teams/#{admin_user.team.id}"
     expect(page).to have_content admin_user.name
     expect(page).to have_content admin_user.team.finance_code
   end
 
-  scenario 'create valid team' do
-    visit '/admin/teams/new'
-    fill_in 'Name', with: 'foo'
-    fill_in 'Description', with: 'bar'
-    select 'BRL', from: 'Finance code'
-    click_button 'Create Team'
+  scenario "create valid team" do
+    visit "/admin/teams/new"
+    fill_in "Name", with: "foo"
+    fill_in "Description", with: "bar"
+    select "BRL", from: "Finance code"
+    click_button "Create Team"
     team = Team.last
-    expect(team.name).to eq('foo')
-    expect(team.finance_code).to eq('BRL')
+    expect(team.name).to eq("foo")
+    expect(team.finance_code).to eq("BRL")
   end
 
   # driver not supported: trigger

@@ -27,15 +27,15 @@ class Public::PeopleController < ApplicationController
 
       if update_params[:tags].present?
         tags = update_params[:tags]
-        tags = tags.tr('_', ' ').split(',')
+        tags = tags.tr("_", " ").split(",")
         @person.tag_list.add(tags)
         @person.save
       end
 
       if update_params[:note].present?
-        Comment.create(content: update_params[:note].tr('_', ' '),
+        Comment.create(content: update_params[:note].tr("_", " "),
                        user_id: @current_user.id,
-                       commentable_type: 'Person',
+                       commentable_type: "Person",
                        commentable_id: @person.id)
       end
 
@@ -53,14 +53,16 @@ class Public::PeopleController < ApplicationController
     output = { success: false }
     PaperTrail.request.whodunnit = @current_user
     @person = Person.new(api_create_params.except(:tags, :low_income, :locale_name))
-    @person.referred_by = 'created via SMS'
+    @person.referred_by = "created via SMS"
     @person.signup_at = Time.current
     @person.created_by = @current_user.id
     if params[:tags].present?
-      tags = api_create_params[:tags].tr('_', ' ').split(',')
+      tags = api_create_params[:tags].tr("_", " ").split(",")
       @person.tag_list.add(tags)
     end
-    @person.low_income = api_create_params[:low_income] == 'Y' if api_create_params[:low_income].present?
+    if api_create_params[:low_income].present?
+      @person.low_income = api_create_params[:low_income] == "Y"
+    end
 
     if api_create_params[:locale_name].present?
       locale = Person.locale_name_to_locale(api_create_params[:locale_name])
@@ -77,7 +79,7 @@ class Public::PeopleController < ApplicationController
     @person = ::Person.new(person_params)
     @person.signup_at = Time.current
 
-    success_msg = 'Thanks! We will be in touch soon!'
+    success_msg = "Thanks! We will be in touch soon!"
     error_msg   = "Oops! Looks like something went wrong. Please get in touch with us at <a href='mailto:#{ENV['MAILER_SENDER']}?subject=Patterns sign up problem'>#{ENV['MAILER_SENDER']}</a> to figure it out!"
 
     @person.tag_list.add(params[:age_range]) if params[:age_range].present?
@@ -90,7 +92,7 @@ class Public::PeopleController < ApplicationController
 
     @msg = @person.save ? success_msg : error_msg
     respond_to do |format|
-      format.html { render action: 'create' }
+      format.html { render action: "create" }
     end
   end
   # rubocop:enable Metrics/MethodLength
@@ -99,7 +101,7 @@ class Public::PeopleController < ApplicationController
     @person = Person.find_by(token: d_params[:token])
 
     if @person && @person.id == d_params[:person_id].to_i
-      @person.deactivate!('email')
+      @person.deactivate!("email")
       @person.save
       ::AdminMailer.deactivate(person: @person).deliver_later
     else
@@ -108,28 +110,33 @@ class Public::PeopleController < ApplicationController
   end
 
   private
-
     def find_user
-      raise ActionController::RoutingError.new('Not Found') if request.headers['AUTHORIZATION'].blank?
+      if Rails.env.development?
+        @current_user = User.find 2
+        return true
+      end
 
-      @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
+      if request.headers["AUTHORIZATION"].blank?
+        raise ActionController::RoutingError, "Not Found"
+        end
 
+      @current_user = User.find_by(token: request.headers["AUTHORIZATION"])
       if @current_user.nil?
-        render(file: 'public/404.html', status: :not_found) && return
+        render(file: "public/404.html", status: :unauthorized) && return
       else
         true
       end
     end
 
     def find_person
-      if update_params[:phone_number].present?
-        phone = PhonyRails.normalize_number(CGI.unescape(update_params[:phone_number]))
-        @person = Person.find_by(phone_number: phone)
-        if @person.nil?
-          render(file: 'public/404.html', status: :not_found) && return
-        else
-          true
+      if update_params[:rapidpro_uuid].present?
+        @person = Person.find_by(rapidpro_uuid: update_params[:rapidpro_uuid])
         end
+
+      if @person.nil?
+        render(file: "public/404.html", status: :not_found) && return
+      else
+        true
       end
     end
 
@@ -195,6 +202,6 @@ class Public::PeopleController < ApplicationController
     # rubocop:enable Metrics/MethodLength
 
     def allow_iframe
-      response.headers.except! 'X-Frame-Options'
+      response.headers.except! "X-Frame-Options"
     end
 end
