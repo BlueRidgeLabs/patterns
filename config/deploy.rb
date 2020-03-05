@@ -42,8 +42,8 @@ before 'deploy', 'rvm:install_ruby'
 set :ssh_options, forward_agent: true
 # set :shared_children, fetch(:shared_children) + ["sharedconfig"]
 
-before  'deploy:finalize_update', 'deploy:create_shared_directories', 'deploy:link_db_config', 'deploy:link_env_var'
-# before  'deploy:finalize_update', 'deploy:link_db_config', 'deploy:link_env_var'
+before  'deploy:finalize_update', 'deploy:create_shared_directories', 'deploy:link_db_config'
+
 
 after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:reload_nginx', 'deploy:cleanup'
 
