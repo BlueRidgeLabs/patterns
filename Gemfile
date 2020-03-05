@@ -159,7 +159,7 @@ gem "gsm_encoder"
 # Switching to sidekiq: async, threaded, less memory,
 # more performance. Important for responsiveness
 # for background tasks users are waiting for.
-gem "sidekiq"
+gem "sidekiq", "~> 5.2.0"
 
 # phone number validation
 gem "phony_rails"
