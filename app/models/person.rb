@@ -138,10 +138,10 @@ class Person < ApplicationRecord
             format: { with: Devise.email_regexp,
                       if: proc { |person| person.email_address.present? } }
 
-  validates :phone_number, allow_blank: true, uniqueness: true
-  validates :landline, allow_blank: true, uniqueness: true
+  validates :phone_number, allow_blank: true, uniqueness: true, case_sensitive: false
+  validates :landline, allow_blank: true, uniqueness: true, case_sensitive: false
 
-  validates :email_address, email: true, allow_blank: true, uniqueness: true
+  validates :email_address, email: true, allow_blank: true, uniqueness: true, case_sensitive: false
 
   # scope :no_signup_card, -> { where('id NOT IN (SELECT DISTINCT(person_id) FROM rewards where rewards.reason = 1)') }
   # scope :signup_card_needed, -> { joins(:rewards).where('rewards.reason !=1') }
