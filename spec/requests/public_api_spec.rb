@@ -91,7 +91,7 @@ describe "public_api", type: :request do
                                            phone_number: phone_number },
                                  headers: invalid_headers
 
-      expect(response.content_type).to eq("text/html")
+      expect(response.content_type).to eq("text/html; charset=utf-8")
       expect(response).to have_http_status(401)
     end
 
@@ -103,7 +103,7 @@ describe "public_api", type: :request do
                      first_name: "Pupper" },
            headers: invalid_headers
 
-      expect(response.content_type).to eq("text/html")
+      expect(response.content_type).to eq("text/html; charset=utf-8")
       expect(response.status).to eq(401)
       person.reload
       expect(person.first_name).to_not eq("pupper")

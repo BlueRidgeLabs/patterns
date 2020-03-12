@@ -43,7 +43,7 @@ feature "people page" do
     check("Low income")
     select preferred_contact_method[:label], from: "Preferred contact method"
     select participation_type, from: "Participation type"
-    select verified, from: "Verified"
+    # select verified, from: "Verified"
     click_button "Create Person"
 
     expect(page).to have_content(email_address)
@@ -175,7 +175,8 @@ feature "people page" do
     expect(page).not_to have_content(normalized_new_tag)
   end
 
-  scenario "create new, unverified person" do
+  # this doesn't happen anymore though the in app form, only public
+  xscenario "create new, unverified person" do
     add_new_person(verified: Person::NOT_VERIFIED_TYPE)
     assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
 
