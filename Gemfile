@@ -3,12 +3,11 @@
 source "https://rubygems.org"
 ruby "~> 2.6.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-
+gem "rails", "~> 6.0.0"
 gem "rack"
-gem "airbrake", "~> 5.0" # sends errors to external service
+gem "airbrake"
 gem "bootsnap", require: false
 gem "rack-cache"
-gem "rails", "~> 5.2.0"
 
 # gem 'webpacker', '~> 4.x' #bundle exec rails webpacker:install:stimulus #sooon
 
