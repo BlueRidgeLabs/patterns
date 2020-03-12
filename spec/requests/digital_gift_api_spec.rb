@@ -40,7 +40,7 @@ describe "digital_gift_api", type: :request do
           amount: 25
         }
 
-    expect(response.content_type).to eq("application/json")
+    expect(response.content_type).to eq("application/json; charset=utf-8")
     body = JSON.parse(response.body)
     expect(body["success"]).to eq(true)
 
@@ -59,7 +59,7 @@ describe "digital_gift_api", type: :request do
           research_session_id: research_session.id,
           amount: 250
         }
-    expect(response.content_type).to eq("application/json")
+    expect(response.content_type).to eq("application/json; charset=utf-8")
     body = JSON.parse(response.body)
     expect(body["success"]).to eq(false)
     expect(body["msg"]).to include("insufficent budget")
@@ -79,7 +79,7 @@ describe "digital_gift_api", type: :request do
           research_session_id: research_session.id,
           amount: 25
         }
-    expect(response.content_type).to eq("application/json")
+    expect(response.content_type).to eq("application/json; charset=utf-8")
     expect(response.status).to eq(401)
     person.reload
     expect(person.rewards_total.to_s).to_not eq("250.00")
@@ -97,7 +97,7 @@ describe "digital_gift_api", type: :request do
           research_session_id: research_session.id,
           amount: 25
         }
-    expect(response.content_type).to eq("application/json")
+    expect(response.content_type).to eq("application/json; charset=utf-8")
     expect(response.status).to eq(401)
     person.reload
     expect(person.rewards_total.to_s).to_not eq("250.00")
@@ -114,7 +114,7 @@ describe "digital_gift_api", type: :request do
           research_session_id: research_session.id,
           amount: 25
         }
-    expect(response.content_type).to eq("application/json")
+    expect(response.content_type).to eq("application/json; charset=utf-8")
     expect(response.status).to eq(401)
     person.reload
     expect(person.rewards_total.to_s).to_not eq("250.00")
@@ -132,7 +132,7 @@ describe "digital_gift_api", type: :request do
           research_session_id: research_session.id,
           amount: 25
         }
-    expect(response.content_type).to eq("application/json")
+    expect(response.content_type).to eq("application/json; charset=utf-8")
     expect(response.status).to eq(401)
 
     person.reload
@@ -147,7 +147,7 @@ describe "digital_gift_api", type: :request do
           research_session_id: research_session.id + 1,
           amount: 25
         }
-    expect(response.content_type).to eq("application/json")
+    expect(response.content_type).to eq("application/json; charset=utf-8")
     expect(response.status).to eq(201)
     person.reload
     expect(person.rewards_total.to_s).to_not eq("250.00")

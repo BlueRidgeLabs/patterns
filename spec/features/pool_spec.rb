@@ -206,8 +206,8 @@ feature "pools" do
       visit cart_path(current_pool)
       click_link "Export to CSV"
       header = page.response_headers["Content-Disposition"]
-      expect(header).to match(/^attachment/)
-      expect(header).to match(/filename="Pool-#{current_pool.name}.csv"$/)
+      expect(header).to include("attachment")
+      expect(header).to include("filename=\"Pool-#{current_pool.name}.csv\"")
 
       # as non-admin
       admin_user.update(new_person_notification: false)

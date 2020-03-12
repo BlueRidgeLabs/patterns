@@ -77,6 +77,7 @@ class RapidproUpdateJob
         @person.save # this calls the rapidpro update again, for the other attributes
         true
       when 400
+        RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
         raise "error: #{res.body}"
       else
         raise "error: #{res.code}, #{res.body}"
