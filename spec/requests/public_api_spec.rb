@@ -45,7 +45,7 @@ describe "public_api", type: :request do
                                            rapidpro_uuid: rapidpro_uuid },
                                  headers: headers
 
-      expect(response.content_type).to eq("application/json")
+      expect(response.content_type).to eq("application/json; charset=utf-8")
       expect(response).to have_http_status(:created)
       expect(Person.last.first_name).to eq("Doggo")
     end
@@ -58,7 +58,7 @@ describe "public_api", type: :request do
                      first_name: "Pupper",
                      rapidpro_uuid: person.rapidpro_uuid },
            headers: headers
-      expect(response.content_type).to eq("application/json")
+      expect(response.content_type).to eq("application/json; charset=utf-8")
 
       person.reload
       expect(person.first_name).to_not eq("Doggo")

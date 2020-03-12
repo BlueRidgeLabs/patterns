@@ -20,7 +20,7 @@ describe "calendar feed", type: :request do
     get "/calendar/#{admin_user.token}/admin_feed"
 
     expect(response.status).to eq(200)
-    expect(response.content_type).to eq("text/plain")
+    expect(response.content_type).to eq("text/plain; charset=utf-8")
     expect(response.body).to include(research_session.description)
   end
 
@@ -34,14 +34,14 @@ describe "calendar feed", type: :request do
     get "/calendar/#{invitation_user.token}/feed"
 
     expect(response.status).to eq(200)
-    expect(response.content_type).to eq("text/plain")
+    expect(response.content_type).to eq("text/plain; charset=utf-8")
     expect(response.body).to include(research_session.description)
   end
 
   it "has feed for person" do
     get "/calendar/#{invitation.person.token}/feed"
     expect(response.status).to eq(200)
-    expect(response.content_type).to eq("text/plain")
+    expect(response.content_type).to eq("text/plain; charset=utf-8")
     expect(response.body).to include(research_session.description)
   end
 end
