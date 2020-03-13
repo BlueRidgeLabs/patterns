@@ -28,6 +28,7 @@
 //= require jquery.mask
 //= require fuse/fuse.min
 //= require leaflet
+//= require clipboard/clipboard
 //= require tempusdominus-bootstrap-4.js
 //= require_tree .
 
