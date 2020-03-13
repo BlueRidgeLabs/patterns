@@ -15,6 +15,7 @@ feature "people page" do
   let(:preferred_contact_method) { { value: "SMS", label: "Text Message" } }
   let(:low_income) { true }
   let(:last_person) { }
+  let(:person_with_consent) { FactoryBot.create(:person,:consent_form_attached) }
 
   let(:now) { DateTime.current }
 
@@ -139,6 +140,29 @@ feature "people page" do
     expect(page).not_to have_content(updated_email_address)
     expect { person.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
+
+  scenario "no attached consent form", js: true do
+    add_new_person(verified: Person::VERIFIED_TYPE)
+    person = Person.order(:id).last
+    click_link person.full_name
+    expect(page.current_path).to eq(person_path(person.id))
+    
+    # verifies that an input/select/textarea exists with the specified value
+    expect(page).to have_field('consent-url')
+    consent_url = find('input#consent-url').value
+    expect(consent_url).to include("/consent/#{person.token}")
+    
+    # can't copypaste in chrome webdriver.
+    # find('#copy-consent-url').click
+    # clip_text = page.evaluate_async_script('navigator.clipboard.readText().then(arguments[0])')
+    # expect(clip_text).to include(person.token)
+  end
+
+  scenario "with attached consent form", js: true do
+    visit person_path(person_with_consent.id)
+    expect(page).to have_content("Consent Form Signed")
+  end
+
 
   scenario "tagging", js: true do
     add_new_person(verified: Person::VERIFIED_TYPE)

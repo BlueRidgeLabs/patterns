@@ -8,15 +8,19 @@
       <dd> <%= humanized_money_with_symbol DigitalGift.current_budget %></dd>
       <dt>Money left All Budgets:</dt>
       <dd id='all_budget'> <%= humanized_money_with_symbol Budget.all.sum(&:amount) %></dd>
-      <h5>Add/Subtract to Patterns Digital Gift Budget<h5>
-      <dt>Top Up</dt>
-      <dd><%= form_tag("/budgets/transaction/create", method: 'post', remote: true, class:"form-group" ) do %>
 
-        <%= label_tag(:top_up, 'Amount') %>
-        <%= text_field_tag(:amount, 0,{ id:'topup-amount', class:'form-control'}) %>
-        <%= hidden_field_tag(:transaction_type, 'Topup') %>
-        <%= submit_tag("Top Up", class:'btn btn-primary mt-2') %>
-      <% end %></dd>
+      <% if DigitalGift.current_budget > Budget.all.sum(&:amount) %>
+        <h5>Add/Subtract to Patterns Digital Gift Budget<h5>
+        
+        <dt>Top Up</dt>
+        <dd><%= form_tag("/budgets/transaction/create", method: 'post', remote: true, class:"form-group" ) do %>
+          <% top_up = DigitalGift.current_budget - Budget.all.sum(&:amount) %>
+          <%= label_tag(:top_up, 'Amount') %>
+          <%= text_field_tag(:amount, top_up.to_s ,{ id:'topup-amount', class:'form-control'}) %>
+          <%= hidden_field_tag(:transaction_type, 'Topup') %>
+          <%= submit_tag("Top Up", class:'btn btn-primary mt-2') %>
+        <% end %></dd>
+      <% end %>
       <dt>Transfer</dt>
       <dd><%= form_tag("/budgets/transaction/create", method: 'post', remote: true, class:'form-group') do %>
 
