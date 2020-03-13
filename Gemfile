@@ -190,7 +190,7 @@ group :development do
   gem "bundler-audit", ">= 0.5.0", require: false
   gem "flamegraph"
   gem "memory_profiler"
-  gem "rack-mini-profiler"
+  #gem "rack-mini-profiler"
   gem "ruby-prof"
   gem "stackprof" # ruby 2.1+ only
   # n+1 killer.

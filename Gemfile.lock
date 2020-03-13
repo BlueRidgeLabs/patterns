@@ -397,8 +397,6 @@ GEM
     rack (2.0.9)
     rack-cache (1.11.0)
       rack (>= 0.4)
-    rack-mini-profiler (2.0.0)
-      rack (>= 1.2.0)
     rack-protection (2.0.8.1)
       rack
     rack-test (1.1.0)
@@ -744,7 +742,6 @@ DEPENDENCIES
   puma
   rack
   rack-cache
-  rack-mini-profiler
   rails (~> 6.0.0)
   rails-erd
   rails-i18n
