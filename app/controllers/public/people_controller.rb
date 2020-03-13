@@ -109,6 +109,16 @@ class Public::PeopleController < ApplicationController
     end
   end
 
+  def consent
+    @person = Person.find_by(token: d_params[:token])
+    redirect_to root_path unless @person.present?
+    
+    if !@person.consent_form.attached?
+      redirect_to @person.community_lawyer_url
+    end
+
+  end
+
   private
     def find_user
       if Rails.env.development?
