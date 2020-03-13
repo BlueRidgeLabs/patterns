@@ -58,7 +58,8 @@ class Person < ApplicationRecord
   has_paper_trail
 
   acts_as_taggable
-
+  has_one_attached :consent_form
+  
   VERIFIED_TYPES = [
     VERIFIED_TYPE = "Verified",
     NOT_VERIFIED_TYPE = "No"
@@ -299,6 +300,10 @@ class Person < ApplicationRecord
 
   def lat_long
     ::ZIP_LAT_LONG[postal_code.to_s]
+  end
+
+  def community_lawyer_url
+    ENV['COMMUNITY_LAWYER_URL'] + self.token
   end
 
   def full_name
