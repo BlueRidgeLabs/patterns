@@ -10,7 +10,7 @@ require 'yaml'
 require 'time'
 require 'tzinfo'
 
-path = "/var/www/logan-#{ENV['RAILS_ENV']}/current"
+path = "/var/www/patterns-#{ENV['RAILS_ENV']}/current"
 
 if File.exist?(path) # handling cold start
 
