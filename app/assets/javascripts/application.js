@@ -29,7 +29,7 @@
 //= require fuse/fuse.min
 //= require leaflet
 //= require clipboard/clipboard
-//= require tempusdominus-bootstrap-4.js
+//= require tempusdominus-bootstrap-4.min.js
 //= require_tree .
 
 
