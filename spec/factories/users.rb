@@ -34,13 +34,13 @@
 #  invitations_count       :integer          default(0)
 #
 
-require "faker"
+require 'faker'
 
 FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
-    password "234klj242lk3j"
-    password_confirmation "234klj242lk3j"
+    password '234klj242lk3j'
+    password_confirmation '234klj242lk3j'
     approved true
     name { Faker::Name.name }
     phone_number { Faker::PhoneNumber.cell_phone }

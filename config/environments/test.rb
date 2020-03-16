@@ -45,6 +45,8 @@ Patterns::Application.configure do
 
   config.active_support.test_order = :random
 
+  # depreciation warnings are annoying in tests
+  ActiveSupport::Deprecation.silenced = true
   # no audits needed in tests. yet.
   PaperTrail.config.enabled = false
 end

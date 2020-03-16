@@ -1,5 +1,9 @@
 $(document).on('turbolinks:load', function () {
 
+  $('#copy-consent-url').on('click',function(){
+    var consent_url = $('#consent-url').val();
+    clipboard.writeText(consent_url);
+  })
   // initialize bloodhound engine
   var searchSelector = 'input#tag-typeahead';
 

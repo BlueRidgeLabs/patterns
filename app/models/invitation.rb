@@ -51,13 +51,13 @@ class Invitation < ApplicationRecord
 
   scope :future, lambda {
     joins(:research_session)
-      .where("research_sessions.start_datetime > ?",
+      .where('research_sessions.start_datetime > ?',
              Time.zone.today.end_of_day)
   }
 
   scope :past, lambda {
     joins(:research_session)
-      .where("research_sessions.start_datetime < ?",
+      .where('research_sessions.start_datetime < ?',
              Time.zone.today.beginning_of_day)
   }
 

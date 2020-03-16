@@ -44,15 +44,15 @@ class TransactionLog < ApplicationRecord
 
   def update_budgets
     case transaction_type
-    when "Transfer"
+    when 'Transfer'
       from.amount -= amount
       recipient.amount += amount
       from.save
       recipient.save
-    when "DigitalGift"
+    when 'DigitalGift'
       from.amount -= amount
       from.save
-    when "Topup"
+    when 'Topup'
       recipient.amount += amount
       recipient.save
     end
@@ -72,11 +72,11 @@ class TransactionLog < ApplicationRecord
   # do we do this here?
   def sufficient_budget?
     # topup auth handled elsewhere.
-    return true if transaction_type == "Topup"
+    return true if transaction_type == 'Topup'
 
     if from.amount.to_i < amount.to_i
       # everyone else, including admins has to have enough
-      errors.add(:amount, :invalid, message: "insufficient budget")
+      errors.add(:amount, :invalid, message: 'insufficient budget')
     else
       true
     end
@@ -87,28 +87,28 @@ class TransactionLog < ApplicationRecord
   end
 
   def from_present?
-    errors.add(:from_id, :invalid, message: "from not found") if from.nil?
+    errors.add(:from_id, :invalid, message: 'from not found') if from.nil?
   end
 
   def correct_type?
     case transaction_type
-    when "Transfer"
-      if recipient_type == "Budget" && from_type == "Budget" && from_id != recipient_id
+    when 'Transfer'
+      if recipient_type == 'Budget' && from_type == 'Budget' && from_id != recipient_id
         true
       else
-        errors.add(:transaction_type, :invalid, message: "Incorrect recipients")
+        errors.add(:transaction_type, :invalid, message: 'Incorrect recipients')
       end
-    when "Topup"
-      if recipient_type == "Budget" && from_type == "User" && admin? && from.team == recipient.team
+    when 'Topup'
+      if recipient_type == 'Budget' && from_type == 'User' && admin? && from.team == recipient.team
         true
       else
-        errors.add(:transaction_type, :invalid, message: "not admin, likely.")
+        errors.add(:transaction_type, :invalid, message: 'not admin, likely.')
       end
-    when "DigitalGift"
-      if recipient_type == "DigitalGift" && from_type == "Budget"
+    when 'DigitalGift'
+      if recipient_type == 'DigitalGift' && from_type == 'Budget'
         true
       else
-        errors.add(:transaction_type, :invalid, "message: wrong types!")
+        errors.add(:transaction_type, :invalid, 'message: wrong types!')
       end
     end
   end

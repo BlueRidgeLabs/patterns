@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe RapidproUpdateJob, type: :job do
   let(:sut) { RapidproUpdateJob }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:action) { sut.new.perform(person.id) }
-  let(:rapidpro_req_headers) { { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" } }
+  let(:rapidpro_req_headers) { { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' } }
   let(:rapidpro_res) do
     Hashie::Mash.new(
       code: 200
@@ -15,16 +15,16 @@ RSpec.describe RapidproUpdateJob, type: :job do
 
   before { allow(HTTParty).to receive(:post).and_return(rapidpro_res) }
 
-  context "person not dig" do
-    it "enqueues RapidproDeleteJob" do
-      person.update(tag_list: "not dig")
+  context 'person not dig' do
+    it 'enqueues RapidproDeleteJob' do
+      person.update(tag_list: 'not dig')
       expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
       action
     end
   end
 
-  context "person not active" do
-    it "enqueues RapidproDeleteJob" do
+  context 'person not active' do
+    it 'enqueues RapidproDeleteJob' do
       person.update(active: false)
       expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
       action
@@ -40,9 +40,9 @@ RSpec.describe RapidproUpdateJob, type: :job do
     end
   end
 
-  context "person has rapidpro_uuid" do
-    before { person.update(tag_list: "tag 1, tag 2") }
-    context "person has email" do
+  context 'person has rapidpro_uuid' do
+    before { person.update(tag_list: 'tag 1, tag 2') }
+    context 'person has email' do
       it "adds tel and email to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
         expect(HTTParty).to receive(:post).with(
           "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
@@ -52,9 +52,9 @@ RSpec.describe RapidproUpdateJob, type: :job do
             first_name: person.first_name,
             language: RapidproService.language_for_person(person),
             urns: ["tel:#{person.phone_number}", "mailto:#{person.email_address}"],
-            groups: ["DIG"],
+            groups: ['DIG'],
             fields: {
-              tags: "tag_1 tag_2",
+              tags: 'tag_1 tag_2',
               verified: person.verified
             }
           }.to_json
@@ -74,9 +74,9 @@ RSpec.describe RapidproUpdateJob, type: :job do
             first_name: person.first_name,
             language: RapidproService.language_for_person(person),
             urns: ["tel:#{person.phone_number}"],
-            groups: ["DIG"],
+            groups: ['DIG'],
             fields: {
-              tags: "tag_1 tag_2",
+              tags: 'tag_1 tag_2',
               verified: person.verified
             }
           }.to_json
@@ -87,7 +87,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
   end
 
   context "person doesn't have rapidpro_uuid" do
-    it "finds contact on rapidpro through phone #" do
+    it 'finds contact on rapidpro through phone #' do
       person.update(rapidpro_uuid: nil)
       expect(HTTParty).to receive(:post).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?urn=#{CGI.escape("tel:#{person.phone_number}")}",
@@ -102,34 +102,34 @@ RSpec.describe RapidproUpdateJob, type: :job do
     end
   end
 
-  context "rapidpro responds with 201" do
+  context 'rapidpro responds with 201' do
     let(:rapidpro_res) do
       Hashie::Mash.new(
         code: 201,
         parsed_response: {
-          uuid: "fakeuuid"
+          uuid: 'fakeuuid'
         }
       )
     end
 
-    context "person has rapidpro_uuid" do
-      it "does nothing" do
+    context 'person has rapidpro_uuid' do
+      it 'does nothing' do
         expect(sut).not_to receive(:perform_in)
         action
       end
     end
 
     context "person doesn't have rapidpro_uuid yet" do
-      it "sets rapidpro_uuid on person" do
+      it 'sets rapidpro_uuid on person' do
         person.update(rapidpro_uuid: nil)
         expect(sut).not_to receive(:perform_in)
         action
-        expect(person.reload.rapidpro_uuid).to eq("fakeuuid")
+        expect(person.reload.rapidpro_uuid).to eq('fakeuuid')
       end
     end
   end
 
-  context "rapidpro responds with 429" do
+  context 'rapidpro responds with 429' do
     let(:rapidpro_res) do
       Hashie::Mash.new(
         code: 429,
@@ -139,33 +139,33 @@ RSpec.describe RapidproUpdateJob, type: :job do
       )
     end
 
-    it "enqueues job to be retried" do
+    it 'enqueues job to be retried' do
       expect(sut).to receive(:perform_in).with(100 + 5, person.id)
       action
     end
   end
 
-  context "rapidpro responds with 200" do
+  context 'rapidpro responds with 200' do
     let(:rapidpro_res) do
       Hashie::Mash.new(
         code: 200
       )
     end
 
-    it "does nothing and returns true" do
+    it 'does nothing and returns true' do
       expect(sut).not_to receive(:perform_in)
       expect(action).to eq(true)
     end
   end
 
-  context "rapidpro responds with unknown status" do
+  context 'rapidpro responds with unknown status' do
     let(:rapidpro_res) do
       Hashie::Mash.new(
         code: 666
       )
     end
 
-    it "raises error" do
+    it 'raises error' do
       expect(sut).not_to receive(:perform_in)
       expect { action }.to raise_error(RuntimeError)
     end
