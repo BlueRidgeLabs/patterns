@@ -7,7 +7,7 @@ class Public::PeopleController < ApplicationController
   skip_before_action :authenticate_user!
 
   before_action :find_user, only: %i[api_create show update]
-  before_action :find_person, only: %i[show update]
+  before_action :find_person, only: %i[show update consent deactivate]
 
   # GET /people/new
   def new
@@ -99,8 +99,6 @@ class Public::PeopleController < ApplicationController
   end
 
   def deactivate
-    @person = Person.find_by(token: d_params[:token])
-
     if @person && @person.id == d_params[:person_id].to_i
       @person.deactivate!('email')
       @person.save
@@ -111,7 +109,6 @@ class Public::PeopleController < ApplicationController
   end
 
   def consent
-    @person = Person.find_by(token: d_params[:token])
     redirect_to root_path unless @person.present?
 
     unless @person.consent_form.attached?
