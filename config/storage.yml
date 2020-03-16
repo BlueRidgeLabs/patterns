@@ -12,7 +12,7 @@ amazon:
   access_key_id: <%= ENV['AWS_API_TOKEN'] %>
   secret_access_key: <%=  ENV['AWS_API_SECRET'] %>
   region: us-east-1
-  bucket: patterns_storage_bucket
+  bucket: patterns-storage-bucket
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
