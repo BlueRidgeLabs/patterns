@@ -15,7 +15,6 @@
 #
 
 # FIXME: Refactor and re-enable cop
-# rubocop:disable Metrics/ClassLength
 class InvitationsController < ApplicationController
   # this is accessed by people, without usernames/passwords.
   # confitmation, updates, etc.
@@ -30,7 +29,6 @@ class InvitationsController < ApplicationController
     @invitation = Invitation.new
   end
 
-  # rubocop:disable Metrics/MethodLength
   # TODO: refactor
   def create
     # params should include a research_session_id
@@ -45,11 +43,10 @@ class InvitationsController < ApplicationController
 
     @person = @invitation.person
     respond_to do |format|
-      format.js { }
+      format.js {}
       format.html { render :new }
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   # no authorization here. yet.
 
@@ -76,12 +73,12 @@ class InvitationsController < ApplicationController
     if @invitation.send("may_#{event}?")
       @invitation.send("#{event}!") && @invitation.save
       flash[:notice] = I18n.t(
-        "invitation.event_success",
+        'invitation.event_success',
         event: event.capitalize,
         person_name: @invitation.person.full_name
       )
     elsif @invitation.errors.empty?
-      flash[:alert] = "Error, cannot update invitation"
+      flash[:alert] = 'Error, cannot update invitation'
     else
       @invitation.errors.messages[:base].each { |e| flash[:alert] = e }
     end
@@ -102,10 +99,10 @@ class InvitationsController < ApplicationController
     if @invitation.confirm! && @invitation.save
       flash[:notice] = "You are confirmed for #{@invitation.start_datetime_human}, with #{@invitation.user.name}."
     else
-      flash[:alert] = "Error"
+      flash[:alert] = 'Error'
     end
     respond_to do |format|
-      format.html { }
+      format.html {}
       format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
       end
@@ -117,11 +114,11 @@ class InvitationsController < ApplicationController
       flash[:notice] = "Your session with #{@invitation.user.name} has been cancelled"
       @invitation.save
     else
-      flash[:alert] = "Error"
+      flash[:alert] = 'Error'
     end
     respond_to do |format|
       # where to redirect for person?
-      format.html { }
+      format.html {}
       format.json do
         { invitation_id: @invitation.id, state: @invitation.aasm_state }
       end
@@ -132,9 +129,9 @@ class InvitationsController < ApplicationController
     # flash a  notice here and return a js file that reloads the page
     # or calls turbolinks to reload or somesuch
     if @invitation.update(update_params)
-      flash[:notice] = "invitation updated"
+      flash[:notice] = 'invitation updated'
     else
-      flash[:error]  = "update failed"
+      flash[:error]  = 'update failed'
     end
 
     respond_to do |format|
@@ -151,56 +148,56 @@ class InvitationsController < ApplicationController
   end
 
   private
-    def set_invitation
-      @set_invitation ||= Invitation.find_by(id: params[:id])
-      @invitation = @set_invitation
-    end
 
-    def set_visitor
-      @person = Person.find_by(token: params[:token]) if params[:token].present?
-      # if we don't have a person, see if we have a user's token.
-      # thus we can provide a feed without auth1
-      visitor # sets our visitor object
-      @invitation ||= Invitation.find_by(id: params[:id])
+  def set_invitation
+    @set_invitation ||= Invitation.find_by(id: params[:id])
+    @invitation = @set_invitation
+  end
 
-      return false unless @invitation&.owner_or_invitee?(@visitor)
+  def set_visitor
+    @person = Person.find_by(token: params[:token]) if params[:token].present?
+    # if we don't have a person, see if we have a user's token.
+    # thus we can provide a feed without auth1
+    visitor # sets our visitor object
+    @invitation ||= Invitation.find_by(id: params[:id])
 
-      @visitor.nil? ? false : true
-    end
+    return false unless @invitation&.owner_or_invitee?(@visitor)
 
-    def visitor
-      @visitor ||= @person || current_user
-      PaperTrail.request.whodunnit = @visitor
-      @visitor
-    end
+    @visitor.nil? ? false : true
+  end
 
-    def event_params
-      params.permit(:event_id)
-    end
+  def visitor
+    @visitor ||= @person || current_user
+    PaperTrail.request.whodunnit = @visitor
+    @visitor
+  end
 
-    def invitation_params
-      params.require(:invitation).permit(
-        :person_id,
-        :research_session_id,
-        :user_id,
-        :aasm_event,
-        :aasm_state
-      )
-    end
+  def event_params
+    params.permit(:event_id)
+  end
 
-    def update_params
-      params.permit(
-        :id,
-        :person_id,
-        :research_session_id,
-        :user_id,
-        :aasm_event,
-        :aasm_state
-      )
-    end
+  def invitation_params
+    params.require(:invitation).permit(
+      :person_id,
+      :research_session_id,
+      :user_id,
+      :aasm_event,
+      :aasm_state
+    )
+  end
 
-    def person_params
-      params.permit(:email_address, :person_id, :token)
-    end
+  def update_params
+    params.permit(
+      :id,
+      :person_id,
+      :research_session_id,
+      :user_id,
+      :aasm_event,
+      :aasm_state
+    )
+  end
+
+  def person_params
+    params.permit(:email_address, :person_id, :token)
+  end
 end
-# rubocop:enable Metrics/ClassLength

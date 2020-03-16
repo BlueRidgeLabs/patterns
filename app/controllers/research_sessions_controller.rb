@@ -40,16 +40,16 @@ class ResearchSessionsController < ApplicationController
   def create
     @research_session = ResearchSession.new(research_session_params)
     if @research_session.save
-      if params["research_session"]["tags"].present?
-        tags = params["research_session"]["tags"]
-        if tags != "research_session[tags]"
+      if params['research_session']['tags'].present?
+        tags = params['research_session']['tags']
+        if tags != 'research_session[tags]'
           @research_session.tag_list.add(tags, parse: true)
         end
       end
 
       if @research_session.location.blank?
         @research_session.location = I18n.t(
-          "research_session.call_location",
+          'research_session.call_location',
           name: current_user.name,
           phone_number: current_user.phone_number
         )
@@ -58,10 +58,10 @@ class ResearchSessionsController < ApplicationController
 
       # need to handle case when the invitation is invalid
       # i.e. timing overlaps, etc.
-      people_ids = params["research_session"]["people_ids"]
+      people_ids = params['research_session']['people_ids']
 
-      if people_ids.present? && people_ids != [""]
-        pids = people_ids[0].split(",").map(&:to_i)
+      if people_ids.present? && people_ids != ['']
+        pids = people_ids[0].split(',').map(&:to_i)
         inv_hash = pids.map { |p| { person_id: p, research_session_id: @research_session.id } }
         Invitation.create(inv_hash)
       end
@@ -72,8 +72,8 @@ class ResearchSessionsController < ApplicationController
 
       redirect_to research_session_path(@research_session)
     else
-      errors = @research_session.errors.full_messages.join(", ")
-      flash[:error] = "There were problems with some of the fields: " + errors
+      errors = @research_session.errors.full_messages.join(', ')
+      flash[:error] = 'There were problems with some of the fields: ' + errors
       redirect_to new_research_session_path
     end
   end
@@ -81,7 +81,7 @@ class ResearchSessionsController < ApplicationController
   def index
     @s = ResearchSession.ransack(params[:q])
 
-    tags =  @s.ransack_tagged_with&.split(",")&.map { |t| t.delete(" ") } || []
+    tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
     @tags = ResearchSession.tag_counts.where(name: tags).to_a
     @research_sessions = @s.result(distinct: true).includes({ invitations: :person }, :tags, :user).page(params[:page])
   end
@@ -92,7 +92,7 @@ class ResearchSessionsController < ApplicationController
 
   def invitations_panel
     @research_session = ResearchSession.find(params[:research_session_id])
-    render partial: "invitations_panel",
+    render partial: 'invitations_panel',
            locals: { invitations: @research_session.invitations }
   end
 
@@ -100,7 +100,7 @@ class ResearchSessionsController < ApplicationController
     @research_session = ResearchSession.find(params[:id])
     respond_to do |format|
       if @research_session.update(research_session_params)
-        format.html { redirect_to(@research_session, notice: "Session was successfully updated.") }
+        format.html { redirect_to(@research_session, notice: 'Session was successfully updated.') }
       else
         format.html { render :edit }
       end
@@ -118,7 +118,7 @@ class ResearchSessionsController < ApplicationController
     else
       inv.delete
       if @research_session.save
-        flash[:notice] = I18n.t("research_session.remove_invitee_success", person_name: @person.full_name)
+        flash[:notice] = I18n.t('research_session.remove_invitee_success', person_name: @person.full_name)
       end
     end
     respond_to do |format|
@@ -129,13 +129,13 @@ class ResearchSessionsController < ApplicationController
 
   def add_person
     @research_session = ResearchSession.find(params[:research_session_id])
-    state = params[:invited].presence || "created"
+    state = params[:invited].presence || 'created'
     inv = Invitation.create(person_id: params[:person_id], aasm_state: state, research_session_id: @research_session.id)
     @research_session.invitations << inv
     @person = inv.person
     if @research_session.save && @research_session.is_invited?(@person)
       flash[:notice] = I18n.t(
-        "research_session.add_invitee_success",
+        'research_session.add_invitee_success',
         person_name: @person.full_name
       )
     end
@@ -146,31 +146,32 @@ class ResearchSessionsController < ApplicationController
   end
 
   private
-    # def hydrate_tags(rs_params)
-    #   tags = ActsAsTaggableOn::Tag.find_by(name: rs_params[:tag].split(','))
-    #   rs_params[:tags] = tags
-    # end
 
-    def parse_dates
-      if params[:end_datetime].present? && params[:start_datetime].present?
-        params[:end_datetime] = Time.zone.parse(params[:end_datetime])
-        params[:start_datetime] = Time.zone.parse(params[:start_datetime])
-      end
-    end
+  # def hydrate_tags(rs_params)
+  #   tags = ActsAsTaggableOn::Tag.find_by(name: rs_params[:tag].split(','))
+  #   rs_params[:tags] = tags
+  # end
 
-    def research_session_params
-      params.require(:research_session).permit(
-        :description,
-        :sms_description,
-        :session_type,
-        :duration,
-        :location,
-        :start_datetime,
-        :end_datetime,
-        :buffer,
-        :title,
-        :user_id,
-        :people_ids
-      ).to_h.symbolize_keys
+  def parse_dates
+    if params[:end_datetime].present? && params[:start_datetime].present?
+      params[:end_datetime] = Time.zone.parse(params[:end_datetime])
+      params[:start_datetime] = Time.zone.parse(params[:start_datetime])
     end
+  end
+
+  def research_session_params
+    params.require(:research_session).permit(
+      :description,
+      :sms_description,
+      :session_type,
+      :duration,
+      :location,
+      :start_datetime,
+      :end_datetime,
+      :buffer,
+      :title,
+      :user_id,
+      :people_ids
+    ).to_h.symbolize_keys
+  end
 end

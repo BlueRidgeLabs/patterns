@@ -85,6 +85,6 @@ Patterns::Application.configure do
 
   # Analytics
   config.google_analytics_enabled = true
-  
+
   config.middleware.use Rack::TwilioWebhookAuthentication, ENV['TWILIO_AUTH_TOKEN'], '/receive_text/index'
 end

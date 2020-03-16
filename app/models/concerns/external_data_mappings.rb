@@ -1,23 +1,22 @@
 # frozen_string_literal: true
 
-require "active_support/concern"
+require 'active_support/concern'
 
 module ExternalDataMappings
   extend ActiveSupport::Concern
 
   module ClassMethods
     # FIXME: Refactor and re-enable cop
-    # rubocop:disable Metrics/MethodLength
     #
     def map_connection_to_id(val)
       sym = case val
-            when "Broadband at home (cable, DSL, etc.)", "Broadband at home (e.g. cable or DSL)"
+            when 'Broadband at home (cable, DSL, etc.)', 'Broadband at home (e.g. cable or DSL)'
               :home_broadband
-            when "Public computer center"
+            when 'Public computer center'
               :public_computer
-            when "Phone plan with data"
+            when 'Phone plan with data'
               :phone
-            when "Public wi-fi", "Public Wi-Fi"
+            when 'Public wi-fi', 'Public Wi-Fi'
               :public_wifi
             else
               :other
@@ -25,25 +24,22 @@ module ExternalDataMappings
 
       Patterns::Application.config.connection_mappings[sym]
     end
-    # rubocop:enable Metrics/MethodLength
 
     # FIXME: Refactor and re-enable cop
-    # rubocop:disable Metrics/MethodLength
     #
     def map_device_to_id(val)
       sym = case val
-            when "Laptop"
+            when 'Laptop'
               :laptop
-            when "Smart phone", "Smart phone (e.g. iPhone or Android phone)"
+            when 'Smart phone', 'Smart phone (e.g. iPhone or Android phone)'
               :smartphone
-            when "Desktop computer"
+            when 'Desktop computer'
               :desktop
-            when "Tablet", "Tablet (e.g. iPad)"
+            when 'Tablet', 'Tablet (e.g. iPad)'
               :tablet
       end
 
       Patterns::Application.config.device_mappings[sym]
     end
-    # rubocop:enable Metrics/MethodLength
   end
 end

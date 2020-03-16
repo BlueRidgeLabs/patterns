@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PeopleHelper
   def private_information(info, name: false)
     if name
@@ -6,7 +8,7 @@ module PeopleHelper
       session[:privacy_mode] ? 'hidden' : info
     end
   end
-  alias_method :pii, :private_information
+  alias pii private_information
 
   def address_fields_to_sentence(person)
     person.address? ? person.address_fields_to_sentence : 'No address'

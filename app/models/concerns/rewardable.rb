@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "active_support/concern"
+require 'active_support/concern'
 
 module Rewardable
   # a rewardable object can be assigned and unassigned.
@@ -24,7 +24,7 @@ module Rewardable
 
   # may not be necessary because of dependent :nullify
   def unassign
-    return if self.class.to_s == "DigitalGift" # can't unassign
+    return if self.class.to_s == 'DigitalGift' # can't unassign
 
     self.reward_id = nil
     save

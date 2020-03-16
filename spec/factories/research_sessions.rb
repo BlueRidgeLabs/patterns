@@ -20,7 +20,7 @@
 #  cached_tag_list :string(255)
 #
 
-require "faker"
+require 'faker'
 FactoryBot.define do
   factory :research_session do
     user

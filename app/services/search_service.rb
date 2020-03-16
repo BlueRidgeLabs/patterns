@@ -4,8 +4,8 @@ class SearchService
   class << self
     def parse_tags(query_params)
       params = Hashie::Mash.new(query_params)
-      ransack_tags = params&.ransack_tagged_with || ""
-      tag_array = ransack_tags.split(",").map(&:strip)
+      ransack_tags = params&.ransack_tagged_with || ''
+      tag_array = ransack_tags.split(',').map(&:strip)
       Person.active.tag_counts.where(name: tag_array).order(taggings_count: :desc)
     end
 

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
-feature "gift_cards page" do
+feature 'gift_cards page' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:valid_cc) { CreditCardValidations::Factory.random(:mastercard) }
   let(:valid_cc_2) { CreditCardValidations::Factory.random(:mastercard) }
-  let(:invalid_cc) { "4853-9800-5973-0865" }
-  let(:secure_code) { "034" }
-  let(:expiration_date) { "12/24" }
-  let(:amount) { "25.00" }
+  let(:invalid_cc) { '4853-9800-5973-0865' }
+  let(:secure_code) { '034' }
+  let(:expiration_date) { '12/24' }
+  let(:amount) { '25.00' }
   let(:batch) { 771_346 }
   let(:now) { DateTime.current }
   # let(:action_cable) { ActionCable.server }
@@ -19,47 +19,47 @@ feature "gift_cards page" do
     login_with_admin_user(admin_user)
   end
 
-  scenario "preload cards" do
-    visit "/gift_cards/preloaded"
-    within ".preload-cards" do
-      fill_in "seq_start", with: 1
-      fill_in "seq_end", with: 10
-      fill_in "batch_id", with: batch
-      fill_in "expiration_date", with: expiration_date
-      fill_in "amount", with: amount
+  scenario 'preload cards' do
+    visit '/gift_cards/preloaded'
+    within '.preload-cards' do
+      fill_in 'seq_start', with: 1
+      fill_in 'seq_end', with: 10
+      fill_in 'batch_id', with: batch
+      fill_in 'expiration_date', with: expiration_date
+      fill_in 'amount', with: amount
     end
 
-    click_button "Preload"
-    visit "/gift_cards/preloaded"
+    click_button 'Preload'
+    visit '/gift_cards/preloaded'
     expect(GiftCard.preloaded.size).to eq(10)
     expect(page).to have_content(batch)
     expect(page).to have_content(admin_user.name)
-    visit "/gift_cards"
+    visit '/gift_cards'
     expect(page).not_to have_content(batch)
   end
 
-  scenario "activate preloaded cards", :js do
+  scenario 'activate preloaded cards', :js do
     gc = FactoryBot.create(:gift_card, :preloaded, user_id: admin_user.id)
-    visit "/gift_cards"
-    find(".activate-toggle").click
+    visit '/gift_cards'
+    find('.activate-toggle').click
     # page.driver.browser.execute_script("$('#manual_card').toggle()")
 
-    within ".new_card" do
-      fill_in "new_gift_cards__full_card_number", with: valid_cc
-      fill_in "new_gift_cards__secure_code", with: secure_code
+    within '.new_card' do
+      fill_in 'new_gift_cards__full_card_number', with: valid_cc
+      fill_in 'new_gift_cards__secure_code', with: secure_code
     end
-    click_button "Activate"
+    click_button 'Activate'
     gc.reload
-    expect(gc.status).to_not eq("preload")
-    expect(gc.status).to eq("activate_started")
+    expect(gc.status).to_not eq('preload')
+    expect(gc.status).to eq('activate_started')
     expect(gc.full_card_number).to eq(valid_cc)
     expect(gc.secure_code).to eq(secure_code)
   end
 
-  scenario "change preloaded cards users", :js do
+  scenario 'change preloaded cards users', :js do
     gift_card = FactoryBot.create(:gift_card, :preloaded, user_id: admin_user.id)
     other_user = FactoryBot.create(:user)
-    visit "/gift_cards/preloaded"
+    visit '/gift_cards/preloaded'
 
     select other_user.name, from: "user_change_gift_card_#{gift_card.id}"
 
@@ -69,7 +69,7 @@ feature "gift_cards page" do
     sleep 1 # hate this
     gift_card.reload
     expect(gift_card.user.id).to eq(other_user.id)
-    visit "/gift_cards/preloaded"
+    visit '/gift_cards/preloaded'
     expect(page).to have_content(other_user.name)
   end
 
@@ -132,10 +132,10 @@ feature "gift_cards page" do
   #   expect(page).to have_no_button('Activate')
   # end
 
-  scenario "change card owner", js: :true do
+  scenario 'change card owner', js: :true do
     gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
     other_user = FactoryBot.create(:user)
-    visit "/gift_cards"
+    visit '/gift_cards'
     expect(page).to have_text(gift_card.last_4)
 
     select other_user.name, from: "user_change_gift_card_#{gift_card.id}"
@@ -148,16 +148,16 @@ feature "gift_cards page" do
     expect(gift_card.user.id).to eq(other_user.id)
   end
 
-  scenario "edit card" do
+  scenario 'edit card' do
     gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
 
     visit "/gift_cards/#{gift_card.id}"
     expect(page).to have_content(gift_card.batch_id)
     expect(page).to have_content(gift_card.last_4)
     visit "/gift_cards/#{gift_card.id}/edit"
-    fill_in "Secure code", with: "001"
-    click_button "Update Gift card"
+    fill_in 'Secure code', with: '001'
+    click_button 'Update Gift card'
     gift_card.reload
-    expect(gift_card.secure_code).to eq("001")
+    expect(gift_card.secure_code).to eq('001')
   end
 end

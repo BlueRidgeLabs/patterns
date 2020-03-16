@@ -11,6 +11,6 @@ class UserMailer < ApplicationMailer
     @user = User.find(user_id)
     @sessions = ResearchSession.find(session_ids)
     mail(to: @user.email_address,
-         subject: "Research Sessions Reminder!")
+         subject: 'Research Sessions Reminder!')
   end
 end

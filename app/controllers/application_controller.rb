@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_paper_trail_whodunnit
   before_action :set_global_search_variable
-  
+
   GIFTABLE_TYPES = {
     'Person' => Person,
     'Invitation' => Invitation
@@ -34,14 +34,14 @@ class ApplicationController < ActionController::Base
 
   def user_needed
     unless current_user
-      render json: { "error" => "authentication error" }, status: :unauthorized
+      render json: { 'error' => 'authentication error' }, status: :unauthorized
     end
   end
 
   def admin_needed
     unless current_user&.admin?
-      flash[:warning] = "Unathorized"
-      render json: { "error" => "authentication error" }, status: :unauthorized
+      flash[:warning] = 'Unathorized'
+      render json: { 'error' => 'authentication error' }, status: :unauthorized
     end
   end
 
@@ -58,14 +58,14 @@ class ApplicationController < ActionController::Base
   def flash_to_headers
     return unless request.xhr?
 
-    response.headers["X-Message"] = flash_message if flash_message
-    response.headers["X-Message-Type"] = flash_type.to_s if flash_type
+    response.headers['X-Message'] = flash_message if flash_message
+    response.headers['X-Message-Type'] = flash_type.to_s if flash_type
     flash.discard # don't want the flash to appear when you reload page
   end
 
   def after_sign_in_path_for(_resource)
     if current_user.sign_in_count == 1
-      flash[:error] = "please update your password"
+      flash[:error] = 'please update your password'
       edit_user_registration_path
     else
       root_path
@@ -74,21 +74,22 @@ class ApplicationController < ActionController::Base
 
   def route_not_found
     Rails.logger.error "Route not found from #{ip} at #{Time.now.utc.iso8601}"
-    render "error_pages/404", status: :not_found
+    render 'error_pages/404', status: :not_found
   end
 
   private
-    def flash_message
-      %i[error warning notice].each do |type|
-        return flash[type] if flash[type].present?
-      end
-      nil
-    end
 
-    def flash_type
-      %i[error warning notice].each do |type|
-        return type if flash[type].present?
-      end
-      nil
+  def flash_message
+    %i[error warning notice].each do |type|
+      return flash[type] if flash[type].present?
     end
+    nil
+  end
+
+  def flash_type
+    %i[error warning notice].each do |type|
+      return type if flash[type].present?
+    end
+    nil
+  end
 end

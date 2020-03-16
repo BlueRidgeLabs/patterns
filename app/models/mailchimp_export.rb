@@ -22,25 +22,26 @@ class MailchimpExport < ApplicationRecord # largely unused
   after_create        :send_to_mailchimp
 
   private
-    def serialize_recipients_to_body
-      self.body = recipients.to_json
-    end
 
-    def send_to_mailchimp
-      # create a new static segment
-      # new_static_segment_id = Gibbon.listStaticSegmentAdd(id: Patterns::Application.config.cut_group_mailchimp_list_id, name: name)
+  def serialize_recipients_to_body
+    self.body = recipients.to_json
+  end
 
-      # add the email addresses to the new static segment
-      # resp = Gibbon.listStaticSegmentMembersAdd(id: Patterns::Application.config.cut_group_mailchimp_list_id, seg_id: new_static_segment_id, batch: recipients)
+  def send_to_mailchimp
+    # create a new static segment
+    # new_static_segment_id = Gibbon.listStaticSegmentAdd(id: Patterns::Application.config.cut_group_mailchimp_list_id, name: name)
 
-      # New API 3.0 version:
-      gibbon = Gibbon::Request.new
-      resp = gibbon.lists(Patterns::Application.config.cut_group_mailchimp_list_id).segments.create(body: { name: name, static_segment: recipients })
+    # add the email addresses to the new static segment
+    # resp = Gibbon.listStaticSegmentMembersAdd(id: Patterns::Application.config.cut_group_mailchimp_list_id, seg_id: new_static_segment_id, batch: recipients)
 
-      Rails.logger.info("[MailchimpExport#send_to_mailchimp] exported #{resp['success']} email addresses to static segment named \"#{name}\"")
-      true
-    rescue StandardError => e
-      Rails.logger.fatal("[MailchimpExport#send_to_mailchimp] mce_id: #{id} fatal error exporting to Mailchimp: #{e.message}")
-      false
-    end
+    # New API 3.0 version:
+    gibbon = Gibbon::Request.new
+    resp = gibbon.lists(Patterns::Application.config.cut_group_mailchimp_list_id).segments.create(body: { name: name, static_segment: recipients })
+
+    Rails.logger.info("[MailchimpExport#send_to_mailchimp] exported #{resp['success']} email addresses to static segment named \"#{name}\"")
+    true
+  rescue StandardError => e
+    Rails.logger.fatal("[MailchimpExport#send_to_mailchimp] mce_id: #{id} fatal error exporting to Mailchimp: #{e.message}")
+    false
+  end
 end
