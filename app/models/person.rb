@@ -374,6 +374,7 @@ class Person < ApplicationRecord
     end
   end
 
+
   def deactivate!(type = nil)
     self.active = false
     self.deactivated_at = Time.current

@@ -18,7 +18,10 @@ class Public::PeopleController < ApplicationController
   end
 
   def show
-    render json: @person.to_json
+    attributes = @person.attributes
+    attributes['tag_list'] = @person.tag_list.to_s 
+    attributes['consent_url'] =  root_url + "consent/#{@person.token}"
+    render json: attributes.to_json
   end
 
   def update
@@ -141,7 +144,9 @@ class Public::PeopleController < ApplicationController
     def find_person
       if update_params[:rapidpro_uuid].present?
         @person = Person.find_by(rapidpro_uuid: update_params[:rapidpro_uuid])
-        end
+      elsif update_params[:token].present?
+        @person = Person.find_by(token: update_params[:token])
+      end
 
       if @person.nil?
         render(file: "public/404.html", status: :not_found) && return
