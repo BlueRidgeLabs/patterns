@@ -15,7 +15,7 @@ path = "/var/www/patterns-#{ENV['RAILS_ENV']}/current"
 if File.exist?(path) # handling cold start
 
   # run our jobs in the right time zone
-  set :job_template, "TZ=\"#{ENV['TIME_ZONE']}\" bash -l -c ':job'"
+  set :job_template, "TZ=\"America/New_York\" bash -l -c ':job'"
   set :output, "#{path}/log/cron_log.log"
 
   every 1.hour do
@@ -26,7 +26,7 @@ if File.exist?(path) # handling cold start
   # see: https://github.com/javan/whenever/pull/239
   # time should be > 03:00
   def local_time(time)
-    TZInfo::Timezone.get(ENV['TIME_ZONE']).local_to_utc(Time.parse(time))
+    TZInfo::Timezone.get('America/New_York').local_to_utc(Time.parse(time))
   end
 
   # this queues up all the email/sms for the day!
