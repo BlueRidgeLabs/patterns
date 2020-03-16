@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Be sure to restart your server when you modify this file.
 #
 # This file contains migration options to ease your Rails 5.2 upgrade.
@@ -33,4 +34,4 @@
 # Rails.application.config.active_record.sqlite3.represent_boolean_as_integer = true
 
 # Use SHA-1 instead of MD5 to generate non-sensitive digests, such as the ETag header.
-# Rails.application.config.active_support.use_sha1_digests = true
+Rails.application.config.active_support.use_sha1_digests = true

@@ -28,8 +28,8 @@ class Team < ApplicationRecord
   def rewards_total(since = Time.zone.today.beginning_of_year - 1.day)
     raise ArgumentError if since.class != Date
 
-    total = rewards.where("created_at > ?", since).sum(:amount_cents)
-    Money.new(total, "USD")
+    total = rewards.where('created_at > ?', since).sum(:amount_cents)
+    Money.new(total, 'USD')
   end
 
   def available_budget
@@ -39,7 +39,8 @@ class Team < ApplicationRecord
   delegate :transactions, to: :budget
 
   private
-    def make_budget
-      Budget.create(team_id: id)
-    end
+
+  def make_budget
+    Budget.create(team_id: id)
+  end
 end

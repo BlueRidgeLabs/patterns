@@ -52,7 +52,7 @@
 #  cached_tag_list                  :text(65535)
 #
 
-require "rails_helper"
+require 'rails_helper'
 
 describe Person do
   subject { FactoryBot.build(:person) }
@@ -62,39 +62,39 @@ describe Person do
   let(:more_than_six_months_ago) { now - 6.months - 1.day }
   let(:less_than_six_months_ago) { now - 6.months + 1.day }
 
-  describe "validations" do
-    it "validates uniqueness of phone_number" do
+  describe 'validations' do
+    it 'validates uniqueness of phone_number' do
       expect(subject).to be_valid
       another_person = FactoryBot.create(:person)
       subject.phone_number = another_person.phone_number
       expect(subject).to_not be_valid
     end
 
-    it "requires either a phone number or an email to be present" do
+    it 'requires either a phone number or an email to be present' do
       expect(subject).to be_valid
-      subject.email_address = ""
+      subject.email_address = ''
       expect(subject).to be_valid
-      subject.phone_number = ""
+      subject.phone_number = ''
 
       expect(subject).to_not be_valid
-      subject.email_address = "jessica@jones.com"
+      subject.email_address = 'jessica@jones.com'
       expect(subject).to be_valid
     end
   end
 
-  describe "class methods" do
-    describe "#update_all_participation_levels" do
+  describe 'class methods' do
+    describe '#update_all_participation_levels' do
       let!(:approved_admin_user) { FactoryBot.create(:user, :admin) }
       let!(:unapproved_admin_user) { FactoryBot.create(:user, :admin, :unapproved) }
       let!(:approved_non_admin_user) { FactoryBot.create(:user) }
       let!(:unapproved_non_admin_user) { FactoryBot.create(:user, :unapproved) }
 
-      it "updates the participation level for all active people, and then sends an email to all admin users with results" do
+      it 'updates the participation level for all active people, and then sends an email to all admin users with results' do
         # `tag_list: "brl special ambassador", participation_level: "new"`
         # ensures that `update_participation_level` returns a non-nil value,
         # which we need in order to test that this method works
-        active_person = FactoryBot.create(:person, active: true, tag_list: "brl special ambassador", participation_level: "new")
-        FactoryBot.create(:person, active: false, tag_list: "brl special ambassador", participation_level: "new")
+        active_person = FactoryBot.create(:person, active: true, tag_list: 'brl special ambassador', participation_level: 'new')
+        FactoryBot.create(:person, active: false, tag_list: 'brl special ambassador', participation_level: 'new')
 
         mail_double = double(:mail)
         # expect(AdminMailer).to receive(:participation_level_change).with(
@@ -104,7 +104,7 @@ describe Person do
 
         [unapproved_admin_user, approved_non_admin_user, unapproved_non_admin_user].each do |user|
           expect(AdminMailer).not_to receive(:participation_level_change).with(
-            results: [{ pid: active_person.id, old: "new", new: "ambassador" }],
+            results: [{ pid: active_person.id, old: 'new', new: 'ambassador' }],
             to: user.email
           )
         end
@@ -113,10 +113,10 @@ describe Person do
         Person.update_all_participation_levels
       end
 
-      context "no results" do
+      context 'no results' do
         it "doesn't send an email" do
-          FactoryBot.create(:person, active: true, participation_level: "new")
-          FactoryBot.create(:person, active: false, participation_level: "new")
+          FactoryBot.create(:person, active: true, participation_level: 'new')
+          FactoryBot.create(:person, active: false, participation_level: 'new')
           # results should be [nil, nil] before compacted to []
           expect(AdminMailer).not_to receive(:participation_level_change)
           Person.update_all_participation_levels
@@ -124,33 +124,33 @@ describe Person do
       end
     end
 
-    describe "#locale_name_to_locale(locale_name)" do
-      it "works" do
-        expect(Person.locale_name_to_locale("english")).to eq("en")
-        expect(Person.locale_name_to_locale("ENgliSh")).to eq("en")
-        expect(Person.locale_name_to_locale("spanish")).to eq("es")
-        expect(Person.locale_name_to_locale("spanisH")).to eq("es")
-        expect(Person.locale_name_to_locale("chinese")).to eq("zh")
-        expect(Person.locale_name_to_locale("covfefe")).to be_nil
+    describe '#locale_name_to_locale(locale_name)' do
+      it 'works' do
+        expect(Person.locale_name_to_locale('english')).to eq('en')
+        expect(Person.locale_name_to_locale('ENgliSh')).to eq('en')
+        expect(Person.locale_name_to_locale('spanish')).to eq('es')
+        expect(Person.locale_name_to_locale('spanisH')).to eq('es')
+        expect(Person.locale_name_to_locale('chinese')).to eq('zh')
+        expect(Person.locale_name_to_locale('covfefe')).to be_nil
       end
     end
   end
 
-  describe "instance methods" do
-    describe "#update_participation_level" do
+  describe 'instance methods' do
+    describe '#update_participation_level' do
       let(:person) { FactoryBot.create(:person) }
       let(:action) { person.update_participation_level }
 
-      context "not dig" do
-        before { person.update(tag_list: "not dig") }
+      context 'not dig' do
+        before { person.update(tag_list: 'not dig') }
 
-        it "returns nil" do
+        it 'returns nil' do
           expect(action).to be_nil
         end
       end
 
-      context "participation_level not changed" do
-        it "returns nil and does nothing" do
+      context 'participation_level not changed' do
+        it 'returns nil and does nothing' do
           old_level = person.participation_level
           expect(person).to receive(:calc_participation_level).and_return(old_level)
           expect(action).to be_nil
@@ -158,8 +158,8 @@ describe Person do
         end
       end
 
-      context "participation_level has changed" do
-        it "updates participation_level, updates tag list, updates placement in cart, and returns hash with id, old level, and new level" do
+      context 'participation_level has changed' do
+        it 'updates participation_level, updates tag list, updates placement in cart, and returns hash with id, old level, and new level' do
           Person::PARTICIPATION_LEVELS.each do |pl|
             FactoryBot.create(:cart, name: pl)
           end
@@ -179,8 +179,8 @@ describe Person do
       end
     end
 
-    describe "#calc_participation_level" do
-      context "ambassador_criteria met" do
+    describe '#calc_participation_level' do
+      context 'ambassador_criteria met' do
         let(:person) { FactoryBot.create(:person) }
         it "returns 'ambassador'" do
           allow(person).to receive(:ambassador_criteria).and_return(true)
@@ -191,7 +191,7 @@ describe Person do
         end
       end
 
-      context "active_criteria met, but ambassador_criteria not met" do
+      context 'active_criteria met, but ambassador_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
         it "returns 'active'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
@@ -202,7 +202,7 @@ describe Person do
         end
       end
 
-      context "participant_criteria met, but ambassador_criteria and active_criteria not met" do
+      context 'participant_criteria met, but ambassador_criteria and active_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
         it "returns 'participant'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
@@ -213,7 +213,7 @@ describe Person do
         end
       end
 
-      context "inactive_criteria met, but ambassador_criteria, participant_criteria, and active_criteria not met" do
+      context 'inactive_criteria met, but ambassador_criteria, participant_criteria, and active_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
         it "returns 'inactive'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
@@ -224,7 +224,7 @@ describe Person do
         end
       end
 
-      context "inactive_criteria, ambassador_criteria, participant_criteria, and active_criteria not met" do
+      context 'inactive_criteria, ambassador_criteria, participant_criteria, and active_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
         it "returns 'new'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
@@ -236,18 +236,18 @@ describe Person do
       end
     end
 
-    describe "#ambassador_criteria" do
+    describe '#ambassador_criteria' do
       let(:person) { FactoryBot.create(:person) }
       context "tag list includes 'brl special ambassador'" do
-        it "returns true" do
+        it 'returns true' do
           expect(person.ambassador_criteria).to eq(false)
-          person.update_attributes(tag_list: "brl special ambassador")
+          person.update_attributes(tag_list: 'brl special ambassador')
           expect(person.ambassador_criteria).to eq(true)
         end
       end
 
-      context "sessions with 2+ teams in past year, and 3+ sessions ever" do
-        it "returns true" do
+      context 'sessions with 2+ teams in past year, and 3+ sessions ever' do
+        it 'returns true' do
           team_1 = FactoryBot.create(:team)
           team_2 = FactoryBot.create(:team)
 
@@ -275,11 +275,11 @@ describe Person do
       end
     end
 
-    describe "#active_criteria" do
+    describe '#active_criteria' do
       let(:person) { FactoryBot.create(:person) }
 
-      context "at least one reward in past six months" do
-        it "returns true" do
+      context 'at least one reward in past six months' do
+        it 'returns true' do
           Timecop.freeze(more_than_six_months_ago) do
             FactoryBot.create(:reward, :gift_card, person: person)
             person.reload
@@ -294,11 +294,11 @@ describe Person do
       end
     end
 
-    describe "#participant_criteria" do
+    describe '#participant_criteria' do
       let(:person) { FactoryBot.create(:person) }
 
-      context "at least one reward in the past year" do
-        it "returns true" do
+      context 'at least one reward in the past year' do
+        it 'returns true' do
           Timecop.freeze(more_than_a_year_ago) do
             FactoryBot.create(:reward, :gift_card, person: person)
             person.reload
@@ -313,11 +313,11 @@ describe Person do
       end
     end
 
-    describe "#inactive_criteria" do
+    describe '#inactive_criteria' do
       let(:person) { FactoryBot.create(:person) }
 
-      context "at least one reward, but not in the past year" do
-        it "returns true" do
+      context 'at least one reward, but not in the past year' do
+        it 'returns true' do
           Timecop.freeze(more_than_a_year_ago) do
             FactoryBot.create(:reward, :gift_card, person: person)
             person.reload

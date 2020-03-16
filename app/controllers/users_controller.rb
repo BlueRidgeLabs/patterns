@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   # GET /users
   def index
     User.per_page = 100
-    @users = User.includes(:rewards, :team).order("approved desc").paginate(page: params[:page])
+    @users = User.includes(:rewards, :team).order('approved desc').paginate(page: params[:page])
   end
 
   # GET /users/1
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
   def edit; end
 
   def changes
-    @changes = PaperTrail::Version.order("id desc").page(params[:page])
+    @changes = PaperTrail::Version.order('id desc').page(params[:page])
   end
 
   def finance
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     @end_date = params[:end_date].presence || Time.current
     codes = Reward.distinct.pluck(:finance_code).compact
     @results = codes.map do |code|
-      amt = Money.new(Reward.where(created_at: @start_date..@end_date, finance_code: code).sum(:amount_cents), "USD")
+      amt = Money.new(Reward.where(created_at: @start_date..@end_date, finance_code: code).sum(:amount_cents), 'USD')
       count = Reward.where(created_at: @start_date..@end_date, finance_code: code).size
       { code: code, amount: amt, count: count }
     end
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
     @user = User.new(user_create_params)
 
     if @user.save
-      redirect_to @user, notice: I18n.t("user.successfully_created")
+      redirect_to @user, notice: I18n.t('user.successfully_created')
     else
       render :new
     end
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to(@user, notice: I18n.t("user.successfully_updated")) }
+        format.html { redirect_to(@user, notice: I18n.t('user.successfully_updated')) }
       else
         format.html { render :edit }
       end
@@ -69,35 +69,36 @@ class UsersController < ApplicationController
   # DELETE /users/1
   def destroy
     @user.destroy
-    redirect_to users_url, notice: "User was successfully destroyed."
+    redirect_to users_url, notice: 'User was successfully destroyed.'
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:name,
-                                   :approved,
-                                   :phone_number,
-                                   :email_address,
-                                   :team_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
 
-    def admin?
-      redirect_to root_url unless current_user.admin?
-    end
+  # Only allow a trusted parameter "white list" through.
+  def user_params
+    params.require(:user).permit(:name,
+                                 :approved,
+                                 :phone_number,
+                                 :email_address,
+                                 :team_id)
+  end
 
-    def user_create_params
-      params.require(:user).permit(:name,
-                                   :approved,
-                                   :phone_number,
-                                   :email_address,
-                                   :team_id,
-                                   :password,
-                                   :password_confirmation)
-    end
+  def admin?
+    redirect_to root_url unless current_user.admin?
+  end
+
+  def user_create_params
+    params.require(:user).permit(:name,
+                                 :approved,
+                                 :phone_number,
+                                 :email_address,
+                                 :team_id,
+                                 :password,
+                                 :password_confirmation)
+  end
 end

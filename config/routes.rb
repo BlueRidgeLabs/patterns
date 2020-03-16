@@ -93,6 +93,7 @@ Patterns::Application.routes.draw do
   resources :mailchimp_updates
   namespace :public do
     resources :people, only: %i[new create deactivate] do
+      get '/consent/:token', to: 'people#consent', as: :consent
       get '/deactivate/:token', to: 'people#deactivate', as: :deactivate
     end
   end
@@ -150,6 +151,7 @@ Patterns::Application.routes.draw do
     resources :comments, controller: 'comments'
   end
 
+  get '/consent/:token', to: 'public/people#consent', as: :consent
   get 'registration', to: 'public/people#new'
 
   post '/api/update_person', to: 'public/people#update', as: :update_post

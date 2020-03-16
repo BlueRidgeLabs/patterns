@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "active_support/concern"
+require 'active_support/concern'
 
 # to be "calendarable", must have or delegate to
 # start_datetime
@@ -77,58 +77,59 @@ module Calendarable
   end
 
   private
-    def cal_description
-      if defined? person # it's an invitation
-        res = description + %(
+
+  def cal_description
+    if defined? person # it's an invitation
+      res = description + %(
           tel: #{person.phone_number}\n
           email: #{person.email_address}\n
         )
-        res
-      elsif defined?(people) # it's a reservation
-        %(Created by: #{user.name}
+      res
+    elsif defined?(people) # it's a reservation
+      %(Created by: #{user.name}
 Team: #{user.team.name}
 People: #{invitations.size}
 Description:#{description}
 tags: #{cached_tag_list})
-      else
-        description
-      end
+    else
+      description
     end
+  end
 
-    def generate_url
-      if self.class.to_s == "Invitation"
-        "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{research_session.id}"
-      elsif self.class.to_s == "ResearchSession"
-        "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{id}"
-      end
+  def generate_url
+    if self.class.to_s == 'Invitation'
+      "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{research_session.id}"
+    elsif self.class.to_s == 'ResearchSession'
+      "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{id}"
     end
+  end
 
-    def add_alarm(event)
-      # only add alarms for the actual reservation
-      case self.class.name.demodulize
-      when "ResearchSession"
-        generate_alarm(event)
-      else
-        event
-      end
-    end
-
-    def generate_alarm(event)
-      user_email = defined?(user) ? user.email : ENV["MAIL_ADMIN"]
-      event.alarm do |alarm|
-        alarm.attendee = "mailto:#{user_email}"
-        alarm.summary  = description
-        alarm.trigger  = "-P1DT0H0M0S" # 1 day before
-      end
+  def add_alarm(event)
+    # only add alarms for the actual reservation
+    case self.class.name.demodulize
+    when 'ResearchSession'
+      generate_alarm(event)
+    else
       event
     end
+  end
 
-    def date_plus_time(date, time)
-      (Date.strptime(date, "%m/%d/%Y") + Time.zone.parse(time).seconds_since_midnight.seconds)
+  def generate_alarm(event)
+    user_email = defined?(user) ? user.email : ENV['MAIL_ADMIN']
+    event.alarm do |alarm|
+      alarm.attendee = "mailto:#{user_email}"
+      alarm.summary  = description
+      alarm.trigger  = '-P1DT0H0M0S' # 1 day before
     end
+    event
+  end
 
-    # must by reasonably unique
-    def generate_ical_id
-      Digest::SHA1.hexdigest(id.to_s + start_datetime.to_s)
-    end
+  def date_plus_time(date, time)
+    (Date.strptime(date, '%m/%d/%Y') + Time.zone.parse(time).seconds_since_midnight.seconds)
+  end
+
+  # must by reasonably unique
+  def generate_ical_id
+    Digest::SHA1.hexdigest(id.to_s + start_datetime.to_s)
+  end
 end

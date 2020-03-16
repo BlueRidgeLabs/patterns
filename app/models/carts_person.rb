@@ -15,18 +15,18 @@ class CartsPerson < ApplicationRecord
 
   validates :person_id,
             uniqueness: { scope: :cart_id,
-                          message: "Person can only be in a cart once." }
+                          message: 'Person can only be in a cart once.' }
 
-  if ENV["RAPIDPRO_TOKEN"]
+  if ENV['RAPIDPRO_TOKEN']
     after_create :add_to_rapidpro
     after_destroy :remove_from_rapidpro
   end
 
   def add_to_rapidpro
-    RapidproPersonGroupJob.perform_async(person_id, cart.id, "add")
+    RapidproPersonGroupJob.perform_async(person_id, cart.id, 'add')
   end
 
   def remove_from_rapidpro
-    RapidproPersonGroupJob.perform_async(person_id, cart.id, "remove")
+    RapidproPersonGroupJob.perform_async(person_id, cart.id, 'remove')
   end
 end

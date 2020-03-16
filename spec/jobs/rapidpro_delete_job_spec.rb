@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe RapidproDeleteJob, type: :job do
   let(:sut) { RapidproDeleteJob }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:action) { sut.new.perform(person.id) }
-  let(:rapidpro_headers) { { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" } }
+  let(:rapidpro_headers) { { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' } }
 
-  context "rapidpro_uuid not present" do
+  context 'rapidpro_uuid not present' do
     before { person.update(rapidpro_uuid: nil) }
 
-    it "doesnt do anything" do
+    it 'doesnt do anything' do
       expect(HTTParty).not_to receive(:delete)
       expect(action).to be_nil
     end
   end
 
-  context "rapidpro returns 404" do
-    it "returns false and doesnt do anything" do
+  context 'rapidpro returns 404' do
+    it 'returns false and doesnt do anything' do
       expect(HTTParty).to receive(:delete).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
@@ -29,8 +29,8 @@ RSpec.describe RapidproDeleteJob, type: :job do
     end
   end
 
-  context "rapidpro returns 204" do
-    it "updates rapidpro_uuid to nil and returns true" do
+  context 'rapidpro returns 204' do
+    it 'updates rapidpro_uuid to nil and returns true' do
       expect(HTTParty).to receive(:delete).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
@@ -42,8 +42,8 @@ RSpec.describe RapidproDeleteJob, type: :job do
     end
   end
 
-  context "rapidpro returns 201" do
-    it "updates rapidpro_uuid to nil and returns true" do
+  context 'rapidpro returns 201' do
+    it 'updates rapidpro_uuid to nil and returns true' do
       expect(HTTParty).to receive(:delete).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
@@ -55,8 +55,8 @@ RSpec.describe RapidproDeleteJob, type: :job do
     end
   end
 
-  context "rapidpro returns 200" do
-    it "updates rapidpro_uuid to nil and returns true" do
+  context 'rapidpro returns 200' do
+    it 'updates rapidpro_uuid to nil and returns true' do
       expect(HTTParty).to receive(:delete).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
@@ -68,15 +68,15 @@ RSpec.describe RapidproDeleteJob, type: :job do
     end
   end
 
-  context "rapidpro returns 429" do
-    it "re-queues job" do
+  context 'rapidpro returns 429' do
+    it 're-queues job' do
       expect(HTTParty).to receive(:delete).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
                      code: 429,
                      headers: {
-                       "retry-after" => 100
+                       'retry-after' => 100
                      }
                    ))
       expect(sut).to receive(:perform_in).with(100 + 5, person.id)
@@ -85,8 +85,8 @@ RSpec.describe RapidproDeleteJob, type: :job do
     end
   end
 
-  context "rapidpro returns unknown response" do
-    it "raises error" do
+  context 'rapidpro returns unknown response' do
+    it 'raises error' do
       expect(HTTParty).to receive(:delete).with(
         "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers

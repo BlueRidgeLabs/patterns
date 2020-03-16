@@ -9,6 +9,7 @@ Patterns::Application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
+  config.action_mailbox.ingress = :mandrill
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both thread web servers
   # and those relying on copy on write to perform better.
@@ -89,7 +90,7 @@ Patterns::Application.configure do
   config.lograge.enabled = true
   # this doesn't do what i had hoped it would do.
   config.lograge.custom_options = lambda do |event|
-    {remote_ip: event.payload[:remote_ip]}
+    { remote_ip: event.payload[:remote_ip] }
   end
   # Analytics
   config.google_analytics_enabled = true
@@ -107,14 +108,12 @@ Patterns::Application.configure do
 
   config.middleware.use Rack::TwilioWebhookAuthentication, ENV['TWILIO_AUTH_TOKEN'], '/receive_text/index'
 
-  #12 factor
+  # 12 factor
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
-
-
 end

@@ -17,4 +17,4 @@
 #  updated_at        :datetime         not null
 #
 
-require "faker"
+require 'faker'

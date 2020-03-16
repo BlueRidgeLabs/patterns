@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
-feature "people page" do
+feature 'people page' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
-  let(:first_name) { "Doggo" }
-  let(:last_name) { "Johnson" }
-  let(:phone_number) { "6665551234" }
-  let(:email_address) { "eugene@asdf.com" }
-  let(:postal_code) { "11101" }
-  let(:neighborhood) { "doggotown" }
-  let(:landline) { "6667772222" }
-  let(:participation_type) { "remote" }
-  let(:preferred_contact_method) { { value: "SMS", label: "Text Message" } }
+  let(:first_name) { 'Doggo' }
+  let(:last_name) { 'Johnson' }
+  let(:phone_number) { '6665551234' }
+  let(:email_address) { 'eugene@asdf.com' }
+  let(:postal_code) { '11101' }
+  let(:neighborhood) { 'doggotown' }
+  let(:landline) { '6667772222' }
+  let(:participation_type) { 'remote' }
+  let(:preferred_contact_method) { { value: 'SMS', label: 'Text Message' } }
   let(:low_income) { true }
-  let(:last_person) { }
+  let(:last_person) {}
+  let(:person_with_consent) { FactoryBot.create(:person, :consent_form_attached) }
 
   let(:now) { DateTime.current }
 
@@ -31,24 +32,24 @@ feature "people page" do
   def add_new_person(verified:)
     visit people_path
 
-    click_link "New Person"
-    expect(page).to have_selector(:link_or_button, "Create Person")
+    click_link 'New Person'
+    expect(page).to have_selector(:link_or_button, 'Create Person')
 
-    fill_in "First name", with: first_name
-    fill_in "Last name", with: last_name
-    fill_in "Phone number", with: phone_number
-    fill_in "Email address", with: email_address
-    fill_in "Postal code", with: postal_code
-    fill_in "Landline", with: landline
-    check("Low income")
-    select preferred_contact_method[:label], from: "Preferred contact method"
-    select participation_type, from: "Participation type"
-    select verified, from: "Verified"
-    click_button "Create Person"
+    fill_in 'First name', with: first_name
+    fill_in 'Last name', with: last_name
+    fill_in 'Phone number', with: phone_number
+    fill_in 'Email address', with: email_address
+    fill_in 'Postal code', with: postal_code
+    fill_in 'Landline', with: landline
+    check('Low income')
+    select preferred_contact_method[:label], from: 'Preferred contact method'
+    select participation_type, from: 'Participation type'
+    # select verified, from: "Verified"
+    click_button 'Create Person'
 
     expect(page).to have_content(email_address)
     expect(page).to have_content(first_name)
-    expect(page).to have_selector(:link_or_button, "Edit")
+    expect(page).to have_selector(:link_or_button, 'Edit')
 
     visit people_path
   end
@@ -65,14 +66,14 @@ feature "people page" do
     expect(new_person.verified).to eq(verified)
     expect(new_person.neighborhood).to eq(neighborhood)
     expect(new_person.created_by).to eq(admin_user.id)
-    expect(new_person.screening_status).to eq("new")
+    expect(new_person.screening_status).to eq('new')
     expect(new_person.signup_at).to be_within(1.seconds).of(now)
     expect(new_person.token).to be_truthy
     expect(new_person.preferred_contact_method).to eq(preferred_contact_method[:value])
     expect(new_person.low_income).to eq(low_income)
   end
 
-  scenario "create new, verified person, and edit their information" do
+  scenario 'create new, verified person, and edit their information' do
     add_new_person(verified: Person::VERIFIED_TYPE)
     assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
@@ -84,12 +85,12 @@ feature "people page" do
     expect(page.current_path).to eq(person_path(person.id))
 
     # edit person's email
-    updated_email_address = "eugeneupdated@asdf.com"
+    updated_email_address = 'eugeneupdated@asdf.com'
     find(:xpath, "//a[@href='#{edit_person_path(person.id)}']").click
 
-    fill_in "Email address", with: updated_email_address
-    click_button "Update Person"
-    expect(page).to have_content("Person was successfully updated.")
+    fill_in 'Email address', with: updated_email_address
+    click_button 'Update Person'
+    expect(page).to have_content('Person was successfully updated.')
     expect(page.current_path).to eq(person_path(person.id))
     expect(person.reload.email_address).to eq(updated_email_address)
     visit people_path
@@ -98,20 +99,20 @@ feature "people page" do
     # non-admin can't reactivate/delete person
     admin_user.update(new_person_notification: false)
     visit people_path
-    expect(page).not_to have_content(I18n.t("deactivate"))
-    expect(page).not_to have_content("Delete")
+    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content('Delete')
     visit person_path(person.id)
-    expect(page).not_to have_content(I18n.t("deactivate"))
-    expect(page).not_to have_content("Delete")
+    expect(page).not_to have_content(I18n.t('deactivate'))
+    expect(page).not_to have_content('Delete')
 
     # admin can reactivate/delete person
     admin_user.update(new_person_notification: true)
     visit people_path
-    expect(page).to have_content(I18n.t("deactivate"))
-    expect(page).to have_content("Delete")
+    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content('Delete')
     visit person_path(person.id)
-    expect(page).to have_content(I18n.t("deactivate"))
-    expect(page).to have_content("Delete")
+    expect(page).to have_content(I18n.t('deactivate'))
+    expect(page).to have_content('Delete')
 
     # deactivate person
     expect(RapidproDeleteJob).to receive(:perform_async).with(person.id)
@@ -121,7 +122,7 @@ feature "people page" do
     person.reload
     expect(person.active).to eq(false)
     expect(person.deactivated_at).to be_truthy
-    expect(person.deactivated_method).to eq("admin_interface")
+    expect(person.deactivated_method).to eq('admin_interface')
 
     # reactivate person
     expect(RapidproUpdateJob).to receive(:perform_async).with(person.id)
@@ -140,7 +141,29 @@ feature "people page" do
     expect { person.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  scenario "tagging", js: true do
+  scenario 'no attached consent form', js: true do
+    add_new_person(verified: Person::VERIFIED_TYPE)
+    person = Person.order(:id).last
+    click_link person.full_name
+    expect(page.current_path).to eq(person_path(person.id))
+
+    # verifies that an input/select/textarea exists with the specified value
+    expect(page).to have_field('consent-url')
+    consent_url = find('input#consent-url').value
+    expect(consent_url).to include("/consent/#{person.token}")
+
+    # can't copypaste in chrome webdriver.
+    # find('#copy-consent-url').click
+    # clip_text = page.evaluate_async_script('navigator.clipboard.readText().then(arguments[0])')
+    # expect(clip_text).to include(person.token)
+  end
+
+  scenario 'with attached consent form', js: true do
+    visit person_path(person_with_consent.id)
+    expect(page).to have_content('Consent Form Signed')
+  end
+
+  scenario 'tagging', js: true do
     add_new_person(verified: Person::VERIFIED_TYPE)
     assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
@@ -151,9 +174,9 @@ feature "people page" do
     expect(page.current_path).to eq(person_path(person.id))
 
     # add tag
-    new_tag = "TeSt TaG"
+    new_tag = 'TeSt TaG'
     normalized_new_tag = new_tag.downcase
-    fill_in with: new_tag, id: "tag-typeahead"
+    fill_in with: new_tag, id: 'tag-typeahead'
     find('.tag-form input[type="submit"]').native.send_keys(:return)
     wait_for_ajax
     person.reload
@@ -162,7 +185,7 @@ feature "people page" do
 
     # look at search results by tag
     click_link normalized_new_tag
-    expect(page).to have_content("Search Results")
+    expect(page).to have_content('Search Results')
     expect(page).to have_content(email_address)
 
     # delete tag
@@ -175,7 +198,8 @@ feature "people page" do
     expect(page).not_to have_content(normalized_new_tag)
   end
 
-  scenario "create new, unverified person" do
+  # this doesn't happen anymore though the in app form, only public
+  xscenario 'create new, unverified person' do
     add_new_person(verified: Person::NOT_VERIFIED_TYPE)
     assert_person_created(verified: Person::NOT_VERIFIED_TYPE)
 

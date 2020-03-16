@@ -150,8 +150,32 @@
         <%= render partial: 'taggings/tag_form', locals: {taggable_obj: @person}%>
       </div>
     </div>
+    <div class='row'>
+      <div class="col-sm mt-2">
+        <div class="card">
+          <div class="card-header">
+            Consent Form
+          </div>
+          <div class="card-body">
+            <% if @person.consent_form.attached? %>
+            <h5 class="card-title">Consent Form Signed</h5>
+            <p class="card-text"><%= link_to "Download Consent Form",rails_blob_path(@person.consent_form, disposition: "attachment") %></p>
+            <% else %>
+            <h1><span class="badge badge-danger">Alert!</span></h1>
+            <p class="card-title">Send this URL to the DIG member to sign the consent form.</p>
+            <p class="card-text">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <a tabindex="0" role="button" class="btn btn-outline-secondary" type="button" id='copy-consent-url' data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="Copied!">Copy Link</a>
+                </div>
+                <input id='consent-url' readonly type="text" class="form-control" value='<%= consent_url(token: @person.token)%>'>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
   <div class="col-sm">
     <div class='row'>
       <h3>Location <%= content_tag :span,'?',class: 'badge badge-dark', data:{
