@@ -37,7 +37,7 @@
 
 # FIXME: Refactor and re-enable cop
 class PeopleController < ApplicationController
-  before_action :set_person, only: %i[show edit update destroy]
+  before_action :set_person, only: %i[show edit update destroy upload_consent delete_consent]
   helper_method :sort_column, :sort_direction
 
   # GET /people
@@ -126,6 +126,17 @@ class PeopleController < ApplicationController
     end
   end
 
+  # POST /people/consent/:id
+  def upload_consent
+    @person.consent_form.attach(params[:consent_form])
+    redirect_to person_path(@person)
+  end
+
+  # DELETE /people/consent/:id
+  def delete_consent
+    @person.consent_form.purge
+    redirect_to person_path(@person)
+  end
   # FIXME: Refactor and re-enable cop
   # TODO: killoff wufoo
   #
