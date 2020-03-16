@@ -24,7 +24,7 @@ class CartController < ApplicationController
           end
           send_data output, filename: "Pool-#{@cart.name}.csv"
         else
-          flash[:error] = I18n.t("not_permitted")
+          flash[:error] = I18n.t('not_permitted')
         end
       end
     end
@@ -40,13 +40,13 @@ class CartController < ApplicationController
     @create_result = @cart.save
     respond_to do |format|
       if @create_result
-        format.js { }
-        format.json { }
-        format.html { redirect_to @cart, notice: "Pool was successfully created." }
+        format.js {}
+        format.json {}
+        format.html { redirect_to @cart, notice: 'Pool was successfully created.' }
       else
         flash[:error] = @cart.errors
-        format.js { }
-        format.html { render action: "new" }
+        format.js {}
+        format.html { render action: 'new' }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
       end
     end
@@ -55,19 +55,18 @@ class CartController < ApplicationController
   def update
     respond_to do |format|
       if @cart.update(cart_update_params)
-        format.html { redirect_to cart_path(@cart), notice: "Cart was successfully updated." }
+        format.html { redirect_to cart_path(@cart), notice: 'Cart was successfully updated.' }
         format.json { respond_with_bip(@cart) }
       else
         flash[:error] = @cart.errors
-        format.html { render action: "edit" }
+        format.html { render action: 'edit' }
         format.json { render json: @cart.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
   def add
-    pids = cart_params[:person_id].split("/")
+    pids = cart_params[:person_id].split('/')
     people = Person.where(id: pids)
     @added = []
     current_size = @cart.people.size
@@ -90,10 +89,8 @@ class CartController < ApplicationController
       format.html { render json: @cart.people.pluck(:id) }
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   # Delete
-  # rubocop:disable Metrics/MethodLength
   def delete
     if cart_params[:person_id].blank?
       @deleted = @cart.people.pluck(:id)
@@ -102,14 +99,14 @@ class CartController < ApplicationController
       @cart.rapidpro_sync = false
       @cart.save
       @deleted_all = true
-      flash[:notice] = I18n.t("cart.delete_all_people_success", cart_name: @cart.name)
+      flash[:notice] = I18n.t('cart.delete_all_people_success', cart_name: @cart.name)
     else
       @deleted = [cart_params[:person_id]]
       cart_person = @cart.carts_people.find_by(person_id: cart_params[:person_id])
       cart_person.destroy if cart_person.present?
       @deleted_all = @cart.people.empty?
       if cart_person.present?
-        flash[:notice] = I18n.t("cart.delete_person_success", person_name: cart_person.person.full_name, cart_name: @cart.name)
+        flash[:notice] = I18n.t('cart.delete_person_success', person_name: cart_person.person.full_name, cart_name: @cart.name)
       end
     end
     @cart.save
@@ -120,7 +117,6 @@ class CartController < ApplicationController
       format.html { render json: @cart.to_json }
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def index
     if current_user.admin?
@@ -143,7 +139,7 @@ class CartController < ApplicationController
     respond_to do |format|
       format.html { redirect_to :back }
       format.json { head :no_content }
-      format.js { }
+      format.js {}
     end
   end
 
@@ -195,41 +191,42 @@ class CartController < ApplicationController
   end
 
   private
-    def cart_update_params
-      params.require(:cart).permit(:description,
-                                   :name,
-                                   :id,
-                                   :user_id,
-                                   :user,
-                                   :person,
-                                   :rapidpro_sync,
-                                   :person_id)
-    end
 
-    def cart_params
-      params.permit(:person_id,
-                    :all,
-                    :type,
-                    :name,
-                    :id,
-                    :user,
-                    :rapidpro_sync,
-                    :user_id,
-                    :description,
-                    :notes)
-    end
+  def cart_update_params
+    params.require(:cart).permit(:description,
+                                 :name,
+                                 :id,
+                                 :user_id,
+                                 :user,
+                                 :person,
+                                 :rapidpro_sync,
+                                 :person_id)
+  end
 
-    def type_init
-      # type is if it's mini or not, for views
-      @type = cart_params[:type].presence || "full"
-    end
+  def cart_params
+    params.permit(:person_id,
+                  :all,
+                  :type,
+                  :name,
+                  :id,
+                  :user,
+                  :rapidpro_sync,
+                  :user_id,
+                  :description,
+                  :notes)
+  end
 
-    def cart_init
-      if cart_params[:id].present?
-        @cart = Cart.find(cart_params[:id])
-        current_user.current_cart = @cart
-      else
-        @cart = current_user.current_cart
-      end
+  def type_init
+    # type is if it's mini or not, for views
+    @type = cart_params[:type].presence || 'full'
+  end
+
+  def cart_init
+    if cart_params[:id].present?
+      @cart = Cart.find(cart_params[:id])
+      current_user.current_cart = @cart
+    else
+      @cart = current_user.current_cart
     end
+  end
 end

@@ -15,18 +15,17 @@
 
 class TaggingsController < ApplicationController
   TAGGABLE_TYPES = {
-    "Person" => Person.active,
-    "ResearchSession" => ResearchSession
+    'Person' => Person.active,
+    'ResearchSession' => ResearchSession
   }.freeze
 
   # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   #
   # TODO: (EL) more rigorously test tagging logic
   def create
     klass = TAGGABLE_TYPES.fetch(params[:taggable_type])
 
-    if klass && params[:tag].present? && params[:tag] != ""
+    if klass && params[:tag].present? && params[:tag] != ''
       obj = klass.includes(:tags, :taggings).find(params[:taggable_id])
       tag = params[:tag].downcase
       # if we want owned tags. Not sure we do...
@@ -46,12 +45,11 @@ class TaggingsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.js { }
+      format.js {}
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:enable
   def destroy
     @tagging = ActsAsTaggableOn::Tagging.find(params[:id])
 
@@ -72,14 +70,13 @@ class TaggingsController < ApplicationController
   end
 
   def index
-    @tags = Person.active.tag_counts_on(:tags).order("taggings_count DESC")
+    @tags = Person.active.tag_counts_on(:tags).order('taggings_count DESC')
   end
 
-  # rubocop:enable Metrics/MethodLength
   def search
     klass = params[:type].blank? ? Person.active : TAGGABLE_TYPES.fetch(params[:type])
 
-    @tags = klass.tag_counts.where("name like ?", "%#{params[:q].downcase}%")
+    @tags = klass.tag_counts.where('name like ?', "%#{params[:q].downcase}%")
                  .order(taggings_count: :desc)
 
     # the methods=> :value is needed for tokenfield.

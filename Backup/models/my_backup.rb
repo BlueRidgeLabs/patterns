@@ -10,9 +10,9 @@
 # For more information about Backup's components, see the documentation at:
 # http://backup.github.io/backup
 #
-require "yaml"
+require 'yaml'
 
-Model.new(:my_backup, "Description for my_backup") do
+Model.new(:my_backup, 'Description for my_backup') do
   ##
   # Archive [Archive]
   #
@@ -47,17 +47,17 @@ Model.new(:my_backup, "Description for my_backup") do
   #
   database MySQL do |db|
     # To dump all databases, set `db.name = :all` (or leave blank)
-    db.name               = ENV["RAILS_ENV"]
-    db.username           = ENV["MYSQL_USER"]
-    db.password           = ENV["MYSQL_PASSWORD"]
-    db.host               = ENV["MYSQL_HOST"]
+    db.name               = ENV['RAILS_ENV']
+    db.username           = ENV['MYSQL_USER']
+    db.password           = ENV['MYSQL_PASSWORD']
+    db.host               = ENV['MYSQL_HOST']
     db.port               = 3306
     # Note: when using `skip_tables` with the `db.name = :all` option,
     # table names should be prefixed with a database name.
     # e.g. ["db_name.table_to_skip", ...]
     # db.skip_tables        = ["skip", "these", "tables"]
     # db.only_tables        = ["only", "these", "tables"]
-    db.additional_options = ["--quick", "--single-transaction"]
+    db.additional_options = ['--quick', '--single-transaction']
   end
 
   ##
@@ -65,13 +65,13 @@ Model.new(:my_backup, "Description for my_backup") do
   #
   store_with S3 do |s3|
     # AWS Credentials
-    s3.access_key_id     = ENV["AWS_API_TOKEN"]
-    s3.secret_access_key = ENV["AWS_API_SECRET"]
+    s3.access_key_id     = ENV['AWS_API_TOKEN']
+    s3.secret_access_key = ENV['AWS_API_SECRET']
     # Or, to use a IAM Profile:
     # s3.use_iam_profile = true
 
-    s3.region            = "us-east-1"
-    s3.bucket            = ENV["AWS_S3_BUCKET"]
+    s3.region            = 'us-east-1'
+    s3.bucket            = ENV['AWS_S3_BUCKET']
     s3.path              = "/patterns_backups_#{ENV['RAILS_ENV']}"
     s3.keep              = 200
     # s3.keep              = Time.now - 2592000 # Remove all backups older than 1 month.
@@ -104,8 +104,8 @@ Model.new(:my_backup, "Description for my_backup") do
 
   encrypt_with GPG do |encryption|
     encryption.keys = {}
-    encryption.keys[ENV["MAIL_ADMIN"]] = File.read("/home/patterns/backup_public_key.pub")
-    encryption.recipients = ENV["MAIL_ADMIN"]
+    encryption.keys[ENV['MAIL_ADMIN']] = File.read('/home/patterns/backup_public_key.pub')
+    encryption.recipients = ENV['MAIL_ADMIN']
   end
   ##
   # Mail [Notifier]
@@ -118,14 +118,14 @@ Model.new(:my_backup, "Description for my_backup") do
     mail.on_warning           = false
     mail.on_failure           = true
 
-    mail.from                 = ENV["MAILER_SENDER"]
-    mail.to                   = ENV["MAIL_ADMIN"]
-    mail.address              = ENV["SMTP_HOST"]
-    mail.port                 = ENV["SMTP_PORT"]
+    mail.from                 = ENV['MAILER_SENDER']
+    mail.to                   = ENV['MAIL_ADMIN']
+    mail.address              = ENV['SMTP_HOST']
+    mail.port                 = ENV['SMTP_PORT']
     mail.domain               = ENV["#{ENV['RAILS_ENV'].upcase}_SERVER"]
-    mail.user_name            = ENV["SMTP_USERNAME"]
-    mail.password             = ENV["SMTP_PASSWORD"]
-    mail.authentication       = "plain"
+    mail.user_name            = ENV['SMTP_USERNAME']
+    mail.password             = ENV['SMTP_PASSWORD']
+    mail.authentication       = 'plain'
     mail.encryption           = :starttls
   end
 end

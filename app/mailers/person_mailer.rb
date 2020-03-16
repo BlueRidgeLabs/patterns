@@ -10,12 +10,12 @@ class PersonMailer < ApplicationMailer
     @email_address = @person.email_address
     @invitation = invitation
 
-    attachments["event.ics"] = { mime_type: "application/ics",
+    attachments['event.ics'] = { mime_type: 'application/ics',
                                  content: generate_ical(invitation) }
 
     mail(to: @email_address,
          subject: @invitation.title,
-         content_type: "multipart/mixed")
+         content_type: 'multipart/mixed')
   end
 
   def remind(email_address:, invitations:)
@@ -44,10 +44,11 @@ class PersonMailer < ApplicationMailer
   end
 
   private
-    def generate_ical(invitation)
-      cal = Icalendar::Calendar.new
-      cal.add_event(invitation.to_ics)
-      cal.publish
-      cal.to_ical
-    end
+
+  def generate_ical(invitation)
+    cal = Icalendar::Calendar.new
+    cal.add_event(invitation.to_ics)
+    cal.publish
+    cal.to_ical
+  end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe RapidproPersonGroupJob, type: :job do
   let(:sut) { RapidproPersonGroupJob }
@@ -14,37 +14,37 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
     sut.new.perform(people.map(&:id), cart.id, action)
   end
 
-  context "rapidpro sync is false for cart" do
+  context 'rapidpro sync is false for cart' do
     before { cart.update(rapidpro_sync: false) }
 
     it "doesn't do a damn thing" do
       expect(HTTParty).not_to receive(:post)
-      perform_job("add")
+      perform_job('add')
     end
   end
 
-  context "rapidpro uuid for cart is nil" do
+  context 'rapidpro uuid for cart is nil' do
     before { cart.update(rapidpro_uuid: nil) }
 
-    it "raises error" do
-      expect { perform_job("add") }.to raise_error(RuntimeError)
+    it 'raises error' do
+      expect { perform_job('add') }.to raise_error(RuntimeError)
     end
   end
 
-  context "action invalid" do
-    it "raises error" do
-      expect { perform_job("covfefe") }.to raise_error(RuntimeError)
+  context 'action invalid' do
+    it 'raises error' do
+      expect { perform_job('covfefe') }.to raise_error(RuntimeError)
     end
   end
 
-  context "rapidpro returns status 429" do
-    it "enqueues job to be re-run later, with remaining people" do
+  context 'rapidpro returns status 429' do
+    it 'enqueues job to be re-run later, with remaining people' do
       rapidpro_409_res = Hashie::Mash.new(code: 429, headers: { 'retry-after': 100 })
-      action = "add"
+      action = 'add'
       last_100 = people.last(100)
       first_10 = people.first(10)
-      request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-      request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
+      request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
+      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
       request_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_409_res)
@@ -53,16 +53,16 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
     end
   end
 
-  context "valid action, rapidpro info correct, and rate-limit not exceeded" do
+  context 'valid action, rapidpro info correct, and rate-limit not exceeded' do
     it "skips folx tagged with 'not dig'" do
       dig_people = FactoryBot.create_list(:person, 10, :rapidpro_syncable).to_a.sort_by(&:id)
       not_dig_people = FactoryBot.create_list(:person, 10, :rapidpro_syncable, :not_dig).to_a.sort_by(&:id)
       all_people = (dig_people + not_dig_people).sort_by(&:id)
 
       rapidpro_ok_res = Hashie::Mash.new(code: 200)
-      action = "add"
-      request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-      request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
+      action = 'add'
+      request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
+      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
       request_body = { action: action, contacts: dig_people .map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_ok_res)
@@ -70,13 +70,13 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
     end
 
     context "action is 'add'" do
-      it "adds people to rapidpro" do
+      it 'adds people to rapidpro' do
         rapidpro_ok_res = Hashie::Mash.new(code: 200)
-        action = "add"
+        action = 'add'
         last_100 = people.last(100)
         first_10 = people.first(10)
-        request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-        request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
+        request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
+        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
         request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
         request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
@@ -88,13 +88,13 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
     end
 
     context "action is 'remove'" do
-      it "removes people from rapidpro" do
+      it 'removes people from rapidpro' do
         rapidpro_ok_res = Hashie::Mash.new(code: 200)
-        action = "remove"
+        action = 'remove'
         last_100 = people.last(100)
         first_10 = people.first(10)
-        request_url = "https://rapidpro.brl.nyc/api/v2/contact_actions.json"
-        request_headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}", "Content-Type" => "application/json" }
+        request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
+        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
         request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
         request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 

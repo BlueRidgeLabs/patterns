@@ -15,25 +15,22 @@
 #
 
 class MailchimpUpdate < ApplicationRecord # largely unused
-  scope :latest, -> { order("fired_at DESC") }
+  scope :latest, -> { order('fired_at DESC') }
   after_save :update_person
   self.per_page = 15
-
-  # rubocop:disable Metrics/MethodLength
   def update_person
     Rails.logger.info("[ MailchimpUpdate#updatePerson ] email = #{email} update_type = #{update_type}")
 
     Person.where(email_address: email).find_each do |person|
-      if update_type == "unsubscribe"
+      if update_type == 'unsubscribe'
         person.tag_list.add(update_type)
-        person.deactivate!("mailchimp_api")
+        person.deactivate!('mailchimp_api')
       end
 
       content = "MailChimp Webhook Update: #{update_type} because reason = #{reason} at #{fired_at}"
       Comment.create(content: content,
-                     commentable_type: "Person",
+                     commentable_type: 'Person',
                      commentable_id: person.id)
     end
   end
-  # rubocop:enable Metrics/MethodLength
 end

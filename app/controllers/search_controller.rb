@@ -2,8 +2,6 @@
 
 class SearchController < ApplicationController
   include SearchHelper
-
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def index_ransack
     @tags = SearchService.parse_tags(params[:q])
     params[:q] = SearchService.normalize_query(params[:q])
@@ -20,15 +18,14 @@ class SearchController < ApplicationController
           csv = SearchService.to_csv(@q)
           send_data csv, filename: "Search-#{Time.zone.today}.csv"
         else
-          flash[:error] = "Not permitted"
+          flash[:error] = 'Not permitted'
         end
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+  # rubocop:enable
 
   # FIXME: Refactor and re-enable cop
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   #
   def export_ransack
     list_name = params.delete(:segment_name)
@@ -38,7 +35,7 @@ class SearchController < ApplicationController
     if @mce.with_user(current_user).save
       Rails.logger.info("[SearchController#export] Sent #{@mce.recipients.size} email addresses to a static segment named #{@mce.name}")
       respond_to do |format|
-        format.js { }
+        format.js {}
       end
     else
       Rails.logger.error("[SearchController#export] failed to send event to mailchimp: #{@mce.errors.inspect}")
@@ -56,14 +53,14 @@ class SearchController < ApplicationController
     if @mce.with_user(current_user).save
       Rails.logger.info("[SearchController#export] Sent #{@mce.recipients.size} email addresses to a static segment named #{@mce.name}")
       respond_to do |format|
-        format.js { }
+        format.js {}
       end
     else
       Rails.logger.error("[SearchController#export] failed to send event to mailchimp: #{@mce.errors.inspect}")
       format.all { render text: "failed to send event to mailchimp: #{@mce.errors.inspect}", status: :bad_request }
     end
   end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+  # rubocop:enable
 
   def add_to_cart
     @q = Person.active.ransack(params[:q])
@@ -74,7 +71,7 @@ class SearchController < ApplicationController
     current_cart.people << people
     flash[:notice] = "#{new_pids.size} people added to #{current_cart.name}."
     respond_to do |format|
-      format.js { }
+      format.js {}
       format.json { render json: { success: true } }
     end
   end
@@ -86,37 +83,36 @@ class SearchController < ApplicationController
   end
 
   private
-    def ransack_params
-      Person.includes(:tags, :comments).ransack(params[:q])
-    end
 
-    def ransack_result
-      @search.result(distinct: user_wants_distinct_results?)
-    end
+  def ransack_params
+    Person.includes(:tags, :comments).ransack(params[:q])
+  end
 
-    # lotta params...
-    # rubocop:disable Metrics/MethodLength,
-    def index_params
-      params.permit(:q,
-                    :adv,
-                    :active,
-                    :first_name,
-                    :last_name,
-                    :email_address,
-                    :postal_code,
-                    :phone_number,
-                    :verified,
-                    :device_description,
-                    :connection_description,
-                    :device_id_type,
-                    :connection_id_type,
-                    :geography_id,
-                    :event_id,
-                    :address,
-                    :city,
-                    :tags,
-                    :preferred_contact_method,
-                    :page)
-    end
-  # rubocop:enable Metrics/MethodLength
+  def ransack_result
+    @search.result(distinct: user_wants_distinct_results?)
+  end
+
+  # lotta params...
+  def index_params
+    params.permit(:q,
+                  :adv,
+                  :active,
+                  :first_name,
+                  :last_name,
+                  :email_address,
+                  :postal_code,
+                  :phone_number,
+                  :verified,
+                  :device_description,
+                  :connection_description,
+                  :device_id_type,
+                  :connection_id_type,
+                  :geography_id,
+                  :event_id,
+                  :address,
+                  :city,
+                  :tags,
+                  :preferred_contact_method,
+                  :page)
+  end
 end

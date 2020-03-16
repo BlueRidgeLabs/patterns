@@ -29,20 +29,20 @@
 #  sent_by           :integer
 #
 
-require "faker"
+require 'faker'
 FactoryBot.define do
   factory :digital_gift do
     user
     created_by 1
     amount_cents 2500
-    amount_currency "USD"
+    amount_currency 'USD'
 
     trait :funded do
       before(:create) do |dg|
         admin = if user.admin?
-          user
-        else
-          create(:user, :admin)
+                  user
+                else
+                  create(:user, :admin)
         end
         create(:transaction_log, :topup, user: admin, amount: dg.amount)
         create(:transaction_log, :transfer, amount: dg.amount, other_user: dg.user, user: admin)

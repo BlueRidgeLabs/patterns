@@ -8,8 +8,8 @@ Patterns::Application.configure do
   # base url for emails
   config.action_mailer.default_url_options = { host: 'localhost:8080' }
   config.action_mailbox.ingress = :mandrill
-  
-  config.hosts << "patterns.ngrok.io"
+
+  config.hosts << 'patterns.ngrok.io'
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.

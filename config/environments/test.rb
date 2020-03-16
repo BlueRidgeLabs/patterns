@@ -44,7 +44,7 @@ Patterns::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.active_support.test_order = :random
-  
+
   # depreciation warnings are annoying in tests
   ActiveSupport::Deprecation.silenced = true
   # no audits needed in tests. yet.

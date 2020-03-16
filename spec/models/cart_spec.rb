@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require 'rails_helper'
 
 describe Cart do
   let(:cart) { FactoryBot.create(:cart) }
 
-  describe "callbacks" do
-    context "person added to, and removed from, cart" do
+  describe 'callbacks' do
+    context 'person added to, and removed from, cart' do
       it "enqueues RapidproPersonGroupJob 'add'/'remove' jobs, respectively" do
         person = FactoryBot.create(:person)
-        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, "add")
-        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, "remove")
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, 'add')
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, 'remove')
         cart.people << person
         cart.remove_person(person.id)
       end
     end
   end
 
-  describe "public instance methods" do
-    describe "#add_user(user_id)" do
+  describe 'public instance methods' do
+    describe '#add_user(user_id)' do
       it "adds user to cart, if they aren't already there" do
         cart.users.destroy_all
         user = FactoryBot.create(:user)
@@ -30,8 +30,8 @@ describe Cart do
       end
     end
 
-    describe "#remove_person(person_id)" do
-      it "removes person from cart, if they exist" do
+    describe '#remove_person(person_id)' do
+      it 'removes person from cart, if they exist' do
         cart.people.destroy_all
         person = FactoryBot.create(:person)
         cart.people << person
@@ -42,20 +42,20 @@ describe Cart do
     end
   end
 
-  describe "private instance methods" do
-    describe "#update_rapidpro" do
-      context "rapidpro_sync is true" do
-        it "enqueues Rapidpro create group job" do
+  describe 'private instance methods' do
+    describe '#update_rapidpro' do
+      context 'rapidpro_sync is true' do
+        it 'enqueues Rapidpro create group job' do
           cart.update(rapidpro_sync: true)
-          expect(RapidproGroupJob).to receive(:perform_async).with(cart.id, "create")
+          expect(RapidproGroupJob).to receive(:perform_async).with(cart.id, 'create')
           cart.send(:update_rapidpro)
         end
       end
 
-      context "rapidpro_sync is false" do
-        it "enqueues Rapidpro delete group job" do
+      context 'rapidpro_sync is false' do
+        it 'enqueues Rapidpro delete group job' do
           cart.update(rapidpro_sync: false)
-          expect(RapidproGroupJob).to receive(:perform_async).with(cart.id, "delete")
+          expect(RapidproGroupJob).to receive(:perform_async).with(cart.id, 'delete')
           cart.send(:update_rapidpro)
         end
       end

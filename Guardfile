@@ -2,8 +2,8 @@
 
 # This group allows to skip running RuboCop when RSpec failed.
 group :red_green_refactor, halt_on_fail: true do
-  guard :rspec, cmd: "bundle exec rspec --fail-fast" do
-    require "guard/rspec/dsl"
+  guard :rspec, cmd: 'bundle exec rspec --fail-fast' do
+    require 'guard/rspec/dsl'
     dsl = Guard::RSpec::Dsl.new(self)
 
     # Feel free to open issues for suggestions and improvements
@@ -40,8 +40,8 @@ group :red_green_refactor, halt_on_fail: true do
     watch(rails.view_dirs)     { |m| rspec.spec.call("features/#{m[1]}") }
     watch(rails.layouts)       { |m| rspec.spec.call("features/#{m[1]}") }
 
-    watch("app/views/public/people/new.html.erb") { "spec/features/people_registration_spec.rb" }
-    watch("app/views/public/people/_form.html.erb") { "spec/features/people_registration_spec.rb" }
+    watch('app/views/public/people/new.html.erb') { 'spec/features/people_registration_spec.rb' }
+    watch('app/views/public/people/_form.html.erb') { 'spec/features/people_registration_spec.rb' }
   end
 
   # guard :rubocop do
@@ -51,12 +51,12 @@ group :red_green_refactor, halt_on_fail: true do
 end
 
 guard :bundler do
-  require "guard/bundler"
-  require "guard/bundler/verify"
+  require 'guard/bundler'
+  require 'guard/bundler/verify'
   helper = Guard::Bundler::Verify.new
 
-  files = ["Gemfile"]
-  files += Dir["*.gemspec"] if files.any? { |f| helper.uses_gemspec?(f) }
+  files = ['Gemfile']
+  files += Dir['*.gemspec'] if files.any? { |f| helper.uses_gemspec?(f) }
 
   # Assume files are symlinked from somewhere
   files.each { |file| watch(helper.real_path(file)) }

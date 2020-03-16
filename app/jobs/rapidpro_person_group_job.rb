@@ -16,9 +16,9 @@ class RapidproPersonGroupJob
   # for individual person adds/removes use other job
 
   def perform(people_ids, cart_id, action)
-    @headers = { "Authorization" => "Token #{ENV['RAPIDPRO_TOKEN']}",
-                 "Content-Type" => "application/json" }
-    @base_url = "https://rapidpro.brl.nyc/api/v2/"
+    @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
+                 'Content-Type' => 'application/json' }
+    @base_url = 'https://rapidpro.brl.nyc/api/v2/'
     Rails.logger.info "[RapidProPersonGroup] job enqueued: cart: #{cart_id}, action: #{action}"
     @cart = Cart.find(cart_id)
 
@@ -27,12 +27,12 @@ class RapidproPersonGroupJob
     # TODO: test 'not dig' exclusion and compacting
     # NOTE: (EL) `.order(:id)`is required for specs to assert that the correct
     # uuids are being iterated through
-    @people_uuids = Person.where(id: people_ids).tagged_with("not dig", exclude: true).order(:id).pluck(:rapidpro_uuid).compact
+    @people_uuids = Person.where(id: people_ids).tagged_with('not dig', exclude: true).order(:id).pluck(:rapidpro_uuid).compact
     @action = action
-    raise "cart not in rapidpro" if @cart.rapidpro_uuid.nil?
-    raise "invalid action" unless %w[add remove].include? action
+    raise 'cart not in rapidpro' if @cart.rapidpro_uuid.nil?
+    raise 'invalid action' unless %w[add remove].include? action
 
-    url = @base_url + "contact_actions.json"
+    url = @base_url + 'contact_actions.json'
     not_throttled = true
     while @people_uuids.size.positive? && not_throttled
       uuids = @people_uuids.pop(100)
@@ -40,7 +40,7 @@ class RapidproPersonGroupJob
       res = HTTParty.post(url, headers: @headers, body: body.to_json)
       next unless res.code == 429 # throttled
 
-      retry_delay = res.headers["retry-after"].to_i + 5
+      retry_delay = res.headers['retry-after'].to_i + 5
       # NOTE: (EL) `.order(:id)`is required for specs to assert that the correct
       # uuids are being passed to `retry_later`
       pids = Person.where(rapidpro_uuid: @people_uuids).order(:id).pluck(:id)

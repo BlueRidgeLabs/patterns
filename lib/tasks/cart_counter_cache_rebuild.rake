@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-desc "Counter cache for project has many tasks"
+desc 'Counter cache for project has many tasks'
 
 task cart_people_counter: :environment do
   Cart.reset_column_information

@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-require "faker"
-require "support/chromedriver_setup"
-require "capybara/email/rspec"
+require 'rails_helper'
+require 'faker'
+require 'support/chromedriver_setup'
+require 'capybara/email/rspec'
 
-feature "tag person" do
+feature 'tag person' do
   before do
     @person = FactoryBot.create(:person)
   end
 
-  scenario "add tag", js: :true do
+  scenario 'add tag', js: :true do
     login_with_admin_user
 
     tag_name = Faker::Company.buzzword.downcase
     visit "/people/#{@person.id}"
-    expect(page).to have_button("Add")
+    expect(page).to have_button('Add')
 
-    fill_in_autocomplete "#tag-typeahead", tag_name
+    fill_in_autocomplete '#tag-typeahead', tag_name
 
-    find_button("Add").click
+    find_button('Add').click
     wait_for_ajax
     sleep 1 # wait for our page to save
     # gotta reload so that we don't cache tags
@@ -32,7 +32,7 @@ feature "tag person" do
     expect(page.evaluate_script("$('a.delete-link').length")).to eq(1)
   end
 
-  scenario "delete tag", js: :true do
+  scenario 'delete tag', js: :true do
     tag_name = Faker::Company.buzzword.downcase
     @person.tag_list.add(tag_name)
     @person.save
@@ -40,7 +40,7 @@ feature "tag person" do
     visit "/people/#{@person.id}"
     expect(page.evaluate_script("$('a.delete-link').length")).to eq(1)
 
-    fill_in_autocomplete "#tag-typeahead", tag_name
+    fill_in_autocomplete '#tag-typeahead', tag_name
     wait_for_ajax
 
     # expect(find(:css, '#tag-typeahead').value).to_not eq(tag_name)

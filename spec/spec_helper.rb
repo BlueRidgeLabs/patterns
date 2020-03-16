@@ -14,30 +14,30 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 
-require "coveralls"
-Coveralls.wear_merged!("rails")
+require 'coveralls'
+Coveralls.wear_merged!('rails')
 
-require "simplecov"
+require 'simplecov'
 SimpleCov.start
 
-require "devise"
-require "factory_bot_rails"
-require "webdrivers"
-require "webmock"
-require "webmock/rspec"
-require "vcr"
+require 'devise'
+require 'factory_bot_rails'
+require 'webdrivers'
+require 'webmock'
+require 'webmock/rspec'
+require 'vcr'
 
 WebMock.disable_net_connect!
 
 # stores http calls and plays them back
 VCR.configure do |config|
-  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
+  config.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
   config.configure_rspec_metadata!
   config.ignore_localhost = true
   config.allow_http_connections_when_no_cassette = true
   config.default_cassette_options = { record: :new_episodes }
   config.hook_into :webmock
-  config.ignore_hosts ["chromedriver.storage.googleapis.com"]
+  config.ignore_hosts ['chromedriver.storage.googleapis.com']
 end
 
 #
