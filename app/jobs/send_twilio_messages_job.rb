@@ -9,9 +9,9 @@
 # #
 # # FIXME: Refactor and re-enable cop
 # #
-# class SendTwilioMessagesJob
-#   include Sidekiq::Worker
-#   sidekiq_options retry: 1
+class SendTwilioMessagesJob
+  include Sidekiq::Worker
+  sidekiq_options retry: 1
 
 #   # FIXME: Refactor and re-enable cop
 #   #
@@ -70,4 +70,4 @@
 #   end
 #   # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/BlockLength
 
-# end
+end
