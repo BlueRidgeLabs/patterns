@@ -19,6 +19,9 @@
 /log/*.log
 /tmp
 
+# ignore activestorage
+/storage
+
 # Ignore variables
 /config/initializers/env.rb
 /config/local_env.yml
