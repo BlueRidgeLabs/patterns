@@ -3,6 +3,7 @@ development:
 production:
   :concurrency: <%= ENV['RAILS_MAX_THREADS'] || 25 %>
 :queues:
+  - rapidpro
   - default
   - mailers
   - action_mailbox_routing

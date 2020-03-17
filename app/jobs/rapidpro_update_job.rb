@@ -3,6 +3,7 @@
 class RapidproUpdateJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
+  sidekiq_options queue: 'rapidpro'
 
   # works like so, if person has no rapidpro uuid, we post with phone,
   # otherwise use uuid. this will allow changes to phone numbers.

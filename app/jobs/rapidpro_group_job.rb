@@ -3,7 +3,7 @@
 class RapidproGroupJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
-
+  sidekiq_options queue: 'rapidpro'
   # two possible actions for groups: create or delete.
   # need another job which is add/remove to group for individuals.
   # works like so: if cart doesnt' have rapidpro UUID, then create group on RP
