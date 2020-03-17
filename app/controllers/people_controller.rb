@@ -128,7 +128,8 @@ class PeopleController < ApplicationController
 
   # POST /people/consent/:id
   def upload_consent
-    @person.consent_form.attach(params[:consent_form])
+    @person.consent_form.attach(person_params[:consent_form])
+    @person.save
     redirect_to person_path(@person)
   end
 
@@ -202,6 +203,7 @@ class PeopleController < ApplicationController
                                    :neighborhood,
                                    :address_1,
                                    :address_2,
+                                   :consent_form,
                                    :city,
                                    :state,
                                    :postal_code,

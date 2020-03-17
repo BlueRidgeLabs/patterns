@@ -228,6 +228,8 @@ Patterns::Application.routes.draw do
 
   resources :people do
     collection do
+      delete 'consent/:id', action: :delete_consent, as: :delete_consent
+      patch 'consent/:id', action: :upload_consent, as: :upload_consent
       get 'lookup/:uuid', action: :lookup, as: :lookup
       post 'create_sms'
       post ':person_id/deactivate', action: :deactivate, as: :deactivate
