@@ -145,6 +145,18 @@ RSpec.describe RapidproUpdateJob, type: :job do
     end
   end
 
+  xcontext 'rapidpro responds with 502' do
+    let(:rapidpro_res) do
+      Hashie::Mash.new(
+        code: 502
+      )
+    end
+
+    it 'enqueues job to be retried' do
+      expect(sut).to receive(:perform_in)
+    end
+  end
+
   context 'rapidpro responds with 200' do
     let(:rapidpro_res) do
       Hashie::Mash.new(
