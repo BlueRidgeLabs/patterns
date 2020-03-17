@@ -161,7 +161,7 @@
             <h5 class="card-title">Consent Form Signed</h5>
             <p class="card-text"><%= link_to "Download Consent Form",rails_blob_path(@person.consent_form, disposition: "attachment"), class: 'btn btn-sm btn-secondary' %></p>
             <% if current_user.admin? %>
-            <%= button_to "delete consent form", delete_consent_people_path(@person.id),  method: :destroy, data: { confirm: "Are you sure?" }, class: 'btn btn-sm btn-danger' %>
+            <%= button_to "delete consent form", delete_consent_people_path(@person.id),  method: 'delete', data: { confirm: "Are you sure?" }, class: 'btn btn-sm btn-danger' %>
             <% end %>
             <% else %>
             <h1><span class="badge badge-danger">Alert!</span></h1>
