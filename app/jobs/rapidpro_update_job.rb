@@ -58,7 +58,13 @@ class RapidproUpdateJob
         url = endpoint_url + "?urn=#{cgi_urn}" # uses phone number to identify.
       end
 
-      res = HTTParty.post(url, headers: @headers, body: body.to_json)
+      begin
+        res = HTTParty.post(url, headers: @headers, body: body.to_json)
+      rescue  Net::ReadTimeout => e
+        RapidproUpdateJob.perform_in(rand(120..2400), id)
+        return
+      end
+      
 
       case res.code
       when 201 # new person in rapidpro
@@ -73,12 +79,13 @@ class RapidproUpdateJob
       when 200 # happy response
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
           @person.rapidpro_uuid = res.parsed_response['uuid']
+          @person.save   # this calls the rapidpro update again, for the other attributes
         end
-        @person.save # this calls the rapidpro update again, for the other attributes
         true
-      when 400
-        RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
-        raise "error: #{res.body}"
+      when 400, 502, 504, 500
+        # re-queue job for a random time in the future. thundering herd.
+        RapidproUpdateJob.perform_in(rand(120..2400), id)
+        true
       else
         raise "error: #{res.code}, #{res.body}"
       end
