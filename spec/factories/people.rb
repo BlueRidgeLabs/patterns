@@ -92,7 +92,7 @@ FactoryBot.define do
 
     trait :consent_form_attached do
       after(:build) do |person|
-        person.consent_form.attach(io: File.open(Rails.root.join('spec', 'factories', 'assets', 'brl_consent_form_2020.pdf')), filename: 'brl_consent_form_2020.pdf', content_type: 'application/pdf')
+        person.consent_form.attach(io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'brl_consent_form_2020.pdf')), filename: 'brl_consent_form_2020.pdf', content_type: 'application/pdf')
       end
     end
   end
