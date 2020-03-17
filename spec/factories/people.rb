@@ -73,7 +73,7 @@ FactoryBot.define do
     signup_at         Time.current
     primary_device_id devices[:desktop]
     primary_device_description 'crawling'
-
+    token             { Faker::Alphanumeric.alpha(number: 10) }
     secondary_device_id devices[:tablet]
     secondary_device_description 'nice'
     verified 'Verified' # means we can get in touch

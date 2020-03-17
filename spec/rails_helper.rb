@@ -35,6 +35,8 @@ ActiveRecord::Base.logger = nil
 
 require 'devise'
 require 'support/controller_macros'
+require 'action_mailbox/test_helper'
+
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -62,6 +64,8 @@ RSpec.configure do |config|
   # config.include Helpers
   config.extend ControllerMacros, type: :controller
   config.include Helpers
+
+  config.include ActionMailbox::TestHelper, type: :mailbox
   # config.include BestInPlace::TestHelpers #busted
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your

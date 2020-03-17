@@ -2,5 +2,5 @@
 
 class ApplicationMailbox < ActionMailbox::Base
   # this is security through obscurity
-  routing /^signed\.consent/i => :consent_form
+  routing /consent/ => :consent_form
 end
