@@ -45,6 +45,7 @@ gem 'redcarpet' # for markdown notes
 gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby'
 
 gem 'aws-sdk-s3', require: false
+gem 'image_processing' # for activestorage image processing
 
 gem 'hashie'
 
