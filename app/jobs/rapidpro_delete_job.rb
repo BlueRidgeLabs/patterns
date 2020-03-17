@@ -3,6 +3,7 @@
 class RapidproDeleteJob
   include Sidekiq::Worker
   sidekiq_options retry: 5
+  sidekiq_options queue: 'rapidpro'
 
   def perform(id)
     Rails.logger.info '[RapidProDelete] job enqueued'
