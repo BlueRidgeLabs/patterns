@@ -48,6 +48,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    active_record_doctor (1.7.1)
+      activerecord (>= 4.2)
+      railties (>= 4.2)
     activejob (6.0.2.1)
       activesupport (= 6.0.2.1)
       globalid (>= 0.3.6)
@@ -656,6 +659,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
+  active_record_doctor
   acts-as-taggable-on
   airbrake
   annotate
