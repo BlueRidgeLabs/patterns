@@ -19,7 +19,7 @@ gem 'hiredis' # faster redis
 gem 'redis' # ephemeral storage and caching
 gem 'redis-rails' # for session store, I think deprecated in rails 5.2
 gem 'validates_overlap' # to ensure we don't double book people
-
+gem 'active_record_doctor', group: :development
 gem 'mail'
 
 gem 'ransack' # rad searching.
