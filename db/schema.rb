@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_12_223825) do
+ActiveRecord::Schema.define(version: 2020_03_19_153444) do
 
-  create_table "action_mailbox_inbound_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "action_mailbox_inbound_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
     t.string "message_checksum", null: false
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 2020_03_12_223825) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["person_id"], name: "index_cash_cards_on_person_id"
+    t.index ["reward_id"], name: "index_cash_cards_on_reward_id"
     t.index ["user_id"], name: "index_cash_cards_on_user_id"
   end
 
@@ -120,6 +121,7 @@ ActiveRecord::Schema.define(version: 2020_03_12_223825) do
     t.datetime "updated_at"
     t.integer "created_by"
     t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "delayed_jobs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -164,6 +166,7 @@ ActiveRecord::Schema.define(version: 2020_03_12_223825) do
     t.boolean "sent"
     t.datetime "sent_at"
     t.integer "sent_by"
+    t.index ["gift_id"], name: "index_digital_gifts_on_gift_id"
     t.index ["person_id"], name: "index_digital_gifts_on_person_id"
     t.index ["reward_id"], name: "index_digital_gifts_on_reward_id"
     t.index ["user_id"], name: "index_digital_gifts_on_user_id"
@@ -191,6 +194,8 @@ ActiveRecord::Schema.define(version: 2020_03_12_223825) do
     t.integer "event_invitation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["event_invitation_id"], name: "index_invitation_invitees_join_table_on_event_invitation_id"
+    t.index ["person_id"], name: "index_invitation_invitees_join_table_on_person_id"
   end
 
   create_table "invitations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -332,7 +337,7 @@ ActiveRecord::Schema.define(version: 2020_03_12_223825) do
   end
 
   create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name"
+    t.string "name", collation: "utf8_bin"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
   end

@@ -51,7 +51,7 @@
 </div> <!-- notifications -->
 You can download your signed consent form here:
 <br>
-<%= link_to "Consent Form",rails_blob_path(person.consent_form, disposition: "attachment") %>
+<%= link_to "Consent Form",rails_blob_path(@person.consent_form, disposition: "attachment") %>
 <br>
 If you have any questions, please don't hesitate to email:
 <%= ENV['MAIL_ADMIN'] %>
