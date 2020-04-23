@@ -18,10 +18,10 @@
 
         <dt>YTD Rewards $</dt>
         <dd><%= @team.rewards_total %></dd>
-        <dt>Budget by Finance Code</dt>
-        <dd><%=@team.reward_by_finance_code('FELL')%></dd>
-        <dd><%=@team.reward_by_finance_code('CATA1')%></dd>
-        <dd><%=@team.reward_by_finance_code('CATA2')%></dd>
+        <dt>Budget by Program</dt>
+        <dd>Fellowship: <%=@team.reward_by_finance_code('FELL')%></dd>
+        <dd>Catalyst Odd Year: <%=@team.reward_by_finance_code('CATA1')%></dd>
+        <dd>Catalyst Even Year: <%=@team.reward_by_finance_code('CATA2')%></dd>
         <dt>Users</dt>
         <% @team.users.each do |user| %>
           <dd> <%=link_to user.name, user_path(user) %> </dd>
