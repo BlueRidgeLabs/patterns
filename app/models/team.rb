@@ -31,7 +31,12 @@ class Team < ApplicationRecord
     total = rewards.where('created_at > ?', since).sum(:amount_cents)
     Money.new(total, 'USD')
   end
-
+  
+  def reward_by_finance_code(finance_code)
+    total = rewards.where(finance_code: finance_code).sum(:amount_cents)
+    Money.new(total, 'USD')
+  end
+  
   def available_budget
     budget.amount
   end
