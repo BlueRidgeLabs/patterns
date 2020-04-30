@@ -168,8 +168,8 @@ class DigitalGiftsController < ApplicationController
     end
 
     @research_session = ResearchSession.where(api_params['research_session_id']).first
-    phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))
-    @person = Person.active.where(phone_number: phone).first
+    
+    @person = Person.active.find_by(rapidpro_uuid: api_params['rapidpro_uuid'])
 
     if @person.blank? || @research_session.blank? || @user.blank?
       Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
