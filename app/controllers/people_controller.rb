@@ -207,6 +207,8 @@ class PeopleController < ApplicationController
                                    :city,
                                    :state,
                                    :postal_code,
+                                   :birth_year,
+                                   :race_ethnicity,
                                    :geography_id,
                                    :primary_device_id,
                                    :primary_device_description,

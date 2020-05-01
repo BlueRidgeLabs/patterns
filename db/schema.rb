@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_153444) do
+ActiveRecord::Schema.define(version: 2020_04_30_182228) do
 
-  create_table "action_mailbox_inbound_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
+  create_table "action_mailbox_inbound_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
     t.string "message_checksum", null: false
@@ -272,6 +272,8 @@ ActiveRecord::Schema.define(version: 2020_03_19_153444) do
     t.string "participation_level", default: "new"
     t.string "locale", default: "en"
     t.text "cached_tag_list"
+    t.integer "birth_year"
+    t.text "race_ethnicity"
   end
 
   create_table "research_sessions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -337,7 +339,7 @@ ActiveRecord::Schema.define(version: 2020_03_19_153444) do
   end
 
   create_table "tags", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name", collation: "utf8_bin"
+    t.string "name"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
