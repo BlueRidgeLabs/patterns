@@ -168,7 +168,7 @@ class DigitalGiftsController < ApplicationController
     end
 
     @research_session = ResearchSession.find(api_params['research_session_id'])
-    
+
     @person = Person.active.find_by(rapidpro_uuid: api_params['rapidpro_uuid'])
 
     if @person.blank? || @research_session.blank? || @user.blank?

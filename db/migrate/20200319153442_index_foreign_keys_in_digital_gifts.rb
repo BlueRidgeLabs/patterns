@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IndexForeignKeysInDigitalGifts < ActiveRecord::Migration[6.0]
   def change
     add_index :digital_gifts, :gift_id

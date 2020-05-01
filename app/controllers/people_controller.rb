@@ -138,6 +138,7 @@ class PeopleController < ApplicationController
     @person.consent_form.purge
     redirect_to person_path(@person)
   end
+
   # FIXME: Refactor and re-enable cop
   # TODO: killoff wufoo
   #
