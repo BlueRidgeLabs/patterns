@@ -2,7 +2,7 @@
 
 class DigitalGiftsController < ApplicationController
   before_action :set_digital_gift, only: %i[show sent]
-  skip_before_action :authenticate_user!, only: %i[api_create webhook]
+  skip_before_action :authenticate_user!, only: %i[api_create webhook budget]
   skip_before_action :verify_authenticity_token, only: :webhook
   # GET /digital_gifts
   # GET /digital_gifts.json
@@ -44,6 +44,15 @@ class DigitalGiftsController < ApplicationController
     @comment = Comment.new commentable: @digital_gift
   end
 
+  def budget
+    if request.headers['AUTHORIZATION'].present?
+      @user = User.where(token: request.headers['AUTHORIZATION']).first
+    else
+      render(json: { success: false }, status: 401) && return
+    end
+
+    render json: { budget: @user.available_budget.to_i }
+  end
   # GET /digital_gifts/new
   def new
     @digital_gift = DigitalGift.new
