@@ -188,6 +188,7 @@ class Person < ApplicationRecord
     @results = []
     Person.active.all.find_each do |person|
       @results << person.update_participation_level
+      person.save
     end
     @results.compact!
     if @results.present?
@@ -233,15 +234,12 @@ class Person < ApplicationRecord
   end
 
   def update_participation_level
-    return if tag_list.include? 'not dig'
-
     new_level = calc_participation_level
 
     if participation_level != new_level
+      tag_list.remove(Person::PARTICIPATION_LEVELS)
       old_level = participation_level
       self.participation_level = new_level
-
-      tag_list.remove(old_level)
       tag_list.add(new_level)
       save
       Cart.where(name: Person::PARTICIPATION_LEVELS).find_each do |cart|
