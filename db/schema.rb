@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_30_182228) do
+ActiveRecord::Schema.define(version: 2020_05_01_154000) do
 
   create_table "action_mailbox_inbound_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -274,6 +274,7 @@ ActiveRecord::Schema.define(version: 2020_04_30_182228) do
     t.text "cached_tag_list"
     t.integer "birth_year"
     t.text "race_ethnicity"
+    t.string "income_level"
   end
 
   create_table "research_sessions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
