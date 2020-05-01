@@ -167,9 +167,9 @@ class DigitalGiftsController < ApplicationController
       render(status: :unauthorized, json: { success: false }.to_json) && return
     end
 
-    @research_session = ResearchSession.find(api_params['research_session_id'])
+    @research_session = ResearchSession.where(api_params['research_session_id']).first
 
-    @person = Person.active.find_by(rapidpro_uuid: api_params['rapidpro_uuid'])
+    @person = Person.active.where(rapidpro_uuid: api_params['rapidpro_uuid']).first
 
     if @person.blank? || @research_session.blank? || @user.blank?
       Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
