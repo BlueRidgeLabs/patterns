@@ -19,6 +19,11 @@ Patterns::Application.routes.draw do
            as: :sent,
            defaults: { format: 'js' }
 
+      get 'budget',
+          action: :budget,
+          as: :budget,
+          defaults: {format: 'json'}
+
       get 'api_create',
           action: :api_create,
           as: :api_create,
