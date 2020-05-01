@@ -121,6 +121,14 @@
           title: 'popover',
           original_title:"Neighborhood"} %></dt>
           <dd><%= best_in_place @person, :neighborhood %></dd>
+          <dt>Birth Year</dt>
+          <% year_collection = {}
+          (1902..2020).each { |a| year_collection[a] = a } %>
+          <dd><%= best_in_place @person, :birth_year, as: :select, collection: year_collection%></dd>
+          <dt>Approximate age</dt>
+          <dd><%= @person.birth_year.nil? ? 'unknown' : Time.zone.now.year - @person.birth_year %></dd>
+          <dt>Race/Ethnicity</dt>
+          <dd><%= best_in_place @person, :race_ethnicity %></dd>
           <dt>Referred by?</dt>
           <dd><%= best_in_place @person, :referred_by %></dd>
           <% if current_user.admin? %>

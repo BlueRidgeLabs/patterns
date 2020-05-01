@@ -167,9 +167,9 @@ class DigitalGiftsController < ApplicationController
       render(status: :unauthorized, json: { success: false }.to_json) && return
     end
 
-    @research_session = ResearchSession.where(api_params['research_session_id']).first
-    phone = PhonyRails.normalize_number(CGI.unescape(api_params['phone_number']))
-    @person = Person.active.where(phone_number: phone).first
+    @research_session = ResearchSession.find(api_params['research_session_id'])
+    
+    @person = Person.active.find_by(rapidpro_uuid: api_params['rapidpro_uuid'])
 
     if @person.blank? || @research_session.blank? || @user.blank?
       Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
@@ -179,7 +179,7 @@ class DigitalGiftsController < ApplicationController
     # $2 fee possibly
     if @user.available_budget + 2.to_money < api_params['amount'].to_money
       Airbrake.notify("Can't create Digital Gift, insufficient budget! #{api_params}")
-      render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon: insufficent budget' }.to_json) && return
+      render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon: insufficent budget', error: 'insufficent budget' }.to_json) && return
     end
     #  should check if we've already given a digital gift for this research session
   end
@@ -239,6 +239,7 @@ class DigitalGiftsController < ApplicationController
                   :api_token,
                   :research_session_id,
                   :phone_number,
+                  :rapidpro_uuid,
                   :amount)
   end
 
@@ -248,6 +249,7 @@ class DigitalGiftsController < ApplicationController
                   :notes,
                   :reason,
                   :amount,
+                  :rapidpro_uuid,
                   :giftable_type,
                   :giftable_id)
   end
