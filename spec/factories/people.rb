@@ -67,6 +67,8 @@ FactoryBot.define do
     address_1         { Faker::Address.street_address }
     address_2         { Faker::Address.secondary_address }
     city              { Faker::Address.city }
+    birth_year        { rand(1902..2002) }
+    race_ethnicity    { Faker::Lorem.word }
     state             { Faker::Address.state }
     postal_code       { 11_222 }
     low_income        true

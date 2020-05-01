@@ -6,8 +6,8 @@ describe 'digital_gift_api', type: :request do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:regular_user) { FactoryBot.create(:user) }
 
-  let(:person) { FactoryBot.create(:person) }
-  let(:inactive_person) { FactoryBot.create(:person, active: false) }
+  let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
+  let(:inactive_person) { FactoryBot.create(:person, :rapidpro_syncable, active: false) }
   let(:research_session) { FactoryBot.create(:research_session, user: admin_user) }
   let(:headers) do
     {
@@ -35,7 +35,7 @@ describe 'digital_gift_api', type: :request do
     get '/digital_gifts/api_create',
         headers: headers,
         params: {
-          phone_number: person.phone_number,
+          rapidpro_uuid: person.rapidpro_uuid,
           research_session_id: research_session.id,
           amount: 25
         }
@@ -55,7 +55,7 @@ describe 'digital_gift_api', type: :request do
     get '/digital_gifts/api_create',
         headers: headers,
         params: {
-          phone_number: person.phone_number,
+          rapidpro_uuid: person.rapidpro_uuid,
           research_session_id: research_session.id,
           amount: 250
         }
@@ -128,7 +128,7 @@ describe 'digital_gift_api', type: :request do
           'AUTHORIZATION' => regular_user.token
         },
         params: {
-          phone_number: inactive_person.phone_number,
+          rapidpro_uuid: inactive_person.rapidpro_uuid,
           research_session_id: research_session.id,
           amount: 25
         }
@@ -143,7 +143,7 @@ describe 'digital_gift_api', type: :request do
     get '/digital_gifts/api_create',
         headers: headers,
         params: {
-          phone_number: person.phone_number,
+          rapidpro_uuid: person.rapidpro_uuid,
           research_session_id: research_session.id + 1,
           amount: 25
         }
