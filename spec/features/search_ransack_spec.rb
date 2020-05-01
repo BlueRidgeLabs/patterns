@@ -14,7 +14,7 @@ feature 'search using ransack' do
     login_with_admin_user
     visit '/search/index_ransack'
     page.find('#ransack-search').click
-    count = Person.all.size
+    count = Person.active.all.size
     expect(page).to have_text("Showing #{count} results of #{count} total")
   end
 
