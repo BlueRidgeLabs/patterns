@@ -150,11 +150,11 @@ class DigitalGiftsController < ApplicationController
         end
       else
         Airbrake.notify("Can't create Digital Gift, not valid #{api_params}")
-        render status: :unprocessable_entity, json: { success: false, msg: 'digital gift invalid' }.to_json
+        render status: :unprocessable_entity, json: { success: false, msg: 'digital gift invalid, cannot create it' }.to_json
       end
     else
       Airbrake.notify("Can't create Digital Gift, research_session busted: #{api_params}")
-      render status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong. we will be in touch soon! research_session invalid' }.to_json
+      render status: :unprocessable_entity, json: { success: false, msg: "Research Session problem: tagget with survey? #{@research_session.can_survey?} person already invited (already paid)? #{@research_session.is_invited?(@person)}" }.to_json
     end
   end
 
@@ -172,13 +172,13 @@ class DigitalGiftsController < ApplicationController
 
     if @person.blank? || @research_session.blank? || @user.blank?
       Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
-      render(status: :not_found, json: { success: false }.to_json) && return
+      render(status: :not_found, json: { success: false, mgs: "person: #{!@person.blank?} research_session: #{!@research_session.blank?} user: #{!@user.blank?}" }.to_json) && return
     end
 
     # $2 fee possibly
     if @user.available_budget + 2.to_money < api_params['amount'].to_money
       Airbrake.notify("Can't create Digital Gift, insufficient budget! #{api_params}")
-      render(status: :unprocessable_entity, json: { success: false, msg: 'Something has gone wrong, we will be in touch soon: insufficent budget', error: 'insufficent budget' }.to_json) && return
+      render(status: :unprocessable_entity, json: { success: false, msg: "Problem: insufficent budget. requested: #{api_params['amount']}, user: #{@user.name}, available_budget: #{@user.available_budget}", error: 'insufficent budget' }.to_json) && return
     end
     #  should check if we've already given a digital gift for this research session
   end
