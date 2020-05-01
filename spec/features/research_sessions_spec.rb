@@ -90,7 +90,7 @@ feature 'research sessions' do
                                                 ))
   end
 
-  scenario 'create a new session, with people', js: true do
+  xscenario 'create a new session, with people', js: true do
     # create two new pools for user
     pool_1 = FactoryBot.create(:cart, user: admin_user)
     pool_2 = FactoryBot.create(:cart, user: admin_user)

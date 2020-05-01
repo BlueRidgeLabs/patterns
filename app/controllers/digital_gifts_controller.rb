@@ -168,7 +168,6 @@ class DigitalGiftsController < ApplicationController
     end
 
     @research_session = ResearchSession.where(api_params['research_session_id']).first
-
     @person = Person.active.where(rapidpro_uuid: api_params['rapidpro_uuid']).first
 
     if @person.blank? || @research_session.blank? || @user.blank?
