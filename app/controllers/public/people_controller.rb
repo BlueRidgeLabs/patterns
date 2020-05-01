@@ -165,6 +165,7 @@ class Public::PeopleController < ApplicationController
                   :birth_year,
                   :race_ethnicity,
                   :low_income,
+                  :income_level,
                   :phone_number,
                   :rapidpro_uuid,
                   :verified)
@@ -190,6 +191,7 @@ class Public::PeopleController < ApplicationController
                                    :phone_number,
                                    :preferred_contact_method,
                                    :low_income,
+                                   :income_level,
                                    :address_1,
                                    :address_2,
                                    :locale,

@@ -199,6 +199,7 @@ class PeopleController < ApplicationController
                                    :verified,
                                    :referred_by,
                                    :low_income,
+                                   :income_level,
                                    :locale,
                                    :email_address,
                                    :neighborhood,

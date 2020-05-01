@@ -42,7 +42,8 @@
           title: 'popover',
           original_title:"Low Income"} %></dt>
           <dd><%= best_in_place @person, :low_income, as: :checkbox, collection: {false: "No", true: "Yes"} %></dd>
-
+          <dt>Income Level</dt>
+          <dd><%= best_in_place @person, :income_level, as: :select, collection: %w( $0-$20k $21-$40k $41k-$80k $81k+ ).inject({}){|acc,el| acc[el] = el;acc} %> </dd>
           <dt>DIG Level <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
