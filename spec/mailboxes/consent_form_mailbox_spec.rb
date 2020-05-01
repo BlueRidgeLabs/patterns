@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ConsentFormMailbox, type: :mailbox do
@@ -12,7 +14,7 @@ RSpec.describe ConsentFormMailbox, type: :mailbox do
       to: 'consent.form.ao0v9ahsdbcnkjn@example.com',
       subject: person.token.to_s,
       body: "I'm a sample body",
-      attachments: [{'consent.pdf' => File.read(Rails.root.join('spec', 'fixtures', 'files', 'brl_consent_form_2020.pdf'))}]
+      attachments: [{ 'consent.pdf' => File.read(Rails.root.join('spec', 'fixtures', 'files', 'brl_consent_form_2020.pdf')) }]
     )
   end
 

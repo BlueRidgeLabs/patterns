@@ -65,7 +65,6 @@ class RapidproUpdateJob
         RapidproUpdateJob.perform_in(rand(120..2400), id)
         return
       end
-      
 
       case res.code
       when 201 # new person in rapidpro
@@ -80,7 +79,7 @@ class RapidproUpdateJob
       when 200 # happy response
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
           @person.rapidpro_uuid = res.parsed_response['uuid']
-          @person.save   # this calls the rapidpro update again, for the other attributes
+          @person.save # this calls the rapidpro update again, for the other attributes
         end
         true
       when 400, 502, 504, 500

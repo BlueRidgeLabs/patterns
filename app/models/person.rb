@@ -303,7 +303,7 @@ class Person < ApplicationRecord
   end
 
   def community_lawyer_url
-    ENV['COMMUNITY_LAWYER_URL'] + self.token
+    ENV['COMMUNITY_LAWYER_URL'] + token
   end
 
   def full_name
