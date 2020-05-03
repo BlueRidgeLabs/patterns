@@ -70,6 +70,10 @@ class RapidproGroupJob
       @cart.rapidpro_uuid = nil
       @cart.save
       true
+    when 404 # it never was created on rapidpro in the first place.
+      @cart.rapidpro_uuid = nil
+      @cart.save
+      true
     when 429
       retry_delay = res.headers['retry-after'].to_i + 5
       RapidproGroupJob.perform_in(retry_delay, @cart.id, 'delete') # re-queue job
