@@ -44,6 +44,19 @@ class DigitalGiftsController < ApplicationController
     @comment = Comment.new commentable: @digital_gift
   end
 
+<<<<<<< Updated upstream
+=======
+  def budget
+    if request.headers['AUTHORIZATION'].present?
+      @user = User.where(token: request.headers['AUTHORIZATION']).first
+    else
+      render(json: { success: false }, status: 401) && return
+    end
+
+    render json: { budget: @user.available_budget.to_i }
+  end
+
+>>>>>>> Stashed changes
   # GET /digital_gifts/new
   def new
     @digital_gift = DigitalGift.new
@@ -137,8 +150,15 @@ class DigitalGiftsController < ApplicationController
 
       @reward = Reward.new(user_id: @user.id, created_by: @user.id, person_id: @person.id, amount: api_params['amount'], reason: 'survey', giftable_type: 'Invitation', giftable_id: @invitation.id, finance_code: @user&.team&.finance_code, team: @user&.team, rewardable_type: 'DigitalGift')
       if @digital_gift.valid? && @digital_gift.can_order?
-        @digital_gift.request_link # do the thing!
-        if @digital_gift.save
+        error = 'none'
+        begin
+          @digital_gift.request_link # do the thing!
+        rescue Exception => e
+          error = e
+        end
+
+        if @digital_gift.link.present?
+          @digital_gift.save
           @reward.rewardable_id = @digital_gift.id
           @success = @reward.save
           @digital_gift.assign(@reward.id) # is this necessary?
@@ -147,10 +167,13 @@ class DigitalGiftsController < ApplicationController
           @digital_gift.sent_by = @user.id
           @digital_gift.save
           render status: :created, json: { success: true, link: @digital_gift.link, msg: 'Successfully created a gift card for you!' }.to_json
+        else
+          Airbrake.notify("Can't create Digital Gift, Tremendous failed: #{api_params}")
+          render status: :unprocessable_entity, json: { success: false, msg: "digital gift invalid, cannot create it, tremendous api failed: #{error}" }.to_json
         end
       else
         Airbrake.notify("Can't create Digital Gift, not valid #{api_params}")
-        render status: :unprocessable_entity, json: { success: false, msg: 'digital gift invalid, cannot create it' }.to_json
+        render status: :unprocessable_entity, json: { success: false, msg: 'digital gift invalid, cannot create it. api params invalid' }.to_json
       end
     else
       Airbrake.notify("Can't create Digital Gift, research_session busted: #{api_params}")

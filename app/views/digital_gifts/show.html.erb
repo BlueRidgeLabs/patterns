@@ -20,6 +20,7 @@
       <th colspan="1">Reward</th>
       <th colspan="1">Sent?</th>
       <th colspan="1">Link</th>
+      <th colspan='1'>Tremendous Dashboard</th>
       <% if current_user.admin? %>
       <th colspan="1">Change User</th>
       <% end %>
@@ -27,7 +28,7 @@
   </thead>
   <tbody> 
     <tr id='digital-gift-<%=@digital_gift.id%>' 
-  class='card card-small digital-gift'>
+  class='digital-gift'>
       <td><%= @digital_gift.order_id %></td>
       <td><%= humanized_money_with_symbol @digital_gift.amount %></td>
       <td><%= @digital_gift.giftrocket_status %></td>
@@ -45,6 +46,7 @@
       </td>
       <% end %>
       <td><%= @digital_gift.link %></td>
+      <td><a href="https://app.tremendous.com/rewards/dashboard/history/rewards/<%= @digital_gift_gift_id %>/">dashboard</a></td>
     </tr>
   </tbody>
 </table>

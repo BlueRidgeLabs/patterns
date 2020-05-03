@@ -128,6 +128,8 @@ class DigitalGift < ApplicationRecord
   # first from our user's team budget
   # then from giftrocket, and then we make the request
   def can_order?
+    return true if link.present? ## we already created the link.
+
     (amount + expected_fee) <= user.available_budget
   end
 
