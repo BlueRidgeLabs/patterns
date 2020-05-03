@@ -134,6 +134,16 @@ RSpec.describe RapidproGroupJob, type: :job do
       end
     end
 
+    context '404 returned from rapidpro' do
+      it 'deletes cart.rapidpro_uuidd' do
+        rapidpro_ok_res = Hashie::Mash.new(code: 404)
+        rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
+        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res)
+        expect(sut).not_to receive(:perform_in)
+        sut.new.perform(cart.id, 'delete')
+      end
+    end
+
     context 'rate limit hit' do
       it 're-queues job' do
         retry_delay = 100
