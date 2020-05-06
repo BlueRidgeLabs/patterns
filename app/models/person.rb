@@ -376,7 +376,7 @@ class Person < ApplicationRecord
     self.active = false
     self.deactivated_at = Time.current
     self.deactivated_method = type if type
-    self.carts.each {|c| c.remove_person(self.id)}
+    carts.each { |c| c.remove_person(id) }
     save! # sends background mailchimp update
     delete_from_rapidpro # remove from rapidpro
   end
