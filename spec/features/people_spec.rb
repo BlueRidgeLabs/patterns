@@ -29,7 +29,7 @@ feature 'people page' do
     Timecop.return
   end
 
-  def add_new_person(verified:)
+  def add_new_person(*)
     visit people_path
 
     click_link 'New Person'
