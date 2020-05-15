@@ -42,6 +42,7 @@ class TransactionLog < ApplicationRecord
               in: %w[Budget User]
             }
 
+  # TODO: add a "cancel" transation here.
   def update_budgets
     case transaction_type
     when 'Transfer'
