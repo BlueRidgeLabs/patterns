@@ -57,6 +57,9 @@ class RapidproUpdateJob
         # and then another to set fields
         cgi_urn = CGI.escape(urn)
         url = endpoint_url + "?urn=#{cgi_urn}" # uses phone number to identify.
+
+        # update groups, fields, etc
+        RapidproUpdateJob.perform_in(rand(120..240), @person.id)
       end
 
       begin
