@@ -64,7 +64,7 @@ describe 'digital_gift_api', type: :request do
     expect(body['success']).to eq(false)
     expect(body['msg']).to include('insufficent budget')
     person.reload
-    expect(person.rewards_total.to_s).to_not eq('250.00')
+    expect(person.rewards_total.to_s).not_to eq('250.00')
   end
 
   it 'cannot create a digital gift for a non-admin', :vcr do
@@ -82,7 +82,7 @@ describe 'digital_gift_api', type: :request do
     expect(response.content_type).to eq('application/json; charset=utf-8')
     expect(response.status).to eq(401)
     person.reload
-    expect(person.rewards_total.to_s).to_not eq('250.00')
+    expect(person.rewards_total.to_s).not_to eq('250.00')
   end
 
   it 'cannot create a digital gift for a non-existant user', :vcr do
@@ -100,7 +100,7 @@ describe 'digital_gift_api', type: :request do
     expect(response.content_type).to eq('application/json; charset=utf-8')
     expect(response.status).to eq(401)
     person.reload
-    expect(person.rewards_total.to_s).to_not eq('250.00')
+    expect(person.rewards_total.to_s).not_to eq('250.00')
   end
 
   it 'cannot create a digital gift without a token', :vcr do
@@ -117,7 +117,7 @@ describe 'digital_gift_api', type: :request do
     expect(response.content_type).to eq('application/json; charset=utf-8')
     expect(response.status).to eq(401)
     person.reload
-    expect(person.rewards_total.to_s).to_not eq('250.00')
+    expect(person.rewards_total.to_s).not_to eq('250.00')
   end
 
   it 'cannot create a digital gift for an inactive person', :vcr do
@@ -136,7 +136,7 @@ describe 'digital_gift_api', type: :request do
     expect(response.status).to eq(401)
 
     person.reload
-    expect(person.rewards_total.to_s).to_not eq('250.00')
+    expect(person.rewards_total.to_s).not_to eq('250.00')
   end
 
   it 'cannot create a digital gift for a non-existant research session', :vcr do
@@ -150,6 +150,6 @@ describe 'digital_gift_api', type: :request do
     expect(response.content_type).to eq('application/json; charset=utf-8')
     expect(response.status).to eq(201)
     person.reload
-    expect(person.rewards_total.to_s).to_not eq('250.00')
+    expect(person.rewards_total.to_s).not_to eq('250.00')
   end
 end

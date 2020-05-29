@@ -42,9 +42,7 @@ class RapidproUpdateJob
       if @person&.rapidpro_uuid.present? # already created in rapidpro
         url = endpoint_url + "?uuid=#{@person.rapidpro_uuid}"
         body[:urns] = [urn] # adds new phone number if need be.
-        if @person.email_address.present?
-          body[:urns] << "mailto:#{@person.email_address}"
-        end
+        body[:urns] << "mailto:#{@person.email_address}" if @person.email_address.present?
         body[:groups] = ['DIG']
         # rapidpro tags are space delimited and have underscores for spaces
         body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' '),

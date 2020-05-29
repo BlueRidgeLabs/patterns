@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe ActivationCallUpdateJob, type: :job do
-  let(:sut) { ActivationCallUpdateJob }
+  let(:sut) { described_class }
   let(:action) { sut.perform_async }
   let(:redis_double) { double(:redis) }
   let!(:call_1) { FactoryBot.create(:activation_call, :started) }

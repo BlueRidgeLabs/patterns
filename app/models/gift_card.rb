@@ -79,9 +79,7 @@ class GiftCard < ApplicationRecord
       if row[:full_card_number].blank? || row[:full_card_number] == 'full_card_number'
         next
       end # empty rows
-      if GiftCard.where(sequence_number: row[:sequence_number], batch_id: row[:batch_id]).present?
-        next
-      end
+      next if GiftCard.where(sequence_number: row[:sequence_number], batch_id: row[:batch_id]).present?
 
       row[:full_card_number].delete!('-')
 
@@ -153,9 +151,7 @@ class GiftCard < ApplicationRecord
 
   # override allows manual check calls
   def create_check_call(override: false)
-    if override || activation_calls.where(call_type: 'check').size < 5
-      ActivationCall.create(gift_card_id: id, call_type: 'check')
-    end
+    ActivationCall.create(gift_card_id: id, call_type: 'check') if override || activation_calls.where(call_type: 'check').size < 5
   end
 
   def do_success_notification
@@ -301,12 +297,8 @@ class GiftCard < ApplicationRecord
   def luhn_number_valid
     return true if full_card_number.blank?
 
-    if full_card_number.length != 16
-      errors[:base].push('Card Number is not long enough.')
-      end
-    unless CreditCardValidations::Luhn.valid?(full_card_number)
-      errors[:base].push("Card number #{full_card_number} is not valid.")
-      end
+    errors[:base].push('Card Number is not long enough.') if full_card_number.length != 16
+    errors[:base].push("Card number #{full_card_number} is not valid.") unless CreditCardValidations::Luhn.valid?(full_card_number)
   end
 
   def can_activate?

@@ -105,9 +105,7 @@ class CartController < ApplicationController
       cart_person = @cart.carts_people.find_by(person_id: cart_params[:person_id])
       cart_person.destroy if cart_person.present?
       @deleted_all = @cart.people.empty?
-      if cart_person.present?
-        flash[:notice] = I18n.t('cart.delete_person_success', person_name: cart_person.person.full_name, cart_name: @cart.name)
-      end
+      flash[:notice] = I18n.t('cart.delete_person_success', person_name: cart_person.person.full_name, cart_name: @cart.name) if cart_person.present?
     end
     @cart.save
 
@@ -145,9 +143,7 @@ class CartController < ApplicationController
 
   def change_cart
     @cart = Cart.find(params[:cart]) || current_cart
-    if params[:current_session_id].present?
-      @current_session = ResearchSession.find(params[:current_session_id]) || nil
-    end
+    @current_session = ResearchSession.find(params[:current_session_id]) || nil if params[:current_session_id].present?
     current_user.current_cart = @cart
     respond_to do |format|
       format.html { redirect_to cart_path(@cart) }

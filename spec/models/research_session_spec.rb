@@ -50,9 +50,10 @@ describe ResearchSession do
 
     describe 'when invalid' do
       subject { described_class.new(invalid_args) }
-      it 'should be invalid' do
-        expect(subject.valid?).to eql false
-        expect(subject.save).to eql false
+
+      it 'is invalid' do
+        expect(subject.valid?).to be false
+        expect(subject.save).to be false
 
         expect(subject.errors.messages[:description]).to eql ["can't be blank"]
         expect(subject.errors.messages[:duration]).to eql ['must be greater than or equal to 0']
@@ -63,7 +64,7 @@ describe ResearchSession do
       subject { described_class.new(valid_args) }
 
       it 'creates a new event' do
-        expect { subject.save }.to change { ResearchSession.all.size }.from(0).to(1)
+        expect { subject.save }.to change { described_class.all.size }.from(0).to(1)
       end
 
       it 'finds the invitees and associates the to the event' do
@@ -84,7 +85,7 @@ describe ResearchSession do
 
     describe 'with missing data' do
       it 'returns false' do
-        expect(subject.save).to eql false
+        expect(subject.save).to be false
       end
     end
 
@@ -108,7 +109,7 @@ describe ResearchSession do
                           user: admin)
       end
 
-      it 'should have a rewarded person' do
+      it 'has a rewarded person' do
         rs.reload
         expect(reward.amount.to_s).to eq('25.00')
         expect(rs.rewards.size).to eq(1)

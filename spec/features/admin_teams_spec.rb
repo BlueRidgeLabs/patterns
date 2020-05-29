@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'faker'
 
-feature 'Team Management' do
+describe 'Team Management' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:user) { FactoryBot.create(:user) }
   let(:now) { DateTime.current }
@@ -19,7 +19,7 @@ feature 'Team Management' do
     Timecop.return
   end
 
-  scenario 'lists teams' do
+  it 'lists teams' do
     visit '/admin/teams'
     expect(page).to have_content(admin_user.team.name)
     visit "/admin/teams/#{admin_user.team.id}"
@@ -27,7 +27,7 @@ feature 'Team Management' do
     expect(page).to have_content admin_user.team.finance_code
   end
 
-  scenario 'create valid team' do
+  it 'create valid team' do
     visit '/admin/teams/new'
     fill_in 'Name', with: 'foo'
     fill_in 'Description', with: 'bar'

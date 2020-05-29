@@ -71,22 +71,22 @@ FactoryBot.define do
     race_ethnicity    { Faker::Lorem.word }
     state             { Faker::Address.state }
     postal_code       { 11_222 }
-    low_income        true
-    signup_at         Time.current
-    primary_device_id devices[:desktop]
-    primary_device_description 'crawling'
+    low_income        { true }
+    signup_at         { Time.current }
+    primary_device_id { devices[:desktop] }
+    primary_device_description { 'crawling' }
     token { Faker::Alphanumeric.alpha(number: 10) }
-    secondary_device_id devices[:tablet]
-    secondary_device_description 'nice'
-    verified 'Verified' # means we can get in touch
-    primary_connection_id connections[:phone]
-    primary_connection_description 'so so'
-    secondary_connection_id connections[:public_wifi]
-    secondary_connection_description 'worse'
+    secondary_device_id { devices[:tablet] }
+    secondary_device_description { 'nice' }
+    verified { 'Verified' } # means we can get in touch
+    primary_connection_id { connections[:phone] }
+    primary_connection_description { 'so so' }
+    secondary_connection_id { connections[:public_wifi] }
+    secondary_connection_description { 'worse' }
 
     trait :not_dig do
       # tagged with 'not dig' stops a whole bunch of things from happening
-      after(:create) { |person| person.update_attributes(tag_list: 'not dig') }
+      after(:create) { |person| person.update(tag_list: 'not dig') }
     end
 
     trait :rapidpro_syncable do

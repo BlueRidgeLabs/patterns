@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'research sessions' do
+describe 'research sessions' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
 
   before do
@@ -12,7 +12,7 @@ feature 'research sessions' do
   def go_to_session_form
     visit root_path
     click_link 'New Session'
-    expect(page.current_path).to eq(new_research_session_path)
+    expect(page).to have_current_path(new_research_session_path, ignore_query: true)
   end
 
   def fill_session_form(user:, title: 'fake title', location: nil, description: 'fake desc', start_datetime: Time.zone.now, duration: ResearchSession::DURATION_OPTIONS.first)
@@ -34,7 +34,7 @@ feature 'research sessions' do
     "#{pool.name}: #{pool.people.count}"
   end
 
-  scenario 'creating a new session, with location' do
+  it 'creating a new session, with location' do
     approved_user = FactoryBot.create(:user)
     unapproved_user = FactoryBot.create(:user, :unapproved)
     title = 'fake title'
@@ -70,14 +70,14 @@ feature 'research sessions' do
     expect(new_research_session.title).to eq(title)
     expect(new_research_session.location).to eq(location)
     expect(new_research_session.description).to eq(description)
-    expect(new_research_session.start_datetime).to be_within(1.seconds).of(start_datetime)
-    expect(new_research_session.end_datetime).to be_within(1.seconds).of(start_datetime + duration.minutes)
+    expect(new_research_session.start_datetime).to be_within(1.second).of(start_datetime)
+    expect(new_research_session.end_datetime).to be_within(1.second).of(start_datetime + duration.minutes)
     expect(new_research_session.duration).to eq(duration)
-    expect(page.current_path).to eq(research_session_path(new_research_session))
+    expect(page).to have_current_path(research_session_path(new_research_session), ignore_query: true)
     expect(page).to have_content(new_research_session.title)
   end
 
-  scenario 'creating a new session, without location' do
+  it 'creating a new session, without location' do
     go_to_session_form
     fill_session_form(user: admin_user, location: nil)
     click_button 'Create'
@@ -90,7 +90,7 @@ feature 'research sessions' do
                                                 ))
   end
 
-  xscenario 'create a new session, with people', js: true do
+  xit 'create a new session, with people', js: true do
     # create two new pools for user
     pool_1 = FactoryBot.create(:cart, user: admin_user)
     pool_2 = FactoryBot.create(:cart, user: admin_user)
@@ -177,7 +177,7 @@ feature 'research sessions' do
     expect(page).to have_content(new_research_session.title)
   end
 
-  scenario 'errors when creating a new session' do
+  it 'errors when creating a new session' do
     go_to_session_form
     click_button 'Create'
     expect(page).to have_content("There were problems with some of the fields: Description can't be blank, Title can't be blank, Start datetime can't be blank")
@@ -225,7 +225,7 @@ feature 'research sessions' do
     expect(invitation.reload.aasm_state).to eq(new_state)
   end
 
-  scenario 'invitee actions', js: true do
+  it 'invitee actions', js: true do
     gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
     start_datetime = DateTime.current + 2.days
     research_session = FactoryBot.create(:research_session, start_datetime: start_datetime)
@@ -342,11 +342,11 @@ feature 'research sessions' do
     end
   end
 
-  scenario 'cloning a session' do
+  it 'cloning a session' do
     research_session = FactoryBot.create(:research_session)
     visit research_session_path(research_session)
     click_link I18n.t('research_session.clone_btn')
-    expect(page.current_path).to eq(research_session_clone_path(research_session))
+    expect(page).to have_current_path(research_session_clone_path(research_session), ignore_query: true)
 
     expect(page).to have_select('research_session_user_id', selected: admin_user.name)
     expect(find_field('research_session_title').value).to eq research_session.title

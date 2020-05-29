@@ -111,9 +111,7 @@ class Person < ApplicationRecord
       # after_commit :send_to_mailchimp, on: %i[update create]
     end
 
-    if ENV['RAPIDPRO_TOKEN']
-      after_commit :update_rapidpro, on: %i[update create]
-    end
+    after_commit :update_rapidpro, on: %i[update create] if ENV['RAPIDPRO_TOKEN']
     before_destroy :delete_from_rapidpro if ENV['RAPIDPRO_TOKEN']
   end
 

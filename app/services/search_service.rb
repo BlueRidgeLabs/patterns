@@ -13,9 +13,7 @@ class SearchService
       return if query_params.blank?
 
       phone = query_params[:phone_number_eq]
-      if phone
-        query_params[:phone_number_eq] = PhonyRails.normalize_number(phone)
-      end
+      query_params[:phone_number_eq] = PhonyRails.normalize_number(phone) if phone
       active = query_params[:active_eq]
       query_params[:active_eq] = true if active.blank?
       query_params

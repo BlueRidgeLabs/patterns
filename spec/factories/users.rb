@@ -39,20 +39,20 @@ require 'faker'
 FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
-    password '234klj242lk3j'
-    password_confirmation '234klj242lk3j'
-    approved true
+    password { '234klj242lk3j' }
+    password_confirmation { '234klj242lk3j' }
+    approved { true }
     name { Faker::Name.name }
     phone_number { Faker::PhoneNumber.cell_phone }
     team
-    new_person_notification false
+    new_person_notification { false }
 
     trait :admin do
-      new_person_notification true
+      new_person_notification { true }
     end
 
     trait :unapproved do
-      approved false
+      approved { false }
     end
   end
 end

@@ -5,12 +5,12 @@ require 'faker'
 require 'support/chromedriver_setup'
 require 'capybara/email/rspec'
 
-feature 'search using ransack' do
+describe 'search using ransack' do
   before do
     @person_one = FactoryBot.create(:person, postal_code: '60606', preferred_contact_method: 'SMS')
   end
 
-  scenario 'with no parameters' do
+  it 'with no parameters' do
     login_with_admin_user
     visit '/search/index_ransack'
     page.find('#ransack-search').click
@@ -18,7 +18,7 @@ feature 'search using ransack' do
     expect(page).to have_text("Showing #{count} results of #{count} total")
   end
 
-  scenario 'with matching parameters' do
+  it 'with matching parameters' do
     login_with_admin_user
     visit '/search/index_ransack'
     fill_in 'q_postal_code_start', with: '606'
@@ -27,7 +27,7 @@ feature 'search using ransack' do
     expect(page).to have_text('Showing 1 results of 1 total')
   end
 
-  scenario 'with no matching parameters' do
+  it 'with no matching parameters' do
     login_with_admin_user
     visit '/search/index_ransack'
     fill_in 'q_postal_code_start', with: '901'

@@ -42,9 +42,7 @@ class ResearchSessionsController < ApplicationController
     if @research_session.save
       if params['research_session']['tags'].present?
         tags = params['research_session']['tags']
-        if tags != 'research_session[tags]'
-          @research_session.tag_list.add(tags, parse: true)
-        end
+        @research_session.tag_list.add(tags, parse: true) if tags != 'research_session[tags]'
       end
 
       if @research_session.location.blank?
@@ -117,9 +115,7 @@ class ResearchSessionsController < ApplicationController
       flash[:error] = "Can't remove #{Person.find(inv.person_id).full_name}, they have a reward for this session."
     else
       inv.delete
-      if @research_session.save
-        flash[:notice] = I18n.t('research_session.remove_invitee_success', person_name: @person.full_name)
-      end
+      flash[:notice] = I18n.t('research_session.remove_invitee_success', person_name: @person.full_name) if @research_session.save
     end
     respond_to do |format|
       format.js

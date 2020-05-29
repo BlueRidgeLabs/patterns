@@ -10,13 +10,13 @@
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleAlignWith, AutoCorrect, Severity.
 # SupportedStylesAlignWith: keyword, variable, start_of_line
-Layout/EndAlignment:
-  Exclude:
-    - 'app/controllers/calendar_controller.rb'
-    - 'app/controllers/public/people_controller.rb'
-    - 'app/models/gift_card.rb'
-    - 'config/initializers/redis.rb'
-    - 'lib/tasks/bulk_fix_numbers.rake'
+# Layout/EndAlignment:
+#   Exclude:
+#     - 'app/controllers/calendar_controller.rb'
+#     - 'app/controllers/public/people_controller.rb'
+#     - 'app/models/gift_card.rb'
+#     - 'config/initializers/redis.rb'
+#     - 'lib/tasks/bulk_fix_numbers.rake'
 
 # Offense count: 1
 Lint/AmbiguousBlockAssociation:
@@ -154,10 +154,10 @@ Style/AsciiComments:
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, EnforcedStyle.
 # SupportedStyles: nested, compact
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'app/controllers/public/people_controller.rb'
-    - 'lib/extensions/with_user.rb'
+# Style/ClassAndModuleChildren:
+#   Exclude:
+#     - 'app/controllers/public/people_controller.rb'
+#     - 'lib/extensions/with_user.rb'
 
 # Offense count: 10
 Style/CommentedKeyword:
@@ -183,8 +183,8 @@ Style/GuardClause:
 
 # Offense count: 36
 # Cop supports --auto-correct.
-Style/IfUnlessModifier:
-  Enabled: false
+# Style/IfUnlessModifier:
+#   Enabled: false
 
 # Offense count: 1
 Style/MixinUsage:
@@ -201,5 +201,5 @@ Style/MultipleComparison:
 # Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
 Layout/LineLength:
-  Max: 80
+  Max: 200
   

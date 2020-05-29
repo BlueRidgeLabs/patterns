@@ -7,7 +7,6 @@ RSpec.describe ConsentFormMailbox, type: :mailbox do
   #   @file = fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'brl_consent_form_2020.pdf'), 'application/pdf')
   # end
 
-  let(:person) { FactoryBot.create(:person) }
   subject do
     receive_inbound_email_from_mail(
       from: 'from-address@example.com',
@@ -17,6 +16,8 @@ RSpec.describe ConsentFormMailbox, type: :mailbox do
       attachments: [{ 'consent.pdf' => File.read(Rails.root.join('spec', 'fixtures', 'files', 'brl_consent_form_2020.pdf')) }]
     )
   end
+
+  let(:person) { FactoryBot.create(:person) }
 
   xit do
     expect { subject }.to change(person.consent_form, :attached?).from(false).to(true)

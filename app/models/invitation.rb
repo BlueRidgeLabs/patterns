@@ -155,9 +155,7 @@ class Invitation < ApplicationRecord
   end
 
   def can_destroy?
-    unless rewards.empty? && !%w[attended missed].include?(aasm_state)
-      throw(:abort)
-    end
+    throw(:abort) unless rewards.empty? && !%w[attended missed].include?(aasm_state)
   end
 
   def can_miss?

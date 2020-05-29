@@ -27,8 +27,8 @@ FactoryBot.define do
     description { Faker::Lorem.sentence }
     title { Faker::Lorem.sentence }
     start_datetime { DateTime.now + 5.days }
-    duration 60
-    session_type 1
+    duration { 60 }
+    session_type { 1 }
     location { Faker::Boolean.boolean ? Faker::Address.full_address : Faker::PhoneNumber.phone_number }
   end
 end
