@@ -17,8 +17,6 @@
 require 'coveralls'
 Coveralls.wear_merged!('rails')
 
-require 'simplecov'
-SimpleCov.start
 
 require 'devise'
 require 'factory_bot_rails'
