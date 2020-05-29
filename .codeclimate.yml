@@ -22,6 +22,7 @@ engines:
     enabled: true
   rubocop:
     enabled: true
+    channel: rubocop-0-80
   bandit:
     enabled: true
   flog:
