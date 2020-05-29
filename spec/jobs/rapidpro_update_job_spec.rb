@@ -122,7 +122,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
     context "person doesn't have rapidpro_uuid yet" do
       it 'sets rapidpro_uuid on person' do
         person.update(rapidpro_uuid: nil)
-        expect(sut).not_to receive(:perform_in)
+        expect(sut).to receive(:perform_in)
         action
         expect(person.reload.rapidpro_uuid).to eq('fakeuuid')
       end
