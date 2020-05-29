@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'gift_cards page' do
+describe 'gift_cards page' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:valid_cc) { CreditCardValidations::Factory.random(:mastercard) }
   let(:valid_cc_2) { CreditCardValidations::Factory.random(:mastercard) }
@@ -19,7 +19,7 @@ feature 'gift_cards page' do
     login_with_admin_user(admin_user)
   end
 
-  scenario 'preload cards' do
+  it 'preload cards' do
     visit '/gift_cards/preloaded'
     within '.preload-cards' do
       fill_in 'seq_start', with: 1
@@ -38,7 +38,7 @@ feature 'gift_cards page' do
     expect(page).not_to have_content(batch)
   end
 
-  scenario 'activate preloaded cards', :js do
+  it 'activate preloaded cards', :js do
     gc = FactoryBot.create(:gift_card, :preloaded, user_id: admin_user.id)
     visit '/gift_cards'
     find('.activate-toggle').click
@@ -50,13 +50,13 @@ feature 'gift_cards page' do
     end
     click_button 'Activate'
     gc.reload
-    expect(gc.status).to_not eq('preload')
+    expect(gc.status).not_to eq('preload')
     expect(gc.status).to eq('activate_started')
     expect(gc.full_card_number).to eq(valid_cc)
     expect(gc.secure_code).to eq(secure_code)
   end
 
-  scenario 'change preloaded cards users', :js do
+  it 'change preloaded cards users', :js do
     gift_card = FactoryBot.create(:gift_card, :preloaded, user_id: admin_user.id)
     other_user = FactoryBot.create(:user)
     visit '/gift_cards/preloaded'
@@ -132,7 +132,7 @@ feature 'gift_cards page' do
   #   expect(page).to have_no_button('Activate')
   # end
 
-  scenario 'change card owner', js: :true do
+  it 'change card owner', js: :true do
     gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
     other_user = FactoryBot.create(:user)
     visit '/gift_cards'
@@ -148,7 +148,7 @@ feature 'gift_cards page' do
     expect(gift_card.user.id).to eq(other_user.id)
   end
 
-  scenario 'edit card' do
+  it 'edit card' do
     gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
 
     visit "/gift_cards/#{gift_card.id}"

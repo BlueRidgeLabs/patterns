@@ -5,9 +5,7 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
-if Rails.env.production?
-  abort('The Rails environment is running in production mode!')
-end
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 
 # Add additional requires below this line. Rails is not loaded until this point!
@@ -17,7 +15,7 @@ require 'database_cleaner'
 require 'support/helpers'
 require 'sms_spec'
 require 'timecop'
-#require 'mock_redis'
+# require 'mock_redis'
 
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
@@ -27,7 +25,7 @@ require 'webmock'
 SmsSpec.driver = :'twilio-ruby'
 
 # mocking out redis for our tests
-#Redis.current = MockRedis.new
+# Redis.current = MockRedis.new
 
 # keeps out sql output hidden
 ActiveRecord::Base.logger = nil

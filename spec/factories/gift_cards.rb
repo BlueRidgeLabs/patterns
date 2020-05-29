@@ -24,24 +24,24 @@ require 'faker'
 FactoryBot.define do
   factory :gift_card do
     sequence(:sequence_number) { |n| n }
-    expiration_date '05/20'
+    expiration_date { '05/20' }
     user
-    created_by 1
+    created_by { 1 }
     batch_id { Faker::Number.number(digits: 8) }
-    amount_cents 2500
-    amount_currency 'USD'
+    amount_cents { 2500 }
+    amount_currency { 'USD' }
     active
 
     trait :active do
-      status 'active'
+      status { 'active' }
       full_card_number { CreditCardValidations::Factory.random(:mastercard) }
       secure_code { Faker::Number.number(digits: 3) }
     end
 
     trait :preloaded do
-      full_card_number nil
-      secure_code nil
-      status 'preload'
+      full_card_number { nil }
+      secure_code { nil }
+      status { 'preload' }
     end
   end
 end

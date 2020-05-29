@@ -35,7 +35,7 @@ describe Calendarable do
       expect(invitation.to_ics.description).to include(invitation.description)
     end
 
-    it 'should not have an alarm' do
+    it 'does not have an alarm' do
       expect(invitation.to_ics.alarms.length).to eq(0)
     end
   end

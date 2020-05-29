@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe RapidproUpdateJob, type: :job do
-  let(:sut) { RapidproUpdateJob }
+  let(:sut) { described_class }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:action) { sut.new.perform(person.id) }
   let(:rapidpro_req_headers) { { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' } }
@@ -42,6 +42,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
 
   context 'person has rapidpro_uuid' do
     before { person.update(tag_list: 'tag 1, tag 2') }
+
     context 'person has email' do
       it "adds tel and email to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
         expect(HTTParty).to receive(:post).with(

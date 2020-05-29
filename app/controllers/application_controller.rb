@@ -33,9 +33,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_needed
-    unless current_user
-      render json: { 'error' => 'authentication error' }, status: :unauthorized
-    end
+    render json: { 'error' => 'authentication error' }, status: :unauthorized unless current_user
   end
 
   def admin_needed

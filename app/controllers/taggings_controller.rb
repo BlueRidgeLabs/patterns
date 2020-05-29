@@ -38,9 +38,7 @@ class TaggingsController < ApplicationController
           found_tag = klass.tagged_with(tag).first.tags.detect { |t| t.name == tag }
           @tagging = obj.taggings.find_by(tag_id: found_tag.id)
         else
-          flash[:error] = "Oops, can't add that tag: #{unless obj.valid?
-                                                         obj.errors.messages
-                                                       end}"
+          flash[:error] = "Oops, can't add that tag: #{obj.errors.messages unless obj.valid?}"
         end
       end
     end

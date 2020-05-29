@@ -3,15 +3,15 @@
 require 'rails_helper'
 require 'faker'
 
-feature 'People registration' do
-  scenario 'with valid data' do
+describe 'People registration' do
+  it 'with valid data' do
     visit '/registration'
 
     expect { complete_form_with_valid_data }.to change(Person, :count).by(1)
     # expect(page).to have_text('Person was successfully created.')
   end
 
-  scenario 'with invalid data' do
+  it 'with invalid data' do
     visit '/registration'
 
     complete_form_with_invalid_data

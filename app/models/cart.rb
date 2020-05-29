@@ -32,9 +32,7 @@ class Cart < ApplicationRecord
   validates :name, length: { in: 3..30 }
   validates :name, uniqueness: { message: 'Pool must have a unique name', case_sensitive: false }
 
-  if ENV['RAPIDPRO_TOKEN']
-    after_save :update_rapidpro, if: :saved_change_to_rapidpro_sync?
-  end
+  after_save :update_rapidpro, if: :saved_change_to_rapidpro_sync? if ENV['RAPIDPRO_TOKEN']
 
   # TODO: should have an actioncable update for carts in view
 

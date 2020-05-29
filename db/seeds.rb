@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Make some dummy people
-if Rails.env == 'development'
+if Rails.env.development?
   Person.create(
     first_name: 'Jim',
     last_name: 'Tester',

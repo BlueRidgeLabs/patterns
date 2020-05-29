@@ -56,6 +56,7 @@ require 'rails_helper'
 
 describe Person do
   subject { FactoryBot.build(:person) }
+
   let(:now) { DateTime.current }
   let(:more_than_a_year_ago) { now - 1.year - 1.day }
   let(:less_than_a_year_ago) { now - 1.year + 1.day }
@@ -67,7 +68,7 @@ describe Person do
       expect(subject).to be_valid
       another_person = FactoryBot.create(:person)
       subject.phone_number = another_person.phone_number
-      expect(subject).to_not be_valid
+      expect(subject).not_to be_valid
     end
 
     it 'requires either a phone number or an email to be present' do
@@ -76,7 +77,7 @@ describe Person do
       expect(subject).to be_valid
       subject.phone_number = ''
 
-      expect(subject).to_not be_valid
+      expect(subject).not_to be_valid
       subject.email_address = 'jessica@jones.com'
       expect(subject).to be_valid
     end
@@ -110,7 +111,7 @@ describe Person do
         end
 
         # expect(mail_double).to receive(:deliver_later)
-        Person.update_all_participation_levels
+        described_class.update_all_participation_levels
       end
 
       context 'no results' do
@@ -119,19 +120,19 @@ describe Person do
           FactoryBot.create(:person, active: false, participation_level: 'new')
           # results should be [nil, nil] before compacted to []
           expect(AdminMailer).not_to receive(:participation_level_change)
-          Person.update_all_participation_levels
+          described_class.update_all_participation_levels
         end
       end
     end
 
     describe '#locale_name_to_locale(locale_name)' do
       it 'works' do
-        expect(Person.locale_name_to_locale('english')).to eq('en')
-        expect(Person.locale_name_to_locale('ENgliSh')).to eq('en')
-        expect(Person.locale_name_to_locale('spanish')).to eq('es')
-        expect(Person.locale_name_to_locale('spanisH')).to eq('es')
-        expect(Person.locale_name_to_locale('chinese')).to eq('zh')
-        expect(Person.locale_name_to_locale('covfefe')).to be_nil
+        expect(described_class.locale_name_to_locale('english')).to eq('en')
+        expect(described_class.locale_name_to_locale('ENgliSh')).to eq('en')
+        expect(described_class.locale_name_to_locale('spanish')).to eq('es')
+        expect(described_class.locale_name_to_locale('spanisH')).to eq('es')
+        expect(described_class.locale_name_to_locale('chinese')).to eq('zh')
+        expect(described_class.locale_name_to_locale('covfefe')).to be_nil
       end
     end
   end
@@ -163,8 +164,8 @@ describe Person do
           Person::PARTICIPATION_LEVELS.each do |pl|
             FactoryBot.create(:cart, name: pl)
           end
-          new_cart = Cart.find_by_name(Person::PARTICIPATION_LEVEL_NEW)
-          ambassador_cart = Cart.find_by_name(Person::PARTICIPATION_LEVEL_AMBASSADOR)
+          new_cart = Cart.find_by(name: Person::PARTICIPATION_LEVEL_NEW)
+          ambassador_cart = Cart.find_by(name: Person::PARTICIPATION_LEVEL_AMBASSADOR)
 
           person.update(tag_list: Person::PARTICIPATION_LEVEL_NEW, participation_level: Person::PARTICIPATION_LEVEL_NEW)
 
@@ -173,8 +174,8 @@ describe Person do
 
           expect(action).to eq(pid: person.id, old: Person::PARTICIPATION_LEVEL_NEW, new: Person::PARTICIPATION_LEVEL_AMBASSADOR)
           expect(person.reload.participation_level).to eq(Person::PARTICIPATION_LEVEL_AMBASSADOR)
-          expect(new_cart.reload.people.find_by_id(person.id)).to be_nil
-          expect(ambassador_cart.reload.people.find_by_id(person.id)).to be_truthy
+          expect(new_cart.reload.people.find_by(id: person.id)).to be_nil
+          expect(ambassador_cart.reload.people.find_by(id: person.id)).to be_truthy
         end
       end
     end
@@ -182,6 +183,7 @@ describe Person do
     describe '#calc_participation_level' do
       context 'ambassador_criteria met' do
         let(:person) { FactoryBot.create(:person) }
+
         it "returns 'ambassador'" do
           allow(person).to receive(:ambassador_criteria).and_return(true)
           allow(person).to receive(:active_criteria).and_return(true)
@@ -193,6 +195,7 @@ describe Person do
 
       context 'active_criteria met, but ambassador_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
+
         it "returns 'active'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
           allow(person).to receive(:active_criteria).and_return(true)
@@ -204,6 +207,7 @@ describe Person do
 
       context 'participant_criteria met, but ambassador_criteria and active_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
+
         it "returns 'participant'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
           allow(person).to receive(:active_criteria).and_return(false)
@@ -215,6 +219,7 @@ describe Person do
 
       context 'inactive_criteria met, but ambassador_criteria, participant_criteria, and active_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
+
         it "returns 'inactive'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
           allow(person).to receive(:active_criteria).and_return(false)
@@ -226,6 +231,7 @@ describe Person do
 
       context 'inactive_criteria, ambassador_criteria, participant_criteria, and active_criteria not met' do
         let(:person) { FactoryBot.create(:person) }
+
         it "returns 'new'" do
           allow(person).to receive(:ambassador_criteria).and_return(false)
           allow(person).to receive(:active_criteria).and_return(false)
@@ -238,10 +244,11 @@ describe Person do
 
     describe '#ambassador_criteria' do
       let(:person) { FactoryBot.create(:person) }
+
       context "tag list includes 'brl special ambassador'" do
         it 'returns true' do
           expect(person.ambassador_criteria).to eq(false)
-          person.update_attributes(tag_list: 'brl special ambassador')
+          person.update(tag_list: 'brl special ambassador')
           expect(person.ambassador_criteria).to eq(true)
         end
       end

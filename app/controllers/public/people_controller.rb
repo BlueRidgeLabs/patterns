@@ -63,9 +63,7 @@ class Public::PeopleController < ApplicationController
       tags = api_create_params[:tags].tr('_', ' ').split(',')
       @person.tag_list.add(tags)
     end
-    if api_create_params[:low_income].present?
-      @person.low_income = api_create_params[:low_income] == 'Y'
-    end
+    @person.low_income = api_create_params[:low_income] == 'Y' if api_create_params[:low_income].present?
 
     if api_create_params[:locale_name].present?
       locale = Person.locale_name_to_locale(api_create_params[:locale_name])
@@ -109,11 +107,9 @@ class Public::PeopleController < ApplicationController
   end
 
   def consent
-    redirect_to root_path unless @person.present?
+    redirect_to root_path if @person.blank?
 
-    unless @person.consent_form.attached?
-      redirect_to @person.community_lawyer_url
-    end
+    redirect_to @person.community_lawyer_url unless @person.consent_form.attached?
   end
 
   private
@@ -124,9 +120,7 @@ class Public::PeopleController < ApplicationController
       return true
     end
 
-    if request.headers['AUTHORIZATION'].blank?
-      raise ActionController::RoutingError, 'Not Found'
-      end
+    raise ActionController::RoutingError, 'Not Found' if request.headers['AUTHORIZATION'].blank?
 
     @current_user = User.find_by(token: request.headers['AUTHORIZATION'])
     if @current_user.nil?

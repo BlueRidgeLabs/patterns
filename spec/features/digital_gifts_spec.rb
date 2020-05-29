@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'digital gifts page' do
+describe 'digital gifts page' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:user) { FactoryBot.create(:user) }
   let(:rs) { FactoryBot.create(:research_session, user: admin_user) }
@@ -26,12 +26,14 @@ feature 'digital gifts page' do
       'AUTHORIZATION' => user.token # This is what Rails 3 accepts
     }
   end
+
   before do
     Timecop.freeze(now)
     login_with_admin_user(admin_user)
   end
   # need to mock out the giftrocket gem.
-  scenario 'top up budget', :vcr, js: :true do
+
+  it 'top up budget', :vcr, js: :true do
     starting_amount = Budget.all.sum(&:amount)
     expected_amount = starting_amount + 100.to_money
     visit '/budgets'
@@ -41,7 +43,7 @@ feature 'digital gifts page' do
     expect(Budget.all.sum(&:amount)).to eq(expected_amount)
   end
 
-  scenario 'transfer to user', :vcr, :js do
+  it 'transfer to user', :vcr, :js do
     # don't like this whole bit here creating a budget.
     # should have a factory for this
 
@@ -62,7 +64,7 @@ feature 'digital gifts page' do
     expect(budget.amount).to eq(original_amount + 100.to_money)
   end
 
-  scenario 'add to invitation', :vcr, :js do
+  it 'add to invitation', :vcr, :js do
     research_session = invitation.research_session
     person = invitation.person
 
@@ -90,7 +92,7 @@ feature 'digital gifts page' do
     expect(person.rewards_total.to_s).to eq('100.00')
 
     dg = person.rewards.last.rewardable
-    expect(dg.sent).to_not eq(true)
+    expect(dg.sent).not_to eq(true)
 
     visit "/digital_gifts/#{dg.id}"
     accept_alert do
@@ -104,7 +106,7 @@ feature 'digital gifts page' do
     Timecop.freeze now
   end
 
-  scenario 'insufficient team budget', :vcr, :js do
+  it 'insufficient team budget', :vcr, :js do
     do_top_up
     research_session = invitation.research_session
     person = invitation.person
@@ -123,11 +125,11 @@ feature 'digital gifts page' do
     end
     wait_for_ajax
     person.reload
-    expect(person.rewards_total.to_s).to_not eq('100.00')
+    expect(person.rewards_total.to_s).not_to eq('100.00')
     Timecop.freeze now
   end
 
-  scenario 'no digital gifts unless attended', :vcr, :js do
+  it 'no digital gifts unless attended', :vcr, :js do
     do_top_up
     research_session = invitation.research_session
     Timecop.travel(research_session.end_datetime + 24.hours)
@@ -135,7 +137,7 @@ feature 'digital gifts page' do
     visit "/sessions/#{research_session.id}"
     find("#add-reward-#{invitation.id}").click
     wait_for_ajax
-    expect(page).to_not have_selector('new-amount', visible: true)
+    expect(page).not_to have_selector('new-amount', visible: true)
   end
 
   def do_top_up(amount = 100)

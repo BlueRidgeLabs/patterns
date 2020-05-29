@@ -32,6 +32,7 @@ describe 'public_api', type: :request do
       'AUTHORIZATION' => 'bustedauthtoken'
     }
   end
+
   context 'valid auth token' do
     it 'creates person through the API' do
       post '/api/create_person', params: { tags: tags,
@@ -61,7 +62,7 @@ describe 'public_api', type: :request do
       expect(response.content_type).to eq('application/json; charset=utf-8')
 
       person.reload
-      expect(person.first_name).to_not eq('Doggo')
+      expect(person.first_name).not_to eq('Doggo')
       expect(person.first_name).to eq('Pupper')
       expect(person.comments.size).to eq(1)
       expect(person.comments.last.content).to include 'note'
@@ -79,6 +80,7 @@ describe 'public_api', type: :request do
       expect(resp_json).to eq(JSON.parse(person.to_json))
     end
     # need to test attributes, not equality
+
     xit 'gets a person from the api with token' do
       get '/api/show.json',
           params: { token: person.token },
@@ -103,7 +105,7 @@ describe 'public_api', type: :request do
                                  headers: invalid_headers
 
       expect(response.content_type).to eq('text/html; charset=utf-8')
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(:unauthorized)
     end
 
     it 'cannot update a person' do
@@ -117,8 +119,8 @@ describe 'public_api', type: :request do
       expect(response.content_type).to eq('text/html; charset=utf-8')
       expect(response.status).to eq(401)
       person.reload
-      expect(person.first_name).to_not eq('pupper')
-      expect(person.tag_list).to_not include('bat')
+      expect(person.first_name).not_to eq('pupper')
+      expect(person.tag_list).not_to include('bat')
     end
 
     it 'cannot get person info' do
@@ -126,7 +128,7 @@ describe 'public_api', type: :request do
           params: { phone_number: person.phone_number },
           headers: invalid_headers
 
-      expect(response.status).to_not eq(200)
+      expect(response.status).not_to eq(200)
       expect(response.status).to eq(401)
     end
   end

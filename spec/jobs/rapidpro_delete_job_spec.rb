@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe RapidproDeleteJob, type: :job do
-  let(:sut) { RapidproDeleteJob }
+  let(:sut) { described_class }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:action) { sut.new.perform(person.id) }
   let(:rapidpro_headers) { { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' } }

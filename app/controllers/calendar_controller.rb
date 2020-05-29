@@ -72,9 +72,7 @@ class CalendarController < ApplicationController
   def default_time
     return invitation.start_datetime.strftime('%F') if invitation
     return research_session.start_datetime.strftime('%F') if research_session
-    if allowed_params['default_time']
-      return Time.zone.parse(allowed_params['default_time']).strftime('%F')
-      end
+    return Time.zone.parse(allowed_params['default_time']).strftime('%F') if allowed_params['default_time']
 
     Time.current.strftime('%F')
   end

@@ -26,8 +26,8 @@ describe 'calendar feed', type: :request do
 
   it 'invalid tokens do not work' do
     get '/calendar/bustedtoken/admin_feed'
-    expect(response.status).to_not eq(200)
-    expect(response.body).to_not include(research_session.description)
+    expect(response.status).not_to eq(200)
+    expect(response.body).not_to include(research_session.description)
   end
 
   it 'for regular feed, it includes ical events' do

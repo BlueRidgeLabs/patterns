@@ -117,9 +117,7 @@ class GiftCardsController < ApplicationController
       xls.sheet(0).each { |row| cards_count += 1 if row[0].present? }
       flash[:notice] = "Import started for #{cards_count - 1} cards."
       @errored_cards = GiftCard.import(params[:file].path, current_user)
-      if @errored_cards.present?
-        flash[:error] = "Error! #{@errored_cards.size} cards not valid."
-      end
+      flash[:error] = "Error! #{@errored_cards.size} cards not valid." if @errored_cards.present?
     end
     redirect_to gift_cards_path
   end

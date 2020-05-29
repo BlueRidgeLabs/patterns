@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'public person page' do
+describe 'public person page' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:user) { FactoryBot.create(:user) }
   let(:now) { DateTime.current }
@@ -15,7 +15,7 @@ feature 'public person page' do
   end
   let(:preexisting_person) { FactoryBot.create(:person) }
 
-  scenario 'create new person' do
+  it 'create new person' do
     visit '/public/people/new'
 
     expect(page).to have_css('#age_range')
@@ -34,7 +34,7 @@ feature 'public person page' do
     expect(last_person.first_name).to eq(new_person[:first_name])
   end
 
-  scenario 'try to create a pre-existing person' do
+  it 'try to create a pre-existing person' do
     visit '/public/people/new'
 
     expect(page).to have_css('#age_range')
@@ -48,6 +48,6 @@ feature 'public person page' do
     fill_in 'Postal code', with: '11222'
     check 'person[low_income]'
     click_button 'Save'
-    expect(page).to_not have_text('Thanks! We will be in touch soon!')
+    expect(page).not_to have_text('Thanks! We will be in touch soon!')
   end
 end

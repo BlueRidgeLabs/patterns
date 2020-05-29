@@ -17,7 +17,6 @@
 require 'coveralls'
 Coveralls.wear_merged!('rails')
 
-
 require 'devise'
 require 'factory_bot_rails'
 require 'webdrivers'

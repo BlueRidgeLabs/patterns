@@ -35,7 +35,7 @@ namespace :cut do
         print "#{v.to_s.humanize} [#{default_value}]:"
         STDOUT.flush
         alt_value = STDIN.gets.strip!
-        post_body[f] = alt_value.present? ? alt_value : default_value
+        post_body[f] = alt_value.presence || default_value
       end
 
       curl_str = "curl -X POST #{hosts[args.env.to_sym]}/people #{post_body.collect { |k, v| "-d #{k}=\"#{v}\"" }.join(' ')} -d HandshakeKey=#{Patterns::Application.config.wufoo_handshake_key}"
@@ -48,9 +48,7 @@ namespace :cut do
 
   desc 'shuffle names to kinda-anonymize data. useful for demos, etc'
   task shuffle: :environment do
-    if Rails.env.production?
-      puts('cowardly refusing to shuffle production data!') && return
-    end
+    puts('cowardly refusing to shuffle production data!') && return if Rails.env.production?
 
     Person.all.each do |person|
       person.first_name = Faker::Name.first_name

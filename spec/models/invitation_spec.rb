@@ -30,21 +30,21 @@ describe Invitation do
       Timecop.return
     end
 
-    it 'should be valid' do
+    it 'is valid' do
       expect(research_session).to be_valid
       expect(research_session.end_datetime.class).to be(ActiveSupport::TimeWithZone)
       expect(person.invitations.first).to eq(invitation)
     end
 
-    it 'should move through states' do
+    it 'moves through states' do
       expect(invitation.aasm_state).to eq('created')
       expect(invitation.can_miss?).to eq(false)
-      expect { invitation.invite }.to change { invitation.aasm_state }.from('created').to('invited')
-      expect { invitation.remind }.to change { invitation.aasm_state }.from('invited').to('reminded')
-      expect(invitation.permitted_states).to_not include('created', 'invited')
+      expect { invitation.invite }.to change(invitation, :aasm_state).from('created').to('invited')
+      expect { invitation.remind }.to change(invitation, :aasm_state).from('invited').to('reminded')
+      expect(invitation.permitted_states).not_to include('created', 'invited')
     end
 
-    it 'should have correct time management' do
+    it 'has correct time management' do
       Timecop.travel(invitation.start_datetime + 1.year)
       expect(invitation.can_miss?).to eq(true)
       expect(invitation.in_past?).to eq(true)
@@ -59,12 +59,12 @@ describe Invitation do
       expect(invitation.owner_or_invitee?(admin)).to eq(false)
     end
 
-    it 'should show up in scopes' do
+    it 'shows up in scopes' do
       Timecop.travel(invitation.start_datetime - 2.days)
-      expect(Invitation.upcoming).to include(invitation)
+      expect(described_class.upcoming).to include(invitation)
     end
 
-    it 'should be able to be rewarded' do
+    it 'is able to be rewarded' do
       reward = Reward.create(rewardable_type: gift_card.class,
                              rewardable_id: gift_card.id,
                              amount: gift_card.amount,
@@ -82,34 +82,34 @@ describe Invitation do
       expect(invitation.rewards.empty?).to eq(false)
       expect(invitation.rewards.first).to eq(reward)
 
-      inv_count = Invitation.all.size
+      inv_count = described_class.all.size
       expect { invitation.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
-      expect(Invitation.all.size).to eq(inv_count)
+      expect(described_class.all.size).to eq(inv_count)
 
       reward.destroy
       invitation.reload
 
-      expect { invitation.destroy }.to change { Invitation.all.size }.by(-1)
+      expect { invitation.destroy }.to change { described_class.all.size }.by(-1)
     end
 
-    it 'should not miss invitations in the future' do
+    it 'does not miss invitations in the future' do
       Timecop.travel(now - 1.year)
-      expect { invitation.miss }.to_not change { invitation.aasm_state }
+      expect { invitation.miss }.not_to change(invitation, :aasm_state)
       Timecop.travel(now + 1.year)
-      expect { invitation.miss }.to change { invitation.aasm_state }.from('created').to('missed')
+      expect { invitation.miss }.to change(invitation, :aasm_state).from('created').to('missed')
     end
 
-    it 'should not attend invitations in the future' do
+    it 'does not attend invitations in the future' do
       Timecop.travel(now - 1.year)
       expect { invitation.attend }.to raise_error(AASM::InvalidTransition)
     end
 
-    it 'should attend invitations in the past' do
+    it 'attends invitations in the past' do
       Timecop.travel(invitation.start_datetime + 1.hour)
-      expect { invitation.attend }.to change { invitation.aasm_state }.from('created').to('attended')
+      expect { invitation.attend }.to change(invitation, :aasm_state).from('created').to('attended')
     end
 
-    it 'should guard against actions in the past' do
+    it 'guards against actions in the past' do
       Timecop.travel(invitation.start_datetime + 1.year)
       expect { invitation.invite }.to raise_error(AASM::InvalidTransition)
       expect { invitation.remind }.to raise_error(AASM::InvalidTransition)
@@ -117,14 +117,14 @@ describe Invitation do
       expect { invitation.cancel }.to raise_error(AASM::InvalidTransition)
     end
 
-    it 'should not destroy attended invitations' do
+    it 'does not destroy attended invitations' do
       Timecop.travel(invitation.start_datetime + 2.hours)
       expect(invitation.in_past?).to eq(true)
       invitation.attend
       expect { invitation.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
     end
 
-    it 'should not destroy missed invitations' do
+    it 'does not destroy missed invitations' do
       Timecop.travel(invitation.start_datetime + 1.week)
       invitation.miss
       expect { invitation.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)

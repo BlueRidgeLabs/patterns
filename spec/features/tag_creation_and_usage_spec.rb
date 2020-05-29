@@ -5,12 +5,12 @@ require 'faker'
 require 'support/chromedriver_setup'
 require 'capybara/email/rspec'
 
-feature 'tag person' do
+describe 'tag person' do
   before do
     @person = FactoryBot.create(:person)
   end
 
-  scenario 'add tag', js: :true do
+  it 'add tag', js: :true do
     login_with_admin_user
 
     tag_name = Faker::Company.buzzword.downcase
@@ -32,7 +32,7 @@ feature 'tag person' do
     expect(page.evaluate_script("$('a.delete-link').length")).to eq(1)
   end
 
-  scenario 'delete tag', js: :true do
+  it 'delete tag', js: :true do
     tag_name = Faker::Company.buzzword.downcase
     @person.tag_list.add(tag_name)
     @person.save
@@ -47,8 +47,8 @@ feature 'tag person' do
     page.execute_script("$('a.delete-link').click();")
     wait_for_ajax
     sleep 1
-    expect(page).to_not have_text(tag_name)
+    expect(page).not_to have_text(tag_name)
     @person.reload
-    expect(@person.tag_list.to_s).to_not have_text(tag_name)
+    expect(@person.tag_list.to_s).not_to have_text(tag_name)
   end
 end

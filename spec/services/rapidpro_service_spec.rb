@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe RapidproService do
-  let(:sut) { RapidproService }
+  let(:sut) { described_class }
 
   describe '#language_for_person(person)' do
     it 'works' do

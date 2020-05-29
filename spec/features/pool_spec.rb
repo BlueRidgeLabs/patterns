@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-feature 'pools' do
+describe 'pools' do
   let(:admin_user) { FactoryBot.create(:user, :admin) }
   let(:current_pool) { admin_user.current_cart }
 
@@ -22,10 +22,10 @@ feature 'pools' do
     def go_to_current_pool
       cart_btn = page.find('.current_cart_link')
       click_with_js(cart_btn)
-      expect(page.current_path).to eq(cart_path(current_pool))
+      expect(page).to have_current_path(cart_path(current_pool), ignore_query: true)
     end
 
-    scenario 'add person to pool', js: true do
+    it 'add person to pool', js: true do
       person = FactoryBot.create(:person)
 
       # confirm that current pool is empty
@@ -59,7 +59,7 @@ feature 'pools' do
       end
     end
 
-    scenario 'delete person from pool', js: true do
+    it 'delete person from pool', js: true do
       person = FactoryBot.create(:person)
       current_pool.people << person
 
@@ -93,7 +93,7 @@ feature 'pools' do
       page.find("#person-#{person.id}").find(:xpath, ".//a[@href='#{delete_person_cart_index_path(person_id: person.id)}']")
     end
 
-    scenario 'create new pool', js: true do
+    it 'create new pool', js: true do
       pool_name = 'the new pool'
       pool_description = 'lorem ipsum'
 
@@ -113,7 +113,7 @@ feature 'pools' do
       expect(new_pool.rapidpro_uuid).to be_nil
       expect(new_pool.rapidpro_sync).to eq(false)
       expect(new_pool.people.length).to eq(0)
-      expect(page.current_path).to eq(cart_path(new_pool))
+      expect(page).to have_current_path(cart_path(new_pool), ignore_query: true)
       expect(page).to have_content(pool_name)
       expect(page).to have_content(pool_description)
       expect(page).to have_content(admin_user.name)
@@ -198,10 +198,10 @@ feature 'pools' do
       other_pool_btn = page.find('#pool-list').find(:xpath, ".//a[@href='#{cart_path(other_pool)}']")
       click_with_js(other_pool_btn)
       expect(page.find('.current_cart_link')).to have_content(other_pool.name)
-      expect(page.current_path).to eq(cart_path(other_pool))
+      expect(page).to have_current_path(cart_path(other_pool), ignore_query: true)
     end
 
-    scenario 'pool page csv export' do
+    it 'pool page csv export' do
       # as admin
       visit cart_path(current_pool)
       click_link 'Export to CSV'
@@ -215,7 +215,7 @@ feature 'pools' do
       expect(page).not_to have_content('Export to CSV')
     end
 
-    scenario 'cart index' do
+    it 'cart index' do
       visit '/cart'
       expect(page).to have_content current_pool.name
     end

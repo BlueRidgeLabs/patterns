@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe RapidproPersonGroupJob, type: :job do
-  let(:sut) { RapidproPersonGroupJob }
+  let(:sut) { described_class }
   let(:people) do
     _p = FactoryBot.create_list(:person, 110, :rapidpro_syncable)
     _p.sort_by(&:id)

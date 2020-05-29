@@ -9,7 +9,7 @@ class ConsentFormMailbox < ApplicationMailbox
 
     return if @person.nil?
     return if @person.consent_form.attached?
-    return unless mail.attachments.present?
+    return if mail.attachments.blank?
 
     @person.consent_form.attach(attachments.first)
   end

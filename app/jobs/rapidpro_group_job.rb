@@ -62,7 +62,7 @@ class RapidproGroupJob
   end
 
   def delete
-    return unless @cart.rapidpro_uuid.present?
+    return if @cart.rapidpro_uuid.blank?
 
     res = HTTParty.delete(@base_url + "groups.json?uuid=#{@cart.rapidpro_uuid}", headers: @headers)
     case res.code

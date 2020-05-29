@@ -48,7 +48,7 @@ class DigitalGiftsController < ApplicationController
     if request.headers['AUTHORIZATION'].present?
       @user = User.where(token: request.headers['AUTHORIZATION']).first
     else
-      render(json: { success: false }, status: 401) && return
+      render(json: { success: false }, status: :unauthorized) && return
     end
 
     render json: { budget: @user.available_budget.to_i }
@@ -179,20 +179,16 @@ class DigitalGiftsController < ApplicationController
   end
 
   def validate_api_args
-    if request.headers['AUTHORIZATION'].present?
-      @user = User.where(token: request.headers['AUTHORIZATION']).first
-    end
+    @user = User.where(token: request.headers['AUTHORIZATION']).first if request.headers['AUTHORIZATION'].present?
 
-    if @user.blank? || !@user.admin?
-      render(status: :unauthorized, json: { success: false }.to_json) && return
-    end
+    render(status: :unauthorized, json: { success: false }.to_json) && return if @user.blank? || !@user.admin?
 
     @research_session = ResearchSession.where(api_params['research_session_id']).first
     @person = Person.active.where(rapidpro_uuid: api_params['rapidpro_uuid']).first
 
     if @person.blank? || @research_session.blank? || @user.blank?
       Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
-      render(status: :not_found, json: { success: false, mgs: "person: #{!@person.blank?} research_session: #{!@research_session.blank?} user: #{!@user.blank?}" }.to_json) && return
+      render(status: :not_found, json: { success: false, mgs: "person: #{@person.present?} research_session: #{@research_session.present?} user: #{@user.present?}" }.to_json) && return
     end
 
     # $2 fee possibly
