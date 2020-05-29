@@ -224,7 +224,7 @@ group :test do
   gem 'memory_test_fix' # in memory DB, for the speedy
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
   gem 'faker'
-  gem 'simplecov', require: false
+  gem "simplecov", "0.16", require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
   # retry poltergeist specs. they are finicky
