@@ -262,7 +262,7 @@ group :development, :test do
   gem 'pry' # a console anywhere!
   gem 'rspec'
   gem 'rspec-rails'
-  gem 'rubocop', require: false
+  gem 'rubocop', '~> 0.80', require: false
   gem 'rubocop-faker', require: false
   gem 'rubocop-rails_config', require: false
   gem 'selenium-webdriver'
