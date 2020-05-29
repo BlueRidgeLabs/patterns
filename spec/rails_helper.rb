@@ -17,18 +17,17 @@ require 'database_cleaner'
 require 'support/helpers'
 require 'sms_spec'
 require 'timecop'
-require 'mock_redis'
-require 'simplecov'
+#require 'mock_redis'
+
 require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'webmock'
 # require 'best_in_place/test_helpers' #busted
 
-SimpleCov.start
 SmsSpec.driver = :'twilio-ruby'
 
 # mocking out redis for our tests
-Redis.current = MockRedis.new
+#Redis.current = MockRedis.new
 
 # keeps out sql output hidden
 ActiveRecord::Base.logger = nil
