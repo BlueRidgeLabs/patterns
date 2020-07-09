@@ -166,6 +166,10 @@ class Person < ApplicationRecord
     %i[no_signup_card ransack_tagged_with]
   end
 
+  def self.current_pronouns_list
+    Person.active.pluck(:pronouns).uniq
+  end
+
   def self.locale_name_to_locale(locale_name)
     obj = { 'english' => 'en',
             'spanish' => 'es', 'spa' => 'es',
