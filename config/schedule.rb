@@ -26,7 +26,7 @@ if File.exist?(path) # handling cold start
   # see: https://github.com/javan/whenever/pull/239
   # time should be > 03:00
   def local_time(time)
-    TZInfo::Timezone.get('America/New_York').local_to_utc(Time.zone.parse(time))
+    TZInfo::Timezone.get('America/New_York').local_to_utc(Time.parse(time))
   end
 
   # this queues up all the email/sms for the day!
