@@ -11,7 +11,7 @@ development:
   pool: 5
   timeout: 5000
   host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
-  username: <%= ENV['MYSQL_USER'] || 'logan' %>
+  username: <%= ENV['MYSQL_USER'] || 'root' %>
   password: <%= ENV['MYSQL_PWD'] || '' %>
 
 # Warning: The database defined as "test" will be erased and
