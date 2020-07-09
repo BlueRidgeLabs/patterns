@@ -20,7 +20,7 @@
         <h3>About</h3>
         <dl>
           <dt>Pronouns</dt>
-          <dd><%= best_in_place @person, :pronouns, as: :select, collection: Person.current_pronouns_list.map{|p| [p,p]} %></dd>
+          <dd <% if @person.pronouns == 'unknown' %>class='border border-danger'<% end %> ><%= best_in_place @person, :pronouns, as: :select, collection: Person.current_pronouns_list.map{|p| [p,p]} %></dd>
           <dt>Add/Remove from Pool: <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
