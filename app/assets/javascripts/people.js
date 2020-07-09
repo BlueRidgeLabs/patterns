@@ -63,7 +63,7 @@ $(document).on('turbolinks:load', function () {
     $(searchSelector).typeahead('val',datum.name);
     $('#tag-typeahead').submit();
   });
-
+  
   $("#new-expirationdate").mask("99/99",{placeholder:"MM/YY"});
   $("#new-amount").mask("$99.99",{placeholder:"##.##"});
   $("#new-cardnumber").mask("9999",{placeholder:"####"});
