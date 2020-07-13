@@ -82,7 +82,7 @@ Model.new(:my_backup, 'Description for my_backup') do
   #
 
   store_with Local do |local|
-    time = Time.zone.now
+    time = Time.current
     if time.day == 1 # first day of the monthf
       storage_id = :monthly
       keep = 12
