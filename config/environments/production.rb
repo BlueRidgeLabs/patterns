@@ -62,7 +62,9 @@ Patterns::Application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-  # config.cache_store = :redis_cache_store, driver: :hiredis, namespace: 'logan-cache',timeout: 1
+  config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] || 'redis://localhost:6379/1/', namespace: 'patterns-cache'}
+  config.session_store :cookie_store
+  #config.cache_store = :redis_cache_store, driver: :hiredis, namespace: 'patterns-cache',timeout: 1
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"
