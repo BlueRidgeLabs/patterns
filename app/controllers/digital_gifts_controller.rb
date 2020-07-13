@@ -165,15 +165,15 @@ class DigitalGiftsController < ApplicationController
           @digital_gift.save
           render status: :created, json: { success: true, link: @digital_gift.link, msg: 'Successfully created a gift card for you!' }.to_json
         else
-          Airbrake.notify("Can't create Digital Gift, Tremendous failed: #{api_params}")
+          # Airbrake.notify("Can't create Digital Gift, Tremendous failed: #{api_params}")
           render status: :unprocessable_entity, json: { success: false, msg: "digital gift invalid, cannot create it, tremendous api failed: #{error}" }.to_json
         end
       else
-        Airbrake.notify("Can't create Digital Gift, not valid #{api_params}")
+        # Airbrake.notify("Can't create Digital Gift, not valid #{api_params}")
         render status: :unprocessable_entity, json: { success: false, msg: 'digital gift invalid, cannot create it. api params invalid' }.to_json
       end
     else
-      Airbrake.notify("Can't create Digital Gift, research_session busted: #{api_params}")
+      # Airbrake.notify("Can't create Digital Gift, research_session busted: #{api_params}")
       render status: :unprocessable_entity, json: { success: false, msg: "Research Session problem: tagget with survey? #{@research_session.can_survey?} person already invited (already paid)? #{@research_session.is_invited?(@person)}" }.to_json
     end
   end
@@ -187,13 +187,13 @@ class DigitalGiftsController < ApplicationController
     @person = Person.active.where(rapidpro_uuid: api_params['rapidpro_uuid']).first
 
     if @person.blank? || @research_session.blank? || @user.blank?
-      Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
+      # Airbrake.notify("person: #{@person}, rs: #{@research_session}, params:#{api_params}")
       render(status: :not_found, json: { success: false, mgs: "person: #{@person.present?} research_session: #{@research_session.present?} user: #{@user.present?}" }.to_json) && return
     end
 
     # $2 fee possibly
     if @user.available_budget + 2.to_money < api_params['amount'].to_money
-      Airbrake.notify("Can't create Digital Gift, insufficient budget! #{api_params}")
+      # Airbrake.notify("Can't create Digital Gift, insufficient budget! #{api_params}")
       render(status: :unprocessable_entity, json: { success: false, msg: "Problem: insufficent budget. requested: #{api_params['amount']}, user: #{@user.name}, available_budget: #{@user.available_budget}", error: 'insufficent budget' }.to_json) && return
     end
     #  should check if we've already given a digital gift for this research session
