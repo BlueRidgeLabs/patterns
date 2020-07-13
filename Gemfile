@@ -52,7 +52,7 @@ gem 'hashie'
 group :production do
   # gem 'newrelic_rpm'
   gem 'lograge' # sane logs
-  gem 'skylight' # perf
+  #gem 'skylight' # perf
 
   gem 'unicorn', '5.4.1' # Use unicorn as the app server
 end
