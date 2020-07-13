@@ -138,7 +138,7 @@ class GiftCardsController < ApplicationController
         gc.save
         gc.start_activate! if gc.ready!
       else
-        Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
+        # Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
         @errors.push gc.errors.messages[:base]
       end
     end
@@ -170,7 +170,7 @@ class GiftCardsController < ApplicationController
       if gc.save
         gc.start_activate!
       else
-        Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
+        # Airbrake.notify("Card Error: #{gc.attributes}, #{gc.errors.messages}")
         @errors.push gc.errors.messages[:base]
       end
     end

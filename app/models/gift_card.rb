@@ -92,7 +92,7 @@ class GiftCard < ApplicationRecord
         ca.start_activate!
       else
         err_msg = "Card Error: sequence: #{ca.sequence_number}, #{ca.full_card_number}, #{ca.errors[:base]}"
-        Airbrake.notify(err_msg)
+        # Airbrake.notify(err_msg)
         logger.info(err_msg)
         errored_cards << ca
       end
