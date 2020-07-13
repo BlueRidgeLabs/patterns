@@ -1,9 +1,9 @@
-Redis.current = # frozen_string_literal: true
-  if ENV['REDIS_URL'].blank?
-    Redis.new(host: 'localhost', port: 6379)
-  else
-    Redis.new(url: ENV['REDIS_URL'])
-                  end
+# frozen_string_literal: true
+if ENV['REDIS_URL'].blank?
+  Redis.new(host: 'localhost', port: 6379)
+else
+  Redis.new(url: ENV['REDIS_URL'])
+end
 
 # LockManager = Redlock::Client.new([ "redis://127.0.0.1:6379"])
 
