@@ -7,7 +7,7 @@ require File.expand_path('config/application', __dir__)
 
 Patterns::Application.load_tasks
 
-if Rails.env != 'production' && Rails.env != 'staging'
+if !Rails.env.production? && !Rails.env.staging?
   require 'coveralls/rake/task'
   Coveralls::RakeTask.new
   task test_with_coveralls: [:spec, :features, 'coveralls:push']

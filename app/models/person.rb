@@ -101,7 +101,7 @@ class Person < ApplicationRecord
 
   # TODO: remove people from carts on deactivation
   has_many :carts_people
-  has_many :carts, through: :carts_people, foreign_key: :person_id
+  has_many :carts, through: :carts_people
 
   has_secure_token :token
 
@@ -185,6 +185,11 @@ class Person < ApplicationRecord
   #   # called by whenever in /config/schedule.rb
   #   Person.active.all.find_each(&:send_invitation_reminder)
   # end
+  def self.send_all_to_rapidpro
+    Person.all.find_each do |person|
+      person.update_rapidpro
+    end
+  end
 
   def self.update_all_participation_levels
     @results = []
@@ -294,7 +299,7 @@ class Person < ApplicationRecord
     if active && !tag_list.include?('not dig')
       RapidproUpdateJob.perform_async(id)
     elsif !active || tag_list.include?('not dig')
-      delete_from_rapidpro
+      delete_from_rapidpro unless rapidpro_uuid.nil?
     end
   end
 

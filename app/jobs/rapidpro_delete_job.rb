@@ -18,7 +18,8 @@ class RapidproDeleteJob
       when 404
         false
       when 204, 201, 200 # successful delete
-        person.update_column(:rapidpro_uuid, nil) # skip callbacks
+        person.rapidpro_uuid = nil
+        person.save
         true
       when 429 # rapidpro rate limiting us.
         retry_delay = res.headers['retry-after'].to_i + 5
