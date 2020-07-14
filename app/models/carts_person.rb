@@ -22,6 +22,13 @@ class CartsPerson < ApplicationRecord
     after_destroy :remove_from_rapidpro
   end
 
+  # only if rapidpro gets out of sync/db resets, etc.
+  def self.update_all_rapidpro
+    CartsPerson.all.find_each do |cp|
+      RapidproPersonGroupJob.perform_async(cp.person_id, cp.cart_id, 'add')
+    end
+  end
+  
   def add_to_rapidpro
     RapidproPersonGroupJob.perform_async(person_id, cart.id, 'add')
   end
