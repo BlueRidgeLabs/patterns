@@ -80,11 +80,11 @@ module Calendarable
 
   def cal_description
     if defined? person # it's an invitation
-      res = description + %(
+      description + %(
           tel: #{person.phone_number}\n
           email: #{person.email_address}\n
         )
-      res
+
     elsif defined?(people) # it's a reservation
       %(Created by: #{user.name}
 Team: #{user.team.name}
@@ -97,9 +97,10 @@ tags: #{cached_tag_list})
   end
 
   def generate_url
-    if self.class.to_s == 'Invitation'
+    case self.class.to_s
+    when 'Invitation'
       "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{research_session.id}"
-    elsif self.class.to_s == 'ResearchSession'
+    when 'ResearchSession'
       "https://#{ENV['PRODUCTION_SERVER']}/sessions/#{id}"
     end
   end

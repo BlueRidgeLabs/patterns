@@ -48,8 +48,7 @@ class DigitalGift < ApplicationRecord
 
   after_create :save_transaction
   delegate :name, to: :person
-  attr_accessor :giftable_id
-  attr_accessor :giftable_type
+  attr_accessor :giftable_id, :giftable_type
 
   def self.campaigns
     Giftrocket::Campaign.list

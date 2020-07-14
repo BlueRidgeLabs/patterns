@@ -31,9 +31,10 @@ class MailChimpImporter
       }
 
       column_map.each do |k, v|
-        person[v] = if k == 'Primary device' || k == 'Secondary device'
+        person[v] = case k
+                    when 'Primary device', 'Secondary device'
                       Person.map_device_to_id(line[k])
-                    elsif k == 'Primary connection method'
+                    when 'Primary connection method'
                       Person.map_connection_to_id(line[k])
                     else
                       line[k]

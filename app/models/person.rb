@@ -217,8 +217,7 @@ class Person < ApplicationRecord
   end
 
   def active_criteria
-    at_least_one_reward_in_past_six_months = rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
-    at_least_one_reward_in_past_six_months
+    rewards.where('created_at > ?', 6.months.ago).map { |g| g&.research_session&.id }.compact.uniq.size >= 1
   end
 
   def ambassador_criteria

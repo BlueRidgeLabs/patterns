@@ -40,7 +40,7 @@ class GiftCard < ApplicationRecord
   validates :user_id, presence: true
 
   validates :expiration_date,
-            format: { with: %r{\A(0|1)([0-9])\/([0-9]{2})\z}i }
+            format: { with: %r{\A(0|1)([0-9])/([0-9]{2})\z}i }
 
   validates :batch_id, format: { with: /\A[0-9]*\z/ }
   validates :secure_code, format: { with: /\A[0-9]*\z/ }, allow_blank: true
