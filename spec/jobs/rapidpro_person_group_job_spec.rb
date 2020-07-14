@@ -63,7 +63,7 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
       action = 'add'
       request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
       request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
-      request_body = { action: action, contacts: dig_people .map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
+      request_body = { action: action, contacts: dig_people.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_ok_res)
       sut.new.perform(all_people.map(&:id), cart.id, action)
