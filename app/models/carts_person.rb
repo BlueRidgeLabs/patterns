@@ -24,7 +24,9 @@ class CartsPerson < ApplicationRecord
 
   # only if rapidpro gets out of sync/db resets, etc.
   def self.update_all_rapidpro
-    CartsPerson.all.find_each do |cp|
+    CartsPerson.includes(:cart).all.find_each do |cp|
+      next unless cp.cart.rapidpro_sync
+      
       RapidproPersonGroupJob.perform_async(cp.person_id, cp.cart_id, 'add')
     end
   end

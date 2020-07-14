@@ -90,6 +90,8 @@ class RapidproUpdateJob
       else
         raise "error: #{res.code}, #{res.body}"
       end
+    else
+      RapidproDeleteJob.perform_async(id)
     end
   end
 end
