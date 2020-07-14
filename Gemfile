@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 ruby '~> 2.6.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-#gem 'airbrake'
+# gem 'airbrake'
 gem 'bootsnap', require: false
 gem 'rack'
 gem 'rack-cache'
@@ -52,7 +52,7 @@ gem 'hashie'
 group :production do
   # gem 'newrelic_rpm'
   gem 'lograge' # sane logs
-  #gem 'skylight' # perf
+  # gem 'skylight' # perf
 
   gem 'unicorn', '5.4.1' # Use unicorn as the app server
 end
@@ -224,7 +224,7 @@ group :test do
   gem 'memory_test_fix' # in memory DB, for the speedy
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
   gem 'faker'
-  gem "simplecov", "0.16", require: false
+  gem 'simplecov', '0.16', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
   # retry poltergeist specs. they are finicky

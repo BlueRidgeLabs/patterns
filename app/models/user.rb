@@ -53,7 +53,7 @@ class User < ApplicationRecord
   has_many :invitations, through: :research_sessions
   has_many :rewards
   has_many :carts_user
-  has_many :carts, through: :carts_user, foreign_key: :user_id
+  has_many :carts, through: :carts_user
   belongs_to :team
 
   after_commit :create_cart, on: :create
