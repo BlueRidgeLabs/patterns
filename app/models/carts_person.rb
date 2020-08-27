@@ -26,11 +26,11 @@ class CartsPerson < ApplicationRecord
   def self.update_all_rapidpro
     CartsPerson.includes(:cart).all.find_each do |cp|
       next unless cp.cart.rapidpro_sync
-      
+
       RapidproPersonGroupJob.perform_async(cp.person_id, cp.cart_id, 'add')
     end
   end
-  
+
   def add_to_rapidpro
     RapidproPersonGroupJob.perform_async(person_id, cart.id, 'add')
   end

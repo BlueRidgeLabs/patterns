@@ -18,7 +18,7 @@ Patterns::Application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
   ips = %w[192.168.0.0/16 172.0.0.0/8]
-  ips.append *ENV['WEBCONSOLE_IPS'].split(',') if ENV['WEBCONSOLE_IPS'].present?
+  ips.append(*ENV['WEBCONSOLE_IPS'].split(',')) if ENV['WEBCONSOLE_IPS'].present?
   config.web_console.whitelisted_ips = ips
 
   # Show full error reports and disable caching.

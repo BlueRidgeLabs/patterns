@@ -115,7 +115,9 @@ class ResearchSessionsController < ApplicationController
       flash[:error] = "Can't remove #{Person.find(inv.person_id).full_name}, they have a reward for this session."
     else
       inv.delete
-      flash[:notice] = I18n.t('research_session.remove_invitee_success', person_name: @person.full_name) if @research_session.save
+      if @research_session.save
+        flash[:notice] = I18n.t('research_session.remove_invitee_success', person_name: @person.full_name)
+      end
     end
     respond_to do |format|
       format.js

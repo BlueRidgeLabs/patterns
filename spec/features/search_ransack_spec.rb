@@ -44,7 +44,7 @@ describe 'search using ransack' do
     page.find('#ransack-search').click
     expect(page).to have_current_path("/people/#{@person_three.id}")
   end
-  
+
   # scenario 'export search results to csv' do
   # end
 end

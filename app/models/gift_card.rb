@@ -151,7 +151,9 @@ class GiftCard < ApplicationRecord
 
   # override allows manual check calls
   def create_check_call(override: false)
-    ActivationCall.create(gift_card_id: id, call_type: 'check') if override || activation_calls.where(call_type: 'check').size < 5
+    if override || activation_calls.where(call_type: 'check').size < 5
+      ActivationCall.create(gift_card_id: id, call_type: 'check')
+    end
   end
 
   def do_success_notification
@@ -298,7 +300,9 @@ class GiftCard < ApplicationRecord
     return true if full_card_number.blank?
 
     errors[:base].push('Card Number is not long enough.') if full_card_number.length != 16
-    errors[:base].push("Card number #{full_card_number} is not valid.") unless CreditCardValidations::Luhn.valid?(full_card_number)
+    unless CreditCardValidations::Luhn.valid?(full_card_number)
+      errors[:base].push("Card number #{full_card_number} is not valid.")
+    end
   end
 
   def can_activate?

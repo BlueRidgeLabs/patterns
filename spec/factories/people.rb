@@ -72,7 +72,10 @@ FactoryBot.define do
     state             { Faker::Address.state }
     postal_code       { 11_222 }
     low_income        { true }
+<<<<<<< HEAD
     pronouns          { 'unknown' }
+=======
+>>>>>>> 50e32651f0c5e8e8fddf29bcf0f9622b20f6c192
     signup_at         { Time.current }
     primary_device_id { devices[:desktop] }
     primary_device_description { 'crawling' }
