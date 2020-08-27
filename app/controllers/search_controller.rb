@@ -12,7 +12,13 @@ class SearchController < ApplicationController
 
     respond_to do |format|
       format.json { @results }
-      format.html
+      format.html do
+        if @results.size == 1
+          redirect_to person_path(id: @results.first.id)
+        else
+          @results
+        end
+      end
       format.csv do
         if current_user.admin?
           csv = SearchService.to_csv(@q)
