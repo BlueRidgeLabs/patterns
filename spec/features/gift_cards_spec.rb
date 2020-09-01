@@ -49,7 +49,14 @@ describe 'gift_cards page' do
       fill_in 'new_gift_cards__secure_code', with: secure_code
     end
     click_button 'Activate'
-    gc.reload
+
+    count = 0
+    while gc.full_card_number.nil? || count <10
+      gc.reload
+      sleep 0.1 # terrible hack
+      count += 1
+    end
+
     expect(gc.status).not_to eq('preload')
     expect(gc.status).to eq('activate_started')
     expect(gc.full_card_number).to eq(valid_cc)
