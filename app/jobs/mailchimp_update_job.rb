@@ -10,7 +10,7 @@ class MailchimpUpdateJob # this is broken
     if person.email_address.present?
       begin
         gibbon = Gibbon::Request.new
-        gibbon.lists(ENV['MAILCHIMP_LIST_ID']).members(person.md5_email).upsert(body: {
+        gibbon.lists(Rails.application.credentials.mailchimp[:list_id]).members(person.md5_email).upsert(body: {
                                                                                   email_address: person.email_address.downcase,
                                                                                   status: status,
                                                                                   merge_fields: { FNAME: person.first_name || '',

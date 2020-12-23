@@ -9,9 +9,9 @@ class RapidproDeleteJob
     Rails.logger.info '[RapidProDelete] job enqueued'
     person = Person.unscoped.find id
     if person.rapidpro_uuid.present?
-      headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
+      headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}",
                   'Content-Type' => 'application/json' }
-      url = "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}"
+      url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}"
       res = HTTParty.delete(url, headers: headers)
 
       case res.code

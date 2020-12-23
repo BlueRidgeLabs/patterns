@@ -41,7 +41,7 @@ class MailchimpUpdatesController < ApplicationController
   # POST /mailchimp_updates
   # POST /mailchimp_updates.json
   def create
-    if params['mailchimpkey'].present? && params['mailchimpkey'] == ENV['MAILCHIMP_WEBHOOK_SECRET_KEY']
+    if params['mailchimpkey'].present? && params['mailchimpkey'] == Rails.application.credentials.mailchimp[:webhook_secret_key]
       @mailchimp_update = MailchimpUpdate.new(
         email: params['data']['email'],
         update_type: params['type'],

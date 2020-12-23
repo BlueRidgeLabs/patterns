@@ -43,8 +43,8 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
       action = 'add'
       last_100 = people.last(100)
       first_10 = people.first(10)
-      request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
-      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
+      request_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contact_actions.json"
+      request_headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
       request_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_409_res)
@@ -61,8 +61,8 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
 
       rapidpro_ok_res = Hashie::Mash.new(code: 200)
       action = 'add'
-      request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
-      request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
+      request_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contact_actions.json"
+      request_headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
       request_body = { action: action, contacts: dig_people.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
       expect(HTTParty).to receive(:post).once.with(request_url, headers: request_headers, body: request_body.to_json).and_return(rapidpro_ok_res)
@@ -75,8 +75,8 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
         action = 'add'
         last_100 = people.last(100)
         first_10 = people.first(10)
-        request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
-        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
+        request_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contact_actions.json"
+        request_headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
         request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
         request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 
@@ -93,8 +93,8 @@ RSpec.describe RapidproPersonGroupJob, type: :job do
         action = 'remove'
         last_100 = people.last(100)
         first_10 = people.first(10)
-        request_url = 'https://rapidpro.brl.nyc/api/v2/contact_actions.json'
-        request_headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
+        request_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contact_actions.json"
+        request_headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
         request_1_body = { action: action, contacts: last_100.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
         request_2_body = { action: action, contacts: first_10.map(&:rapidpro_uuid), group: cart.rapidpro_uuid }
 

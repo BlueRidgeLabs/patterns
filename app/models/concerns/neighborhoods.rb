@@ -144,7 +144,7 @@ module Neighborhoods
   private
 
   def select_neighborhood_mapping
-    case ENV['NEIGHBORHOOD']
+    case Rails.application.credentials.neighborhood
     when 'CHICAGO'
       CHICAGO_NEIGHBORHOODS
     when 'NEW_YORK'

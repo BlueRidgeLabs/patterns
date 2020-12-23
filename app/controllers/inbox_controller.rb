@@ -15,7 +15,7 @@ class InboxController < ApplicationController
   # To enable authentication, uncomment this line and set your API key.
   # It is recommended you pull your API keys from environment settings,
   # or use some other means to avoid committing the API keys in your source code.
-  authenticate_with_mandrill_keys! ENV['MANDRILL_WEBHOOK_SECRET_KEY']
+  authenticate_with_mandrill_keys! Rails.application.credentials.mandrill[:webhook_secret_key]
 
   def handle_inbound(event_payload)
     head(:ok)

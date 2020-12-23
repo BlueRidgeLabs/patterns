@@ -6,7 +6,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
   let(:sut) { described_class }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:action) { sut.new.perform(person.id) }
-  let(:rapidpro_req_headers) { { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' } }
+  let(:rapidpro_req_headers) { { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' } }
   let(:rapidpro_res) do
     Hashie::Mash.new(
       code: 200

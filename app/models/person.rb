@@ -106,13 +106,13 @@ class Person < ApplicationRecord
   has_secure_token :token
 
   if ENV['RAILS_ENV'] == 'production'
-    if ENV['MAILCHIMP_API_KEY']
+    if Rails.application.credentials.mailchimp[:api_key]
       # no mailchimping
       # after_commit :send_to_mailchimp, on: %i[update create]
     end
 
-    after_commit :update_rapidpro, on: %i[update create] if ENV['RAPIDPRO_TOKEN']
-    before_destroy :delete_from_rapidpro if ENV['RAPIDPRO_TOKEN']
+    after_commit :update_rapidpro, on: %i[update create] if Rails.application.credentials.rapidpro[:token]
+    before_destroy :delete_from_rapidpro if Rails.application.credentials.rapidpro[:token]
   end
 
   after_create  :update_neighborhood
@@ -307,7 +307,7 @@ class Person < ApplicationRecord
   end
 
   def community_lawyer_url
-    ENV['COMMUNITY_LAWYER_URL'] + token
+    Rails.application.credentials.community_lawyer[:url] + token
   end
 
   def full_name

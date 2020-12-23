@@ -161,6 +161,6 @@ class User < ApplicationRecord
   end
 
   def weak_words
-    ['patterns', ENV['SITE_NAME'], name, email]
+    ['patterns', Rails.application.credentials.site[:name], name, email]
   end
 end

@@ -65,13 +65,13 @@ Model.new(:my_backup, 'Description for my_backup') do
   #
   store_with S3 do |s3|
     # AWS Credentials
-    s3.access_key_id     = ENV['AWS_API_TOKEN']
-    s3.secret_access_key = ENV['AWS_API_SECRET']
+    s3.access_key_id     = Rails.application.credentials.aws[:api_token]
+    s3.secret_access_key = Rails.application.credentials.aws[:api_secret]
     # Or, to use a IAM Profile:
     # s3.use_iam_profile = true
 
     s3.region            = 'us-east-1'
-    s3.bucket            = ENV['AWS_S3_BUCKET']
+    s3.bucket            = Rails.application.credentials.aws[:s3_bucket]
     s3.path              = "/patterns_backups_#{ENV['RAILS_ENV']}"
     s3.keep              = 200
     # s3.keep              = Time.now - 2592000 # Remove all backups older than 1 month.
@@ -104,8 +104,8 @@ Model.new(:my_backup, 'Description for my_backup') do
 
   encrypt_with GPG do |encryption|
     encryption.keys = {}
-    encryption.keys[ENV['MAIL_ADMIN']] = File.read('/home/patterns/backup_public_key.pub')
-    encryption.recipients = ENV['MAIL_ADMIN']
+    encryption.keys[Rails.application.credentials.mailer[:admin]] = File.read('/home/patterns/backup_public_key.pub')
+    encryption.recipients = Rails.application.credentials.mailer[:admin]
   end
   ##
   # Mail [Notifier]
@@ -118,13 +118,13 @@ Model.new(:my_backup, 'Description for my_backup') do
     mail.on_warning           = false
     mail.on_failure           = true
 
-    mail.from                 = ENV['MAILER_SENDER']
-    mail.to                   = ENV['MAIL_ADMIN']
-    mail.address              = ENV['SMTP_HOST']
-    mail.port                 = ENV['SMTP_PORT']
+    mail.from                 = Rails.application.credentials.mailer[:sender]
+    mail.to                   = Rails.application.credentials.mailer[:admin]
+    mail.address              = Rails.application.credentials.smtp[:host]
+    mail.port                 = Rails.application.credentials.smtp[:port]
     mail.domain               = ENV["#{ENV['RAILS_ENV'].upcase}_SERVER"]
-    mail.user_name            = ENV['SMTP_USERNAME']
-    mail.password             = ENV['SMTP_PASSWORD']
+    mail.user_name            = Rails.application.credentials.smtp[:username]
+    mail.password             = Rails.application.credentials.smtp[:username]
     mail.authentication       = 'plain'
     mail.encryption           = :starttls
   end

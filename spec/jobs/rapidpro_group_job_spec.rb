@@ -4,10 +4,10 @@ require 'rails_helper'
 
 RSpec.describe RapidproGroupJob, type: :job do
   let(:sut) { described_class }
-  let(:rapidpro_base_uri) { 'https://rapidpro.brl.nyc/api/v2/' }
+  let(:rapidpro_base_uri) { "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/" }
   let(:rapidpro_headers) do
     {
-      'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}",
+      'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}",
       'Content-Type' => 'application/json'
     }
   end

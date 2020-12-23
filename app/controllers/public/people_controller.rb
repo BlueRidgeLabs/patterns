@@ -80,7 +80,7 @@ class Public::PeopleController < ApplicationController
     @person.signup_at = Time.current
 
     success_msg = 'Thanks! We will be in touch soon!'
-    error_msg   = "Oops! Looks like something went wrong. Please get in touch with us at <a href='mailto:#{ENV['MAILER_SENDER']}?subject=Patterns sign up problem'>#{ENV['MAILER_SENDER']}</a> to figure it out!"
+    error_msg   = "Oops! Looks like something went wrong. Please get in touch with us at <a href='mailto:#{Rails.application.credentials.mailer[:sender]}?subject=Patterns sign up problem'>#{Rails.application.credentials.mailer[:sender]}</a> to figure it out!"
 
     @person.tag_list.add(params[:age_range]) if params[:age_range].present?
 

@@ -100,10 +100,10 @@ class DigitalGift < ApplicationRecord
 
     self.campaign_id = if amount.to_i < 20
                          # small dollar amounts, no fee
-                         ENV['GIFTROCKET_LOW_CAMPAIGN']
+                         Rails.application.credentials.giftrocket[:low_campaign]
                        else
                          # high dolalr amounts, $2 fee
-                         ENV['GIFTROCKET_HIGH_CAMPAIGN']
+                         Rails.application.credentials.giftrocket[:high_campaign]
     end
 
     generate_external_id

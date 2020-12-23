@@ -98,17 +98,17 @@ Patterns::Application.configure do
   config.google_analytics_enabled = true
 
   config.action_mailer.smtp_settings = {
-    address: ENV['SMTP_HOST'],
-    port: ENV['SMTP_PORT'],
-    user_name: ENV['SMTP_USERNAME'],
-    password: ENV['SMTP_PASSWORD']
+    address: Rails.application.credentials.smtp[:host],
+    port: Rails.application.credentials.smtp[:port],
+    user_name: Rails.application.credentials.smtp[:username],
+    password: Rails.application.credentials.smtp[:username]
   }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true # we want to know whats up
   config.action_mailer.default charset: 'utf-8'
 
-  config.middleware.use Rack::TwilioWebhookAuthentication, ENV['TWILIO_AUTH_TOKEN'], '/receive_text/index'
+  config.middleware.use Rack::TwilioWebhookAuthentication,Rails.application.credentials.twilio[:auth_token], '/receive_text/index'
 
   # 12 factor
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?

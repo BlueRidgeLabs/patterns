@@ -2,6 +2,6 @@
 
 require 'giftrocket'
 Giftrocket.configure do |config|
-  config[:access_token] = ENV['GIFTROCKET_API_KEY']
-  config[:base_api_uri] = ENV['GIFTROCKET_API_ENDPOINT']
+  config[:access_token] = Rails.application.credentials.giftrocket[:api_key]
+  config[:base_api_uri] = Rails.application.credentials.giftrocket[:api_endpoint]
 end

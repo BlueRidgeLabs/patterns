@@ -6,7 +6,7 @@ RSpec.describe RapidproDeleteJob, type: :job do
   let(:sut) { described_class }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:action) { sut.new.perform(person.id) }
-  let(:rapidpro_headers) { { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' } }
+  let(:rapidpro_headers) { { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' } }
 
   context 'rapidpro_uuid not present' do
     before { person.update(rapidpro_uuid: nil) }

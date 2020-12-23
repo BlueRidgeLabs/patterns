@@ -9,8 +9,8 @@ class RapidproUpdateJob
   # otherwise use uuid. this will allow changes to phone numbers.
   # additionally, it means we only need one worker.
   def perform(id)
-    @headers = { 'Authorization' => "Token #{ENV['RAPIDPRO_TOKEN']}", 'Content-Type' => 'application/json' }
-    @base_url = 'https://rapidpro.brl.nyc/api/v2/'
+    @headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
+    @base_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/"
     Rails.logger.info '[RapidProUpdate] job enqueued'
     @person = Person.find(id)
 

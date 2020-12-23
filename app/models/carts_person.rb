@@ -17,7 +17,7 @@ class CartsPerson < ApplicationRecord
             uniqueness: { scope: :cart_id,
                           message: 'Person can only be in a cart once.' }
 
-  if ENV['RAPIDPRO_TOKEN']
+  if Rails.application.credentials.rapidpro[:token]
     after_create :add_to_rapidpro
     after_destroy :remove_from_rapidpro
   end
