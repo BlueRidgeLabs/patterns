@@ -46,7 +46,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
     context 'person has email' do
       it "adds tel and email to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
         expect(HTTParty).to receive(:post).with(
-          "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+          "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
           headers: rapidpro_req_headers,
           body: {
             name: person.full_name,
@@ -68,7 +68,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
       it "adds tel to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
         person.update(email_address: nil)
         expect(HTTParty).to receive(:post).with(
-          "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+          "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
           headers: rapidpro_req_headers,
           body: {
             name: person.full_name,
@@ -91,7 +91,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
     it 'finds contact on rapidpro through phone #' do
       person.update(rapidpro_uuid: nil)
       expect(HTTParty).to receive(:post).with(
-        "https://rapidpro.brl.nyc/api/v2/contacts.json?urn=#{CGI.escape("tel:#{person.phone_number}")}",
+        "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?urn=#{CGI.escape("tel:#{person.phone_number}")}",
         headers: rapidpro_req_headers,
         body: {
           name: person.full_name,

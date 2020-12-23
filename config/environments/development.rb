@@ -46,7 +46,7 @@ Patterns::Application.configure do
   config.assets.debug = true
   config.assets.quiet = true
 
-  config.middleware.use Rack::TwilioWebhookAuthentication,Rails.application.credentials.twilio[:auth_token], '/receive_text/index'
+  config.middleware.use Rack::TwilioWebhookAuthentication, Rails.application.credentials.twilio[:auth_token], '/receive_text/index'
 
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.

@@ -20,7 +20,7 @@ RSpec.describe RapidproDeleteJob, type: :job do
   context 'rapidpro returns 404' do
     it 'returns false and doesnt do anything' do
       expect(HTTParty).to receive(:delete).with(
-        "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+        "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
                      code: 404
@@ -32,7 +32,7 @@ RSpec.describe RapidproDeleteJob, type: :job do
   context 'rapidpro returns 204' do
     it 'updates rapidpro_uuid to nil and returns true' do
       expect(HTTParty).to receive(:delete).with(
-        "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+        "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
                      code: 204
@@ -45,7 +45,7 @@ RSpec.describe RapidproDeleteJob, type: :job do
   context 'rapidpro returns 201' do
     it 'updates rapidpro_uuid to nil and returns true' do
       expect(HTTParty).to receive(:delete).with(
-        "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+        "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
                      code: 201
@@ -58,7 +58,7 @@ RSpec.describe RapidproDeleteJob, type: :job do
   context 'rapidpro returns 200' do
     it 'updates rapidpro_uuid to nil and returns true' do
       expect(HTTParty).to receive(:delete).with(
-        "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+        "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
                      code: 200
@@ -71,7 +71,7 @@ RSpec.describe RapidproDeleteJob, type: :job do
   context 'rapidpro returns 429' do
     it 're-queues job' do
       expect(HTTParty).to receive(:delete).with(
-        "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+        "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
                      code: 429,
@@ -88,7 +88,7 @@ RSpec.describe RapidproDeleteJob, type: :job do
   context 'rapidpro returns unknown response' do
     it 'raises error' do
       expect(HTTParty).to receive(:delete).with(
-        "https://rapidpro.brl.nyc/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+        "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
                      code: 666

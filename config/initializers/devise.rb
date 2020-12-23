@@ -296,10 +296,10 @@ Warden::Manager.before_failure do |env, opts|
   if (opts[:action] == 'unauthenticated') && (opts[:attempted_path] == '/users/sign_in')
     ip = env['action_dispatch.remote_ip'] || env['REMOTE_ADDR']
     user = begin
-             env['action_dispatch.request.parameters']['user']['email']
-           rescue StandardError
-             'unknown'
-           end
+      env['action_dispatch.request.parameters']['user']['email']
+    rescue StandardError
+      'unknown'
+    end
     Rails.logger.error "Failed login for '#{user}' from #{ip} at #{Time.now.utc.iso8601}"
   end
 end

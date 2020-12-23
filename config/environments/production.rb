@@ -108,13 +108,13 @@ Patterns::Application.configure do
   config.action_mailer.raise_delivery_errors = true # we want to know whats up
   config.action_mailer.default charset: 'utf-8'
 
-  config.middleware.use Rack::TwilioWebhookAuthentication,Rails.application.credentials.twilio[:auth_token], '/receive_text/index'
+  config.middleware.use Rack::TwilioWebhookAuthentication, Rails.application.credentials.twilio[:auth_token], '/receive_text/index'
 
   # 12 factor
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger           = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
