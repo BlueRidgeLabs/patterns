@@ -90,6 +90,6 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.profile_examples = true
-  config.example_status_persistence_file_path = "tmp/rspect_examples.txt"
+  config.example_status_persistence_file_path = 'tmp/rspec_status.txt'
   config.include Devise::Test::ControllerHelpers, type: :controller
 end
