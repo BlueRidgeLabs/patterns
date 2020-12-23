@@ -22,6 +22,8 @@ Setup
 -----
 Patterns is a Ruby on Rails app. Mysql, Redis, Sidekiq, and Rapidpro (for sms)
 
+TODO: Switching to Heroku. Will need to update Heroku with rails production credentials encryption key
+
 * Server Set up:
   * It currently uses Capistrano for deployment to staging and production instances.
   * Environment Variables are used (saved in a local_env.yml file) for API keys and other IDs.
@@ -35,12 +37,13 @@ On Mac OS X, ssh-agent will "forget" this key, once it gets restarted during reb
 ```/usr/bin/ssh-add -K yourkey```
 
 * Provisioning a new server:
-  * change your local_env.yml to point production to the right url/git/branch/etc/
+  * change your .env to point production to the right url/git/branch/etc/
     * PRODUCTION_SERVER: "example.com"
     * PRODUCTION_BRANCH: "production"
     * STAGING_SERVER: "staging.example.com"
     * STAGING_BRANCH: "devlopment"
     * GIT_REPOSITORY: "git@github.com:example/example.git"
+  
   * use the provision_new_server.sh script.
     * script defaults to production, however, the first arg is the environment you want.
     * `provision_new_server.sh staging` will provision staging

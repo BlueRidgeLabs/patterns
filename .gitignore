@@ -22,9 +22,9 @@
 # ignore activestorage
 /storage
 
-# Ignore variables
-/config/initializers/env.rb
-/config/local_env.yml
+# # Ignore variables
+# /config/initializers/env.rb
+# /config/local_env.yml
 
 # personal environment variables.
 .env
@@ -41,23 +41,19 @@
 # screenshots
 screenshot*
 
-
 # ignore backups and DB dumps
 *.sql
 
+# skylight congif
 /config/skylight.yml
-Todo.txt
+
 
 # ignoring cards to activate
 cards.csv
 
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-
 .byebug_history
 
+# yarnish stuff
 /public/packs
 /public/packs-test
 /node_modules
@@ -66,5 +62,11 @@ yarn-debug.log*
 .yarn-integrity
 
 /config/master.key
-
 /config/credentials/*.key
+
+
+/config/credentials/production.key
+
+/config/credentials/development.key
+
+/config/credentials/test.key
