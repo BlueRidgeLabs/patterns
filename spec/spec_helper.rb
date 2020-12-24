@@ -64,7 +64,7 @@ RSpec.configure do |config|
   end
 
   config.example_status_persistence_file_path = 'tmp/rspec_status.txt'
-  
+
   # This option will default to `:apply_to_host_groups` in RSpec 4 (and will
   # have no way to turn it off -- the option exists only for backwards
   # compatibility in RSpec 3). It causes shared context metadata to be

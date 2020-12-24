@@ -33,6 +33,7 @@ class ActivationCall < ApplicationRecord
   validates :call_type, inclusion: { in: CALL_TYPES }
 
   belongs_to :gift_card
+  after_initialize :create_twilio
   after_commit :enqueue_call, on: :create
   after_commit :update_front_end
 
@@ -41,8 +42,6 @@ class ActivationCall < ApplicationRecord
   scope :ongoing, -> { where(call_status: CALL_STATUS_STARTED) }
   scope :checks, -> { where(call_type: CALL_TYPE_CHECK) }
   scope :activations, -> { where(call_type: CALL_TYPE_ACTIVATE) }
-
-  after_initialize :create_twilio
 
   def transcript_check
     # this will be very different.
@@ -81,7 +80,7 @@ class ActivationCall < ApplicationRecord
   end
 
   def timeout_error?
-    call.update.status == 'completed' && (Time.current - updated_at) > 2.minutes && !%w[success failure].include?(call_status)
+    call.update.status == 'completed' && (Time.current - updated_at) > 2.minutes && %w[success failure].exclude?(call_status)
   end
 
   def success

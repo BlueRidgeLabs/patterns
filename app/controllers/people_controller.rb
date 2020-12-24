@@ -48,13 +48,13 @@ class PeopleController < ApplicationController
     # this could be cleaner...
     search = if params[:tags].blank?
                Person.active.includes(:taggings).paginate(page: params[:page])
-                     .order(sort_column + ' ' + sort_direction)
+                     .order("#{sort_column} #{sort_direction}")
              else
                tags = params[:tags].split(',').map(&:strip)
                @tags = Person.active.tag_counts.where(name: tags)
 
                Person.active.includes(:taggings).paginate(page: params[:page])
-                     .order(sort_column + ' ' + sort_direction)
+                     .order("#{sort_column} #{sort_direction}")
                      .tagged_with(tags)
     end
     # only show verified people to non-admins

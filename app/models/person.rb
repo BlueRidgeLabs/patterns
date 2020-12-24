@@ -295,7 +295,7 @@ class Person < ApplicationRecord
   end
 
   def update_rapidpro
-    if active && !tag_list.include?('not dig')
+    if active && tag_list.exclude?('not dig')
       RapidproUpdateJob.perform_async(id)
     elsif !active || tag_list.include?('not dig')
       delete_from_rapidpro unless rapidpro_uuid.nil?

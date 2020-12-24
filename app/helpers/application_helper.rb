@@ -3,10 +3,8 @@
 module ApplicationHelper
   delegate :current_cart, to: :current_user
 
-  def nav_bar(classes = 'nav')
-    tag.ul(class: classes) do
-      yield
-    end
+  def nav_bar(classes = 'nav', &block)
+    tag.ul(class: classes, &block)
   end
 
   def markdown(text)

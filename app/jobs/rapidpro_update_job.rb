@@ -23,7 +23,7 @@ class RapidproUpdateJob
     # we may deal with a word where rapidpro does email...
     # but not now.
     if @person.phone_number.present?
-      endpoint_url = @base_url + 'contacts.json'
+      endpoint_url = "#{@base_url}contacts.json"
 
       body = { name: @person.full_name,
                first_name: @person.first_name,

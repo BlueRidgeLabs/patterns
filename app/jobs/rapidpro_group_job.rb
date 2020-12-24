@@ -32,7 +32,7 @@ class RapidproGroupJob
   def create
     return unless @cart.rapidpro_sync # perhaps cart is no longer synced
 
-    url = @base_url + 'groups.json'
+    url = "#{@base_url}groups.json"
 
     if @cart.rapidpro_uuid.present?
       @cart.rapidpro_uuid = nil unless find_group
@@ -83,7 +83,7 @@ class RapidproGroupJob
   end
 
   def find_group
-    url = @base_url + 'groups.json'
+    url = "#{@base_url}groups.json"
     found = false
     while found == false
       res = HTTParty.get(url, headers: @headers)

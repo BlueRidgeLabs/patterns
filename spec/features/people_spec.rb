@@ -185,11 +185,11 @@ describe 'people page' do
 
     # only one person, goes right to their profile
     click_link normalized_new_tag
-    #expect(page).to have_content('Search Results')
+    # expect(page).to have_content('Search Results')
     expect(page).to have_content(email_address)
 
     # delete tag
-    #click_link person.full_name
+    # click_link person.full_name
     created_tagging = person.taggings.order(:id).last
     find(:xpath, "//a[@href='#{tagging_path(created_tagging.id)}' and @data-method='delete']").click
     wait_for_ajax

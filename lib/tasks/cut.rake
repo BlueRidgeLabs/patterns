@@ -33,8 +33,8 @@ namespace :cut do
       Person::WUFOO_FIELD_MAPPING.each do |f, v|
         default_value = "#{v.to_s.humanize} #{Process.pid}"
         print "#{v.to_s.humanize} [#{default_value}]:"
-        STDOUT.flush
-        alt_value = STDIN.gets.strip!
+        $stdout.flush
+        alt_value = $stdin.gets.strip!
         post_body[f] = alt_value.presence || default_value
       end
 

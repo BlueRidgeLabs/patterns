@@ -71,7 +71,7 @@ class ResearchSessionsController < ApplicationController
       redirect_to research_session_path(@research_session)
     else
       errors = @research_session.errors.full_messages.join(', ')
-      flash[:error] = 'There were problems with some of the fields: ' + errors
+      flash[:error] = "There were problems with some of the fields: #{errors}"
       redirect_to new_research_session_path
     end
   end

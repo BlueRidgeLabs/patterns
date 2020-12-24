@@ -32,7 +32,7 @@ class RapidproPersonGroupJob
     raise 'cart not in rapidpro' if @cart.rapidpro_uuid.nil?
     raise 'invalid action' unless %w[add remove].include? action
 
-    url = @base_url + 'contact_actions.json'
+    url = "#{@base_url}contact_actions.json"
     not_throttled = true
     while @people_uuids.size.positive? && not_throttled
       uuids = @people_uuids.pop(100)

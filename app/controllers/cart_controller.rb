@@ -159,7 +159,7 @@ class CartController < ApplicationController
   end
 
   def check_name
-    @cart_name_valid = !Cart.where(name: param[:name]).exists?
+    @cart_name_valid = !Cart.exists?(name: param[:name])
     status = @cart_name_valid ? 200 : 422
     respond_to do |format|
       format.json do

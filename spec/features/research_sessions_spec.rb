@@ -21,7 +21,7 @@ describe 'research sessions' do
     fill_in 'Session Location', with: location
     fill_in 'Session description', with: description
     # we use a datepicker, so we hide the actual datetime field
-    if page.driver.class == Capybara::Selenium::Driver # dumb, but the element doesn't appear otherwise
+    if page.driver.instance_of?(Capybara::Selenium::Driver) # dumb, but the element doesn't appear otherwise
       find('.today').click
     else
       find("//*[@id=\'research_session_start_datetime\']", visible: false).set(start_datetime.strftime('%Y-%m-%d %H:%M %p'))
