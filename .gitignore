@@ -22,9 +22,14 @@
 # ignore activestorage
 /storage
 
-# # Ignore variables
-# /config/initializers/env.rb
-# /config/local_env.yml
+
+# Ignore credential keys
+/config/master.key
+/config/credentials/production.key
+/config/credentials/development.key
+/config/credentials/staging.key
+
+# we can commit test.key, it's all bupkus in there
 
 # personal environment variables.
 .env
@@ -61,12 +66,4 @@ cards.csv
 yarn-debug.log*
 .yarn-integrity
 
-/config/master.key
-/config/credentials/*.key
 
-
-/config/credentials/production.key
-
-/config/credentials/development.key
-
-/config/credentials/test.key

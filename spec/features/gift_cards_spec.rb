@@ -50,8 +50,10 @@ describe 'gift_cards page' do
     end
 
     click_button 'Activate'
+
     visit '/gift_cards/preloaded'
     gc.reload
+
     expect(gc.status).not_to eq('preload')
     expect(gc.status).to eq('activate_started')
     expect(gc.full_card_number).to eq(valid_cc)

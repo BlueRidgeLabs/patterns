@@ -116,10 +116,10 @@ EOL
   curl -sSL https://get.rvm.io | bash -s stable
   echo 'rvm_trust_rvmrcs_flag=1' >> ~/.rvmrc
   source /home/patterns/.rvm/scripts/rvm
-  rvm install 2.6.3
-  rvm use 2.6.3@`echo $RAILS_ENV` --create
+  rvm install 2.7.2
+  rvm use 2.7.2@`echo $RAILS_ENV` --create
   rvm @global do gem install rake whenever
-  rvm @global do gem install backup -v5.0.0.beta.2
+  rvm @global do gem install backup -v5.0.0.beta.3
   #echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
   ln -s /var/www/patterns-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
   exit # back to root.
