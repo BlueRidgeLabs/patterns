@@ -13,6 +13,7 @@ class RapidproUpdateJob
     @base_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/"
     Rails.logger.info '[RapidProUpdate] job enqueued'
     @person = Person.find(id)
+    @redis = Redis.current
 
     # TODO: (EL) should we early-return?
     if @person.tag_list.include?('not dig') || @person.active == false
@@ -61,6 +62,9 @@ class RapidproUpdateJob
       end
 
       begin
+        body_sha1 = Digest::SHA1.hexdigest body.to_json
+        return if @redis.get(body_sha1) && Rails.env.production? # less hammering of rapidpro
+
         res = HTTParty.post(url, headers: @headers, body: body.to_json)
       rescue  Net::ReadTimeout => e
         RapidproUpdateJob.perform_in(rand(120..2400), id)
@@ -69,6 +73,7 @@ class RapidproUpdateJob
 
       case res.code
       when 201 # new person in rapidpro
+        @redis.setex(body_sha1, 1.day.to_i, true) if Rails.env.production?
         if @person.rapidpro_uuid.blank?
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
@@ -79,6 +84,7 @@ class RapidproUpdateJob
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
+          @redis.setex(body_sha1, 1.day.to_i, true) if Rails.env.production?
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
         end
