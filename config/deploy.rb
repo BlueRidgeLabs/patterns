@@ -75,6 +75,7 @@ namespace :deploy do
   task :link_db_config do
     # pull in database.yml on server
     run "rm -f #{release_path}/config/database.yml && ln -s #{deploy_to}/shared/database.yml #{release_path}/config/database.yml"
+    run "rm -f #{release_path}/config/credentials/production.key && ln -s #{deploy_to}/shared/production.key #{release_path}/config/credentials/production.key"
   end
 
   # https://github.com/capistrano/capistrano/issues/362#issuecomment-14158487
