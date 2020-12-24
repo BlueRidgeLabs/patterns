@@ -73,6 +73,8 @@ class RapidproUpdateJob
 
       case res.code
       when 201 # new person in rapidpro
+
+        # store the sha1 of the body
         @redis.setex(body_sha1, 1.day.to_i, true) if Rails.env.production?
         if @person.rapidpro_uuid.blank?
           @person.rapidpro_uuid = res.parsed_response['uuid']
@@ -84,6 +86,8 @@ class RapidproUpdateJob
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
+
+          # store the sha1 of the body
           @redis.setex(body_sha1, 1.day.to_i, true) if Rails.env.production?
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
