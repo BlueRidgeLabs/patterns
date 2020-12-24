@@ -18,7 +18,7 @@ class RapidproUpdateJob
     # TODO: (EL) should we early-return?
     if @person.tag_list.include?('not dig') || @person.active == false
       RapidproDeleteJob.perform_async(id)
-      return
+      return true
     end
 
     # we may deal with a word where rapidpro does email...
@@ -63,12 +63,12 @@ class RapidproUpdateJob
 
       begin
         body_sha1 = Digest::SHA1.hexdigest body.to_json
-        return if @redis.get(body_sha1) && Rails.env.production? # less hammering of rapidpro
+        return true if @redis.get(body_sha1) && Rails.env.production? # less hammering of rapidpro
 
         res = HTTParty.post(url, headers: @headers, body: body.to_json)
       rescue  Net::ReadTimeout => e
         RapidproUpdateJob.perform_in(rand(120..2400), id)
-        return
+        return true
       end
 
       case res.code
