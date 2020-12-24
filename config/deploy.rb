@@ -24,7 +24,7 @@ set :default_stage, 'staging'
 set :sidekiq_config, 'config/sidekiq.yml'
 set :sidekiq_processes, 2
 
-set :bundle_flags, '--quiet --add-platform x86_64-linux'
+set :bundle_flags, '--quiet -j 4'
 
 # more info: rvm help autolibs
 set :rvm_autolibs_flag, 'read-only'
