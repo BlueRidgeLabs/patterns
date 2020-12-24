@@ -48,7 +48,9 @@ describe 'gift_cards page' do
       fill_in 'new_gift_cards__full_card_number', with: valid_cc
       fill_in 'new_gift_cards__secure_code', with: secure_code
     end
+
     click_button 'Activate'
+    visit '/gift_cards/preloaded'
     gc.reload
     expect(gc.status).not_to eq('preload')
     expect(gc.status).to eq('activate_started')
