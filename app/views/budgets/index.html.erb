@@ -8,7 +8,7 @@
       <dd> <%= humanized_money_with_symbol DigitalGift.current_budget %></dd>
       <dt>Money left All Budgets:</dt>
       <dd id='all_budget'> <%= humanized_money_with_symbol Budget.all.sum(&:amount) %></dd>
-
+      
       <% if DigitalGift.current_budget > Budget.all.sum(&:amount) %>
         <h5>Add/Subtract to Patterns Digital Gift Budget<h5>
         
