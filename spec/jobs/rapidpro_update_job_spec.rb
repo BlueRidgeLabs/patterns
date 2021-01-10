@@ -64,9 +64,29 @@ RSpec.describe RapidproUpdateJob, type: :job do
         action
       end
     end
-    context "person is in multiple groups" ddo
-    before { person.update(tag_list: 'tag 1, tag 2') }
-
+    
+    context "person is in synced cart" do
+      before { cart.people << person }
+      it "sends all of the synced groups to rapidpro" do
+        expect(HTTParty).to receive(:post).with(
+          "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
+          headers: rapidpro_req_headers,
+          body: {
+            name: person.full_name,
+            first_name: person.first_name,
+            language: RapidproService.language_for_person(person),
+            urns: ["tel:#{person.phone_number}","mailto:#{person.email_address}"],
+            groups: ['DIG', cart.name],
+            fields: {
+              tags: 'tag_1 tag_2',
+              verified: person.verified
+            }
+          }.to_json
+        )
+        action
+      end
+    end
+    
     context "person doesn't have email" do
       it "adds tel to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
         person.update(email_address: nil)
