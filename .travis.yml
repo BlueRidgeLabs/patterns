@@ -13,13 +13,11 @@ git:
   quiet: true
 addons: # get google-chrome-stable
   chrome: stable
-  code_climate:
-    repo_token: bc9e0fee3d10d7a24d762909e4fffe85dab761dfded5db6ffddf9d7b6e5b61f4
 services:
   - redis # using mock redis in tests
   - mysql
 install:
-  - bundle install -j 4 --without=production
+  - bundle install -j 4
   - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
   - unzip ~/chromedriver_linux64.zip -d ~/
   - rm ~/chromedriver_linux64.zip
@@ -36,5 +34,3 @@ before_script:
   - ./cc-test-reporter before-build
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-global:
-  RAPIDPRO_TOKEN: fake_rp_token
