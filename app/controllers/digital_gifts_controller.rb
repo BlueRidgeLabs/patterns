@@ -2,28 +2,35 @@
 
 class DigitalGiftsController < ApplicationController
   before_action :set_digital_gift, only: %i[show sent]
+  before_action :validate_tremendous_request, only: :webhook
   skip_before_action :authenticate_user!, only: %i[api_create webhook budget]
   skip_before_action :verify_authenticity_token, only: :webhook
   # GET /digital_gifts
   # GET /digital_gifts.json
   def index
     if current_user.admin?
-      @digital_gifts = DigitalGift.order(id: 'desc').includes(:reward).page(params[:page])
+      @digital_gifts = DigitalGift.order(id: 'desc')
+        .includes(:reward).page(params[:page])
     else
       team_ids = current_user.team.users.map(&:id)
-      @digital_gifts = DigitalGift.where(user_id: team_ids).order(id: 'desc').includes(:reward).page(params[:page])
+      @digital_gifts = DigitalGift.where(user_id: team_ids)
+        .order(id: 'desc').includes(:reward).page(params[:page])
     end
   end
 
+  # this is used by tremendous to update the status of digital gifts.
+  # find the list of webhooks for the account here: Tremendous::Client.webhooks.list
+  # use the tremendous client to create a webhook, and then edit the rails credentials
+  # in order for the webhook to validate.
   def webhook
-    @digital_gift = DigitalGift.find_by(gift_id: params[:payload][:id])
-    if @digtial_gift.nil? || !valid_request?(request)
+    tremendous_id = params[:payload][:resource][:id]
+    @digital_gift = DigitalGift.where(order_id: tremendous_id).or(DigitalGift.where(gift_id: tremendous_id)).first
+
+    if @digital_gift.nil?
       render json: { success: false }
     else
-      if params[:event].match? 'gift'
-        @digital_gift.giftrocket_status = params[:event].delete('gift.')
-        @digital_gift.save
-      end
+      @digital_gift.giftrocket_status = params[:event]
+      @digital_gift.save
       render json: { success: true }
     end
   end
@@ -245,9 +252,10 @@ class DigitalGiftsController < ApplicationController
 
   private
 
-  def webhook_params
-    params.permit(:payload, :event, :digital_gift)
-  end
+  # TODO can't get this to work. 
+  # def webhook_params
+  #   params.permit(:payload, :event, :uuid)
+  # end
 
   def api_params
     params.permit(:person_id,
@@ -279,8 +287,8 @@ class DigitalGiftsController < ApplicationController
     params.fetch(:digital_gift, {})
   end
 
-  def valid_request?(request)
-    signature_header = request.headers['GiftRocket-Webhook-Signature']
+  def validate_tremendous_request
+    signature_header = request.headers['Tremendous-Webhook-Signature']
     algorithm, received_signature = signature_header.split('=', 2)
 
     raise Exception, 'Invalid algorithm' if algorithm != 'sha256'

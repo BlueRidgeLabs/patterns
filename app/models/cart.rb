@@ -32,8 +32,9 @@ class Cart < ApplicationRecord
   validates :name, length: { in: 3..30 }
   validates :name, uniqueness: { message: 'Pool must have a unique name', case_sensitive: false }
 
-  after_save :update_rapidpro, if: :saved_change_to_rapidpro_sync? if Rails.application.credentials.rapidpro[:token]
-
+  
+  after_save :update_rapidpro, if: :sync_changed?
+  
   # TODO: should have an actioncable update for carts in view
 
   # keep current cart in carts_users,
@@ -68,10 +69,15 @@ class Cart < ApplicationRecord
   end
 
   private
+  def sync_changed?
+    self.saved_changes.keys.include? "rapidpro_sync"
+  end
 
   def update_rapidpro
+    return unless Rails.application.credentials.rapidpro[:token].present?
+    
     if rapidpro_sync == true
-      RapidproGroupJob.perform_async(id, 'create')
+      RapidproGroupJob.perform_async(id, 'create') if rapidpro_uuid.nil?
     else # creating
       RapidproGroupJob.perform_async(id, 'delete')
     end

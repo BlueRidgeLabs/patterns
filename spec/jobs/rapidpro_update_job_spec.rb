@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe RapidproUpdateJob, type: :job do
   let(:sut) { described_class }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
+  let(:cart) {FactoryBot.create(:cart, :rapidpro) }
   let(:action) { sut.new.perform(person.id) }
   let(:rapidpro_req_headers) { { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' } }
   let(:rapidpro_res) do
@@ -63,6 +64,8 @@ RSpec.describe RapidproUpdateJob, type: :job do
         action
       end
     end
+    context "person is in multiple groups" ddo
+    before { person.update(tag_list: 'tag 1, tag 2') }
 
     context "person doesn't have email" do
       it "adds tel to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do

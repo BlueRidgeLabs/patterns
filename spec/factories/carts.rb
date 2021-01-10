@@ -22,5 +22,9 @@ FactoryBot.define do
     user
     name { Faker::Lorem.words(number: 2).join(' ') }
     description { Faker::Lorem.sentence }
+    trait :rapidpro do
+      rapidpro_sync { true }
+      rapidpro_uuid { SecureRandom.uuid }
+    end
   end
 end

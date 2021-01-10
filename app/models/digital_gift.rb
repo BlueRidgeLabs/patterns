@@ -51,17 +51,14 @@ class DigitalGift < ApplicationRecord
   attr_accessor :giftable_id, :giftable_type
 
   ## TODO extract to it's own service object.
-  @@client = Tremendous::Rest.new(
-    Rails.application.credentials.tremendous[:api_token],
-    Rails.application.credentials.tremendous[:endpoint]
-  )
+  
 
   def self.campaigns
-    @@client.campaigns.list
+    Tremendous::Client.campaigns.list
   end
 
   def self.funding_sources
-    @@client.funding_sources.list
+    Tremendous::Client.funding_sources.list
   end
 
   def self.balance_funding_source
@@ -73,18 +70,18 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.orders
-    @@client.orders.list
+    Tremendous::Client.orders.list
   end
 
   def self.rewards
-    @@client.rewards.list
+    Tremendous::Client.rewards.list
   end
 
-  def
-  def(_fetch_gift)
+  
+  def fetch_gift
     raise if gift_id.nil?
 
-    @@client.reward.show(gift_id)
+    Tremendous::Client.rewards.show(gift_id)
   end
 
   def check_status
@@ -113,15 +110,8 @@ class DigitalGift < ApplicationRecord
 
     generate_external_id
 
-    #begin
-      @my_order = @@client.orders.create!(generate_order)
-    # rescue Tremendous::BadDataError
-    #   begin
-    #     @my_order = @@client.orders.create!(generate_order)
-    #   rescue Tremendous::Error
-    #     @my_order = @@client.orders.create!(generate_order)
-    #   end
-    # end
+    @my_order = Tremendous::Client.orders.create!(generate_order)
+
 
     self.fee = @my_order['payment']['fees']
     self.order_id = @my_order['id']
@@ -185,9 +175,9 @@ class DigitalGift < ApplicationRecord
       },
       campaign_id: campaign_id,
       recipient: {
-        name: person.full_name,
-        email: person.email_address,
-        phone: person.phone_number
+        name: person.full_name
+        # email: person.email_address,
+        # phone: person.phone_number
       },
       delivery: {
         method: 'LINK'
