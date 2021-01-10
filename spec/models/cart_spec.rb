@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe Cart do
   let(:cart) { FactoryBot.create(:cart) }
-  let(:rapidpro_cart) {FactoryBot.create(:cart,:rapidpro)}
+  let(:rapidpro_cart) { FactoryBot.create(:cart, :rapidpro) }
 
   describe 'callbacks' do
     context 'person added to, and removed from, cart' do

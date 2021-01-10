@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe RapidproUpdateJob, type: :job do
   let(:sut) { described_class }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
-  let(:cart) {FactoryBot.create(:cart, :rapidpro) }
+  let(:cart) { FactoryBot.create(:cart, :rapidpro) }
   let(:action) { sut.new.perform(person.id) }
   let(:rapidpro_req_headers) { { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' } }
   let(:rapidpro_res) do
@@ -64,10 +64,11 @@ RSpec.describe RapidproUpdateJob, type: :job do
         action
       end
     end
-    
-    context "person is in synced cart" do
+
+    context 'person is in synced cart' do
       before { cart.people << person }
-      it "sends all of the synced groups to rapidpro" do
+
+      it 'sends all of the synced groups to rapidpro' do
         expect(HTTParty).to receive(:post).with(
           "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{person.rapidpro_uuid}",
           headers: rapidpro_req_headers,
@@ -75,7 +76,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
             name: person.full_name,
             first_name: person.first_name,
             language: RapidproService.language_for_person(person),
-            urns: ["tel:#{person.phone_number}","mailto:#{person.email_address}"],
+            urns: ["tel:#{person.phone_number}", "mailto:#{person.email_address}"],
             groups: ['DIG', cart.name],
             fields: {
               tags: 'tag_1 tag_2',
@@ -86,7 +87,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
         action
       end
     end
-    
+
     context "person doesn't have email" do
       it "adds tel to RP URNs, adds tags to RP fields, and adds to group 'DIG'" do
         person.update(email_address: nil)

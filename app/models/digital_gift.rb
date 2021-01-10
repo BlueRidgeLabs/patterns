@@ -51,7 +51,6 @@ class DigitalGift < ApplicationRecord
   attr_accessor :giftable_id, :giftable_type
 
   ## TODO extract to it's own service object.
-  
 
   def self.campaigns
     Tremendous::Client.campaigns.list
@@ -77,7 +76,6 @@ class DigitalGift < ApplicationRecord
     Tremendous::Client.rewards.list
   end
 
-  
   def fetch_gift
     raise if gift_id.nil?
 
@@ -111,7 +109,6 @@ class DigitalGift < ApplicationRecord
     generate_external_id
 
     @my_order = Tremendous::Client.orders.create!(generate_order)
-
 
     self.fee = @my_order['payment']['fees']
     self.order_id = @my_order['id']

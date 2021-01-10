@@ -41,7 +41,7 @@ class RapidproUpdateJob
       urn = "tel:#{@person.phone_number}"
 
       if @person&.rapidpro_uuid.present? # already created in rapidpro
-        groups = ['DIG'] + @person.carts.where(rapidpro_sync: true).where.not(rapidpro_uuid: nil).map(&:name) 
+        groups = ['DIG'] + @person.carts.where(rapidpro_sync: true).where.not(rapidpro_uuid: nil).map(&:name)
         groups.compact!
         url = endpoint_url + "?uuid=#{@person.rapidpro_uuid}"
         body[:urns] = [urn] # adds new phone number if need be.

@@ -10,11 +10,11 @@ class DigitalGiftsController < ApplicationController
   def index
     if current_user.admin?
       @digital_gifts = DigitalGift.order(id: 'desc')
-        .includes(:reward).page(params[:page])
+                                  .includes(:reward).page(params[:page])
     else
       team_ids = current_user.team.users.map(&:id)
       @digital_gifts = DigitalGift.where(user_id: team_ids)
-        .order(id: 'desc').includes(:reward).page(params[:page])
+                                  .order(id: 'desc').includes(:reward).page(params[:page])
     end
   end
 
@@ -252,7 +252,7 @@ class DigitalGiftsController < ApplicationController
 
   private
 
-  # TODO can't get this to work. 
+  # TODO: can't get this to work.
   # def webhook_params
   #   params.permit(:payload, :event, :uuid)
   # end
