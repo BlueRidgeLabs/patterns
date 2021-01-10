@@ -50,34 +50,36 @@ class DigitalGift < ApplicationRecord
   delegate :name, to: :person
   attr_accessor :giftable_id, :giftable_type
 
+  ## TODO extract to it's own service object.
+
   def self.campaigns
-    Giftrocket::Campaign.list
+    Tremendous::Client.campaigns.list
   end
 
   def self.funding_sources
-    Giftrocket::FundingSource.list
+    Tremendous::Client.funding_sources.list
   end
 
   def self.balance_funding_source
-    DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }
+    DigitalGift.funding_sources.find { |fs| fs['method'] == 'balance' }
   end
 
   def self.current_budget
-    (DigitalGift.funding_sources.find { |fs| fs.method == 'balance' }.available_cents / 100).to_money
+    DigitalGift.funding_sources.find { |fs| fs['method'] == 'balance' }['meta']['available_cents'].to_money
   end
 
   def self.orders
-    Giftrocket::Order.list
+    Tremendous::Client.orders.list
   end
 
-  def self.gifts
-    Giftrocket::Gift.list
+  def self.rewards
+    Tremendous::Client.rewards.list
   end
 
   def fetch_gift
     raise if gift_id.nil?
 
-    Giftrocket::Gift.retrieve(gift_id)
+    Tremendous::Client.rewards.show(gift_id)
   end
 
   def check_status
@@ -96,26 +98,25 @@ class DigitalGift < ApplicationRecord
     raise if person_id.nil? || giftable_id.nil? || giftable_type.nil?
     raise unless can_order?
 
-    self.funding_source_id = DigitalGift.balance_funding_source.id
-
     self.campaign_id = if amount.to_i < 20
                          # small dollar amounts, no fee
-                         Rails.application.credentials.giftrocket[:low_campaign]
+                         Rails.application.credentials.giftrocket[:campaigns][:low]
                        else
                          # high dolalr amounts, $2 fee
-                         Rails.application.credentials.giftrocket[:high_campaign]
+                         Rails.application.credentials.giftrocket[:campaigns][:high]
     end
 
     generate_external_id
 
-    my_order = Giftrocket::Order.create!(generate_order)
-    self.fee = my_order.payment.fees
-    self.order_id = my_order.id
+    @my_order = Tremendous::Client.orders.create!(generate_order)
 
-    gift = my_order.gifts.first
-    self.gift_id = gift.id
-    self.link = gift.raw['recipient']['link']
-    self.order_details = Base64.encode64(Marshal.dump(my_order))
+    self.fee = @my_order['payment']['fees']
+    self.order_id = @my_order['id']
+
+    reward = @my_order['rewards'].first
+    self.gift_id = reward['id']
+    self.link = reward['delivery']['link']
+    self.order_details = @my_order.to_json
   end
 
   def expected_fee
@@ -132,7 +133,6 @@ class DigitalGift < ApplicationRecord
     (amount + expected_fee) <= user.available_budget
   end
 
-  # maybe this is just a
   def generate_external_id
     self.external_id = { person_id: person_id,
                          giftable_id: giftable_id,
@@ -141,11 +141,17 @@ class DigitalGift < ApplicationRecord
     external_id
   end
 
-  # rubocop:disable Security/MarshalLoad
+  def funding_source_id
+    DigitalGift.balance_funding_source['id']
+  end
+
+  # rubocop:disable Security/MarshalLoad`
   # we want to save the full object. probably don't need to,
   # but it's handy
   def order_data
-    @order_data ||= Marshal.load(Base64.decode64(order_details))
+    Marshal.load(Base64.decode64(order_details))
+  rescue TypeError => _e
+    JSON.parse(order_details)
   end
   # rubocop:enable Security/MarshalLoad
 
@@ -156,26 +162,31 @@ class DigitalGift < ApplicationRecord
 
   private
 
-  def generate_gifts
+  def generate_rewards
     raise if person.nil?
 
-    [
-      {
-        amount: amount.to_s,
-        recipient: {
-          name: person.full_name,
-          delivery_method: 'LINK'
-        }
+    {
+      value: {
+        denomination: amount.to_s,
+        currency_code: 'USD'
+      },
+      campaign_id: campaign_id,
+      recipient: {
+        name: person.full_name
+        # email: person.email_address,
+        # phone: person.phone_number
+      },
+      delivery: {
+        method: 'LINK'
       }
-    ]
+    }
   end
 
   def generate_order
     {
       external_id: external_id,
-      funding_source_id: funding_source_id,
-      campaign_id: campaign_id,
-      gifts: generate_gifts
+      payment: { funding_source_id: funding_source_id },
+      reward: generate_rewards
     }
   end
 

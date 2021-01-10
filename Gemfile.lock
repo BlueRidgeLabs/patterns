@@ -1,11 +1,12 @@
 GIT
-  remote: https://github.com/BlueRidgeLabs/giftrocket-ruby.git
-  revision: 1cf6818941dc2f1b5846dc1858b924a6a067d5ba
+  remote: https://github.com/talkable/tremendous-ruby.git
+  revision: cfca9e182982d4576f291ddd037658960edc7544
+  branch: rails-6.0
   specs:
-    giftrocket_ruby (2.0.1)
-      activesupport (>= 3.2)
-      httparty (~> 0.14.0)
-      jwt (= 1.5.6)
+    tremendous_ruby (4.2.0)
+      activesupport (>= 3.2, < 6.2)
+      httparty (>= 0.14.0)
+      jwt (>= 1.5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -712,7 +713,6 @@ DEPENDENCIES
   foreman
   fuzzy_match
   gibbon
-  giftrocket_ruby!
   glyphicons-rails
   groupdate
   gsm_encoder
@@ -791,6 +791,7 @@ DEPENDENCIES
   sqlite3
   stackprof
   timecop
+  tremendous_ruby!
   turbolinks
   twilio-ruby
   twitter-typeahead-rails

@@ -4,15 +4,16 @@ require 'rails_helper'
 
 describe Cart do
   let(:cart) { FactoryBot.create(:cart) }
+  let(:rapidpro_cart) { FactoryBot.create(:cart, :rapidpro) }
 
   describe 'callbacks' do
     context 'person added to, and removed from, cart' do
       it "enqueues RapidproPersonGroupJob 'add'/'remove' jobs, respectively" do
         person = FactoryBot.create(:person)
-        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, 'add')
-        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, cart.id, 'remove')
-        cart.people << person
-        cart.remove_person(person.id)
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, rapidpro_cart.id, 'add')
+        expect(RapidproPersonGroupJob).to receive(:perform_async).with(person.id, rapidpro_cart.id, 'remove')
+        rapidpro_cart.people << person
+        rapidpro_cart.remove_person(person.id)
       end
     end
   end

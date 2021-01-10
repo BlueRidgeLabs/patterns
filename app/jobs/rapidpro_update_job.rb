@@ -41,10 +41,12 @@ class RapidproUpdateJob
       urn = "tel:#{@person.phone_number}"
 
       if @person&.rapidpro_uuid.present? # already created in rapidpro
+        groups = ['DIG'] + @person.carts.where(rapidpro_sync: true).where.not(rapidpro_uuid: nil).map(&:name)
+        groups.compact!
         url = endpoint_url + "?uuid=#{@person.rapidpro_uuid}"
         body[:urns] = [urn] # adds new phone number if need be.
         body[:urns] << "mailto:#{@person.email_address}" if @person.email_address.present?
-        body[:groups] = ['DIG']
+        body[:groups] = groups
         # rapidpro tags are space delimited and have underscores for spaces
         body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' '),
                           verified: @person.verified }

@@ -17,10 +17,8 @@ class CartsPerson < ApplicationRecord
             uniqueness: { scope: :cart_id,
                           message: 'Person can only be in a cart once.' }
 
-  if Rails.application.credentials.rapidpro[:token]
-    after_create :add_to_rapidpro
-    after_destroy :remove_from_rapidpro
-  end
+  after_create :add_to_rapidpro, if: :do_rapidpro_sync?
+  after_destroy :remove_from_rapidpro, if: :do_rapidpro_sync?
 
   # only if rapidpro gets out of sync/db resets, etc.
   def self.update_all_rapidpro
@@ -37,5 +35,11 @@ class CartsPerson < ApplicationRecord
 
   def remove_from_rapidpro
     RapidproPersonGroupJob.perform_async(person_id, cart.id, 'remove')
+  end
+
+  def do_rapidpro_sync?
+    return false if Rails.application.credentials.rapidpro[:token].blank?
+
+    cart.rapidpro_sync && cart.rapidpro_uuid.present?
   end
 end
