@@ -55,8 +55,6 @@ class RapidproGroupJob
         raise 'error'
       end
     end
-    # need a delay for rapidpro to catch up, maybe?
-    sleep(1) until find_group
     people_ids = @cart.people.where.not(rapidpro_uuid: nil, phone_number: nil).pluck(:id)
     RapidproPersonGroupJob.perform_async(people_ids, @cart.id, 'add')
   end

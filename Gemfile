@@ -42,7 +42,7 @@ gem 'rubyzip'
 gem 'redcarpet' # for markdown notes
 
 # giftrocket API for automagic giftcarding
-gem 'giftrocket_ruby', github: 'BlueRidgeLabs/giftrocket-ruby'
+gem 'tremendous_ruby', github: 'talkable/tremendous-ruby', branch: 'rails-6.0'
 
 gem 'aws-sdk-s3', require: false
 gem 'image_processing' # for activestorage image processing
@@ -264,7 +264,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'rubocop', '~> 0.80', require: false
-  gem 'rubocop-faker', require: false
+  # gem 'rubocop-faker', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rails_config', require: false
