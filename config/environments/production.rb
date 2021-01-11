@@ -101,7 +101,7 @@ Patterns::Application.configure do
     address: Rails.application.credentials.smtp[:host],
     port: Rails.application.credentials.smtp[:port],
     user_name: Rails.application.credentials.smtp[:username],
-    password: Rails.application.credentials.smtp[:username]
+    password: Rails.application.credentials.smtp[:password]
   }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
