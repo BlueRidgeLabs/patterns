@@ -46,7 +46,6 @@ class DigitalGiftsController < ApplicationController
   end
 
   # GET /digital_gifts/1
-  # GET /digital_gifts/1.json
   def show
     @tremendous_info = Rails.application.credentials.tremendous
     @comment = Comment.new commentable: @digital_gift
