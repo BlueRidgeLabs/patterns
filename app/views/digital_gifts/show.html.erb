@@ -46,7 +46,7 @@
       </td>
       <% end %>
       <td><%= @digital_gift.link %></td>
-      <td><a href="https://app.tremendous.com/apps//history/rewards/<%= @digital_gift.gift_id %>/details">dashboard</a></td>
+      <td><a href="https://app.tremendous.com/apps/<%= Rails.application.credentials.tremendous['org_id'] %>/history/rewards/<%= @digital_gift.gift_id %>/details">dashboard</a></td>
     </tr>
   </tbody>
 </table>
