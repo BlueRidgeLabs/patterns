@@ -14,3 +14,13 @@ if !Rails.env.production? && !Rails.env.staging?
 
   task default: [:spec, 'coveralls:push']
 end
+
+desc "Send reminders"
+task :send_reminders => :environment do # :environment will load our Rails app, so we can query the database with ActiveRecord
+  User.send_all_reminders
+end
+
+desc "update participation levels"
+task :update_participation_levels => :environment do # :environment will load our Rails app, so we can query the database with ActiveRecord
+  Person.update_all_participation_levels
+end
