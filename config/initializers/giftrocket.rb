@@ -13,6 +13,6 @@ Tremendous::Client ||= Tremendous::Rest.new(
   Rails.application.credentials.tremendous[:endpoint]
 )
 
-if %w[production staging].include? Rails.env
-  raise 'no tremendous webhooks created!' if Tremendous::Client.webhooks.list.empty?
-end
+# if %w[production staging].include? Rails.env
+#   raise 'no tremendous webhooks created!' if Tremendous::Client.webhooks.list.empty?
+# end
