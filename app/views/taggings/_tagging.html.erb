@@ -1,3 +1,4 @@
+<% if tagging.tag.present?  # there's a weird heisenbug in our specs %>
 <li id="tagging-<%= tagging.id %>" class="tagging">
   <%= link_to tagging.tag.name,
               search_index_ransack_path("q[tags_id_eq_all]" => [tagging.tag.id]) %>
@@ -8,3 +9,4 @@
         class: "delete-link",
         title: "delete this tag" %>
 </li>
+<% end %>
