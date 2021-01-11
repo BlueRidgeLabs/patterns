@@ -9,6 +9,7 @@
 <h5>email: <%= reward.person.email_address %></h5>
 
 <h5>For: <%= link_to(find_name(reward.giftable), url_for(reward.giftable)) %></h5>
+<h5>Redemption Status: <%= @digital_gift.fetch_gift['delivery']['status'] %>
 
 <table class="table">
   <thead>
