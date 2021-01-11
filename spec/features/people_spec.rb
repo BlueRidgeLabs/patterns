@@ -163,7 +163,7 @@ describe 'people page' do
     expect(page).to have_content('Consent Form Signed')
   end
 
-  it 'tagging', js: true do
+  it 'tagging', js: true do ## some reason, it can't find the id: tag-typeahead
     add_new_person(verified: Person::VERIFIED_TYPE)
     assert_person_created(verified: Person::VERIFIED_TYPE)
     expect(page).to have_content(email_address)
@@ -171,11 +171,13 @@ describe 'people page' do
     person = Person.order(:id).last
     # show person details page
     click_link person.full_name
+    wait_for_ajax
     expect(page).to have_current_path(person_path(person.id), ignore_query: true)
 
     # add tag
     new_tag = 'TeSt TaG'
     normalized_new_tag = new_tag.downcase
+    expect(page).to have_css('#tag-typeahead') #makes the test pass somehow
     fill_in with: new_tag, id: 'tag-typeahead'
     find('.tag-form input[type="submit"]').native.send_keys(:return)
     wait_for_ajax
