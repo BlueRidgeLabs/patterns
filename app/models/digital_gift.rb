@@ -29,7 +29,9 @@
 #  sent_by           :integer
 #
 
-# first we create the giftrocket, with a person and user and created_by
+# giftrocket is the former brand name of tremendous.com
+
+# first we create the tremendous, with a person and user and created_by
 # then we check budgets, local and remote
 # then we try to make the order
 # then if the order is successful
@@ -100,10 +102,10 @@ class DigitalGift < ApplicationRecord
 
     self.campaign_id = if amount.to_i < 20
                          # small dollar amounts, no fee
-                         Rails.application.credentials.giftrocket[:campaigns][:low]
+                         Rails.application.credentials.tremendous[:campaigns][:low]
                        else
                          # high dolalr amounts, $2 fee
-                         Rails.application.credentials.giftrocket[:campaigns][:high]
+                         Rails.application.credentials.tremendous[:campaigns][:high]
     end
 
     generate_external_id

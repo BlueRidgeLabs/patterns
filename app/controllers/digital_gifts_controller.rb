@@ -294,7 +294,7 @@ class DigitalGiftsController < ApplicationController
     raise Exception, 'Invalid algorithm' if algorithm != 'sha256'
 
     expected_signature = OpenSSL::HMAC.hexdigest(
-      OpenSSL::Digest.new(algorithm), Rails.application.credentials.giftrocket[:webhook], request.body.read
+      OpenSSL::Digest.new(algorithm), Rails.application.credentials.tremendous[:webhook], request.body.read
     )
     received_signature == expected_signature
   end
