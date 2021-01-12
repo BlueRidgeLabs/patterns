@@ -12,7 +12,43 @@
 #
 require 'yaml'
 
-Model.new(:my_backup, 'Description for my_backup') do
+Model.new(:hourly_backup) do
+database MySQL do |db|
+    # To dump all databases, set `db.name = :all` (or leave blank)
+    db.name               = ENV['RAILS_ENV']
+    db.username           = ENV['MYSQL_USER']
+    db.password           = ENV['MYSQL_PASSWORD']
+    db.host               = ENV['MYSQL_HOST']
+    db.port               = 3306
+    # Note: when using `skip_tables` with the `db.name = :all` option,
+    # table names should be prefixed with a database name.
+    # e.g. ["db_name.table_to_skip", ...]
+    # db.skip_tables        = ["skip", "these", "tables"]
+    # db.only_tables        = ["only", "these", "tables"]
+    db.additional_options = ['--quick', '--single-transaction']
+  end
+
+  store_with Local do |local|
+    
+    storage_id = :hourly
+    local.keep = 48
+    local.path  = "/var/www/patterns-production/shared/backups/#{storage_id}"
+  end
+
+  ##
+  # Gzip [Compressor]
+  #
+  compress_with Gzip
+
+  encrypt_with GPG do |encryption|
+    encryption.keys = {}
+    encryption.keys[Rails.application.credentials.mailer[:admin]] = File.read('/home/patterns/backup_public_key.pub')
+    encryption.recipients = Rails.application.credentials.mailer[:admin]
+  end
+
+end
+
+Model.new(:daily_backup, 'the daily backup') do
   ##
   # Archive [Archive]
   #
@@ -91,7 +127,7 @@ Model.new(:my_backup, 'Description for my_backup') do
       keep = 4
     else
       storage_id = :daily
-      keep = 200
+      keep = 7
     end
     local.path  = "/var/www/patterns-production/shared/backups/#{storage_id}"
     local.keep  = keep

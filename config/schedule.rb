@@ -18,8 +18,12 @@ if File.exist?(path) # handling cold start
   set :job_template, "TZ=\"America/New_York\" bash -l -c ':job'"
   set :output, "#{path}/log/cron_log.log"
 
+  every 1.day do
+    command "backup perform --trigger daily_backup -r #{path}/Backup/"
+  end
+
   every 1.hour do
-    command "backup perform --trigger my_backup -r #{path}/Backup/"
+    command "backup perform --trigger hourly_backup -r #{path}/Backup/"
   end
 
   # https://coderwall.com/p/ahdolq/local-timezone-fix-for-whenever-gem
