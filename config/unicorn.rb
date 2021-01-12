@@ -4,7 +4,7 @@
 # unicorn_rails -c config/unicorn.rb -E production -D
 
 rails_env = ENV['RAILS_ENV'] || 'production'
-working_directory "/var/www/patterns-#{rails_env}/current"
+#working_directory "/var/www/patterns-#{rails_env}/current"
 # 16 workers and 1 master
 # worker_processes (rails_env == 'production' ? 16 : 4)
 # worker_processes 4
@@ -18,33 +18,33 @@ preload_app true
 timeout 30
 
 # Listen on a Unix data socket
-listen "/tmp/patterns-#{rails_env}.sock", backlog: 2048
+# listen "/tmp/patterns-#{rails_env}.sock", backlog: 2048
 
-before_exec do |_server|
-  ENV['BUNDLE_GEMFILE'] = "/var/www/patterns-#{rails_env}/current/Gemfile"
-end
+# before_exec do |_server|
+#   ENV['BUNDLE_GEMFILE'] = "/var/www/patterns-#{rails_env}/current/Gemfile"
+# end
 
-before_fork do |server, _worker|
-  ##
-  # When sent a USR2, Unicorn will suffix its pidfile with .oldbin and
-  # immediately start loading up a new version of itself (loaded with a new
-  # version of our app). When this new Unicorn is completely loaded
-  # it will begin spawning workers. The first worker spawned will check to
-  # see if an .oldbin pidfile exists. If so, this means we've just booted up
-  # a new Unicorn and need to tell the old one that it can now die. To do so
-  # we send it a QUIT.
-  #
-  # Using this method we get 0 downtime deploys.
+# before_fork do |server, _worker|
+#   ##
+#   # When sent a USR2, Unicorn will suffix its pidfile with .oldbin and
+#   # immediately start loading up a new version of itself (loaded with a new
+#   # version of our app). When this new Unicorn is completely loaded
+#   # it will begin spawning workers. The first worker spawned will check to
+#   # see if an .oldbin pidfile exists. If so, this means we've just booted up
+#   # a new Unicorn and need to tell the old one that it can now die. To do so
+#   # we send it a QUIT.
+#   #
+#   # Using this method we get 0 downtime deploys.
 
-  old_pid = "/var/www/patterns-#{rails_env}/current/tmp/pids/unicorn.pid.oldbin"
-  if File.exist?(old_pid) && server.pid != old_pid
-    begin
-      Process.kill('QUIT', File.read(old_pid).to_i)
-    rescue Errno::ENOENT, Errno::ESRCH
-      # someone else did our job for us
-    end
-  end
-end
+#   old_pid = "/var/www/patterns-#{rails_env}/current/tmp/pids/unicorn.pid.oldbin"
+#   if File.exist?(old_pid) && server.pid != old_pid
+#     begin
+#       Process.kill('QUIT', File.read(old_pid).to_i)
+#     rescue Errno::ENOENT, Errno::ESRCH
+#       # someone else did our job for us
+#     end
+#   end
+# end
 
 after_fork do |_server, _worker|
   ##
