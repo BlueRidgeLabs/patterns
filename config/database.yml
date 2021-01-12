@@ -40,7 +40,7 @@ staging:
   pool: 5
   timeout: 5000
 
-
+# should use DATABASE_URL for this.
 production:
   adapter: mysql2
   database: <%= ENV['RAILS_ENV'] || 'production' %>
