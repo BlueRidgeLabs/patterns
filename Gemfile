@@ -159,6 +159,9 @@ gem 'paper_trail'
 gem 'paper_trail-association_tracking'
 gem 'paper_trail-globalid'
 
+# webrick is slow, capybara will use puma instead
+gem 'puma'
+
 # gem "faster_path" # will break without rustc
 gem 'fast_blank'
 
@@ -232,8 +235,7 @@ group :test do
   gem 'rspec-retry'
   # calendaring tests will almost always break on saturdays.
   gem 'timecop'
-  # webrick is slow, capybara will use puma instead
-  gem 'puma'
+  
   gem 'webmock'
   # in memory redis for testing only
   gem 'mock_redis'
