@@ -22,6 +22,7 @@ echo "setting up $ARG1 environment on this server";
 
 hostname $ARG1;
 echo "RAILS_ENV=$ARG1" >> /etc/environment
+echo "RACK_ENV=$ARG1" >> /etc/environment
 echo "$ARG1" > /etc/hostname
 echo "MYSQL_USER=root" >> /etc/environment
 echo "MYSQL_PASSWORD=password" >> /etc/environment
@@ -29,7 +30,7 @@ echo "MYSQL_PWD=password" >> /etc/environment
 echo "MYSQL_HOST=localhost" >> /etc/environment
 echo "MALLOC_ARENA_MAX=2" >> /etc/environment
 echo "RAILS_MAX_THREADS=30" >> /etc/environment
-
+echo "DATABASE_URL=mysql://root:password@localhost/$ARG1" >> etc/environment
 echo "127.0.0.1 $ARG1" >> /etc/hosts
 
 source /etc/environment;

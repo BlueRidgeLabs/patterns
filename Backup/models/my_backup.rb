@@ -11,15 +11,18 @@
 # http://backup.github.io/backup
 #
 require 'yaml'
+require 'cgi'
+require 'uri'
 
 Model.new(:hourly_backup) do
-database MySQL do |db|
+  database MySQL do |db|
+    db_params = get_db_params
     # To dump all databases, set `db.name = :all` (or leave blank)
-    db.name               = ENV['RAILS_ENV']
-    db.username           = ENV['MYSQL_USER']
-    db.password           = ENV['MYSQL_PASSWORD']
-    db.host               = ENV['MYSQL_HOST']
-    db.port               = 3306
+    db.name               = db_params[:database]
+    db.username           = db_params[:username]
+    db.password           = db_params[:password]
+    db.host               = db_params[:host]
+    db.port               = db_params[:port]
     # Note: when using `skip_tables` with the `db.name = :all` option,
     # table names should be prefixed with a database name.
     # e.g. ["db_name.table_to_skip", ...]
@@ -82,12 +85,13 @@ Model.new(:daily_backup, 'the daily backup') do
   # MySQL [Database]
   #
   database MySQL do |db|
+    db_params = get_db_params
     # To dump all databases, set `db.name = :all` (or leave blank)
-    db.name               = ENV['RAILS_ENV']
-    db.username           = ENV['MYSQL_USER']
-    db.password           = ENV['MYSQL_PASSWORD']
-    db.host               = ENV['MYSQL_HOST']
-    db.port               = 3306
+    db.name               = db_params[:database]
+    db.username           = db_params[:username]
+    db.password           = db_params[:password]
+    db.host               = db_params[:host]
+    db.port               = db_params[:port]
     # Note: when using `skip_tables` with the `db.name = :all` option,
     # table names should be prefixed with a database name.
     # e.g. ["db_name.table_to_skip", ...]
@@ -140,7 +144,8 @@ Model.new(:daily_backup, 'the daily backup') do
 
   encrypt_with GPG do |encryption|
     encryption.keys = {}
-    encryption.keys[Rails.application.credentials.mailer[:admin]] = File.read('/home/patterns/backup_public_key.pub')
+    pubkey = Rails.application.credentials.backup_public_key
+    encryption.keys[Rails.application.credentials.mailer[:admin]] = pubkey
     encryption.recipients = Rails.application.credentials.mailer[:admin]
   end
   ##
@@ -164,4 +169,23 @@ Model.new(:daily_backup, 'the daily backup') do
     mail.authentication       = 'plain'
     mail.encryption           = :starttls
   end
+end
+
+d
+
+def get_db_params
+  uri = URI.parse(ENV["DATABASE_URL"])
+  database = "#{(uri.path || "").split("/")[1]}_#{env}"
+  adapter = case uri.scheme.to_s
+          when "postgres" then "postgresql"
+          when "mysql"    then "mysql2"
+          else uri.scheme.to_s
+          end
+  { username:uri.user,
+    password: uri.password,
+    host: uri.host,
+    port: uri.port,
+    database: database,
+    adapter: adapter}
+
 end
