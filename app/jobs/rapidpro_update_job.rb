@@ -73,6 +73,7 @@ class RapidproUpdateJob
         return true
       end
 
+      Rails.logger.info("rapidpro job: #{@person.id}::#{res.code}")
       case res.code
       when 201 # new person in rapidpro
 
