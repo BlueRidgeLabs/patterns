@@ -1,7 +1,13 @@
 <%= form_tag(taggings_path(), remote: true, class: "form-inline tag-form" ) do |form| %>
   <%= hidden_field_tag :taggable_type, taggable_obj.class %>
   <%= hidden_field_tag :taggable_id, taggable_obj.id %>
-  <%= text_field_tag :tag, "", id: 'tag-typeahead', class: "input tag-typehead", autocomplete: 'off' %>
-  <%= submit_tag "Add", class: "btn btn-sm btn-secondary mt-1" %>
+  <%= text_field_tag :tag, "", id: 'tag-typeahead', class: "input tag-typehead border border-dark", autocomplete: 'off', placeholder: "Type the tag here" %>
+  <%= submit_tag "Add Tag", class: "btn btn-sm btn-secondary mt-1" %>
+  <%= content_tag :span,'?', class: 'badge badge-dark m-1', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Tags are positive attributes a person has, like 'college diploma', never 'no degree'. Also, no medical information, or legal information here ever. This is used for things people like to talk about, and things other researchers could ask about. Nothing sensitive should ever be entered into Patterns!",
+          title: 'popover',
+          original_title:"Add a Tag"} %>
 <% end %>
 

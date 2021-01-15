@@ -256,7 +256,7 @@
     <%= form_for([@person, @comment], remote: true) do |form| %>
       <%= form.hidden_field :commentable_type, :value => 'Person' %>
       <%= form.hidden_field :commentable_id, :value => @person.id %>
-      <%= form.text_area :content, rows: 3, class: "col-sm input-block-level" %>
+      <%= form.text_area :content, rows: 3, class: "col-sm input-block-level" , placeholder: "add notes about the person here." %>
       <%= form.submit 'Add note', :class => "btn btn-sm btn-primary" %>
       <%= content_tag :span,'?', class: 'badge badge-dark', data:{
           toggle: "popover", 

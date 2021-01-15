@@ -71,6 +71,14 @@ $(document).on('turbolinks:load ready',function() {
   }
 
   $("[data-toggle=popover]").popover();
+  // this closes popovers when anything else is clicked.
+  $('body').on('click', function (e) {
+    //only buttons
+    if ($(e.target).data('toggle') !== 'popover'
+        && $(e.target).parents('.popover.in').length === 0) { 
+        $('[data-toggle="popover"]').popover('hide');
+    }
+  });
 
   $(document).ajaxComplete(function(event, request) {
     var msg = request.getResponseHeader('X-Message');
