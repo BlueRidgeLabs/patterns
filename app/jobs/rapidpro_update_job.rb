@@ -47,6 +47,7 @@ class RapidproUpdateJob
         body[:urns] = [urn] # adds new phone number if need be.
         body[:urns] << "mailto:#{@person.email_address}" if @person.email_address.present?
         body[:groups] = groups
+        body[:name] = @person.full_name
         # rapidpro tags are space delimited and have underscores for spaces
         body[:fields] = { tags: @person.tag_list.map { |t| t.tr(' ', '_') }.join(' '),
                           verified: @person.verified }

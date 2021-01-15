@@ -69,7 +69,7 @@
       <tbody>
         <% @people.each do |person| %>
           <tr id='person-<%= person.id %>'>
-            <td><%= render partial: 'add_remove_cart',locals: {person: person} %></td>
+            <td><%= render partial: 'add_remove_cart',locals: {person: person, in_cart: @cart_pids.include?(person.id) } %></td>
             <td><%= link_to "#{person.first_name} #{person.last_name}", person_path(person) %></td>
             <td><%= person.address_fields_to_sentence %></td>
             <td><%= best_in_place person, :email_address %></td>

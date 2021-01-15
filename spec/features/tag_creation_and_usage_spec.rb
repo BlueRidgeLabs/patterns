@@ -15,11 +15,11 @@ describe 'tag person' do
 
     tag_name = Faker::Company.buzzword.downcase
     visit "/people/#{@person.id}"
-    expect(page).to have_button('Add')
+    expect(page).to have_button('Add Tag')
 
     fill_in_autocomplete '#tag-typeahead', tag_name
 
-    find_button('Add').click
+    find_button('Add Tag').click
     wait_for_ajax
     sleep 1 # wait for our page to save
     # gotta reload so that we don't cache tags

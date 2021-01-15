@@ -3,12 +3,11 @@
 <!-- event invitation scheduling handling. -->
 <%
   #this should be refactored out, as this is a tight loop
-  cart = current_user.current_cart
-  in_cart = cart.people.include?(person)
+  in_cart ||= current_user.current_cart.people.include?(person)
   add_button_class = in_cart ? ' d-none' : ' d-inline'
   remove_button_class = in_cart ? ' d-inline' : ' d-none'
 %>
-  <!-- <%= in_cart %> -->
+  
               <%= link_to t('.cart', default: "Add"),
                           add_person_cart_index_path(person_id: person.id),
                           class: "mt-2 btn btn-primary#{add_button_class}",

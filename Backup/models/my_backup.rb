@@ -32,10 +32,9 @@ Model.new(:hourly_backup) do
   end
 
   store_with Local do |local|
-    
     storage_id = :hourly
     local.keep = 48
-    local.path  = "/var/www/patterns-production/shared/backups/#{storage_id}"
+    local.path = "/var/www/patterns-production/shared/backups/#{storage_id}"
   end
 
   ##
@@ -48,7 +47,6 @@ Model.new(:hourly_backup) do
     encryption.keys[Rails.application.credentials.mailer[:admin]] = File.read('/home/patterns/backup_public_key.pub')
     encryption.recipients = Rails.application.credentials.mailer[:admin]
   end
-
 end
 
 Model.new(:daily_backup, 'the daily backup') do
@@ -174,18 +172,17 @@ end
 d
 
 def get_db_params
-  uri = URI.parse(ENV["DATABASE_URL"])
-  database = "#{(uri.path || "").split("/")[1]}_#{env}"
+  uri = URI.parse(ENV['DATABASE_URL'])
+  database = "#{(uri.path || '').split('/')[1]}_#{env}"
   adapter = case uri.scheme.to_s
-          when "postgres" then "postgresql"
-          when "mysql"    then "mysql2"
-          else uri.scheme.to_s
-          end
-  { username:uri.user,
+            when 'postgres' then 'postgresql'
+            when 'mysql'    then 'mysql2'
+            else uri.scheme.to_s
+            end
+  { username: uri.user,
     password: uri.password,
     host: uri.host,
     port: uri.port,
     database: database,
-    adapter: adapter}
-
+    adapter: adapter }
 end

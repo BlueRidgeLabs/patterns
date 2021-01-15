@@ -177,7 +177,7 @@ describe 'people page' do
     # add tag
     new_tag = 'TeSt TaG'
     normalized_new_tag = new_tag.downcase
-    expect(page).to have_css('#tag-typeahead') #makes the test pass somehow
+    expect(page).to have_css('#tag-typeahead') # makes the test pass somehow
     fill_in with: new_tag, id: 'tag-typeahead'
     find('.tag-form input[type="submit"]').native.send_keys(:return)
     wait_for_ajax

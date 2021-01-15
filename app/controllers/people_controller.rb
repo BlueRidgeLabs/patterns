@@ -59,6 +59,7 @@ class PeopleController < ApplicationController
     end
     # only show verified people to non-admins
     @people = current_user.admin? ? search : search.verified
+    @cart_pids = current_cart.people.map(&:id)
     @tags ||= []
   end
 

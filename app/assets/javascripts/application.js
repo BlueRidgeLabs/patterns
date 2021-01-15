@@ -49,9 +49,9 @@ $(document).on('turbolinks:load ready',function() {
     // show notifactions in modals too
     if ($("#modal-notifications").length > 0) {
       $("#modal-notifications").html(html);
-      //$(".alert" ).fadeOut(5000);
+      
     }
-    
+    $(".alert" ).fadeOut(5000);
   };
 
   function copyToClipboard(element) {

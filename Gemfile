@@ -235,7 +235,7 @@ group :test do
   gem 'rspec-retry'
   # calendaring tests will almost always break on saturdays.
   gem 'timecop'
-  
+
   gem 'webmock'
   # in memory redis for testing only
   gem 'mock_redis'

@@ -80,10 +80,11 @@ class DigitalGift < ApplicationRecord
 
   def fetch_gift
     raise if gift_id.nil?
+
     begin
-      Tremendous::Client.rewards.show(gift_id)  
+      Tremendous::Client.rewards.show(gift_id)
     rescue Tremendous::AccessError
-      {'delivery'=> {'status'=> 'Not Found'}}
+      { 'delivery' => { 'status' => 'Not Found' } }
     end
   end
 

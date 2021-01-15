@@ -22,7 +22,7 @@ class Invitation < ApplicationRecord
   belongs_to :person
   belongs_to :research_session
   validates :person, presence: true
-
+  default_scope { includes(:person, :rewards) }
   # so users can take notes.
   has_many :comments, as: :commentable, dependent: :destroy
 

@@ -33,7 +33,7 @@ class Cart < ApplicationRecord
   validates :name, uniqueness: { message: 'Pool must have a unique name', case_sensitive: false }
 
   after_save :update_rapidpro, if: :sync_changed?
-
+  default_scope { includes(:carts_people, :carts_users) }
   # TODO: should have an actioncable update for carts in view
 
   # keep current cart in carts_users,
@@ -44,7 +44,7 @@ class Cart < ApplicationRecord
 
   # this looks like a decorator, should be elsewhere.
   def name_and_count
-    "#{name}: #{people.size}"
+    "#{name}: #{people_count}"
   end
 
   def assign_current_cart(user_id)
