@@ -302,6 +302,12 @@ class Person < ApplicationRecord
     end
   end
 
+  def get_rapidpro
+    headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
+    url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{rapidpro_uuid}"
+    HTTParty.get(url,headers:headers).parsed_response['results']
+  end
+
   def lat_long
     ::ZIP_LAT_LONG[postal_code.to_s]
   end
