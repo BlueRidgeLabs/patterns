@@ -5,7 +5,7 @@
         when 'GiftCard'
             "Seq ##{reward.rewardable.sequence_number}"
         when 'DigitalGift'
-            link_to "get link", reward.rewardable
+            reward.rewardable.link
         when 'CashCard'
            reward.rewardable.notes
        end

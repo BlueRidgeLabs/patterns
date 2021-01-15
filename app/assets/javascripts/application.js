@@ -54,6 +54,15 @@ $(document).on('turbolinks:load ready',function() {
     
   };
 
+  function copyToClipboard(element) {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(element).text()).select();
+    document.execCommand("copy");
+    $temp.remove();
+  }
+
+
   scrollPosition = null;
   
   document.addEventListener('turbolinks:load', function () {
@@ -69,6 +78,7 @@ $(document).on('turbolinks:load ready',function() {
     console.log(scrollPosition);
     Turbolinks.visit(window.location, { action: 'replace', scroll: false })
   }
+
 
   $("[data-toggle=popover]").popover();
   // this closes popovers when anything else is clicked.
