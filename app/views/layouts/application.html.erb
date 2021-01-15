@@ -40,7 +40,7 @@
         <%= link_to cart_path(current_user.current_cart), class: "current_cart_link nav-link" do %>
                   Pool:&nbsp;
                   <span class='current_cart'><%= current_user.current_cart.name %></span>&nbsp;
-                  <span class='badge badge-light cart-size'><%= current_user.current_cart.people.size %></span>
+                  <span class='badge badge-light cart-size'><%= current_user.current_cart.people_count %></span>
         <% end %>
       </li>
       <li class="nav-item dropdown">

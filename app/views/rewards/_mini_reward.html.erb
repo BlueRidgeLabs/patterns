@@ -5,7 +5,11 @@
         when 'GiftCard'
             "Seq ##{reward.rewardable.sequence_number}"
         when 'DigitalGift'
-            reward.rewardable.link
+            raw("
+<input id='gift-link' value='#{reward.rewardable.link}' readonly>
+<button class='btn' onclick='clipboard.writeText(\"#{reward.rewardable.link}\");show_ajax_message(\"Copied\",\"success\");'>
+   <i class='fa fa-clipboard'></i>
+</button>")
         when 'CashCard'
            reward.rewardable.notes
        end
@@ -30,3 +34,5 @@
     <td><%= link_to remove_text, reward, remote: true, method: :delete, data: { confirm: 'Are you sure?' } %></td>
     <% end %>
 </tr>
+
+<!-- $(\"#gift-link\").tooltip({title:\"Copied!\",trigger:\"manual\" delay: { \"hide\": 500 }}).show() -->
