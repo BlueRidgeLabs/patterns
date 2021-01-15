@@ -105,14 +105,15 @@ class Person < ApplicationRecord
 
   has_secure_token :token
 
-  if ENV['RAILS_ENV'] == 'production'
-    if Rails.application.credentials.mailchimp[:api_key]
+  if Rails.env.production?
+    if Rails.application.credentials.mailchimp[:api_key].present?
       # no mailchimping
       # after_commit :send_to_mailchimp, on: %i[update create]
     end
-
-    after_commit :update_rapidpro, on: %i[update create] if Rails.application.credentials.rapidpro[:token]
-    before_destroy :delete_from_rapidpro if Rails.application.credentials.rapidpro[:token]
+    if Rails.application.credentials.rapidpro[:token].present?
+      after_commit :update_rapidpro, on: %i[update create]
+      before_destroy :delete_from_rapidpro
+    end
   end
 
   after_create  :update_neighborhood
