@@ -65,7 +65,7 @@ class RapidproUpdateJob
 
       begin
         body_sha1 = Digest::SHA1.hexdigest body.to_json
-        return true if @redis.get(body_sha1) && Rails.env.production? # less hammering of rapidpro
+        return true if @redis.get(body_sha1).present? && Rails.env.production? # less hammering of rapidpro
 
         res = HTTParty.post(url, headers: @headers, body: body.to_json)
       rescue  Net::ReadTimeout => e
