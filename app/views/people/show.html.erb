@@ -94,7 +94,7 @@
           <dd><%= @person.invitations.attended.size %></dd>
           <% if @person.rapidpro_uuid.present? %>
           <dt>Rapid Pro Link</dt>
-          <dd><a href='https://rapidpro.brl.nyc/contact/read/<%= @person.rapidpro_uuid %>'>Rapidpro link</a></dd>
+          <dd><a href='<%= Rails.application.credentials.rapidpro[:web_address]%>/contact/read/<%= @person.rapidpro_uuid %>'>Rapidpro link</a></dd>
           <% end %>
         </dl>
       </div>

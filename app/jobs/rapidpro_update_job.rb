@@ -23,7 +23,7 @@ class RapidproUpdateJob
 
     # we may deal with a word where rapidpro does email...
     # but not now.
-    if @person.phone_number.present?
+    if @person.phone_number.present? && Phony.plausible?(@person.phone_number)
       endpoint_url = "#{@base_url}contacts.json"
 
       body = { name: @person.full_name,
