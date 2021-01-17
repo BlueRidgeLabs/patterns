@@ -3,10 +3,10 @@ development:
 production:
   :concurrency: <%= ENV['RAILS_MAX_THREADS'] || 25 %>
 :queues:
-  - rapidpro
-  - default
-  - mailers
-  - action_mailbox_routing
-  - action_mailbox_incineration
-  - active_storage_analysis
-  - active_storage_purge
+  - ['rapidpro',3]
+  - ['default',2]
+  - ['mailers',1]
+  - ['action_mailbox_routing',2]
+  - ['action_mailbox_incineration',9]
+  - ['active_storage_analysis',1]
+  - ['active_storage_purge',10]
