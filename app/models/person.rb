@@ -123,11 +123,14 @@ class Person < ApplicationRecord
   validates :last_name, presence: true
 
   validates :postal_code, presence: true
-  validates :postal_code, zipcode: { country_code: :us }
+  validates :postal_code, zipcode: { country_code: Rails.application.credentials.country_code.downcase.to_sym }
 
   # phony validations and normalization
-  phony_normalize :phone_number, default_country_code: 'US'
-  phony_normalize :landline, default_country_code: 'US'
+  phony_normalize :phone_number, default_country_code: Rails.application.credentials.country_code
+  validates :phone_number, phony_plausible: true
+  
+  phony_normalize :landline, default_country_code: Rails.application.credentials.country_code
+  validates :landline, phony_plausible: true
 
   validates :phone_number, presence: true, length: { in: 9..15 },
                            unless: proc { |person| person.email_address.present? }
