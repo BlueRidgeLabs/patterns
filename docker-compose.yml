@@ -14,9 +14,7 @@ services: # configuring each container
       - "3000:3000" 
     environment:
       - RAILS_ENV=${RAILS_ENV:-development}
-      - MYSQL_HOST='db'
-      - MYSQL_PWD='patterns'
-      - MYSQL_USER='patterns'
+      - DATABASE_URL=${DATABASE_URL:-mysql2://patterns:patterns@db/development}
       - REDIS_URL=redis://redis:6379/0
       - VIRTUAL_HOST=${PRODUCTION_SERVER:-localhost}
       - LETSENCRYPT_HOST=${PRODUCTION_SERVER:-localhost} # for letsencrypt
@@ -33,10 +31,8 @@ services: # configuring each container
       - db
     environment:
       - RAILS_ENV=${RAILS_ENV:-development}
-      - MYSQL_HOST='db'
-      - MYSQL_PWD='patterns'
-      - MYSQL_USER='patterns'
-      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=${DATABASE_URL:-mysql2://patterns:patterns@db/development}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
   redis:
     image: redis:alpine
     restart: always
