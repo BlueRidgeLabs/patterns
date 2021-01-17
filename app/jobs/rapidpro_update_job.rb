@@ -66,7 +66,7 @@ class RapidproUpdateJob
 
       begin
         body_sha1 = Digest::SHA1.hexdigest body.to_json
-        return true if @redis.get("rapidpro_update_throttle:#{body_sha1}").present? && Rails.env.production? # less hammering of rapidpro
+        return true if @redis.get("rapidpro_update_throttle:#{@person.id}:#{body_sha1}").present? && Rails.env.production? # less hammering of rapidpro
 
         res = HTTParty.post(url, headers: @headers, body: body.to_json)
       rescue  Net::ReadTimeout => e
@@ -92,7 +92,7 @@ class RapidproUpdateJob
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
 
           # store the sha1 of the body
-          @redis.setex("rapidpro_update_throttle:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
+          @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
         end
