@@ -151,7 +151,7 @@
           <dd><%= @person.signup_at ? @person.signup_at.to_s(:long) : 'unknown' %></dd>
           <dt>Rapidpro:</dt>
           <dd><%= if @person.rapidpro_uuid.present?  
-                    link_to 'link to profile', "https://#{Rails.application.credentials.rapidpro[:domain]}/contact/read/#{@person.rapidpro_uuid}/" 
+                    link_to 'link to profile', "https://#{Rails.application.credentials.rapidpro[:web_address]}/contact/read/#{@person.rapidpro_uuid}/" 
                   else
                     "Not synced"
                   end
