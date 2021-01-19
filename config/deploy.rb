@@ -1,93 +1,70 @@
-# frozen_string_literal: true
+# config valid for current version and patch releases of Capistrano
+lock "~> 3.15.0"
 
-require 'bundler/capistrano'
-require 'capistrano'
-require 'capistrano/sidekiq'
-require 'capistrano/ext/multistage'
-require 'rvm/capistrano'
-require 'rvm/capistrano/gem_install_uninstall'
-require 'dotenv/load'
+set :application, "patterns"
+set :repo_url, "git@github.com:BlueRidgeLabs/patterns.git"
 
-set :repository, ENV['GIT_REPOSITORY']
-
-set :scm, :git
-set(:deploy_to) { "/var/www/#{application}" }
-set :deploy_via, :remote_cache
-set :use_sudo, false
 set :user, 'patterns'
-set :keep_releases, 10
-set :stages, %w[production staging]
-set :default_stage, 'staging'
 
-set :sidekiq_config, 'config/sidekiq.yml'
-set :sidekiq_processes, 4
+append :linked_dirs
 
+# Default branch is :master
+# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+
+# Default deploy_to directory is /var/www/my_app_name
+# set :deploy_to, "/var/www/my_app_name"
+
+# Default value for :format is :airbrussh.
+# set :format, :airbrussh
+
+# You can configure the Airbrussh format using :format_options.
+# These are the defaults.
+# set :format_options, command_output: true, log_file: "log/capistrano.log", color: :auto, truncate: :auto
+
+# Default value for :pty is false
+# set :pty, true
+
+# Default value for :linked_files is []
+# append :linked_files, "config/database.yml"
+
+# Default value for linked_dirs is []
+# append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
+
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value for local_user is ENV['USER']
+# set :local_user, -> { `git config user.name`.chomp }
+
+# Default value for keep_releases is 5
+# set :keep_releases, 5
+
+# Uncomment the following to require manually verifying the host key before first deploy.
+# set :ssh_options, verify_host_key: :secure
+
+set :rvm_type, :user                     # Defaults to: :auto
+set :rvm_ruby_version, '2.7,2'      # Defaults to: 'default'
+
+set :sidekiq_processes, 2
+set :sidekiq_user, 'patterns'
 set :bundle_flags, '--quiet -j 4'
 
-# more info: rvm help autolibs
-set :rvm_autolibs_flag, 'read-only'
+set :ssh_options, forward_agent: false
 
-# install/update RVM
-before 'deploy', 'rvm:install_rvm'
+# rails
+set :conditionally_migrate, true
+set :migration_role, :app
 
-ENV['GEM'] = 'bundler'
-# Make sure Bundler is installed for gemset
-before 'bundle:install', 'rvm:install_gem'
+# puma
+set :puma_init_active_record, true
 
-# install Ruby and create gemset (both if missing)
-before 'deploy', 'rvm:install_ruby'
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+append :linked_files, 'config/database.yml', 'config/secrets.yml'
 
-set :ssh_options, forward_agent: true
-# set :shared_children, fetch(:shared_children) + ["sharedconfig"]
-
-before  'deploy:finalize_update', 'deploy:create_shared_directories', 'deploy:link_db_config'
-
-after   'deploy:finalize_update', 'deploy:create_binstubs', 'deploy:migrate', 'deploy:cleanup'
-
-namespace :deploy do
-  task :start do
-    run "cd #{current_path} && `bundle exec unicorn_rails -c config/unicorn.rb -E #{rails_env.to_s.shellescape} -D`"
-  end
-
-  task :stop do
-    run "cd #{current_path} && kill -TERM `cat tmp/pids/unicorn.pid`"
-  end
-
-  task :restart do
-    # unicorn reloads on USR2
-    run "cd #{current_path} && kill -USR2 `cat tmp/pids/unicorn.pid`"
-  end
-
-  task :create_shared_directories do
-    run "mkdir -p #{deploy_to}/shared/pids"
-    run "mkdir -p #{deploy_to}/shared/system"
-    run "mkdir -p #{deploy_to}/shared/assets"
-    run "mkdir -p #{deploy_to}/releases"
-    run "mkdir -p #{shared_path}/log"
-    run "mkdir -p #{shared_path}/tmp"
-    run "mkdir -p #{shared_path}/assets"
-    run "mkdir -p #{shared_path}/bundle"
-    run "mkdir -p #{shared_path}/cached-copy"
-  end
-
-  task :link_db_config do
-    # pull in database.yml on server
-    run "rm -f #{release_path}/config/database.yml && ln -s #{deploy_to}/shared/database.yml #{release_path}/config/database.yml"
-    run "rm -f #{release_path}/config/credentials/production.key && ln -s #{deploy_to}/shared/production.key #{release_path}/config/credentials/production.key"
-  end
-
-  # https://github.com/capistrano/capistrano/issues/362#issuecomment-14158487
-  namespace :assets do
-    task :precompile, roles: assets_role, except: { no_release: true } do
-      run <<-CMD.compact
-        cd -- #{latest_release.shellescape} &&
-        #{rake} RAILS_ENV=#{rails_env.to_s.shellescape} #{asset_env} assets:precompile
-      CMD
+on roles :all do
+  within fetch(:latest_release_directory) do
+    with rails_env: fetch(:rails_env) do
+      execute :rake, 'assets:precompile'
     end
-  end
-
-  # rewrite binstubs
-  task :create_binstubs do
-    run "cd #{latest_release.shellescape} && bundle binstubs unicorn --force --path ./bin"
   end
 end

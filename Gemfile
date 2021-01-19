@@ -181,13 +181,15 @@ group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
-  gem 'capistrano', '~> 2.15.4'
+  gem 'capistrano-rails',   '~> 1.1', require: false
+  gem 'capistrano-bundler', '~> 1.1', require: false
   gem 'capistrano-sidekiq'
+  gem 'capistrano-rvm',   '~> 0.1', require: false
+  gem 'capistrano3-puma' 
   gem 'ed25519'
   gem 'heavens_door' # recording capybara tests
   gem 'lol_dba' # find columns that should have indices
   gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
-  gem 'rvm-capistrano', require: false
   # gem 'rbnacl-libsodium' # same as above
   gem 'bcrypt_pbkdf' # same as above
   # this whole group makes finding performance issues much friendlier
