@@ -77,6 +77,10 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     after_commit_everywhere (0.1.5)
       activerecord (>= 4.2)
+    airbrake (11.0.1)
+      airbrake-ruby (~> 5.1)
+    airbrake-ruby (5.2.0)
+      rbtree3 (~> 0.5)
     annotate (3.1.1)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
@@ -463,6 +467,7 @@ GEM
       ffi (~> 1.0)
     rbnacl (4.0.2)
       ffi
+    rbtree3 (0.6.0)
     redcarpet (3.5.1)
     redis (4.1.4)
     redis-actionpack (5.2.0)
@@ -698,6 +703,7 @@ DEPENDENCIES
   active_record_doctor
   acts-as-taggable-on
   after_commit_everywhere (~> 0.1, >= 0.1.5)
+  airbrake
   annotate
   apparition
   awesome_print
