@@ -12,7 +12,6 @@ class RapidproUpdateJob
     @headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
     @base_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/"
     Rails.logger.info "[RapidProUpdate] job enqueued: #{id}"
-    Logger.info "[RapidProUpdate] job enqueued: #{id}"
     @person = Person.find(id)
     @redis = Redis.current
 
