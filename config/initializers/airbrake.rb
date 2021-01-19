@@ -29,7 +29,6 @@ Airbrake.configure do |c|
   # https://github.com/airbrake/airbrake-ruby#logger
   c.logger = Airbrake::Rails.logger
 
-  c.performance = true
   # Configures the environment the application is running in. Helps the Airbrake
   # dashboard to distinguish between exceptions occurring in different
   # environments.
