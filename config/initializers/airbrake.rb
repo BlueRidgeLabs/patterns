@@ -29,6 +29,7 @@ Airbrake.configure do |c|
   # https://github.com/airbrake/airbrake-ruby#logger
   c.logger = Airbrake::Rails.logger
 
+  c.performance = true
   # Configures the environment the application is running in. Helps the Airbrake
   # dashboard to distinguish between exceptions occurring in different
   # environments.
@@ -47,7 +48,7 @@ Airbrake.configure do |c|
   # Airbrake. By default, all "password" attributes will have their contents
   # replaced.
   # https://github.com/airbrake/airbrake-ruby#blocklist_keys
-  c.blocklist_keys = [/password/i, /authorization/i, /token/i, /secret/i, /authorization/i, /api_key/i, /api_token/i /api_secret/i]
+  c.blocklist_keys = [/password/i, /authorization/i, /token/i, /secret/i, /authorization/i, /api_key/i, /api_token/i, /api_secret/i]
 
   # Alternatively, you can integrate with Rails' filter_parameters.
   # Read more: https://goo.gl/gqQ1xS
