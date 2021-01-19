@@ -168,6 +168,7 @@ class PeopleController < ApplicationController
       if @person.with_user(current_user).update(person_params)
         format.html { redirect_to @person, notice: 'Person was successfully updated.' }
         format.json { respond_with_bip(@person) }
+        @person.update_rapidpro
       else
         flash[:error] = @person.errors.full_messages.join(', ')
         format.html { render action: 'edit' }
