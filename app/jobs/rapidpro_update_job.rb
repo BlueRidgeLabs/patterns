@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class RapidproUpdateJob
-  include Sidekiq::Worker
-  sidekiq_options retry: 5
-  sidekiq_options queue: 'rapidpro'
+  # include Sidekiq::Worker
+  # sidekiq_options retry: 5
+  # sidekiq_options queue: 'rapidpro'
 
   # works like so, if person has no rapidpro uuid, we post with phone,
   # otherwise use uuid. this will allow changes to phone numbers.
@@ -70,6 +70,7 @@ class RapidproUpdateJob
 
         res = HTTParty.post(url, headers: @headers, body: body.to_json)
       rescue  Net::ReadTimeout => e
+        Rails.logger.info("Rapidpro timeout. id: #{id}, error: #{e}")
         RapidproUpdateJob.perform_in(rand(120..2400), id)
         return true
       end
@@ -79,25 +80,26 @@ class RapidproUpdateJob
       when 201 # new person in rapidpro
 
         # store the sha1 of the body
-        @redis.setex(body_sha1, 1.hour.to_i, true) if Rails.env.production?
+        @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
         if @person.rapidpro_uuid.blank?
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
         end
         true
       when 429 # throttled
+        Rails.logger.info("Rapidpro throttled. id: #{id}, Retry-after: #{res.headers['retry-after']}")
         retry_delay = res.headers['retry-after'].to_i + 5
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
+        @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
+        Rails.logger.info("Rapidpro success for id: #{id}")
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
-
-          # store the sha1 of the body
-          @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
         end
         true
       when 400, 502, 504, 500
+        Rails.logger.info("Other Error. id: #{id}, #{res.parsed_response}")
         # re-queue job for a random time in the future. thundering herd.
         RapidproUpdateJob.perform_in(rand(120..2400), id)
         true

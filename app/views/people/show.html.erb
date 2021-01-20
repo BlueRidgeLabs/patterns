@@ -21,6 +21,13 @@
         <dl>
           <dt>Pronouns</dt>
           <dd <% if @person.pronouns == 'unknown' %>class='border border-danger'<% end %> ><%= best_in_place @person, :pronouns, as: :select, collection: Person.current_pronouns_list.map{|p| [p,p]} %></dd>
+          <dt>Preferred Language <%= content_tag :span,'?',class: 'badge badge-dark', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "EN = english, ES = Spanish, ZH = Chinese.",
+          title: 'popover',
+          original_title:"Preferred Language"} %></dt>
+          <dd><%= best_in_place @person, :locale, as: :select, collection: {en: 'english', es:'spanish',zh: 'chinese'} %></dd>
           <dt>Add/Remove from Pool: <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
@@ -56,13 +63,6 @@
           <dt>Preferred participation method</dt>
           <dd><%= best_in_place @person, :participation_type, as: :select, collection: %w(in-person remote) %></dd>
           
-          <dt>Preferred Language <%= content_tag :span,'?',class: 'badge badge-dark', data:{
-          toggle: "popover", 
-          placement: "top", 
-          content: "EN = english, ES = Spanish, ZH = Chinese.",
-          title: 'popover',
-          original_title:"Preferred Language"} %></dt>
-          <dd><%= best_in_place @person, :locale, as: :select, collection: {en: 'english', es:'spanish',zh: 'chinese'} %></dd>
    
           <dt>Session Invitations <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
