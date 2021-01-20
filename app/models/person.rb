@@ -178,7 +178,7 @@ class Person < ApplicationRecord
 
   def self.locale_name_to_locale(locale_name)
     obj = { 'english' => 'en',
-            'spanish' => 'es', 'spa' => 'es',
+            'spanish' => 'es',
             'chinese' => 'zh' }
     obj[locale_name.to_s.downcase]
   end
