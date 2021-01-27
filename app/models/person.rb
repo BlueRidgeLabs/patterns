@@ -302,8 +302,9 @@ class Person < ApplicationRecord
 
   def update_rapidpro
     if active && tag_list.exclude?('not dig')
-      Rails.logger.info("sending to rapidpro: #{id}")
-      RapidproUpdateJob.perform_async(id)
+      Rails.logger.info("update rapidpro job send : #{id}")
+      res = RapidproUpdateJob.perform_async(id)
+      Rails.logger.info("update rapidpro job enqueued: #{id} jid:#{res}")
     elsif !active || tag_list.include?('not dig')
       delete_from_rapidpro unless rapidpro_uuid.nil?
     end
