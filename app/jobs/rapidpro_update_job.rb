@@ -105,7 +105,7 @@ class RapidproUpdateJob
         retry_delay = res.headers['retry-after'].to_i + 5
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
-        @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
+        # @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
         Sidekiq.logger.info("[RapidProUpdate] success for id: #{id}")
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
           Sidekiq.logger.info("[RapidProUpdate] saving uuid: #{id}")
