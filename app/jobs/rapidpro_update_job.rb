@@ -12,14 +12,14 @@ class RapidproUpdateJob
     @headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
     @base_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/"
 
-    Rails.logger.info "[RapidProUpdate] job started: #{id}"
+    Sidekiq.logger.info "[RapidProUpdate] job started: #{id}"
 
     @person = Person.find(id)
     @redis = Redis.current
 
     # TODO: (EL) should we early-return?
     if @person.tag_list.include?('not dig') || @person.active == false
-      Rails.logger.info "[RapidProUpdate] job exit not dig or not active: #{id}"
+      Sidekiq.logger.info "[RapidProUpdate] job exit not dig or not active: #{id}"
       RapidproDeleteJob.perform_async(id)
       return true
     end
@@ -44,7 +44,7 @@ class RapidproUpdateJob
       urn = "tel:#{@person.phone_number}"
 
       if @person&.rapidpro_uuid.present? # already created in rapidpro
-        Rails.logger.info("[RapidProUpdate] person alredy synced, sending update now: #{@person.id}")
+        Sidekiq.logger.info("[RapidProUpdate] person alredy synced, sending update now: #{@person.id}")
         groups = ['DIG'] + @person.carts.where(rapidpro_sync: true).where.not(rapidpro_uuid: nil).map(&:name)
         groups.compact!
         url = endpoint_url + "?uuid=#{@person.rapidpro_uuid}"
@@ -63,31 +63,34 @@ class RapidproUpdateJob
         # and then another to set fields
         cgi_urn = CGI.escape(urn)
         url = endpoint_url + "?urn=#{cgi_urn}" # uses phone number to identify.
-        Rails.logger.info("[RapidProUpdate] person not in rapidpro, sending another update later: #{@person.id}")
+        Sidekiq.logger.info("[RapidProUpdate] person not in rapidpro, sending another update later: #{@person.id}")
         # update groups, fields, etc
         RapidproUpdateJob.perform_in(rand(120..240), @person.id)
       end
 
+      Sidekiq.logger.info("[RapidProUpdate] sending the request: #{@person.id}")
+
       begin
-        Rails.logger.info("[RapidProUpdate] sending the request: #{@person.id}")
+        Sidekiq.logger.info("[RapidProUpdate] in begin;rescue;end: #{@person.id}")
 
         body_sha1 = Digest::SHA1.hexdigest body.to_json
         if @redis.get("rapidpro_update_throttle:#{@person.id}:#{body_sha1}").present? && Rails.env.production? # less hammering of rapidpro
-          Rails.logger.info("[RapidProUpdate] throttled: #{@person.id}")
+          Sidekiq.logger.info("[RapidProUpdate] throttled: #{@person.id}")
           return true
         end
 
         res = HTTParty.post(url, headers: @headers, body: body.to_json)
-      rescue  Net::ReadTimeout => e
-        Rails.logger.info("[RapidProUpdate] timeout. id: #{id}, error: #{e}")
+        Sidekiq.logger.info("[RapidProUpdate] request sent: #{@person.id} http: #{res.code}")
+      rescue Net::ReadTimeout => e
+        Sidekiq.logger.info("[RapidProUpdate] timeout. id: #{id}, error: #{e}")
         RapidproUpdateJob.perform_in(rand(120..2400), id)
         return true
       end
 
-      Rails.logger.info("rapidpro job: #{@person.id}::#{res.code} #{res.parsed_response}")
+      Sidekiq.logger.info("rapidpro job: #{@person.id}::#{res.code} #{res.parsed_response}")
       case res.code
       when 201 # new person in rapidpro
-        Rails.logger.info("[RapidProUpdate] added person to rapidpro: #{@person.id}")
+        Sidekiq.logger.info("[RapidProUpdate] added person to rapidpro: #{@person.id}")
         # store the sha1 of the body
         @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
         if @person.rapidpro_uuid.blank?
@@ -96,27 +99,29 @@ class RapidproUpdateJob
         end
         true
       when 429 # throttled
-        Rails.logger.info("[RapidProUpdate] throttled. id: #{id}, Retry-after: #{res.headers['retry-after']}")
+        Sidekiq.logger.info("[RapidProUpdate] throttled. id: #{id}, Retry-after: #{res.headers['retry-after']}")
         retry_delay = res.headers['retry-after'].to_i + 5
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job
       when 200 # happy response
         @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
-        Rails.logger.info("[RapidProUpdate] success for id: #{id}")
+        Sidekiq.logger.info("[RapidProUpdate] success for id: #{id}")
         if res.parsed_response.present? && @person.rapidpro_uuid.blank?
+          Sidekiq.logger.info("[RapidProUpdate] saving uuid: #{id}")
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
         end
         true
       when 400, 502, 504, 500
-        Rails.logger.info("[RapidProUpdate] Other Error. id: #{id}, #{res.code}, #{res.parsed_response}")
+        Sidekiq.logger.info("[RapidProUpdate] Other Error. id: #{id}, #{res.code}, #{res.parsed_response}")
         # re-queue job for a random time in the future. thundering herd.
         RapidproUpdateJob.perform_in(rand(120..2400), id)
         true
       else
+        Sidekiq.logger.info("[RapidProUpdate] unknown http error for id: #{id}, #{res.code}, #{res.body}")
         raise "error: #{res.code}, #{res.body}"
       end
     else
-      Rails.logger.info("[RapidProUpdate] sending delete job for id: #{id}")
+      Sidekiq.logger.info("[RapidProUpdate] sending delete job for id: #{id}")
       RapidproDeleteJob.perform_async(id)
     end
   end
