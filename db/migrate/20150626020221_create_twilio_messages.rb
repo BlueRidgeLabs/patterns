@@ -21,8 +21,6 @@ class CreateTwilioMessages < ActiveRecord::Migration[4.2]
       t.string   'wufoo_formid'
       t.integer  'conversation_count'
       t.string   'signup_verify'
-      t.datetime 'created_at'
-      t.datetime 'updated_at'
       t.timestamps
     end
   end
