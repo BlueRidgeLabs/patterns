@@ -9,6 +9,6 @@ class CreateTeams < ActiveRecord::Migration[5.1]
       t.timestamps
     end
     add_column :users, :team_id, :bigint
-    add_foreign_key :users, :teams
+    # add_foreign_key :users, :teams # breaks things.
   end
 end
