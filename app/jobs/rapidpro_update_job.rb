@@ -73,14 +73,14 @@ class RapidproUpdateJob
       begin
         Sidekiq.logger.info("[RapidProUpdate] in begin;rescue;end: #{@person.id}")
 
-        body_sha1 = Digest::SHA1.hexdigest body.to_json
-        if @redis.get("rapidpro_update_throttle:#{@person.id}:#{body_sha1}").present? && Rails.env.production? # less hammering of rapidpro
-          Sidekiq.logger.info("[RapidProUpdate] throttled: #{@person.id}")
-          return true
-        end
-        Sidekiq.logger.info("[RapidProUpdate] not throttled, making request: #{@person.id}")
-        
-        res = HTTParty.post(url, headers: @headers, body: body.to_json, timeout: 30)
+        # body_sha1 = Digest::SHA1.hexdigest body.to_json
+        # if @redis.get("rapidpro_update_throttle:#{@person.id}:#{body_sha1}").present? && Rails.env.production? # less hammering of rapidpro
+        #   Sidekiq.logger.info("[RapidProUpdate] throttled: #{@person.id}")
+        #   return true
+        # end
+        #Sidekiq.logger.info("[RapidProUpdate] not throttled, making request: #{@person.id}")
+
+        res = HTTParty.post(url, headers: @headers, body: body.to_json, timeout: 10)
 
         Sidekiq.logger.info("[RapidProUpdate] request sent: #{@person.id} http: #{res.code}")
       rescue Net::ReadTimeout => e
@@ -94,7 +94,7 @@ class RapidproUpdateJob
       when 201 # new person in rapidpro
         Sidekiq.logger.info("[RapidProUpdate] added person to rapidpro: #{@person.id}")
         # store the sha1 of the body
-        @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
+        # @redis.setex("rapidpro_update_throttle:#{@person.id}:#{body_sha1}", 1.day.to_i, true) if Rails.env.production?
         if @person.rapidpro_uuid.blank?
           @person.rapidpro_uuid = res.parsed_response['uuid']
           @person.save # this calls the rapidpro update again, for the other attributes
