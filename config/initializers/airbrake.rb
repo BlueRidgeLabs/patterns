@@ -14,7 +14,7 @@ Airbrake.configure do |c|
   # project_key navigate to your project's General Settings and copy the values
   # from the right sidebar.
   # https://github.com/airbrake/airbrake-ruby#project_id--project_key
-  c.project_id = Rails.application.credentials.airbrake[:project_id] 
+  c.project_id = Rails.application.credentials.airbrake[:project_id]
   c.project_key = Rails.application.credentials.airbrake[:key]
 
   # Configures the root directory of your project. Expects a String or a

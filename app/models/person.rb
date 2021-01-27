@@ -129,7 +129,7 @@ class Person < ApplicationRecord
   phony_normalize :phone_number, default_country_code: Rails.application.credentials.country_code
   phony_normalize :landline, default_country_code: Rails.application.credentials.country_code
 
-  if Rails.env.production? # only reasonable in production. 
+  if Rails.env.production? # only reasonable in production.
     validates :landline, phony_plausible: true
     validates :phone_number, phony_plausible: true
   end

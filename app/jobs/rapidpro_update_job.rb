@@ -78,7 +78,7 @@ class RapidproUpdateJob
         #   Sidekiq.logger.info("[RapidProUpdate] throttled: #{@person.id}")
         #   return true
         # end
-        #Sidekiq.logger.info("[RapidProUpdate] not throttled, making request: #{@person.id}")
+        # Sidekiq.logger.info("[RapidProUpdate] not throttled, making request: #{@person.id}")
 
         res = HTTParty.post(url, headers: @headers, body: body.to_json, timeout: 10)
 
