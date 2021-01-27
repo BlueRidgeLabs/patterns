@@ -117,9 +117,7 @@ gem 'httparty'
 # Use gsm_encoder to help text messages send correctly
 gem 'gsm_encoder'
 
-# Switching to sidekiq: async, threaded, less memory,
-# more performance. Important for responsiveness
-# for background tasks users are waiting for.
+# not sidekiq 6 yet. need to upgrade capistrano first
 gem 'sidekiq', '~> 5.2.0'
 
 # phone number validation
