@@ -80,7 +80,7 @@ class RapidproUpdateJob
         # end
         # Sidekiq.logger.info("[RapidProUpdate] not throttled, making request: #{@person.id}")
 
-        res = HTTParty.post(url, headers: @headers, body: body.to_json, timeout: 10)
+        res = HTTParty.post(url, headers: @headers, body: body.to_json)
 
         Sidekiq.logger.info("[RapidProUpdate] request sent: #{@person.id} http: #{res.code}")
       rescue Net::ReadTimeout => e
