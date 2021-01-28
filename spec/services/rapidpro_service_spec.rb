@@ -13,7 +13,7 @@ RSpec.describe RapidproService do
       person.update(locale: 'es')
       expect(sut.language_for_person(person)).to eq('spa')
       person.update(locale: 'zh')
-      expect(sut.language_for_person(person)).to eq('chi')
+      expect(sut.language_for_person(person)).to eq('cmn')
       person.update(locale: 'DOG')
       expect(sut.language_for_person(person)).to eq('eng')
     end

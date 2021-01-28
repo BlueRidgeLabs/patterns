@@ -115,25 +115,51 @@ RSpec.describe RapidproGroupJob, type: :job do
     end
   end
 
-  context "action is update" do
+  context 'action is update' do
+    before do
+      expect(HTTParty).to receive(:get).with(
+        "#{rapidpro_base_uri}groups.json",
+        headers: rapidpro_headers
+      ).and_return(Hashie::Mash.new(
+                     parsed_response: {
+                       'results' => [{
+                         'uuid' => cart.rapidpro_uuid
+                       }],
+                       'next' => nil
+                     }
+                   ))
+    end
 
-    context "cart is empty" do
+    context 'cart is empty' do
+      it 'does nothing' do
         expect(HTTParty).not_to receive(:post)
         expect(sut).not_to receive(:perform_in)
         sut.new.perform(empty_cart.id, 'update')
+      end
     end
 
-    context "cart has people without rapidpro uuids" do
+    xcontext 'cart has people without rapidpro uuids' do
       # right number of uuids, no nils
-      expect(HTTParty).to receive(:post)
-      expect
     end
 
-    context "cart is not synced with rapidpro" do
+    xcontext 'cart is not synced with rapidpro' do
       # httparty isn't called
     end
 
-    context "updates rapidpro" do
+    context 'updates rapidpro' do
+      it 'sends an http request' do
+        expect(HTTParty).to receive(:post).with(
+          "#{rapidpro_base_uri}contact_actions.json",
+          headers: rapidpro_headers,
+          body: {
+            contacts: cart.people.map(&:rapidpro_uuid).compact,
+            action: 'add',
+            group: cart.rapidpro_uuid
+          }.to_json
+        ).and_return(Hashie::Mash.new(code:200,parsed_response:{results:true}))
+        expect(sut).not_to receive(:perform_in)
+        sut.new.perform(cart.id, 'update')
+      end
     end
   end
 

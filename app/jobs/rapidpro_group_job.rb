@@ -86,7 +86,7 @@ class RapidproGroupJob
     return unless @cart.rapidpro_sync
     return unless find_group
 
-    url = "#{base_url}contact_actions.json"
+    url = "#{@base_url}contact_actions.json"
     people_uuids = @cart.people.map(&:rapidpro_uuid).compact
     if people_uuids.size >= 1
       body = {
@@ -94,7 +94,7 @@ class RapidproGroupJob
         action: 'add',
         group: @cart.rapidpro_uuid
       }
-      res = HTTParty.delete(url, body: body, headers: @headers)
+      res = HTTParty.post(url, body: body.to_json, headers: @headers)
       case res.code
       when 200, 201, 202, 204
         true
