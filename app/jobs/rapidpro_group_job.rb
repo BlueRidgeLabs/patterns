@@ -26,6 +26,8 @@ class RapidproGroupJob
       create
     when 'delete'
       delete
+    when 'update'
+      update
     end
   end
 
@@ -77,6 +79,31 @@ class RapidproGroupJob
       RapidproGroupJob.perform_in(retry_delay, @cart.id, 'delete') # re-queue job
     else
       raise "delete error:#{@cart.id}, code: #{res.code}"
+    end
+  end
+
+  def update
+    return unless @cart.rapidpro_sync
+    return unless find_group
+
+    url = "#{base_url}contact_actions.json"
+    people_uuids = @cart.people.map(&:rapidpro_uuid).compact
+    if people_uuids.size >= 1
+      body = {
+        contacts: people_uuids,
+        action: 'add',
+        group: @cart.rapidpro_uuid
+      }
+      res = HTTParty.delete(url, body: body, headers: @headers)
+      case res.code
+      when 200, 201, 202, 204
+        true
+      when 429
+        retry_delay = res.headers['retry-after'].to_i + 5
+        RapidproGroupJob.perform_in(retry_delay, @cart.id, 'update') # re-queue job
+      when 500, 505, 401, 404
+        raise "delete error:#{@cart.id}, code: #{res.code}"
+      end
     end
   end
 

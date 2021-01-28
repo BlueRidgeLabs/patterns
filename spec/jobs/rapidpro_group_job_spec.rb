@@ -21,6 +21,8 @@ RSpec.describe RapidproGroupJob, type: :job do
     cart
   end
 
+  let(:empty_cart) { FactoryBot.create(:cart, rapidpro_uuid: SecureRandom.uuid, rapidpro_sync: true) }
+
   context "action is 'create'" do
     context 'rapidpro sync false' do
       before { cart.update(rapidpro_sync: false) }
@@ -110,6 +112,28 @@ RSpec.describe RapidproGroupJob, type: :job do
         sut.new.perform(cart.id, 'create')
         expect(cart.reload.rapidpro_uuid).to eq('newrapidprouuid')
       end
+    end
+  end
+
+  context "action is update" do
+
+    context "cart is empty" do
+        expect(HTTParty).not_to receive(:post)
+        expect(sut).not_to receive(:perform_in)
+        sut.new.perform(empty_cart.id, 'update')
+    end
+
+    context "cart has people without rapidpro uuids" do
+      # right number of uuids, no nils
+      expect(HTTParty).to receive(:post)
+      expect
+    end
+
+    context "cart is not synced with rapidpro" do
+      # httparty isn't called
+    end
+
+    context "updates rapidpro" do
     end
   end
 
