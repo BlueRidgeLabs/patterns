@@ -9,7 +9,7 @@ class CartController < ApplicationController
   def show
     current_user.current_cart = @cart
 
-    @people = @cart.people
+    @people = @cart.people.paginate(page: params[:page])
     @users = @cart.users
     @comment = Comment.new commentable: @cart
     @selectable_users = User.approved.where.not(id: @users.pluck(:id))

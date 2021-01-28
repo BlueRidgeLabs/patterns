@@ -97,7 +97,12 @@
   </div>
   <div class='col-lg'>
     <div class='input-group mb-3'>
-      <input id='cart-typeahead' class="form-control" aria-label="people" type="text" placeholder="People Search" >  
+      <input id='cart-typeahead' class="form-control" aria-label="people" type="text" placeholder="Search here to add people" >  
+    </div>
+    <div class="row">
+      <div class="col-2" style="text-align:center">
+        <%= will_paginate @people, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
+      </div>
     </div>
     <table class="table table-striped">
       <thead>
@@ -115,5 +120,9 @@
       </tbody>
     </table>
   </div>
-
+  <div class="row">
+    <div class="col-2" style="text-align:center">
+      <%= will_paginate @people, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
+    </div>
+  </div>
 </div>
