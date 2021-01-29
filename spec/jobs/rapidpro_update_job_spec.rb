@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe RapidproUpdateJob, type: :job do
-  let(:sut) { described_class }
+  let(:sut) { RapidproUpdateJob }
   let(:person) { FactoryBot.create(:person, :rapidpro_syncable) }
   let(:cart) { FactoryBot.create(:cart, :rapidpro) }
   let(:action) { sut.new.perform(person.id) }
