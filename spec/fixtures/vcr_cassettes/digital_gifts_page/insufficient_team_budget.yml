@@ -180,4 +180,74 @@ http_interactions:
       encoding: UTF-8
       string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":460000}}]}'
   recorded_at: Thu, 07 Jan 2021 21:12:21 GMT
+- request:
+    method: get
+    uri: https://testflight.tremendous.com/api/v2/funding_sources
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer superfake
+  response:
+    status:
+      code: 500
+      message: Internal Server Error
+    headers:
+      Date:
+      - Fri, 29 Jan 2021 22:38:17 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cf_bm=72b7bf6a15bf59c8b8e231612177fda6ad21b1a6-1611959897-1800-AeOGnr0IG2t3Jxk8zdpu8OcaD0VgZQk1iBNzh1NqTvFZiRvxIRjMLjXpKqFM6suHA+Pxyo8DzUIjWX7TMkO4cM4=;
+        path=/; expires=Fri, 29-Jan-21 23:08:17 GMT; domain=.tremendous.com; HttpOnly;
+        Secure
+      - __cfduid=db65ee0c5faa805522ad6e15b36377bb61611959897; expires=Sun, 28-Feb-21
+        22:38:17 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Request-Id:
+      - a9fd7983-8076-48f3-a5f8-76ef5791632d
+      X-Runtime:
+      - '0.059833'
+      Strict-Transport-Security:
+      - max-age=31536000
+      Via:
+      - 1.1 vegur
+      Cf-Cache-Status:
+      - DYNAMIC
+      Cf-Request-Id:
+      - 07f1e5242a00003db588056000000001
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 6196714d081f3db5-EWR
+    body:
+      encoding: UTF-8
+      string: "<!DOCTYPE html>\n<html xmlns:tremendous='http://www.tremendous.com/ns#'>\n<head
+        prefix='og: http://ogp.me/ns# tremendous: http://ogp.me/ns/apps/tremendous#'>\n<script
+        type=\"text/javascript\">var _sf_startpt=(new Date()).getTime()</script>\n<link
+        rel=\"stylesheet\" media=\"all\" href=\"https://testflight.tremendous.com/assets/application-d6d5a6b44bd0e98ebdcf73bbac1767d14367a5b0085efd46669ecded55b33f58.css\"
+        />\n<title>\nApplication Error | Tremendous\n</title>\n<link href='/favicon.png'
+        rel='shortcut icon'>\n<script async src='/cdn-cgi/bm/cv/669835187/api.js'></script></head>\n\n\n\n<body>\n
+        \ <div style=\"padding: 20px\">\n    <h1 style=\"font-size:50px;\">Issue with
+        your request</h1>\n    <p>\n    \tThis is very likely a temporary error and
+        we would suggest you retry this action again within the next 30 minutes.  If
+        you were in the middle of something critical please contact us at <a href=\"/cdn-cgi/l/email-protection#523a373e22122620373f373c363d27217c313d3f\"><span
+        class=\"__cf_email__\" data-cfemail=\"6a020f061a2a1e180f070f040e051f1944090507\">[email&#160;protected]</span></a>.
+        If this problem persists beyond 30 minutes, please also contact our team.\n
+        \   </p>\n    <p>\n      The Tremendous Team\n    </p>\n  </div>\n<script
+        data-cfasync=\"false\" src=\"/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js\"></script><script
+        type=\"text/javascript\">(function(){window['__CF$cv$params']={r:'6196714d081f3db5',m:'d9cab2042766bbcf3f8b132ff605a0dbcaf08de0-1611959897-1800-AYT84CRNtDu3hMe7uD7NBOi66Z6HdrvWtzKrUCypQACYkuLN7DnQFWUKJ2V2y9R8cLIiBD5JgoODyVnuF86fn6DvM2AxtA57ruUZhEhoDe7oaqVB2nUz7izx/qFq7eJpJs1Cfvos30Xu8aLolKUOvCg=',s:[0xa4950f3586,0xa329a9c8e4],}})();</script></html>\n"
+  recorded_at: Thu, 04 Feb 2021 23:38:07 GMT
 recorded_with: VCR 6.0.0
