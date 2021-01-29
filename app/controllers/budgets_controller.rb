@@ -7,6 +7,14 @@ class BudgetsController < ApplicationController
   # GET /budgets.json
   def index
     @budgets = Budget.all
+
+    res = DigitalGift.current_budget
+    case res
+    when nil
+      @current_giftrocket_budget = "Unknown"
+    else
+      @current_giftrocket_budget = res.to_s
+    end
   end
 
   # GET /budgets/1

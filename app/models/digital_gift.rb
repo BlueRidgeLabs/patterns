@@ -67,8 +67,12 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.current_budget
-    res = DigitalGift.balance_funding_source['meta']['available_cents'] / 100
-    res.to_money
+    begin
+      res = DigitalGift.balance_funding_source['meta']['available_cents'] / 100
+      res.to_money
+    rescue JSON::ParserError => e
+      nil
+    end
   end
 
   def self.orders
@@ -97,7 +101,7 @@ class DigitalGift < ApplicationRecord
     # DELIVERED                       receipt confirmed (Everytime, this)
     # I assume REDEEMED is a status?
 
-    fetch_gift.status
+    fetch_gift['delivery']['status']
   end
 
   # is this really how I want to do it?
