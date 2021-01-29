@@ -101,7 +101,7 @@ class RapidproUpdateJob
         end
         true
       when 429 # throttled
-        
+
         # Sidekiq.logger.info("[RapidProUpdate] throttled. id: #{id}, Retry-after: #{res.headers['retry-after']}")
         retry_delay = res.headers['retry-after'].to_i + 5
         RapidproUpdateJob.perform_in(retry_delay, id) # re-queue job

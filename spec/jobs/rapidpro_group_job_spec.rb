@@ -156,7 +156,7 @@ RSpec.describe RapidproGroupJob, type: :job do
             action: 'add',
             group: cart.rapidpro_uuid
           }.to_json
-        ).and_return(Hashie::Mash.new(code:200,parsed_response:{results:true}))
+        ).and_return(Hashie::Mash.new(code: 200, parsed_response: { results: true }))
         expect(sut).not_to receive(:perform_in)
         sut.new.perform(cart.id, 'update')
       end

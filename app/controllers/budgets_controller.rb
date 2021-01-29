@@ -9,12 +9,12 @@ class BudgetsController < ApplicationController
     @budgets = Budget.all
 
     res = DigitalGift.current_budget
-    case res
-    when nil
-      @current_giftrocket_budget = "Unknown"
-    else
-      @current_giftrocket_budget = res.to_s
-    end
+    @current_giftrocket_budget = case res
+                                 when nil
+                                   'Unknown'
+                                 else
+                                   res.to_s
+                                 end
   end
 
   # GET /budgets/1

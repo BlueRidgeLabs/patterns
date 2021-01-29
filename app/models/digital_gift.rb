@@ -67,12 +67,10 @@ class DigitalGift < ApplicationRecord
   end
 
   def self.current_budget
-    begin
-      res = DigitalGift.balance_funding_source['meta']['available_cents'] / 100
-      res.to_money
-    rescue JSON::ParserError => e
-      nil
-    end
+    res = DigitalGift.balance_funding_source['meta']['available_cents'] / 100
+    res.to_money
+  rescue JSON::ParserError => e
+    nil
   end
 
   def self.orders
