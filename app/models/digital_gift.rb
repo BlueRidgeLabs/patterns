@@ -62,6 +62,17 @@ class DigitalGift < ApplicationRecord
     Tremendous::Client.funding_sources.list
   end
 
+  def self.product_list
+    res = Redis.current.get 'digital_gift:product_list'
+    if res.nil?
+      list = Tremendous::Client.products.list.map { |r| r['id'] }
+      Redis.current.setex('digital_gift:product_list', 30.days, list.to_json)
+    else
+      list = JSON.parse(res)
+    end
+    list
+  end
+
   def self.balance_funding_source
     DigitalGift.funding_sources.find { |fs| fs['method'] == 'balance' }
   end
@@ -179,6 +190,7 @@ class DigitalGift < ApplicationRecord
         denomination: amount.to_s,
         currency_code: 'USD'
       },
+      products: DigitalGift.product_list,
       campaign_id: campaign_id,
       recipient: {
         name: person.full_name

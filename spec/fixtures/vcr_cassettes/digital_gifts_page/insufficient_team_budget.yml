@@ -15,7 +15,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 07 Jan 2021 21:12:27 GMT
+      - Sat, 30 Jan 2021 00:43:35 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
@@ -23,11 +23,11 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cf_bm=ef16626fa807589cf30e1cbf521b6f46f2542788-1610053947-1800-ATOX51VAPb5uEMHjbZSHryvhB2WuQiP4u1eYVpKP/FlLkRdCPc9tP7H+uHPZthGufZZyn5chvAhBE7yQcUw0F3g=;
-        path=/; expires=Thu, 07-Jan-21 21:42:27 GMT; domain=.tremendous.com; HttpOnly;
+      - __cf_bm=e2bfd1368c4699fbe7b168a5c87dc308a50309a2-1611967415-1800-ASBnh9PTitR2GUCeSa7YJIzs/yWD71CFyDxKs7TXmFCKmlKF50t2UfaSfLQi+e/EZuKdECoLBsJh5d0D+fseUiE=;
+        path=/; expires=Sat, 30-Jan-21 01:13:35 GMT; domain=.tremendous.com; HttpOnly;
         Secure
-      - __cfduid=d5486fb5a647971e61c82c0d1e4378ccd1610053947; expires=Sat, 06-Feb-21
-        21:12:27 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
+      - __cfduid=d83858f774af540976d51d5ab716b5b9e1611967415; expires=Mon, 01-Mar-21
+        00:43:35 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
       X-Frame-Options:
       - SAMEORIGIN
       X-Xss-Protection:
@@ -35,13 +35,13 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       Etag:
-      - W/"857a2d98ca67600dacada06948ce9b9a"
+      - W/"cdb0ee44e0cab77b158fe7d43d6aa866"
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 0fb5cd34-7084-43fb-9684-38bd92fc13a0
+      - 2e803325-e7f7-4168-ab9f-e11eb90f02fb
       X-Runtime:
-      - '0.406859'
+      - '0.051468'
       Strict-Transport-Security:
       - max-age=31536000
       Via:
@@ -49,17 +49,17 @@ http_interactions:
       Cf-Cache-Status:
       - DYNAMIC
       Cf-Request-Id:
-      - '07804aa6820000e8391badb000000001'
+      - 07f257db2800003de5f021e000000001
       Expect-Ct:
       - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
       Server:
       - cloudflare
       Cf-Ray:
-      - 60e0ad50cd08e839-EWR
+      - 619728d83cb33de5-EWR
     body:
       encoding: UTF-8
-      string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":460000}}]}'
-  recorded_at: Thu, 07 Jan 2021 21:12:21 GMT
+      string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":455000}}]}'
+  recorded_at: Sat, 30 Jan 2021 00:43:26 GMT
 - request:
     method: get
     uri: https://testflight.tremendous.com/api/v2/funding_sources
@@ -75,7 +75,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 07 Jan 2021 21:12:27 GMT
+      - Sat, 30 Jan 2021 00:43:35 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
@@ -83,11 +83,11 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cf_bm=977453acc3173e17d883726b78b5892dfd6d802c-1610053947-1800-ASTXIxFt92fCHhCFpeoPZU8Xxz55INKe+vBkTZ8l3vGi3UktsYJUqdXKQvYQq1dGFq/kaXZwoflJW5bn/tU1vbs=;
-        path=/; expires=Thu, 07-Jan-21 21:42:27 GMT; domain=.tremendous.com; HttpOnly;
+      - __cf_bm=6e59db1356e99116ee91d32e1d61ca4ee5872308-1611967415-1800-ASH5nlcRErTkbnmb2FNyBXWNv/7H5MatlpIJ7lvVZf1Zt5TB1YSUTdGGgjfAArTEEFYa7y/pjT3smifj8XP7oVE=;
+        path=/; expires=Sat, 30-Jan-21 01:13:35 GMT; domain=.tremendous.com; HttpOnly;
         Secure
-      - __cfduid=de30e6c3b31d09a2793e8a206f1cc63681610053947; expires=Sat, 06-Feb-21
-        21:12:27 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
+      - __cfduid=d2a5c51ce61709cab8e4c7523f630971f1611967415; expires=Mon, 01-Mar-21
+        00:43:35 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
       X-Frame-Options:
       - SAMEORIGIN
       X-Xss-Protection:
@@ -95,13 +95,13 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       Etag:
-      - W/"857a2d98ca67600dacada06948ce9b9a"
+      - W/"cdb0ee44e0cab77b158fe7d43d6aa866"
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 80edad4b-ff53-4604-88b3-0412e3c25f68
+      - fc1f69f6-0352-4566-ad32-86f5502fe132
       X-Runtime:
-      - '0.133353'
+      - '0.046857'
       Strict-Transport-Security:
       - max-age=31536000
       Via:
@@ -109,17 +109,17 @@ http_interactions:
       Cf-Cache-Status:
       - DYNAMIC
       Cf-Request-Id:
-      - '07804aa95a00003dd9f9b47000000001'
+      - 07f257dbe10000efc4b8289000000001
       Expect-Ct:
       - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
       Server:
       - cloudflare
       Cf-Ray:
-      - 60e0ad555f183dd9-EWR
+      - 619728d968e7efc4-EWR
     body:
       encoding: UTF-8
-      string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":460000}}]}'
-  recorded_at: Thu, 07 Jan 2021 21:12:21 GMT
+      string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":455000}}]}'
+  recorded_at: Sat, 30 Jan 2021 00:43:26 GMT
 - request:
     method: get
     uri: https://testflight.tremendous.com/api/v2/funding_sources
@@ -135,7 +135,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 07 Jan 2021 21:12:28 GMT
+      - Sat, 30 Jan 2021 00:43:35 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
@@ -143,11 +143,11 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cf_bm=e12306a12448abf30963a760723c42ff9821018e-1610053948-1800-AWoj+Q7LG13Z59aNm8gG5y3kI0f1W83QvJ5fvr7tVEiuWpgWfxcCv9ksBBpHKUHeqPVF14CayOydsqxRjttK1GE=;
-        path=/; expires=Thu, 07-Jan-21 21:42:28 GMT; domain=.tremendous.com; HttpOnly;
+      - __cf_bm=14a2b604741bf70e49becad3627f6d0c8a1e1dea-1611967415-1800-ARmrtdQ2c9pnnISrORhMv/9t7gyYSjPGHijBzdNZp2nmJOXGWTvS2qkf2to6EFDB2N8DsmJSQisHrnop+u58IX8=;
+        path=/; expires=Sat, 30-Jan-21 01:13:35 GMT; domain=.tremendous.com; HttpOnly;
         Secure
-      - __cfduid=dfb49ca056de805b38d1a006f5d333c4f1610053948; expires=Sat, 06-Feb-21
-        21:12:28 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
+      - __cfduid=d2e06e91f2bef60018483abc39a87fcd01611967415; expires=Mon, 01-Mar-21
+        00:43:35 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
       X-Frame-Options:
       - SAMEORIGIN
       X-Xss-Protection:
@@ -155,13 +155,13 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       Etag:
-      - W/"857a2d98ca67600dacada06948ce9b9a"
+      - W/"cdb0ee44e0cab77b158fe7d43d6aa866"
       Cache-Control:
       - max-age=0, private, must-revalidate
       X-Request-Id:
-      - 3b74f43a-8a8a-42fc-a351-d80b0d1f3a7b
+      - e6d42c3a-0f0b-4cff-a80b-898661498fe4
       X-Runtime:
-      - '0.183428'
+      - '0.050354'
       Strict-Transport-Security:
       - max-age=31536000
       Via:
@@ -169,17 +169,17 @@ http_interactions:
       Cf-Cache-Status:
       - DYNAMIC
       Cf-Request-Id:
-      - '07804aaa9200003e5849af0000000001'
+      - 07f257dc9700009216378a0000000001
       Expect-Ct:
       - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
       Server:
       - cloudflare
       Cf-Ray:
-      - 60e0ad575b0b3e58-EWR
+      - 619728da8de09216-EWR
     body:
       encoding: UTF-8
-      string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":460000}}]}'
-  recorded_at: Thu, 07 Jan 2021 21:12:21 GMT
+      string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":455000}}]}'
+  recorded_at: Sat, 30 Jan 2021 00:43:26 GMT
 - request:
     method: get
     uri: https://testflight.tremendous.com/api/v2/funding_sources
@@ -188,36 +188,40 @@ http_interactions:
       string: ''
     headers:
       Authorization:
-      - Bearer superfake
+      - Bearer 1f93c4f8b31fa850d8c13f2871c6abc1f65b7db63d988d21dccb95376cc9d0f2
   response:
     status:
-      code: 500
-      message: Internal Server Error
+      code: 200
+      message: OK
     headers:
       Date:
-      - Fri, 29 Jan 2021 22:38:17 GMT
+      - Sat, 30 Jan 2021 00:43:35 GMT
       Content-Type:
-      - text/html; charset=utf-8
+      - application/json; charset=utf-8
       Transfer-Encoding:
       - chunked
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cf_bm=72b7bf6a15bf59c8b8e231612177fda6ad21b1a6-1611959897-1800-AeOGnr0IG2t3Jxk8zdpu8OcaD0VgZQk1iBNzh1NqTvFZiRvxIRjMLjXpKqFM6suHA+Pxyo8DzUIjWX7TMkO4cM4=;
-        path=/; expires=Fri, 29-Jan-21 23:08:17 GMT; domain=.tremendous.com; HttpOnly;
+      - __cf_bm=6c6ad174f935a0876c9cb0290eb886bb611b1122-1611967415-1800-Ada2yTbMtoY1AlCxob46vk5iTwTASTUpySqXxJBPV2a6JnanVIo2XHvB/kNSUnFsnNlDtDz3fEA7ZVgx4Y3ImHA=;
+        path=/; expires=Sat, 30-Jan-21 01:13:35 GMT; domain=.tremendous.com; HttpOnly;
         Secure
-      - __cfduid=db65ee0c5faa805522ad6e15b36377bb61611959897; expires=Sun, 28-Feb-21
-        22:38:17 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
+      - __cfduid=db1e5f3e7ff3ed5701b1ce98897d50baf1611967415; expires=Mon, 01-Mar-21
+        00:43:35 GMT; path=/; domain=.tremendous.com; HttpOnly; SameSite=Lax
       X-Frame-Options:
       - SAMEORIGIN
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
+      Etag:
+      - W/"cdb0ee44e0cab77b158fe7d43d6aa866"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
       X-Request-Id:
-      - a9fd7983-8076-48f3-a5f8-76ef5791632d
+      - f71083cc-7910-43b0-8546-10f13b518094
       X-Runtime:
-      - '0.059833'
+      - '0.049000'
       Strict-Transport-Security:
       - max-age=31536000
       Via:
@@ -225,29 +229,15 @@ http_interactions:
       Cf-Cache-Status:
       - DYNAMIC
       Cf-Request-Id:
-      - 07f1e5242a00003db588056000000001
+      - 07f257de0b00003dae0ca39000000001
       Expect-Ct:
       - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
       Server:
       - cloudflare
       Cf-Ray:
-      - 6196714d081f3db5-EWR
+      - 619728dcdfff3dae-EWR
     body:
       encoding: UTF-8
-      string: "<!DOCTYPE html>\n<html xmlns:tremendous='http://www.tremendous.com/ns#'>\n<head
-        prefix='og: http://ogp.me/ns# tremendous: http://ogp.me/ns/apps/tremendous#'>\n<script
-        type=\"text/javascript\">var _sf_startpt=(new Date()).getTime()</script>\n<link
-        rel=\"stylesheet\" media=\"all\" href=\"https://testflight.tremendous.com/assets/application-d6d5a6b44bd0e98ebdcf73bbac1767d14367a5b0085efd46669ecded55b33f58.css\"
-        />\n<title>\nApplication Error | Tremendous\n</title>\n<link href='/favicon.png'
-        rel='shortcut icon'>\n<script async src='/cdn-cgi/bm/cv/669835187/api.js'></script></head>\n\n\n\n<body>\n
-        \ <div style=\"padding: 20px\">\n    <h1 style=\"font-size:50px;\">Issue with
-        your request</h1>\n    <p>\n    \tThis is very likely a temporary error and
-        we would suggest you retry this action again within the next 30 minutes.  If
-        you were in the middle of something critical please contact us at <a href=\"/cdn-cgi/l/email-protection#523a373e22122620373f373c363d27217c313d3f\"><span
-        class=\"__cf_email__\" data-cfemail=\"6a020f061a2a1e180f070f040e051f1944090507\">[email&#160;protected]</span></a>.
-        If this problem persists beyond 30 minutes, please also contact our team.\n
-        \   </p>\n    <p>\n      The Tremendous Team\n    </p>\n  </div>\n<script
-        data-cfasync=\"false\" src=\"/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js\"></script><script
-        type=\"text/javascript\">(function(){window['__CF$cv$params']={r:'6196714d081f3db5',m:'d9cab2042766bbcf3f8b132ff605a0dbcaf08de0-1611959897-1800-AYT84CRNtDu3hMe7uD7NBOi66Z6HdrvWtzKrUCypQACYkuLN7DnQFWUKJ2V2y9R8cLIiBD5JgoODyVnuF86fn6DvM2AxtA57ruUZhEhoDe7oaqVB2nUz7izx/qFq7eJpJs1Cfvos30Xu8aLolKUOvCg=',s:[0xa4950f3586,0xa329a9c8e4],}})();</script></html>\n"
-  recorded_at: Thu, 04 Feb 2021 23:38:07 GMT
+      string: '{"funding_sources":[{"method":"balance","id":"7HTMLN7EMN1T","meta":{"available_cents":455000}}]}'
+  recorded_at: Sat, 30 Jan 2021 00:43:26 GMT
 recorded_with: VCR 6.0.0

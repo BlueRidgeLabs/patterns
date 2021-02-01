@@ -6,8 +6,8 @@
 development:
   adapter: mysql2
   database: development
-  encoding: utf8
-  collation: utf8_general_ci
+  encoding: utf8mb4
+  collation: utf8mb4_bin
   pool: 5
   timeout: 5000
   host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
@@ -21,8 +21,8 @@ test:
   adapter: mysql2
   #database: patterns_test<%= ENV['TEST_ENV_NUMBER'] %>
   database: test
-  encoding: utf8
-  collation: utf8_general_ci
+  encoding: utf8mb4
+  collation: utf8mb4_bin
   pool: 5
   timeout: 5000
   host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
@@ -35,8 +35,8 @@ staging:
   host: <%= ENV['MYSQL_HOST'] || 'localhost' %>
   username: <%= ENV['MYSQL_USER'] || 'logan' %>
   password: <%= ENV['MYSQL_PWD'] || '' %>
-  encoding: utf8
-  collation: utf8_general_ci
+  encoding: utf8mb4
+  collation: utf8mb4_bin
   pool: 5
   timeout: 5000
 
@@ -48,6 +48,6 @@ production:
   username: <%= ENV['MYSQL_USER'] || 'logan' %>
   password: <%= ENV['MYSQL_PWD'] || '' %>
   pool: <%= ENV['RAILS_MAX_THREADS'] || 25 %>
-  encoding: utf8
-  collation: utf8_general_ci
+  encoding: utf8mb4
+  collation: utf8mb4_bin
   timeout: 5000
