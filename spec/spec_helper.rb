@@ -17,6 +17,7 @@
 require 'coveralls'
 Coveralls.wear_merged!('rails')
 
+require 'rspec/retry' # for js tests, and finicky tests
 require 'devise'
 require 'factory_bot_rails'
 require 'webdrivers'
@@ -61,6 +62,10 @@ RSpec.configure do |config|
     # a real object. This is generally recommended, and will default to
     # `true` in RSpec 4.
     mocks.verify_partial_doubles = true
+  end
+
+  config.around :each, :js do |ex|
+    ex.run_with_retry retry: 3
   end
 
   config.example_status_persistence_file_path = 'tmp/rspec_status.txt'
