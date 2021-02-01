@@ -95,7 +95,7 @@ class Person < ApplicationRecord
   has_many :rewards
   accepts_nested_attributes_for :rewards, reject_if: :all_blank
   attr_accessor :rewards_attributes
-  attr_reader :consent_form_url
+  attr_reader :consent_url
 
   has_many :invitations
   has_many :research_sessions, through: :invitations
