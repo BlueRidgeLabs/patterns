@@ -7,7 +7,7 @@ require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
-
+require 'rspec/retry' # for js tests, and finicky tests
 # Add additional requires below this line. Rails is not loaded until this point!
 
 require 'shoulda/matchers'
@@ -92,4 +92,7 @@ RSpec.configure do |config|
   config.profile_examples = true
   config.example_status_persistence_file_path = 'tmp/rspec_status.txt'
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.around :each, :js do |ex|
+    ex.run_with_retry retry: 3
+  end
 end

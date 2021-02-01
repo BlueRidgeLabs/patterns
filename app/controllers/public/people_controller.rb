@@ -18,9 +18,9 @@ class Public::PeopleController < ApplicationController
   end
 
   def show
+    # should probably define a 'to_json' method on person.
     attributes = @person.attributes
-    attributes['tag_list'] = @person.tag_list.to_s
-    attributes['consent_url'] = root_url + "consent/#{@person.token}"
+    attributes['tag_list'] = @person.tag_list
     render json: attributes.to_json
   end
 

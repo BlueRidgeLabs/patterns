@@ -95,6 +95,7 @@ class Person < ApplicationRecord
   has_many :rewards
   accepts_nested_attributes_for :rewards, reject_if: :all_blank
   attr_accessor :rewards_attributes
+  attr_reader :consent_form_url
 
   has_many :invitations
   has_many :research_sessions, through: :invitations
@@ -353,7 +354,11 @@ class Person < ApplicationRecord
   #     end
   #   end
   # end
-
+  def consent_url
+    # this feels broken, using config.hosts this way.
+    Rails.configuration.hosts[0] + "/consent/#{@person.token}"
+  end
+  
   def self.csv_headers
     Person.column_names + ['tags']
   end

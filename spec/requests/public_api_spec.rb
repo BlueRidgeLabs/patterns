@@ -70,7 +70,7 @@ describe 'public_api', type: :request do
     end
 
     # need to test attributes, not equality
-    xit 'gets a person from the api with rapidpro uuid' do
+    it 'gets a person from the api with rapidpro uuid' do
       get '/api/show.json',
           params: { rapidpro_uuid: person.rapidpro_uuid },
           headers: headers
@@ -81,7 +81,7 @@ describe 'public_api', type: :request do
     end
     # need to test attributes, not equality
 
-    xit 'gets a person from the api with token' do
+    it 'gets a person from the api with token' do
       get '/api/show.json',
           params: { token: person.token },
           headers: headers
