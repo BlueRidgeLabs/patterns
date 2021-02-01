@@ -81,7 +81,7 @@ gem 'jbuilder'
 gem 'bcrypt'
 
 # bootstrapping
-gem 'bootstrap', '~> 4.4.1'
+gem 'bootstrap', '~> 4.4.0'
 gem 'bootstrap4-datetime-picker-rails'
 gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.1'
 gem 'glyphicons-rails'
@@ -147,7 +147,7 @@ gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'
 
 # cron jobs for backups and sending reminders
 gem 'whenever', require: false
-# gem 'backup', require: false
+gem 'backup', require: false
 
 # handling emoji!
 gem 'emoji'
@@ -236,7 +236,7 @@ group :test do
 
   gem 'webmock'
   # in memory redis for testing only
-  gem 'mock_redis'
+  # gem 'mock_redis'
   gem 'rspec-sidekiq'
   gem 'shoulda'
   gem 'vcr'

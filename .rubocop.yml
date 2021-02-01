@@ -9,3 +9,13 @@ AllCops:
   TargetRubyVersion: 2.7
   DisabledByDefault: false
   NewCops: enable
+  UseCache: enable
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Severity: warning
+
+Layout/LineLength: 
+  Severity: warning

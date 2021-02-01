@@ -1,0 +1,27 @@
+name: Autolinting
+
+on: [push, pull_request]
+
+jobs:
+  auto-lint:
+    environment: test
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+    - name: bundler-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-
+    - name: Install gems
+      run:  bundle config path vendor/bundle && bundle install -j 4
+    - name: Git Auto Commit
+      uses: stefanzweifel/git-auto-commit-action@v4.8.0
+    - name: Run rubocop
+      run: bundle exec rubocop -a

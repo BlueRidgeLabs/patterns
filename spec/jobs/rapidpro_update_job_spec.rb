@@ -170,7 +170,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
     end
   end
 
-  context 'rapidpro responds with 502' do
+  context 'rapidpro responds with 502', retry: 3 do
     let(:rapidpro_res) do
       Hashie::Mash.new(
         code: 502

@@ -311,7 +311,7 @@ class Person < ApplicationRecord
     end
   end
 
-  def get_rapidpro
+  def get_rapidpro # rubocop:todo Naming/AccessorMethodName
     headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
     url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/contacts.json?uuid=#{rapidpro_uuid}"
     HTTParty.get(url, headers: headers).parsed_response['results']
@@ -354,11 +354,11 @@ class Person < ApplicationRecord
   #     end
   #   end
   # end
-  def consent_url
+  def consent_url # rubocop:todo Lint/DuplicateMethods
     # this feels broken, using config.hosts this way.
     Rails.configuration.hosts[0] + "/consent/#{@person.token}"
   end
-  
+
   def self.csv_headers
     Person.column_names + ['tags']
   end

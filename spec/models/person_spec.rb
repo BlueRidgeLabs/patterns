@@ -57,6 +57,7 @@ require 'rails_helper'
 describe Person do
   subject { FactoryBot.build(:person) }
 
+  let(:user) { FactoryBot.create(:user) }
   let(:now) { DateTime.current }
   let(:more_than_a_year_ago) { now - 1.year - 1.day }
   let(:less_than_a_year_ago) { now - 1.year + 1.day }
@@ -153,7 +154,7 @@ describe Person do
       context 'participation_level not changed' do
         it 'returns nil and does nothing' do
           old_level = person.participation_level
-          expect(person).to receive(:calc_participation_level).and_return(old_level)
+          allow(person).to receive(:calc_participation_level).and_return(old_level)
           expect(action).to be_nil
           expect(person.reload.participation_level).to eq(old_level)
         end
@@ -162,7 +163,7 @@ describe Person do
       context 'participation_level has changed' do
         it 'updates participation_level, updates tag list, updates placement in cart, and returns hash with id, old level, and new level' do
           Person::PARTICIPATION_LEVELS.each do |pl|
-            FactoryBot.create(:cart, name: pl)
+            FactoryBot.create(:cart, name: pl, user: user)
           end
           new_cart = Cart.find_by(name: Person::PARTICIPATION_LEVEL_NEW)
           ambassador_cart = Cart.find_by(name: Person::PARTICIPATION_LEVEL_AMBASSADOR)
@@ -170,7 +171,7 @@ describe Person do
           person.update(tag_list: Person::PARTICIPATION_LEVEL_NEW, participation_level: Person::PARTICIPATION_LEVEL_NEW)
 
           new_level = Person::PARTICIPATION_LEVEL_AMBASSADOR
-          expect(person).to receive(:calc_participation_level).and_return(new_level)
+          allow(person).to receive(:calc_participation_level).and_return(new_level)
 
           expect(action).to eq(pid: person.id, old: Person::PARTICIPATION_LEVEL_NEW, new: Person::PARTICIPATION_LEVEL_AMBASSADOR)
           expect(person.reload.participation_level).to eq(Person::PARTICIPATION_LEVEL_AMBASSADOR)

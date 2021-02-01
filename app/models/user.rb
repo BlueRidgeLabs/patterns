@@ -124,7 +124,7 @@ class User < ApplicationRecord
     ).deliver_later
   end
 
-  def create_cart(cart_name = nil, assign = true)
+  def create_cart(cart_name = nil, assign = true) # rubocop:todo Style/OptionalBooleanParameter
     cart_name = "#{name}-pool" if cart_name.nil?
     cart = Cart.create(name: cart_name, user_id: id)
     cart.assign_current_cart(id) if assign # default assign

@@ -8,8 +8,8 @@ Patterns::Application.configure do
 
   # Code is not reloaded between requests.
   config.cache_classes = true
-  config.hosts << ENV['PRODUCTION_SERVER'] 
-  
+  config.hosts << ENV['PRODUCTION_SERVER']
+
   config.action_mailbox.ingress = :mandrill
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both thread web servers

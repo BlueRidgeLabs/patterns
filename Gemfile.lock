@@ -112,6 +112,9 @@ GEM
       mimemagic (~> 0.3)
       nokogiri (~> 1.8, >= 1.8.2)
       rubyzip (~> 1.2, >= 1.2.1)
+    backup (3.4.0)
+      open4 (~> 1.3.0)
+      thor (>= 0.15.4, < 2)
     bcrypt (3.1.16)
     bcrypt_pbkdf (1.0.1)
     bcrypt_pbkdf (1.0.1-x86-mingw32)
@@ -345,7 +348,6 @@ GEM
       libv8 (~> 8.4.255)
     minitest (5.14.3)
     mocha (1.12.0)
-    mock_redis (0.26.0)
     moment-timezone-rails (1.0.0)
       momentjs-rails (>= 2.10.5, <= 3.0.0)
     momentjs-rails (2.20.1)
@@ -387,6 +389,7 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    open4 (1.3.4)
     orm_adapter (0.5.0)
     paper_trail (11.1.0)
       activerecord (>= 5.2)
@@ -709,11 +712,12 @@ DEPENDENCIES
   awesome_print
   aws-sdk-s3
   axlsx (~> 3.0.0.pre)
+  backup
   bcrypt
   bcrypt_pbkdf
   best_in_place (~> 3.0.1)
   bootsnap
-  bootstrap (~> 4.4.1)
+  bootstrap (~> 4.4.0)
   bootstrap4-datetime-picker-rails
   bundler-audit (>= 0.5.0)
   byebug (~> 11.0)
@@ -772,7 +776,6 @@ DEPENDENCIES
   memory_test_fix
   mini_racer
   mocha
-  mock_redis
   momentjs-rails
   money-rails
   mysql2

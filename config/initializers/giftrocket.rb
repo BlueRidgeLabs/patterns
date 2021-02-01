@@ -8,5 +8,5 @@ Tremendous::Client ||= Tremendous::Rest.new(
 )
 
 if %w[production staging].include? Rails.env
-  raise 'no tremendous webhooks created!' if Tremendous::Client.webhooks.list.empty?
+  raise 'no tremendous webhooks created!' if Tremendous::Client.webhooks.list.empty? # rubocop:todo Style/SoleNestedConditional
 end

@@ -1,31 +1,51 @@
-name: Ruby
+name: continuous-integration
 
 on: [push, pull_request]
 
 jobs:
-  services:
-    mysql:
-      image: mysql:5.7
-      env:
-        MYSQL_ROOT_PASSWORD: root
-      ports:
-      - 3306
-      options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    # How to use Redis
-    redis:
-      image: redis
-      ports:
-      - 6379/tcp
-  test:
-    runs-on: ubuntu-latest
-
+  continuous-integration:
+    environment: test
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "mysql2://root:root@127.0.0.1:3306/test"
+      REDIS_URL: "redis://localhost:6379/0"
+    runs-on: Ubuntu-20.04
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+        - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      # How to use Redis
+      redis:
+        image: redis:latest
+        ports:
+        - 6379:6379
     steps:
+    - name: Install chromedriver
+      run: sudo apt-get install chromium-chromedriver chromium-browser libmysqlclient-dev
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7
-    - name: Install dependencies
-      run: bundle install -j 4
+    # - uses: actions/cache@v2
+    #   with:
+    #     path: vendor/bundle
+    #     key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-gems-
+    - name: Install gems
+      run:  bundle config path vendor/bundle && bundle install -j 4
+    - name: setup databases
+      run: echo $DATABASE_URL && bundle exec rake db:create && bundle exec rake db:schema:load
+      env:
+        RAILS_MASTER_KEY: ${{ secrets.MASTER_KEY }}
+    - name: launch chrome
+      run: chromium --headless --disable-gpu --remote-debugging-port=9516 http://localhost & 
     - name: Run tests
+      env:
+        RAILS_MASTER_KEY: ${{ secrets.MASTER_KEY }}
       run: bundle exec rake

@@ -8,6 +8,7 @@ class RapidproUpdateJob
   # works like so, if person has no rapidpro uuid, we post with phone,
   # otherwise use uuid. this will allow changes to phone numbers.
   # additionally, it means we only need one worker.
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
   def perform(id)
     @headers = { 'Authorization' => "Token #{Rails.application.credentials.rapidpro[:token]}", 'Content-Type' => 'application/json' }
     @base_url = "https://#{Rails.application.credentials.rapidpro[:domain]}/api/v2/"
@@ -128,4 +129,5 @@ class RapidproUpdateJob
       RapidproDeleteJob.perform_async(id)
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 end

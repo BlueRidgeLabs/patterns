@@ -171,7 +171,7 @@ end
 
 d
 
-def get_db_params
+def get_db_params # rubocop:todo Naming/AccessorMethodName
   uri = URI.parse(ENV['DATABASE_URL'])
   database = "#{(uri.path || '').split('/')[1]}_#{env}"
   adapter = case uri.scheme.to_s

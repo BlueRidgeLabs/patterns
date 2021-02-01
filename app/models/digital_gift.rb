@@ -80,7 +80,7 @@ class DigitalGift < ApplicationRecord
   def self.current_budget
     res = DigitalGift.balance_funding_source['meta']['available_cents'] / 100
     res.to_money
-  rescue JSON::ParserError => e
+  rescue JSON::ParserError => e # rubocop:todo Lint/UselessAssignment
     nil
   end
 

@@ -37,7 +37,7 @@ RSpec.describe RapidproGroupJob, type: :job do
     context "rapidpro_uuid present, but group doesn't actually exist anymore" do
       it 'creates a new group on rapidpro and resets rapidpro_uuid' do
         allow_any_instance_of(sut).to receive(:find_group).and_return(false, true)
-        expect(HTTParty).to receive(:post).with(
+        expect(HTTParty).to receive(:post).with( # rubocop:todo RSpec/StubbedMock
           "#{rapidpro_base_uri}groups.json",
           headers: rapidpro_headers,
           body: { name: cart.name }.to_json
@@ -71,7 +71,7 @@ RSpec.describe RapidproGroupJob, type: :job do
 
       it 're-queues job' do
         allow_any_instance_of(sut).to receive(:find_group).and_return(true)
-        expect(HTTParty).to receive(:post).with(
+        expect(HTTParty).to receive(:post).with( # rubocop:todo RSpec/StubbedMock
           "#{rapidpro_base_uri}groups.json",
           headers: rapidpro_headers,
           body: { name: cart.name }.to_json
@@ -95,7 +95,7 @@ RSpec.describe RapidproGroupJob, type: :job do
 
       it 'creates group, and adds all people on cart, who have rapidpro uuids and a phone #, to the group' do
         allow_any_instance_of(sut).to receive(:find_group).and_return(true)
-        expect(HTTParty).to receive(:post).with(
+        expect(HTTParty).to receive(:post).with( # rubocop:todo RSpec/StubbedMock
           "#{rapidpro_base_uri}groups.json",
           headers: rapidpro_headers,
           body: { name: cart.name }.to_json
@@ -117,7 +117,7 @@ RSpec.describe RapidproGroupJob, type: :job do
 
   context 'action is update' do
     before do
-      expect(HTTParty).to receive(:get).with(
+      allow(HTTParty).to receive(:get).with(
         "#{rapidpro_base_uri}groups.json",
         headers: rapidpro_headers
       ).and_return(Hashie::Mash.new(
@@ -138,17 +138,17 @@ RSpec.describe RapidproGroupJob, type: :job do
       end
     end
 
-    xcontext 'cart has people without rapidpro uuids' do
+    xcontext 'cart has people without rapidpro uuids' do # rubocop:todo RSpec/EmptyExampleGroup
       # right number of uuids, no nils
     end
 
-    xcontext 'cart is not synced with rapidpro' do
+    xcontext 'cart is not synced with rapidpro' do # rubocop:todo RSpec/EmptyExampleGroup
       # httparty isn't called
     end
 
     context 'updates rapidpro' do
       it 'sends an http request' do
-        expect(HTTParty).to receive(:post).with(
+        expect(HTTParty).to receive(:post).with( # rubocop:todo RSpec/StubbedMock
           "#{rapidpro_base_uri}contact_actions.json",
           headers: rapidpro_headers,
           body: {
@@ -178,7 +178,7 @@ RSpec.describe RapidproGroupJob, type: :job do
       it 'raises error' do
         rapidpro_ok_res = Hashie::Mash.new(code: 666)
         rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
-        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res)
+        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res) # rubocop:todo RSpec/StubbedMock
         expect(sut).not_to receive(:perform_in)
         expect { sut.new.perform(cart.id, 'delete') }.to raise_error(RuntimeError)
       end
@@ -188,7 +188,7 @@ RSpec.describe RapidproGroupJob, type: :job do
       it 'deletes cart.rapidpro_uuidd' do
         rapidpro_ok_res = Hashie::Mash.new(code: 404)
         rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
-        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res)
+        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res) # rubocop:todo RSpec/StubbedMock
         expect(sut).not_to receive(:perform_in)
         sut.new.perform(cart.id, 'delete')
       end
@@ -199,7 +199,7 @@ RSpec.describe RapidproGroupJob, type: :job do
         retry_delay = 100
         rapidpro_429_res = Hashie::Mash.new(code: 429, headers: { 'retry-after' => retry_delay })
         rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
-        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_429_res)
+        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_429_res) # rubocop:todo RSpec/StubbedMock
         expect(sut).to receive(:perform_in).with(retry_delay + 5, cart.id, 'delete')
         sut.new.perform(cart.id, 'delete')
       end
@@ -209,7 +209,7 @@ RSpec.describe RapidproGroupJob, type: :job do
       it 'does not requeue job' do
         rapidpro_ok_res = Hashie::Mash.new(code: 204)
         rapidpro_uri = "#{rapidpro_base_uri}groups.json?uuid=#{cart.rapidpro_uuid}"
-        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res)
+        expect(HTTParty).to receive(:delete).with(rapidpro_uri, headers: rapidpro_headers).and_return(rapidpro_ok_res) # rubocop:todo RSpec/StubbedMock
         expect(sut).not_to receive(:perform_in)
         sut.new.perform(cart.id, 'delete')
       end
@@ -220,7 +220,7 @@ RSpec.describe RapidproGroupJob, type: :job do
     describe '#find_group' do
       context 'a matching group exists' do
         it 'runs through all pages until it finds a matching group' do
-          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new(
+          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new( # rubocop:todo RSpec/StubbedMock
                                                                                                                             parsed_response: {
                                                                                                                               'results' => [{
                                                                                                                                 'uuid' => 'otheruuid'
@@ -228,7 +228,7 @@ RSpec.describe RapidproGroupJob, type: :job do
                                                                                                                               'next' => 'nexturl'
                                                                                                                             }
                                                                                                                           ))
-          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new(
+          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new( # rubocop:todo RSpec/StubbedMock
                                                                                                     parsed_response: {
                                                                                                       'results' => [{
                                                                                                         'uuid' => cart.rapidpro_uuid
@@ -246,7 +246,7 @@ RSpec.describe RapidproGroupJob, type: :job do
 
       context 'a matching group does not exist' do
         it 'returns false' do
-          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new(
+          expect(HTTParty).to receive(:get).with("#{rapidpro_base_uri}groups.json", headers: rapidpro_headers).and_return(Hashie::Mash.new( # rubocop:todo RSpec/StubbedMock
                                                                                                                             parsed_response: {
                                                                                                                               'results' => [{
                                                                                                                                 'uuid' => 'otheruuid'
@@ -254,7 +254,7 @@ RSpec.describe RapidproGroupJob, type: :job do
                                                                                                                               'next' => 'nexturl'
                                                                                                                             }
                                                                                                                           ))
-          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new(
+          expect(HTTParty).to receive(:get).with('nexturl', headers: rapidpro_headers).and_return(Hashie::Mash.new( # rubocop:todo RSpec/StubbedMock
                                                                                                     parsed_response: {
                                                                                                       'results' => [{
                                                                                                         'uuid' => 'otherotheruuid'

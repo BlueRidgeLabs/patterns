@@ -37,7 +37,7 @@ class RapidproGroupJob
     url = "#{@base_url}groups.json"
 
     if @cart.rapidpro_uuid.present?
-      @cart.rapidpro_uuid = nil unless find_group
+      @cart.rapidpro_uuid = nil unless find_group # rubocop:todo Style/SoleNestedConditional
     end
 
     if @cart.rapidpro_uuid.nil?
