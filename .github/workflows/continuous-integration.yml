@@ -40,7 +40,7 @@ jobs:
     - name: Install gems
       run:  bundle config path vendor/bundle && bundle install -j 4
     - name: setup databases
-      run: echo $DATABASE_URL && bundle exec rake db:create && bundle exec rake db:schema:load
+      run: bundle exec rake db:create && bundle exec rake db:schema:load
       env:
         RAILS_MASTER_KEY: ${{ secrets.MASTER_KEY }}
     - name: launch chrome
