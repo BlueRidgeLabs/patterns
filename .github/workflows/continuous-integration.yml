@@ -49,3 +49,8 @@ jobs:
       env:
         RAILS_MASTER_KEY: ${{ secrets.MASTER_KEY }}
       run: bundle exec rake
+    - name: Code Climate Test Reporter
+      uses: aktions/codeclimate-test-reporter@v1
+      with:
+        codeclimate-test-reporter-id: ${{ secrets.CC_TEST_REPORTER_ID }}
+        command: after-build
