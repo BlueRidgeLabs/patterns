@@ -196,7 +196,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
     end
   end
 
-  context 'rapidpro responds with unknown status' do
+  context 'rapidpro responds with unknown status', retry: 3 do
     let(:rapidpro_res) do
       Hashie::Mash.new(
         code: 666
