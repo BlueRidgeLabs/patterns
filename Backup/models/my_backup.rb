@@ -10,7 +10,6 @@
 # For more information about Backup's components, see the documentation at:
 # http://backup.github.io/backup
 #
-require 'yaml'
 require 'cgi'
 require 'uri'
 
@@ -31,11 +30,12 @@ Model.new(:hourly_backup) do
     db.additional_options = ['--quick', '--single-transaction']
   end
 
-  store_with Local do |local|
-    storage_id = :hourly
-    local.keep = 48
-    local.path = "/var/www/patterns-production/shared/backups/#{storage_id}"
-  end
+  # no local storage anymore. 12 factor!
+  # store_with Local do |local|
+  #   storage_id = :hourly
+  #   local.keep = 48
+  #   local.path = "/var/www/patterns-production/shared/backups/#{storage_id}"
+  # end
 
   ##
   # Gzip [Compressor]
@@ -119,21 +119,22 @@ Model.new(:daily_backup, 'the daily backup') do
   # Local (Copy) [Storage]
   #
 
-  store_with Local do |local|
-    time = Time.now
-    if time.day == 1 # first day of the monthf
-      storage_id = :monthly
-      keep = 12
-    elsif time.sunday?
-      storage_id = :weekly
-      keep = 4
-    else
-      storage_id = :daily
-      keep = 7
-    end
-    local.path  = "/var/www/patterns-production/shared/backups/#{storage_id}"
-    local.keep  = keep
-  end
+  # no local storage anymore. 12 factor!
+  # store_with Local do |local|
+  #   time = Time.now
+  #   if time.day == 1 # first day of the monthf
+  #     storage_id = :monthly
+  #     keep = 12
+  #   elsif time.sunday?
+  #     storage_id = :weekly
+  #     keep = 4
+  #   else
+  #     storage_id = :daily
+  #     keep = 7
+  #   end
+  #   local.path  = "/var/www/patterns-production/shared/backups/#{storage_id}"
+  #   local.keep  = keep
+  # end
 
   ##
   # Gzip [Compressor]
@@ -169,7 +170,6 @@ Model.new(:daily_backup, 'the daily backup') do
   end
 end
 
-d
 
 def get_db_params # rubocop:todo Naming/AccessorMethodName
   uri = URI.parse(ENV['DATABASE_URL'])

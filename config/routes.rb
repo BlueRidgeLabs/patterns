@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'sidekiq/web'
+require 'sidekiq-scheduler/web'
+
 Patterns::Application.routes.draw do
   resources :cash_cards
   resources :budgets do

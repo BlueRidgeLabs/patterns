@@ -6,7 +6,24 @@ production:
   - rapidpro
   - default
   - mailers
+  - cron
   - action_mailbox_routing
   - action_mailbox_incineration
   - active_storage_analysis
   - active_storage_purge
+:schedule:
+  daily_backup:
+    cron: '0 0 2 * * *' # everyday at 2am
+    class: BackupJob
+    args: ['daily']
+  
+  hourly_backup:
+    cron: '0 0 * * * *' # everyday at 2am
+    class: BackupJob
+    args: ['hourly']
+  
+  DailyUserRemindersJob:
+    cron: '0 0 8 * *'
+
+  DailyParticipationLevelUpdateJob:
+    cron: '0 0 0 * * *' # everyday at midnight

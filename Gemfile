@@ -119,6 +119,7 @@ gem 'gsm_encoder'
 
 # not sidekiq 6 yet. need to upgrade capistrano first
 gem 'sidekiq', '~> 5.2.0'
+gem 'sidekiq-scheduler'
 
 # phone number validation
 gem 'phony_rails'
