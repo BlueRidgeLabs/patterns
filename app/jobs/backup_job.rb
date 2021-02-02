@@ -4,7 +4,7 @@ class BackupJob
   include Sidekiq::Worker
   sidekiq_options queue: 'cron'
 
-  def perform(type: 'hourly')
+  def perform(type)
     raise unless %w[hourly daily].include? type
 
     path = "/var/www/patterns-#{ENV['RAILS_ENV']}/current"
