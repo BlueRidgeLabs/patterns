@@ -146,9 +146,10 @@ gem 'icalendar'
 gem 'aasm'
 gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'
 
-# cron jobs for backups and sending reminders
-gem 'backup', require: false
-gem 'whenever', require: false
+# using sidekiq scheduluer, and direct to s3
+# # cron jobs for backups and sending reminders
+# gem 'backup', require: false
+# gem 'whenever', require: false
 
 # handling emoji!
 gem 'emoji'
