@@ -11,6 +11,6 @@ class BackupJob
     path = '/tmp/'
     filepath = path + filename
     system("mysqldump -u #{config['username']} -h #{config['host']} -p#{config['password']} #{config['database']} > gzip -9 #{path}#{filename}.gz")
-    s3.upload(filepath)
+    s3.upload(filepath+'.gz')
   end
 end
