@@ -12,8 +12,5 @@ RSpec.describe S3BackupService do
       # check are they the same?
       # probably using vcr, I think.
     end
-
-    xit 'does not work' do
-    end
   end
 end
