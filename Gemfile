@@ -147,8 +147,8 @@ gem 'aasm'
 gem 'after_commit_everywhere', '~> 0.1', '>= 0.1.5'
 
 # cron jobs for backups and sending reminders
-gem 'whenever', require: false
 gem 'backup', require: false
+gem 'whenever', require: false
 
 # handling emoji!
 gem 'emoji'

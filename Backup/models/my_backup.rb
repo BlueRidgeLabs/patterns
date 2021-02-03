@@ -170,7 +170,6 @@ Model.new(:daily_backup, 'the daily backup') do
   end
 end
 
-
 def get_db_params # rubocop:todo Naming/AccessorMethodName
   uri = URI.parse(ENV['DATABASE_URL'])
   database = "#{(uri.path || '').split('/')[1]}_#{env}"

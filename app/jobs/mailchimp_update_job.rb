@@ -10,7 +10,7 @@ class MailchimpUpdateJob # this is broken
     if @person.email_address.present?
       begin
         gibbon = Gibbon::Request.new
-        gibbon.lists(list_id).members(@person.md5_email).upsert(body: generate_body(status))
+        gibbon.lists(list_id).members(@person.md5_email).upsert(body: generate_body(status)) # rubocop:todo Rails/SkipsModelValidations
 
         Rails.logger.info("[People->sendToMailChimp] Sent #{@person.id} to Mailchimp")
       rescue Gibbon::MailChimpError => e
