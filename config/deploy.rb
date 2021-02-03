@@ -20,7 +20,7 @@ set :stages, %w[production staging]
 set :default_stage, 'staging'
 
 set :sidekiq_config, 'config/sidekiq.yml'
-set :sidekiq_processes, 2
+set :sidekiq_processes, 4
 
 set :bundle_flags, '--quiet -j 4'
 
