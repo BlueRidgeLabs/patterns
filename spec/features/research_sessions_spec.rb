@@ -343,7 +343,7 @@ describe 'research sessions' do
   end
 
   it 'cloning a session' do
-    research_session = FactoryBot.create(:research_session)
+    research_session = FactoryBot.create(:research_session, user: admin_user)
     visit research_session_path(research_session)
     click_link I18n.t('research_session.clone_btn')
     expect(page).to have_current_path(research_session_clone_path(research_session), ignore_query: true)
