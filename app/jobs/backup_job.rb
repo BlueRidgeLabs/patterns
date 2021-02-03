@@ -4,11 +4,13 @@ class BackupJob
   include Sidekiq::Worker
   sidekiq_options queue: 'cron'
 
-  def perform(type)
-    raise unless %w[hourly daily].include? type
-
-    path = "/var/www/patterns-#{ENV['RAILS_ENV']}/current"
-
-    system("cd #{path} && bundle exec backup perform --trigger #{type}_backup -r #{path}/Backup/")
+  def perform
+    config = Rails.configuration.database_configuration[Rails.env]
+    s3 = S3BackupService.new
+    filename = "patterns-#{Rails.env}-#{Time.zone.now.strftime('%Y%m%dT%H%M')}.sql"
+    path = '/tmp/'
+    filepath = path + filename
+    system("mysqldump -u #{config['username']} -h #{config['host']} -p#{config['password']} #{config['database']} > #{path}#{filename}")
+    s3.upload(filepath)
   end
 end

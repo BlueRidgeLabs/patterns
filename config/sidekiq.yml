@@ -15,13 +15,7 @@ production:
   daily_backup:
     cron: '0 0 2 * * *' # everyday at 2am
     class: BackupJob
-    args: ['daily']
-  
-  hourly_backup:
-    cron: '0 0 * * * *' # everyday at 2am
-    class: BackupJob
-    args: ['hourly']
-  
+
   DailyUserRemindersJob:
     cron: '0 0 8 * *'
 

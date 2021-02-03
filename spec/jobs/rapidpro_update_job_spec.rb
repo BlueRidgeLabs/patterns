@@ -16,7 +16,7 @@ RSpec.describe RapidproUpdateJob, type: :job do
 
   before { allow(HTTParty).to receive(:post).and_return(rapidpro_res) }
 
-  around { |e| e.run_with_retry retry: 3 }
+  around { |e| e.run_with_retry retry: 3 } # rubocop:todo RSpec/AroundBlock
 
   context 'person not dig' do
     it 'enqueues RapidproDeleteJob' do

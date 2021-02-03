@@ -23,10 +23,8 @@ RSpec.describe RapidproGroupJob, type: :job do
 
   let(:empty_cart) { FactoryBot.create(:cart, rapidpro_uuid: SecureRandom.uuid, rapidpro_sync: true) }
 
-  around(:each) do |ex|
-     ex.run_with_retry retry: 3
-  end
-  
+  around { |e| e.run_with_retry retry: 3 } # rubocop:todo RSpec/AroundBlock
+
   context "action is 'create'" do
     context 'rapidpro sync false' do
       before { cart.update(rapidpro_sync: false) }

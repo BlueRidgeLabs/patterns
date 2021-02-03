@@ -37,9 +37,16 @@ class S3BackupService
       object_key,
       object_content
     )
+
+      object_uploaded_with_public_key_encryption?(
+        s3_encryption_client,
+        'latest',
+        object_content
+      )
+
       Rails.logger.info 'Object uploaded.'
     else
-      Rails.logger.info 'Object not uploaded.'
+      raise 'Backup Object not uploaded.'
     end
   end
 
@@ -72,7 +79,8 @@ class S3BackupService
 
   def download_object_with_private_key_encryption(
     s3_encryption_client,
-    object_key)
+    object_key
+  )
 
     response = s3_encryption_client.get_object(
       bucket: @bucket_name,
@@ -86,7 +94,8 @@ class S3BackupService
   def object_uploaded_with_public_key_encryption?(
     s3_encryption_client,
     object_key,
-    object_content)
+    object_content
+  )
 
     s3_encryption_client.put_object(
       bucket: @bucket_name,
