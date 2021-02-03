@@ -44,7 +44,7 @@ gem 'redcarpet' # for markdown notes
 # giftrocket API for automagic giftcarding
 gem 'tremendous_ruby', github: 'talkable/tremendous-ruby', branch: 'rails-6.0'
 
-gem 'aws-sdk-s3', require: false
+gem 'aws-sdk-s3'
 gem 'image_processing' # for activestorage image processing
 
 gem 'hashie'
@@ -214,7 +214,7 @@ group :development do
 
   # enabling us to deploy via travis and encrypted keys!
   # gem 'travis'
-  gem 'spring'
+  # gem 'spring' is this even a thing anymore?
 end
 
 group :test do

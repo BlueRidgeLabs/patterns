@@ -94,7 +94,7 @@ describe 'admin page' do
     expect(new_user.new_person_notification).to eq(false)
   end
 
-  it 'error creating user' do
+  it 'error creating user', retry: 3 do
     visit users_path
     click_link 'New User'
     expect(page).to have_current_path(new_user_path, ignore_query: true)
