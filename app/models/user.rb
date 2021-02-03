@@ -98,7 +98,7 @@ class User < ApplicationRecord
     GiftCard.unassigned.where(user_id: id).size
   end
 
-  delegate :budget, to: :team
+  delegate :budget, to: :teamu
 
   def available_budget
     budget.amount # always in ruby money
@@ -106,14 +106,8 @@ class User < ApplicationRecord
 
   def self.send_all_reminders
     # this is where reservation_reminders
-    # called by whenever in /config/schedule.rb
-    User.upcoming_sessions(1).find_each do |u|
-      sessions = u.upcoming_sessions(1)
-      if sessions.present?
-        session_ids = sessions.map(&:id)
-        ::UserMailer.session_reminder(user_id: u.id, session_ids: session_ids)
-      end
-    end
+    # called by sidekiq scheduler.
+    User.upcoming_sessions(1).find_each(&:send_session_reminder)
   end
 
   def send_session_reminder
