@@ -12,9 +12,8 @@ production:
   - active_storage_analysis
   - active_storage_purge
 :schedule:
-  daily_backup:
+  BackupJob:
     cron: '0 0 2 * * *' # everyday at 2am
-    class: BackupJob
 
   DailyUserRemindersJob:
     cron: '0 0 8 * *'
