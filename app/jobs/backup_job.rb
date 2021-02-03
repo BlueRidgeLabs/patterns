@@ -10,7 +10,7 @@ class BackupJob
     filename = "patterns-#{Rails.env}-#{Time.zone.now.strftime('%Y%m%dT%H%M')}.sql"
     path = '/tmp/'
     filepath = path + filename
-    system("mysqldump -u #{config['username']} -h #{config['host']} -p#{config['password']} #{config['database']} > gzip -9 #{path}#{filename}")
+    system("mysqldump -u #{config['username']} -h #{config['host']} -p#{config['password']} #{config['database']} > gzip -9 #{path}#{filename}.gz")
     s3.upload(filepath)
   end
 end
