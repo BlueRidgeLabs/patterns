@@ -14,23 +14,39 @@ fi
 
 if [ -f /etc/provisioned ];
 then
-   echo "server is provisioned, exiting."
+   echo "server is provisioned, exiting." 1>&2
    exit 1
 fi
 
-ARG1=${1:-'production'}
+ENVIRONMENT=${1?param missing - environment}
+DOMAINNAME=${2?param missing - hostname}
+ADMIN_EMAIL=${3?param missing - admin email}
 
-echo "setting up $ARG1 environment on this server";
+PUBLIC_IP=$(curl -s http://ipinfo.io/ip);
 
+which dig;
+if [ $? -eq 1 ]; then
+  apt-get install -y dnsutils
+fi
 
-hostname $ARG1;
-echo "RAILS_ENV=$ARG1" >> /etc/environment
-echo "RACK_ENV=$ARG1" >> /etc/environment
-echo "$ARG2" > /etc/hostname
+DNS_RESOLVES_TO=$(dig +short $DOMAINNAME | grep -v '\.$' )
+
+if [[ $DNS_RESOLVES_TO != $PUBLIC_IP ]]; then
+  echo "DNS for $DOMAINNAME resolves to $DNS_RESOLVES_TO not the public IP of this server, which is $PUBLIC_IP" 1>&2
+  exit 1
+fi
+
+echo "tests pass: we are root, DNS setup, server not already provisioned"
+echo "setting up $ENVIRONMENT environment for $DOMAINNAME on this server";
+
+hostname $DOMAINNAME;
+echo "RAILS_ENV=$ENVIRONMENT" >> /etc/environment
+echo "RACK_ENV=$ENVIRONMENT" >> /etc/environment
+echo "$DOMAINNAME" > /etc/hostname
 echo "MALLOC_ARENA_MAX=2" >> /etc/environment
 echo "RAILS_MAX_THREADS=30" >> /etc/environment
-echo "DATABASE_URL=mysql://root:password@localhost/$ARG1" >> etc/environment
-echo "127.0.0.1 $ARG1" >> /etc/hosts
+echo "DATABASE_URL=mysql://root:password@localhost/$ENVIRONMENT" >> etc/environment
+echo "127.0.0.1 $DOMAINNAME" >> /etc/hosts
 
 source /etc/environment;
 
@@ -59,10 +75,8 @@ openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
 
 # stop nginx for letsencrypt initial setup
 # service nginx stop
-certbot certonly --nginx --agree-tos --email $ARG3 -d $ARG2
+certbot certonly --nginx --agree-tos --email $ADMIN_EMAIL -d $DOMAINNAME
 
-
-# service nginx start
 
 # we don't want the default nginx server setup.
 if [ -f /etc/nginx/sites-enabled/default ];
@@ -81,6 +95,7 @@ EOL
 chmod +x /etc/cron.daily/nginx_restart.sh
 
 service cron restart
+service nginx restart
 
 #passwordless sudo for patterns, or else we can't install rvm
 echo 'patterns ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/patterns
@@ -135,10 +150,9 @@ chown -R patterns:patterns /var/www/patterns*
 
 #we've provisioned this server
 touch /etc/provisioned
-
-echo "ensure github has deploy keys for your server, find them here: \n"
-echo cat ~/.ssh/id_ed25519.pub
-echo "\n"
-
+echo "Provisioning complete!"
+echo "ensure github has deploy keys for your server: \n"
+cat ~/.ssh/id_ed25519.pub
+echo "\n" 
 echo "now run on your local machine:\n"
-echo "cap produciton deploy:setup && cap production deploy:cold"
+echo "cap production deploy:setup && cap production deploy:cold"
