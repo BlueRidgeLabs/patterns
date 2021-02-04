@@ -52,7 +52,7 @@ class S3BackupService
 
   # Full example call:
   # Prerequisites: the same RSA key pair you originally used to encrypt the object.
-  def download(object_key, private_key_path, output_directory = '/tmp/')
+  def download(object_key, private_key_path, output_directory = Rails.root.join('tmp/').to_s)
     private_key = OpenSSL::PKey::RSA.new(File.read(private_key_path))
 
     # When initializing this Amazon S3 encryption client, note:

@@ -18,5 +18,5 @@ task :download_latest_backup do
   filename = gets 'Filename, or blank to get latest backup'
   filename = filename.presence || 'latest.sql.gz'
   s3 = S3BackupService.new
-  s3.download(filename, privkey, '.')
+  s3.download(filename, privkey, Rails.root.to_s)
 end
