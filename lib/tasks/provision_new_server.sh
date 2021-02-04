@@ -22,21 +22,6 @@ ENVIRONMENT=${1?param missing - environment}
 DOMAINNAME=${2?param missing - hostname}
 ADMIN_EMAIL=${3?param missing - admin email}
 
-PUBLIC_IP=$(curl -s http://ipinfo.io/ip);
-
-which dig;
-if [ $? -eq 1 ]; then
-  apt-get install -y dnsutils
-fi
-
-DNS_RESOLVES_TO=$(dig +short $DOMAINNAME | grep -v '\.$' )
-
-if [[ $DNS_RESOLVES_TO != $PUBLIC_IP ]]; then
-  echo "DNS for $DOMAINNAME resolves to $DNS_RESOLVES_TO not the public IP of this server, which is $PUBLIC_IP" 1>&2
-  exit 1
-fi
-
-echo "tests pass: we are root, DNS setup, server not already provisioned"
 echo "setting up $ENVIRONMENT environment for $DOMAINNAME on this server";
 
 hostname $DOMAINNAME;
