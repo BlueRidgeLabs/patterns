@@ -16,7 +16,7 @@ task :download_latest_backup do
   return if privkey.blank?
 
   filename = gets 'Filename, or blank to get latest backup'
-  filename = filename.presence || 'latest'
+  filename = filename.presence || 'latest.sql.gz'
   s3 = S3BackupService.new
   s3.download(filename, privkey, '.')
 end

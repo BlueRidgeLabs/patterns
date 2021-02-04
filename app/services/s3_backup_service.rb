@@ -40,7 +40,7 @@ class S3BackupService
 
       object_uploaded_with_public_key_encryption?(
         s3_encryption_client,
-        'latest',
+        'latest.sql.gz',
         object_content
       )
 
