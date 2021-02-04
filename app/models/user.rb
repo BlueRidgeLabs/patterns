@@ -98,7 +98,7 @@ class User < ApplicationRecord
     GiftCard.unassigned.where(user_id: id).size
   end
 
-  delegate :budget, to: :teamu
+  delegate :budget, to: :team
 
   def available_budget
     budget.amount # always in ruby money
