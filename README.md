@@ -29,13 +29,14 @@ Hosted on a single machine:
   * Environment Variables are used (saved in a sample.env file) for some non-Rails things.
   * credentials are stored in encrypted files, in yaml format. You'll need the production.key on your server.
   * you'll need ssh-agent forwarding:
-  ```ssh-add -L``
-If the command says that no identity is available, you'll need to add your key:
+  ``ssh-add -L``
 
-```ssh-add yourkey```
-On Mac OS X, ssh-agent will "forget" this key, once it gets restarted during reboots. But you can import your SSH keys into Keychain using this command:
+  If the command says that no identity is available, you'll need to add your key:
 
-```/usr/bin/ssh-add -K yourkey```
+  ```ssh-add yourkey```
+  On Mac OS X, ssh-agent will "forget" this key, once it gets restarted during reboots. But you can import your SSH keys into Keychain using this command:
+
+  ```/usr/bin/ssh-add -K yourkey```
 
 * Provisioning a new server:
   * change your .env to point production to the right url/git/branch/etc/
@@ -46,11 +47,11 @@ On Mac OS X, ssh-agent will "forget" this key, once it gets restarted during reb
     * GIT_REPOSITORY: "git@github.com:example/example.git"
   
   * use the provision_new_server.sh script.
-    * script defaults to production, however, the first arg is the environment you want.
-    * `provision_new_server.sh staging` will provision staging
+    * Ensure that DNS for your hostname is pointing at the server, or else this script will exit.
+    * `provision_new_server.sh staging staging.example.com admin@example.com` will provision staging
     * don't forget to add your deploy key and person ssh pubkey to the provision.sh script!
-  * run 'cap production deploy:setup' (if you are deploying to production)
-  * run 'cap production deploy:cold' ( starts up all of the daemons.)
+  * run 'cap staging deploy:setup' (if you are deploying to staging)
+  * run 'cap staging deploy:cold' ( starts up all of the daemons.)
 
   SSL certificates are provided free of charge and automatically updated by [LetsEncrypt!](https://letsencrypt.org)
 
