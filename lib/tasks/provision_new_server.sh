@@ -2,7 +2,10 @@
 
 # setups a production server by default.
 # pass 'staging' as an argument to change the rails environment default
+# pass hostname as second argument
+# pass admin email address as third
 
+# sudo ./provision_new_server.sh production example.com admin@example.com
 #as root only
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
@@ -23,11 +26,7 @@ echo "setting up $ARG1 environment on this server";
 hostname $ARG1;
 echo "RAILS_ENV=$ARG1" >> /etc/environment
 echo "RACK_ENV=$ARG1" >> /etc/environment
-echo "$ARG1" > /etc/hostname
-echo "MYSQL_USER=root" >> /etc/environment
-echo "MYSQL_PASSWORD=password" >> /etc/environment
-echo "MYSQL_PWD=password" >> /etc/environment
-echo "MYSQL_HOST=localhost" >> /etc/environment
+echo "$ARG2" > /etc/hostname
 echo "MALLOC_ARENA_MAX=2" >> /etc/environment
 echo "RAILS_MAX_THREADS=30" >> /etc/environment
 echo "DATABASE_URL=mysql://root:password@localhost/$ARG1" >> etc/environment
@@ -46,18 +45,21 @@ chmod +x /tmp/rustup.sh
 apt-add-repository -y ppa:nginx/development
 add-apt-repository -y ppa:certbot/certbot
 
+# not great passwords, but mysql should only listen on localhost.
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
 
 apt-get update && apt-get install -y mysql-server libmysqlclient-dev redis-server git git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libgmp-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nginx gpgv2 ruby-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison gawk g++ gcc make libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev nodejs libv8-dev clang certbot python-certbot-nginx
 
-mysqladmin -ppassword create `echo $RAILS_ENV`
+mysqladmin -ppassword create `echo $RAILS_ENV` # database named after rails environment
+
+# for additional security with nginx
 openssl dhparam -dsaparam -out /etc/nginx/dhparam.pem 2048
 
 
 # stop nginx for letsencrypt initial setup
 # service nginx stop
-certbot certonly --nginx --agree-tos --email blueridgelabs@robinhood.org -d patterns.brl.nyc
+certbot certonly --nginx --agree-tos --email $ARG3 -d $ARG2
 
 
 # service nginx start
@@ -78,21 +80,17 @@ service nginx restart
 EOL
 chmod +x /etc/cron.daily/nginx_restart.sh
 
-# setting up regular backups
-# cat >/etc/cron.d/patterns_backup.sh <<EOL
-# 32 *    * * *   logan   /home/logan/.rvme/wrappers/ruby-2.2.4@global/backup perform --trigger my_backup -r /var/www/logan-`echo $RAILS_ENV`/current/Backup/
-# EOL
-# chmod +x /etc/cron.d/patterns_backup.sh
-
 service cron restart
 
-#passwordless sudo for logan, or else we can't install rvm
+#passwordless sudo for patterns, or else we can't install rvm
 echo 'patterns ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/patterns
+# will be removed at the end.
+
 mkdir -p /var/www/patterns-`echo $RAILS_ENV`
 mkdir -p /var/www/patterns-`echo $RAILS_ENV`/shared/
 
 
-# creating the user.
+# creating the user, but checking if it exists first
 getent passwd patterns  > /dev/null
 if [ $? -eq 0 ]; then
   echo "patterns user exists, skipping user creation"
@@ -106,6 +104,10 @@ else
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCUkhUCqUdEjpm92sN5OGW7cLekAJNdT0HTDqCsUR28I3eB1lelKLWGDhIkR2L3TZmiX511+ZfaydgrFJEUqT+gotUKmWmW9CVpt5OQTZPPNJBkZ99uXYqg2sLHpAptacVIn/UGS4RRvMG6gT+pYiI1epyY0F0uqeNDVwO0HAo7pLxS7K/eK49QUZQMszjkv7TxykIDDe8wjVkkNIABbnz0vYWibaCdyYsTOqqDhrywXhX3uIoUHYqlQdN5Wk11jqnxGFrixojEhy0LEosHry8qjFBNP6H/jyfuFQeZW6+tDW8H3dY+WXYRkcN6harXmi4o/GewkAkukRVE12+nLXdX deploy@patterns
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDRCFqdXUioU3N1GIRK5bowUfJ9DKswJeMp6diQDOfCU4rKN4Y6jg/Xzl8ijTXsH3e+q3hvpPAbynjNF9cK3af93tdMQ49fJajPRVlM+mZW2MXkJAnI0TkqGWqwk93KqnVAajVdaDo+jEFqdNvYzYLeqwAJUaED0OyD/GlOBlF0NV9kT2mVXGtCdcJ+ItTqFwtn6NcAuXg+/5S2ZpBJGjf1mOVyLAHdbGg00L5YY2GpU4s7L02fKqIdOzNgmU2ek74ba0F74KTcEvReRNePFjlCNZqrbqiw6dgOoo9BGjbCploNdmUzA4DJ9CQHx3lBPQXLjEiNx+kMUkxC0JxlVQbb cromie@zephyr.local
 EOL
+  
+  #making keys
+  ssh-keygen -t ed25519 -q -f "$HOME/.ssh/id_ed25519" -N ""
+
   # so we don't have key failures for github
   ssh-keyscan -H github.com >> ~/.ssh/known_hosts
   echo 'export PATH=$PATH:/usr/sbin' >> ~/.bashrc
@@ -121,21 +123,23 @@ EOL
   rvm use 2.7.2@`echo $RAILS_ENV` --create
   rvm @global do gem install rake whenever
   rvm @global do gem install backup -v5.0.0.beta.3
-  #echo -e "\n\n\n" | ssh-keygen -t rsa # make keys
   ln -s /var/www/patterns-`echo $RAILS_ENV`/current `echo $RAILS_ENV`
   exit # back to root.
 fi
 
-# remove our logan passwordless sudo, for security
+# remove our patterns user passwordless sudo, for security
 # exit
-# rm /etc/sudoers.d/logan
+rm /etc/sudoers.d/patterns
+
+# for great ownership
 chown -R patterns:patterns /var/www/patterns*
 
 #we've provisioned this server
 touch /etc/provisioned
 
-# ensure github has deploy keys for your server
+echo "ensure github has deploy keys for your server, find them here: \n"
+echo cat ~/.ssh/id_ed25519.pub
+echo "\n"
 
-# now run:
-# cap produciton deploy:setup
-# cap production deploy:cold
+echo "now run on your local machine:\n"
+echo "cap produciton deploy:setup && cap production deploy:cold"

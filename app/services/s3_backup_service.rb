@@ -7,9 +7,11 @@
 
 # https://docs.aws.amazon.com/sdk-for-ruby/v3/developer-guide/s3-example-client-side-decrypt-item-with-private-key.html
 
+# TODO: keep dailies forever, but delete hourlies.
+# store hourlies in a different bucket, with different permissions.
 class S3BackupService
-  def initialize
-    @bucket_name = Rails.application.credentials.aws[:backup_bucket]
+  def initialize(bucket_name = nil)
+    @bucket_name = bucket_name.presence || Rails.application.credentials.aws[:backup_bucket]
     @region = Rails.application.credentials.aws[:region]
     @public_key = OpenSSL::PKey::RSA.new(Rails.application.credentials.backup_public_key)
   end

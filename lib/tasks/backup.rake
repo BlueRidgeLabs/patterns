@@ -12,12 +12,11 @@ task :backup do
 end
 
 desc 'download backup'
-task :download_latest_backup do
-  privkey = gets 'Path to private key:'
-  return if privkey.blank?
+task :download_latest_backup, [:privkey, :filename] do |_task, args|
+  args.with_defaults(filename: 'latest.sql.gz')
+  raise if args[:privkey].blank?
+  raise unless File.exist?(privkey)
 
-  filename = gets 'Filename, or blank to get latest backup'
-  filename = filename.presence || 'latest.sql.gz'
   s3 = S3BackupService.new
   s3.download(filename, privkey, Rails.root.to_s)
 end

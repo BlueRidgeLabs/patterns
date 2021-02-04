@@ -16,7 +16,7 @@ Currently specs are almost all integration specs.
 Features
 --------
 
-Patterns is a customer relationship management application at its heart. Patterns tracks people that have signed up to participate with the Design Insight Group, their involvement in research, testing, co-design and focus groups.
+Patterns is a customer relationship management application at its heart. Patterns holds people that have signed up to participate with the Design Insight Group, what they like to talk about, and their involvement in research, testing, co-design and focus groups.
 
 Setup
 -----
@@ -25,7 +25,9 @@ Patterns is a Ruby on Rails app. Mysql, Redis, Sidekiq, and Rapidpro (for sms)
 Hosted on a single machine:
 * Server Set up:
   * It currently uses Capistrano for deployment to staging and production instances.
-  * Environment Variables are used (saved in a local_env.yml file) for API keys and other IDs.
+    * it's an old version of Capistrano. need to upgrade.
+  * Environment Variables are used (saved in a sample.env file) for some non-Rails things.
+  * credentials are stored in encrypted files, in yaml format. You'll need the production.key on your server.
   * you'll need ssh-agent forwarding:
   ```ssh-add -L``
 If the command says that no identity is available, you'll need to add your key:
@@ -92,19 +94,54 @@ You can edit credentials like so:
 
 * Backups!
   * things now get backed up to AWS
-  * provisioning script sets this up for you. runs 32 minutes after the hour, ever hour, using the "whenever" gem.
+  * need a bucket for each environment, set it in the `rails credentials:edit --environment production`
+  * runs with sidekiq-scheduler (slightly abandonware. keep an eye on it) 
   * or run jobs manually: 
-    * `backup perform --trigger daily_backup -r #{path}/Backup/`
-    * `backup perform --trigger hourly_backup -r #{path}/Backup/`
+    * `rake backup`
+    * `rake download_backup path_to_private_key {optional_filename}`
+  * encrypted: so you'll need keys. There are "testing" keys in the fixtures/files folder.
+    * DO NOT USE THESE IN PRODUCTION!
+  * Generating Keys:
+    * Private Key: `openssl genrsa -out patterns.pem 2048`
+    * Public Key: `openssl rsa -in patterns.pem -outform PEM -pubout -out patterns_public.pem`
+    * store the contents of the public key in your environment's credentials.
+    * store the private key somewhere safe. NOT in your git repo!
+  * AWS Policy permissions: they are super weird and arcane. Use the Simulator!
+    * Policy Simulator: https://policysim.aws.amazon.com/home/index.jsp?#
+    * permissions that work for us: Read/Write/List only
+    `{"Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject"
+            ],
+            "Resource": "arn:aws:s3:::YOURBUCKETNAME/*",
+            "Condition": {}
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::YOURBUCKETNAME/*",
+            "Condition": {}
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::YOURBUCKETNAME/*",
+            "Condition": {}
+        }
+    ]
+    }`
 
 
 * [Rapidpro](https://github.com/rapidpro/rapidpro/)
   * we used to deploy ours with docker-compose: [cromulus/rapidpro-docker-compose](cromulus/rapidpro-docker-compose)
-  * It's not easy to keep running, so we switched to the hosted provider, textit.com
+  * It's not easy to keep running, so we switched to the hosted provider, https://textit.com
   * It is a UI for creating sms workflows that are designed to communicate with backend services like patterns.
-  * add the URL and your rapidpro API token to local_env.yml
-  * new people are added to rapidpro
-  * eventually we will be able to start rapidpro flows from patterns.
+  * add the URL and your rapidpro API token to encrypted credentials.
+  * new people are added to rapidpro using sidekiq.
+  * eventually we will be able to start rapidpro flows from Patterns.
+
 
 
 TODO
@@ -124,6 +161,9 @@ Hacking
 -------
 
 Main development occurs in the development branch. HEAD on production is always ready to be released. staging is, well, staging. New features are created in topic branches, and then merged to development via pull requests. Candidate releases are tagged from development and deployed to staging, tested, then merged into the production and deployed.
+
+We use Github Actions for continuous integration testing and linting.
+see: `.github/workflows` for details.
 
 Development workflow:
 Install mysql & redis
