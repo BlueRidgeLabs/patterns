@@ -11,6 +11,7 @@ task :backup do
   s3.upload(filepath)
 end
 
+desc 'download backup'
 task :download_latest_backup do
   privkey = gets 'Path to private key:'
   return if privkey.blank?
