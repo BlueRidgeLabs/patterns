@@ -19,6 +19,10 @@
 /log/*.log
 /tmp
 
+
+# ignore /public/assets
+/public/assets
+
 # ignore activestorage
 /storage
 
