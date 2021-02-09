@@ -28,7 +28,7 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 # set :pty, true
 
 # Default value for default_env is {}
-set :default_env, { path: "#{shared_path.join('bin')}:$PATH" }
+#set :default_env, { path: "#{shared_path.join('bin')}:$PATH" }
 
 # Default value for local_user is ENV['USER']
 # set :local_user, -> { `git config user.name`.chomp }
