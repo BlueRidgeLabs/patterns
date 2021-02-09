@@ -178,6 +178,9 @@ gem 'acts-as-taggable-on'
 # mapping, because maps rock and google sucks
 gem 'leaflet-rails'
 
+# for seeding the DB and factories for specs
+gem 'factory_bot_rails', '4.10.0', require: false
+
 group :development do
   gem 'capistrano', require: false
   gem 'capistrano-bundler', require: false
@@ -254,7 +257,6 @@ group :development, :test do
   gem 'concurrent-ruby'
   gem 'database_cleaner'
   gem 'dotenv-rails'
-  gem 'factory_bot_rails', '4.10.0', require: false
   gem 'foreman', require: false # for procfile
   gem 'guard', require: false
   gem 'guard-bundler', require: false
