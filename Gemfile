@@ -180,6 +180,8 @@ gem 'leaflet-rails'
 
 # for seeding the DB and factories for specs
 gem 'factory_bot_rails', '4.10.0', require: false
+# generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
+gem 'faker', require: false
 
 group :development do
   gem 'capistrano', require: false
@@ -230,8 +232,7 @@ group :test do
   # gem 'jdbc-sqlite3', platform: :jruby
   gem 'coveralls', require: false
   gem 'memory_test_fix' # in memory DB, for the speedy
-  # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
-  gem 'faker'
+  
   gem 'simplecov', '0.16', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'

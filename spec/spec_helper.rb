@@ -20,6 +20,7 @@ Coveralls.wear_merged!('rails')
 require 'rspec/retry' # for js tests, and finicky tests
 require 'devise'
 require 'factory_bot_rails'
+require 'faker'
 require 'webdrivers'
 require 'webmock'
 require 'webmock/rspec'
