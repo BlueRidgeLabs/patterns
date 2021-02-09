@@ -26,6 +26,8 @@ install_plugin Capistrano::Sidekiq::Systemd
 require 'capistrano/puma'
 install_plugin Capistrano::Puma
 install_plugin Capistrano::Puma::Systemd
+require 'capistrano/puma/nginx'
+
 # Include tasks from other gems included in your Gemfile
 #
 # For documentation on these, see for example:

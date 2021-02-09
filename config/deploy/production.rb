@@ -8,6 +8,7 @@ server ENV['PRODUCTION_SERVER'], user: 'patterns', roles: %w[web worker]
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
+set :branch, 'production'
 append :linked_files, 'config/credentials/production.key'
 
 # role-based syntax

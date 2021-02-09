@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'factory_bot_rails' # use factories!
+require 'faker'
 # Make some dummy people
 if Rails.env.development?
   100.times { FactoryBot.create :person }
