@@ -40,7 +40,7 @@ ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 # set :ssh_options, verify_host_key: :secure
 
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
-append :linked_files, 'config/credentials/production.key', 'config/secrets.yml'
+append :linked_files, 'config/secrets.yml'
 
 set :rvm_type, :system # Defaults to: :auto
 set :rvm_ruby_version, '2.7.2' # Defaults to: 'default'

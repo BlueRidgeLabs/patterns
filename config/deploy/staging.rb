@@ -9,7 +9,7 @@ server ENV['STAGING_SERVER'], user: 'patterns', roles: %w{web worker}
 # server "db.example.com", user: "deploy", roles: %w{db}
 
 set :branch, fetch(:branch, ENV['STAGING_BRANCH'])
-  
+append :linked_files, 'config/credentials/staging.key'
 
 # role-based syntax
 # ==================
