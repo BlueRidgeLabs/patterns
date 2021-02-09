@@ -45,8 +45,7 @@ append :linked_files, 'config/credentials/production.key', 'config/secrets.yml'
 set :rvm_type, :system # Defaults to: :auto
 set :rvm_ruby_version, '2.7.2' # Defaults to: 'default'
 
-set :bundle_flags, '--quiet -j 4'
-set :bundle_binstubs, -> { shared_path.join('bin') }
+# bundler defaults
 
 set :ssh_options, forward_agent: true
 
