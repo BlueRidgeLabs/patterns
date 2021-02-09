@@ -4,8 +4,7 @@ require "capistrano/setup"
 # Include default deployment tasks
 require "capistrano/deploy"
 
-require 'capistrano/sidekiq'
-
+require 'capistrano/rvm'
 # Load the SCM plugin appropriate to your project:
 #
 # require "capistrano/scm/hg"
@@ -17,9 +16,13 @@ require 'capistrano/sidekiq'
 require "capistrano/scm/git"
 install_plugin Capistrano::SCM::Git
 
+
 require 'capistrano/bundler'
 require 'capistrano/rails'
-require 'capistrano/rvm'
+
+require 'capistrano/sidekiq'
+install_plugin Capistrano::Sidekiq::Systemd
+
 require 'capistrano/puma'
 install_plugin Capistrano::Puma
 install_plugin Capistrano::Puma::Systemd

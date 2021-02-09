@@ -1,16 +1,18 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.15.0"
+
+lock '~> 3.15.0'
 require 'dotenv'
 Dotenv.load
-set :application, "patterns"
-set :repo_url, "git@github.com:BlueRidgeLabs/patterns.git"
+
+set :application, 'patterns'
+set :repo_url, 'git@github.com:BlueRidgeLabs/patterns.git'
 
 set :user, 'patterns'
 
 append :linked_dirs
 
 # Default branch is :master
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
@@ -25,14 +27,8 @@ append :linked_dirs
 # Default value for :pty is false
 # set :pty, true
 
-# Default value for :linked_files is []
-# append :linked_files, "config/database.yml"
-
-# Default value for linked_dirs is []
-# append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
-
 # Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+set :default_env, { path: '/var/www/ruby/2.7.0/bin:$PATH' }
 
 # Default value for local_user is ENV['USER']
 # set :local_user, -> { `git config user.name`.chomp }
@@ -43,24 +39,28 @@ append :linked_dirs
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-set :rvm_type, :user                     # Defaults to: :auto
-set :rvm_ruby_version, '2.7,2'      # Defaults to: 'default'
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+append :linked_files, 'config/credentials/production.key', 'config/secrets.yml'
 
-set :sidekiq_processes, 2
-set :sidekiq_user, 'patterns'
+set :rvm_type, :system # Defaults to: :auto
+set :rvm_ruby_version, '2.7.2' # Defaults to: 'default'
+
 set :bundle_flags, '--quiet -j 4'
+set :bundle_binstubs, -> { shared_path.join('bin') }
 
-set :ssh_options, forward_agent: false
+set :ssh_options, forward_agent: true
 
 # rails
 set :conditionally_migrate, true
 set :migration_role, :app
 
+set :sidekiq_processes, 2
+set :sidekiq_user, 'patterns'
+
 # puma
 set :puma_init_active_record, true
 
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
-append :linked_files, 'config/database.yml', 'config/secrets.yml'
+
 
 on roles :all do
   within fetch(:latest_release_directory) do

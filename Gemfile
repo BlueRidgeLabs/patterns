@@ -6,6 +6,7 @@ ruby '~> 2.7.0'
 gem 'airbrake'
 gem 'bootsnap', require: false
 gem 'rack'
+gem 'rake'
 gem 'rack-cache'
 gem 'rails', '~> 6.0.0'
 
@@ -118,7 +119,7 @@ gem 'httparty'
 gem 'gsm_encoder'
 
 # not sidekiq 6 yet. need to upgrade capistrano first
-gem 'sidekiq', '~> 5.2.0'
+gem 'sidekiq'
 gem 'sidekiq-scheduler'
 
 # phone number validation
@@ -178,14 +179,14 @@ gem 'acts-as-taggable-on'
 gem 'leaflet-rails'
 
 group :development do
-  # gem 'capistrano'
+  gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
-  gem 'capistrano-rails',   '~> 1.1', require: false
-  gem 'capistrano-bundler', '~> 1.1', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
   gem 'capistrano-sidekiq'
-  gem 'capistrano-rvm',   '~> 0.1', require: false
-  gem 'capistrano3-puma' 
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano3-puma', require: false
   gem 'ed25519'
   gem 'heavens_door' # recording capybara tests
   gem 'lol_dba' # find columns that should have indices

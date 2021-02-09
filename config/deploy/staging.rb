@@ -3,12 +3,13 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server ENV['STAGING_SERVER'], user: 'patterns', roles: %w{app worker}
+server ENV['STAGING_SERVER'], user: 'patterns', roles: %w{web worker}
 # server "example.com", user: "deploy", roles: %w{app
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
 
-
+set :branch, fetch(:branch, ENV['STAGING_BRANCH'])
+  
 
 # role-based syntax
 # ==================
