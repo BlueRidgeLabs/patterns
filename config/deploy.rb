@@ -65,3 +65,6 @@ on roles :all do
     end
   end
 end
+
+after :deploy, 'puma:restart'
+after :deploy, 'sidekiq:restart'
