@@ -118,8 +118,11 @@ class User < ApplicationRecord
     ).deliver_later
   end
 
+  # todo, this needs work.
+  # ActiveRecord::RecordNotSaved (You cannot call create unless the parent is saved)
   def create_cart(cart_name = nil, assign = true) # rubocop:todo Style/OptionalBooleanParameter
     cart_name = "#{name}-pool" if cart_name.nil?
+
     cart = Cart.create(name: cart_name, user_id: id)
     cart.assign_current_cart(id) if assign # default assign
     cart.save

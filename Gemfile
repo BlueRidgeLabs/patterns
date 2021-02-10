@@ -99,6 +99,7 @@ gem 'health_check'
 
 # use devise for auth/identity
 gem 'devise'
+gem 'devise_token_auth'
 gem 'devise_invitable'
 gem 'devise_zxcvbn' # password strength filter
 
@@ -181,27 +182,29 @@ group :development do
   # gem 'capistrano'
   # mainline cap is busted w/r/t Rails 4. Try this fork instead.
   # src: https://github.com/capistrano/capistrano/pull/412
-  gem 'capistrano', '~> 2.15.4'
-  gem 'capistrano-sidekiq'
+  gem 'capistrano', '~> 2.15.4', require: false
+  gem 'capistrano-sidekiq', require: false
   gem 'ed25519'
   gem 'heavens_door' # recording capybara tests
   gem 'lol_dba' # find columns that should have indices
-  gem 'rbnacl', '~> 4.0.0' # for modern ssh keys
+  gem 'rbnacl', require: false
   gem 'rvm-capistrano', require: false
   # gem 'rbnacl-libsodium' # same as above
   gem 'bcrypt_pbkdf' # same as above
   # this whole group makes finding performance issues much friendlier
   gem 'bundler-audit', '>= 0.5.0', require: false
-  gem 'flamegraph'
-  gem 'memory_profiler'
+  gem 'derailed_benchmarks'
+
+  # gem 'flamegraph'
+  # gem 'memory_profiler'
   # gem "rack-mini-profiler"
-  gem 'ruby-prof'
-  gem 'stackprof' # ruby 2.1+ only
+  # gem 'ruby-prof'
+  # gem 'stackprof' # ruby 2.1+ only
   # n+1 killer.
   # gem 'bullet'
 
   # what attributes does this model actually have?
-  gem 'annotate'
+  gem 'annotate', require: false
 
   # a console in your tests, to find out what's actually happening
   gem 'pry-rails'
@@ -209,13 +212,21 @@ group :development do
   # a console in your browser, when you want to interrogate views.
   gem 'web-console'
 
-  gem 'rails-erd'
+  gem 'rails-erd', require: false
   # silences logging of requests for assets
   # gem 'quiet_assets'
 
   # enabling us to deploy via travis and encrypted keys!
   # gem 'travis'
   # gem 'spring' is this even a thing anymore?
+  gem 'foreman', require: false # for procfile
+  gem 'guard', require: false
+  gem 'guard-bundler', require: false
+  gem 'guard-minitest', require: false
+  gem 'guard-rspec', require: false
+  gem 'guard-rubocop', require: false
+
+  gem 'rubocop', '~> 0.80', require: false
 end
 
 group :test do
@@ -227,7 +238,7 @@ group :test do
   gem 'coveralls', require: false
   gem 'memory_test_fix' # in memory DB, for the speedy
   # generate fake data w/faker: http://rubydoc.info/github/stympy/faker/master/frames
-  gem 'faker'
+
   gem 'simplecov', '0.16', require: false
   # screenshots when capybara fails
   gem 'capybara-screenshot'
@@ -239,41 +250,36 @@ group :test do
   gem 'webmock'
   # in memory redis for testing only
   # gem 'mock_redis'
+  gem 'capybara'
+  gem 'capybara-email'
+  gem 'database_cleaner'
+  gem 'parallel_tests' # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
+  gem 'rspec'
+  gem 'rspec-rails'
   gem 'rspec-sidekiq'
+  gem 'selenium-webdriver'
   gem 'shoulda'
+  gem 'sms-spec'
   gem 'vcr'
+  gem 'webdrivers'
 end
 
 group :development, :test do
   # use holder for placeholder images
   gem 'apparition'
   gem 'byebug', '~> 11.0'
-  gem 'capybara'
-  gem 'capybara-email'
   gem 'concurrent-ruby'
-  gem 'database_cleaner'
   gem 'dotenv-rails'
   gem 'factory_bot_rails', '4.10.0', require: false
-  gem 'foreman', require: false # for procfile
-  gem 'guard', require: false
-  gem 'guard-bundler', require: false
-  gem 'guard-minitest', require: false
-  gem 'guard-rspec', require: false
-  gem 'guard-rubocop', require: false
+  gem 'faker', require: false
   gem 'holder_rails'
-  gem 'parallel_tests' # https://devopsvoyage.com/2018/10/22/execute-rspec-locally-in-parallel.html
   gem 'pry' # a console anywhere!
-  gem 'rspec'
-  gem 'rspec-rails'
-  gem 'rubocop', '~> 0.80', require: false
   # gem 'rubocop-faker', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rails_config', require: false
   gem 'rubocop-rspec', require: false
-  gem 'selenium-webdriver'
-  gem 'sms-spec'
-  gem 'webdrivers', '~> 3.8'
+
   # To use debugger
   # gem 'debugger'
 end

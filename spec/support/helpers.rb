@@ -19,6 +19,7 @@ module Helpers
   end
 
   def wait_for_ajax
+    sleep 0.1
     counter = 0
     while page.execute_script('return $.active').to_i > 0
       counter += 1

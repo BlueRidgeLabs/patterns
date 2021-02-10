@@ -225,7 +225,7 @@ describe 'research sessions' do
     expect(invitation.reload.aasm_state).to eq(new_state)
   end
 
-  it 'invitee actions', js: true do
+  it 'invitee actions', js: true, retry: 3 do
     gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
     start_datetime = DateTime.current + 2.days
     research_session = FactoryBot.create(:research_session, start_datetime: start_datetime)
