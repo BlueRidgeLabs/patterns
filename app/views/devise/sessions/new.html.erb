@@ -27,8 +27,12 @@
         <%= f.submit "Log in", class:"btn btn-primary" %>
       </div>
     <% end %>
-
-    <%= render "devise/shared/links" %>
-  </div> 
 </div>
+<div class='container'>
+  <div class="col-md-6 col-sm-12">
+    <h4>Sign In with a Magic Link</h4>
+    <%= link_to "Click here", new_magic_link_path, class: 'btn btn-primary' %>
+  </div>
+</div> 
+
 
