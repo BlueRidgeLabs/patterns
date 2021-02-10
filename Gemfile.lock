@@ -338,6 +338,7 @@ GEM
     leaflet-rails (1.7.0)
       rails (>= 4.2.0)
     libv8 (8.4.255.0-x86_64-darwin-20)
+    libv8 (8.4.255.0-x86_64-linux)
     listen (3.4.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -405,6 +406,8 @@ GEM
     netrc (0.11.0)
     nio4r (2.5.5)
     nokogiri (1.11.1-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.11.1-x86_64-linux)
       racc (~> 1.4)
     notiffany (0.1.3)
       nenv (~> 0.1)
@@ -710,6 +713,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   aasm
