@@ -88,6 +88,14 @@ class Reward < ApplicationRecord
   #   Arel.sql('date(created_at)')
   # end
 
+  def self.ytd_rewards_by_user_id
+    end_of_last_year = Time.zone.today.beginning_of_year - 1.day
+    Reward.where('created_at > ?', end_of_last_year)
+          .group(:user_id)
+          .sum(:amount_cents)
+          .transform_values { |v| (v / 100).to_money }
+  end
+
   def reason_is_signup?
     reason == 'signup'
   end

@@ -6,7 +6,9 @@ class UsersController < ApplicationController
   # GET /users
   def index
     User.per_page = 100
-    @users = User.includes(:rewards, :team).order('approved desc').paginate(page: params[:page])
+    @users = User.includes(:team).order('approved desc').paginate(page: params[:page])
+    @user_rewards = Reward.ytd_rewards_by_user_id
+    @user_gc_unassigned = GiftCard.unscoped.unassigned.group(:user_id).count
   end
 
   # GET /users/1

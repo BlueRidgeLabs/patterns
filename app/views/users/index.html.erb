@@ -42,8 +42,8 @@
                       collection: teams ,
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></td>
-            <td><%= user.rewards_total %></td>
-            <td><%= user.unassigned_gift_cards_count %></td>
+            <td><%= humanized_money_with_symbol @user_rewards[user.id] %></td>
+            <td><%= @user_gc_unassigned[user.id] || 0 %></td>
             <td><%= link_to 'Show', user %></td>
             <td><%= link_to 'Edit', edit_user_path(user) %></td>
           </tr>
