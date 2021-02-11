@@ -25,6 +25,8 @@ class EmailLinksController < ApplicationController
       redirect_to root_path
     else
       flash[:alert] = 'Invalid or expired token!'
+      # should be a 401 for fail2ban etc.
+      # need to make it so that this can't be bruteforced
       redirect_to new_magic_link_path
     end
   end

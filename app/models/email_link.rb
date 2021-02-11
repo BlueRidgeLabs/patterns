@@ -15,7 +15,7 @@ class EmailLink < ApplicationRecord
   end
 
   def self.generate_token
-    Devise.friendly_token.first(16)
+    Devise.friendly_token.first(32)
   end
 
   def utilized!
