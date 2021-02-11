@@ -16,11 +16,12 @@ class EmailLinksController < ApplicationController
   end
 
   def validate
-    email_link = EmailLink.where(token: params[:token]).where('expires_at > ?', DateTime.now).first
+    email_link = EmailLink.active.find_by(token: params[:token])
 
-    if email_link.present? && email.user.approved?
+    if email_link.present? && email_link.user.approved?
       flash[:notice] = 'Signed in!'
       sign_in(email_link.user)
+      email_link.utilized!
       redirect_to root_path
     else
       flash[:alert] = 'Invalid or expired token!'

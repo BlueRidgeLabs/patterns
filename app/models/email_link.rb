@@ -5,15 +5,22 @@ class EmailLink < ApplicationRecord
   belongs_to :user
   after_commit :send_mail
 
+  scope :active, -> { where('expires_at > ?', Time.zone.now).where(utilized: false) }
+
   def self.generate(email)
-    user = User.find_by(email: email)
-    return nil unless user && user.approved?
+    user = User.approved.find_by(email: email)
+    return nil unless user
 
     create(user: user, expires_at: Time.zone.today + 1.day, token: generate_token)
   end
 
   def self.generate_token
     Devise.friendly_token.first(16)
+  end
+
+  def utilized!
+    self.utilized = true
+    save!
   end
 
   private
