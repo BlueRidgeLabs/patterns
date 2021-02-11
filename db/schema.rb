@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_11_052348) do
+ActiveRecord::Schema.define(version: 2021_02_11_053634) do
 
   create_table "action_mailbox_inbound_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 2021_02_11_052348) do
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_id", "record_type"], name: "index_active_storage_attachments_on_record_id_and_record_type"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
@@ -435,6 +436,7 @@ ActiveRecord::Schema.define(version: 2021_02_11_052348) do
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
+    t.index ["team_id"], name: "index_users_on_team_id"
   end
 
   create_table "versions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
