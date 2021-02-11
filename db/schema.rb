@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_09_215034) do
+ActiveRecord::Schema.define(version: 2021_02_10_224401) do
 
   create_table "action_mailbox_inbound_emails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
     t.integer "status", default: 0, null: false
@@ -170,6 +170,15 @@ ActiveRecord::Schema.define(version: 2020_07_09_215034) do
     t.index ["person_id"], name: "index_digital_gifts_on_person_id"
     t.index ["reward_id"], name: "index_digital_gifts_on_reward_id"
     t.index ["user_id"], name: "index_digital_gifts_on_user_id"
+  end
+
+  create_table "email_links", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "token"
+    t.datetime "expires_at"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_email_links_on_user_id"
   end
 
   create_table "gift_cards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|

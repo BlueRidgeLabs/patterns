@@ -1,0 +1,17 @@
+
+<div class="sidenav">
+  <div class="login-main-text">
+    <h2>Send Magic Link to Email</h2>
+  </div>
+</div>
+<div class="container">
+  <div class="col-md-6 col-sm-12">
+    <%= form_with(url: magic_link_path, method: :post) do %>
+      <div class="form-group">
+      <%= label_tag :email, "We'll email you a link to log in!" %>
+      <%= email_field_tag :email, nil, placeholder:"Your Email address", autofocus: true, autocomplete: "email", required: true, class: 'form-control' %>
+    </div>
+    <div class="actions pt-2">
+      <%= submit_tag "Send!", class:"btn btn-primary" %>
+    </div>
+    <% end %>
