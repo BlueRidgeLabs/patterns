@@ -31,7 +31,7 @@
                 id: "person-#{person.id}" %></td>
         <td><%= number_to_phone(person.phone_number&.gsub('+1',''), area_code: true) %></td>
         <% if person.consent_form.present? %>
-        <td><i class='fa fa-check'></i></td>
+        <td><i class='fa fa-check' style="color:green"></i></td>
         <% else %>
         <td>
           <button class='btn' onclick='clipboard.writeText("<%=person.consent_url%>");show_ajax_message("Copied Consent Link","success");'>
