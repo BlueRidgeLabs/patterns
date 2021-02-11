@@ -3,11 +3,11 @@
 # see here: https://dev.to/matiascarpintini/magic-links-with-ruby-on-rails-and-devise-4e3o
 class EmailLink < ApplicationRecord
   belongs_to :user
-  after_create :send_mail
+  after_commit :send_mail
 
   def self.generate(email)
     user = User.find_by(email: email)
-    return nil unless user
+    return nil unless user && user.approved?
 
     create(user: user, expires_at: Time.zone.today + 1.day, token: generate_token)
   end
