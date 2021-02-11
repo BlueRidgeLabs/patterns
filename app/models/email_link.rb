@@ -9,7 +9,7 @@ class EmailLink < ApplicationRecord
     user = User.find_by(email: email)
     return nil unless user
 
-    create(user: user, expires_at: Date.today + 1.day, token: generate_token)
+    create(user: user, expires_at: Time.zone.today + 1.day, token: generate_token)
   end
 
   def self.generate_token
