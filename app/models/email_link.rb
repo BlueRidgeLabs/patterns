@@ -15,6 +15,7 @@ class EmailLink < ApplicationRecord
 
   private
   def send_mail
+    # not backgrounding, because we want it fast
     EmailLinkMailer.sign_in_mail(self).deliver_now
   end
 end
