@@ -7,9 +7,11 @@
         when 'DigitalGift'
             raw("
 <input id='gift-link' value='#{reward.rewardable.link}' readonly>
-<button class='btn' onclick='clipboard.writeText(\"#{reward.rewardable.link}\");show_ajax_message(\"Copied\",\"success\");'>
+<a class='btn popit' onclick='clipboard.writeText(\"#{reward.rewardable.link}\");$(this).popover({content:\"Copied Digital Gift Link\", placement: \"top\"}).popover(\"show\");
+            setTimeout(function() {$(\".popit\").popover(\"hide\")},1000);
+          '>
    <i class='fa fa-clipboard'></i>
-</button>")
+</a>")
         when 'CashCard'
            reward.rewardable.notes
        end

@@ -39,9 +39,11 @@
         <td><i class='fa fa-check' style="color:green"></i></td>
         <% else %>
         <td>
-          <button class='btn' onclick='clipboard.writeText("<%=person.consent_url%>");show_ajax_message("Copied Consent Link","success");'>
+          <a class='btn popit' onclick='clipboard.writeText("<%=person.consent_url%>");$(this).popover({content:"Copied Consent Link", placement: "top"}).popover("show");
+            setTimeout(function() {$(".popit").popover("hide")},1000);
+          '>
           <i class='fa fa-clipboard' style='color:red'></i>
-          </button>
+          </a>
         </td>
         <% end %>
         <td id="<%= "invitation-#{invitation.id}-actions" %>">
