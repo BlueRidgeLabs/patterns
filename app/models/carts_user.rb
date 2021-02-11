@@ -22,8 +22,8 @@ class CartsUser < ApplicationRecord
             if: proc { |p| p.current_cart == true }
 
   def set_current_cart
-    # update all is OK, because d
+    # update all is OK
     CartsUser.where(user_id: user_id).update_all(current_cart: false)
-    current_cart = true
+    self.current_cart = true
   end
 end

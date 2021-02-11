@@ -7,7 +7,7 @@ Patterns::Application.routes.draw do
   get 'email_links/new', as: :new_magic_link
   post 'email_links/create', as: :magic_link
   get 'email_links/validate', as: :email_link
-  
+
   resources :cash_cards
   resources :budgets do
     collection do

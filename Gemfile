@@ -99,8 +99,8 @@ gem 'health_check'
 
 # use devise for auth/identity
 gem 'devise'
-gem 'devise_token_auth'
 gem 'devise_invitable'
+gem 'devise_token_auth'
 gem 'devise_zxcvbn' # password strength filter
 
 # use gibbon for easy Mailchimp API access
