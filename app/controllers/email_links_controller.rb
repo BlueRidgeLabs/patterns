@@ -21,7 +21,7 @@ class EmailLinksController < ApplicationController
       redirect_to new_magic_link_path
     end
     flash[:notice] = 'Signed in!'
-    sign_in(email_link.user, scope: :user)
+    sign_in(email_link.user)
     redirect_to root_path
   end
 end
