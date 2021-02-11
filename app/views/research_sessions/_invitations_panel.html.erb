@@ -9,7 +9,12 @@
           original_title:"Assigned Gift Card"} %></th>
       <th>Name</th>
       <th>Phone</th>
-      <th>Consent Form</th>
+      <th>Consent Form <%= content_tag :span,'?',class: 'badge badge-dark', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Click the red clipboard to copy someone's consent link. A green checkmark means that we have their consent form on file.",
+          title: 'Consent Form',
+          original_title:"Check to see if we have a consent form"} %></th>
       <th>Action <%= content_tag :span,'?',class: 'badge badge-dark', data:{
           toggle: "popover", 
           placement: "top", 
