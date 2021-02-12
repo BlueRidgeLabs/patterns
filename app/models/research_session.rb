@@ -89,7 +89,11 @@ class ResearchSession < ApplicationRecord
   def can_survey?
     tag_list.include? 'survey'
   end
-
+  
+  def can_reward?
+    start_datetime < Time.zone.now
+  end
+  
   def is_invited?(person)
     invitations.pluck(:person_id).include? person.id
   end

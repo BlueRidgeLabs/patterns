@@ -31,9 +31,9 @@
         <hr>
         <!-- must be hideable -->
         <div id='digital-gifts-for-<%= @giftable.id %>'>
-          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.nil? && @giftable.attended? && current_user.available_budget.to_i > 0 %>
           <h4>Digital Gifts</h4>
           <h6>available budget:<span id='available-budget<%= current_user.team.budget.id%>'><%= humanized_money_with_symbol current_user.available_budget %></h6>
+          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.nil? && @giftable.attended? && current_user.available_budget.to_i > 0 %>
           <div class='input-group'>
             <%= form_tag( '/digital_gifts', remote: true) do %>
             <table>
@@ -79,8 +79,24 @@
             <% end %>
           </div>
         </div>
-        <hr>
+        <% else %>
+          <h6>Digital gifts not available:</h6>
+          <ul>
+          <% if @giftable.rewards.find{|r| r.rewardable_type == 'DigitalGift'}.present? %>
+            <li>Person already has a Digital Gift</li>
+          <% end %>
+          <% if @giftable.attended? == false %>
+            <li>Person not yet marked as "attended"</li>
+          <% end %>
+          <% if @giftable.research_session.can_reward? == false  %>
+            <li>Research Session hasn't started yet</li>
+          <% end %>
+          <% if current_user.available_budget.to_i <= 0 %>
+            <li>Insufficient budget: <%= current_user.available_budget %></li>
+          <% end %>
+          </ul>
         <% end %>
+        <hr>
         <h4>Available Cards</h4>
         <div class="input-group">
           <input type="text" id='card-search' class="form-control has-clear" placeholder="filter cards">
