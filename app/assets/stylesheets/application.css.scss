@@ -40,6 +40,11 @@
   width:auto;
 }
 
-a.btn:hover {
+.invitees a.popit:hover {
   background: white;
+}
+
+.invitees a.popit{
+  background: $gray-100;
+  border: 1px solid $gray-600;
 }
