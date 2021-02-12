@@ -356,7 +356,7 @@ class Person < ApplicationRecord
   # end
   def consent_url # rubocop:todo Lint/DuplicateMethods
     # this feels broken, using config.hosts this way.
-    Rails.configuration.hosts[0] + "/consent/#{self.token}"
+    Rails.configuration.hosts[0] + "/consent/#{token}"
   end
 
   def self.csv_headers

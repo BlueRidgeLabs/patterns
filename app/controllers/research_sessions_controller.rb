@@ -18,6 +18,7 @@
 #
 
 class ResearchSessionsController < ApplicationController
+  include InvitationHelper
   before_action :parse_dates, only: %i[create update]
 
   def new

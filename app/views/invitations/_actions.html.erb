@@ -1,5 +1,5 @@
 <% invitation.aasm.events(permitted:true).each do |e| %>
-            <%= button_to e.name,
+            <%= button_to invitation_action_name(e.name),
                   event_research_session_invitations_path(@research_session,invitation,e.name),
                   method: :post,
                   remote: true,

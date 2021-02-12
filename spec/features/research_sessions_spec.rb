@@ -217,16 +217,17 @@ describe 'research sessions' do
       wait_for_ajax
       assert_invitee_actions_exist(new_actions)
     end
-    expect(page).to have_content(I18n.t(
-                                   'invitation.event_success',
-                                   event: action.capitalize,
-                                   person_name: invitation.person.full_name
-                                 ))
+    # no longer flashing.
+    # expect(page).to have_content(I18n.t(
+    #                                'invitation.event_success',
+    #                                event: action.capitalize,
+    #                                person_name: invitation.person.full_name
+    #                              ))
     expect(invitation.reload.aasm_state).to eq(new_state)
   end
 
   it 'invitee actions', js: true, retry: 3 do
-    gift_card = FactoryBot.create(:gift_card, :active, user: admin_user)
+    FactoryBot.create(:gift_card, :active, user: admin_user)
     start_datetime = DateTime.current + 2.days
     research_session = FactoryBot.create(:research_session, start_datetime: start_datetime)
     current_cart = admin_user.current_cart
@@ -250,31 +251,31 @@ describe 'research sessions' do
                                    person_name: person_1.full_name
                                  ))
     within("#invitation-#{invitation_1.id}-actions") do
-      assert_invitee_actions_exist(['invite'])
+      assert_invitee_actions_exist(['invited?'])
     end
 
     # person 1, invite!
     assert_invitee_action_works(
       invitation: invitation_1,
-      action: 'invite',
+      action: 'invited?',
       new_state: 'invited',
-      new_actions: %w[remind confirm cancel]
+      new_actions: %w[reminded? confirmed? canceled?]
     )
 
     # person 1, remind!
     assert_invitee_action_works(
       invitation: invitation_1,
-      action: 'remind',
+      action: 'reminded?',
       new_state: 'reminded',
-      new_actions: %w[remind confirm cancel]
+      new_actions: %w[reminded? confirmed? canceled?]
     )
 
     # person 1, confirm!
     assert_invitee_action_works(
       invitation: invitation_1,
-      action: 'confirm',
+      action: 'confirmed?',
       new_state: 'confirmed',
-      new_actions: %w[confirm cancel]
+      new_actions: %w[canceled?]
     )
 
     Timecop.travel(invitation_1.start_datetime + 2.hours)
@@ -282,9 +283,9 @@ describe 'research sessions' do
     # person 1, attend!
     assert_invitee_action_works(
       invitation: invitation_1,
-      action: 'attend',
+      action: 'attended?',
       new_state: 'attended',
-      new_actions: ['attend']
+      new_actions: ['attended?']
     )
     Timecop.return
     # uninvite person 1
@@ -298,13 +299,13 @@ describe 'research sessions' do
     # person 1, invite, and cancel!
     assert_invitee_action_works(
       invitation: invitation_1,
-      action: 'invite',
+      action: 'invited?',
       new_state: 'invited',
-      new_actions: %w[remind confirm cancel]
+      new_actions: %w[reminded? confirmed? canceled?]
     )
     assert_invitee_action_works(
       invitation: invitation_1,
-      action: 'cancel',
+      action: 'canceled?',
       new_state: 'cancelled',
       new_actions: []
     )
@@ -312,7 +313,7 @@ describe 'research sessions' do
     # invite person 2
     add_invitee(person_2)
     invitation_2 = research_session.reload.invitations.find_by(person: person_2)
-    assert_invitee_actions_exist(['invite'])
+    assert_invitee_actions_exist(['invited?'])
 
     click_with_js(page.find("#add-reward-#{invitation_2.id}"))
     expect(page).to have_content("Rewards:#{invitation_2.person.full_name}")
@@ -325,13 +326,13 @@ describe 'research sessions' do
     Timecop.freeze(start_datetime + 1.day) do
       visit current_path
       within("#invitation-#{invitation_2.id}-actions") do
-        assert_invitee_actions_exist(%w[attend miss])
+        assert_invitee_actions_exist(%w[attended? missed?])
       end
       assert_invitee_action_works(
         invitation: invitation_2,
-        action: 'miss',
+        action: 'missed?',
         new_state: 'missed',
-        new_actions: ['attend']
+        new_actions: ['attended?']
       )
 
       # click_with_js(page.find("#add-reward-#{invitation_2.id}"))
