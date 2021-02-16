@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  before_action :admin_needed, only: [:export,:export_ransack]
+
   include SearchHelper
   def index_ransack
     @tags = SearchService.parse_tags(params[:q])

@@ -39,6 +39,7 @@
 class PeopleController < ApplicationController
   before_action :set_person, only: %i[show edit update destroy upload_consent delete_consent]
   helper_method :sort_column, :sort_direction
+  before_action :admin_needed, only: [:amount]
 
   # GET /people
   # GET /people.json

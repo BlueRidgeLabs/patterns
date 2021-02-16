@@ -25,12 +25,26 @@ describe 'admin page' do
     expect(page).to have_current_path(root_path, ignore_query: true)
     visit finance_code_path
     expect(page).to have_current_path(root_path, ignore_query: true)
-    # TODO: test other admin paths
-    # http://localhost:3000/admin/people_amount
-    # http://localhost:3000/admin/teams
-    # http://localhost:3000/budgets
-    # http://localhost:3000/cart
-    # http://localhost:3000/admin/map
+    visit budgets_path
+    expect(page).to have_current_path(root_path, ignore_query: true)
+
+    # broken in testing
+    # visit people_map_path
+    # expect(page).to have_current_path(root_path, ignore_query: true)
+    visit people_amount_path
+    expect(page).to have_current_path(root_path, ignore_query: true)
+    visit teams_path
+    expect(page).to have_current_path(root_path, ignore_query: true)
+    
+    visit new_team_path
+    expect(page).to have_current_path(root_path, ignore_query: true)
+    visit new_user_path
+    expect(page).to have_current_path(root_path, ignore_query: true)
+
+    # huh, wonder why this doesn't work.
+    # visit sidekiq_web_path
+    # expect(page).to have_current_path(root_path, ignore_query: true)
+
   end
 
   it 'view user' do
