@@ -8,7 +8,8 @@
       <dd> <%= @current_giftrocket_budget %></dd>
       <dt>Money left All Budgets:</dt>
       <dd id='all_budget'> <%= humanized_money_with_symbol Budget.all.sum(&:amount) %></dd>
-      
+      <dt>Download CSV of all transaction</dt>
+      <dd><%= link_to "download csv", budgets_path(format: :csv) %></dd>
       <% if DigitalGift.current_budget && DigitalGift.current_budget > Budget.all.sum(&:amount).to_money %>
         <h5>Add/Subtract to Patterns Digital Gift Budget<h5>
         
@@ -53,7 +54,7 @@
           <td><%= link_to budget.id, budget %></td>
           <td><%= link_to budget.team.name, budget.team %></td>
           <td id='budget_amount_<%= budget.id %>'><%= humanized_money_with_symbol budget.amount %></td>
-          <td><%= link_to 'Show', budget %></td>
+          <td><%= link_to 'Show', budget %> | <%= link_to 'CSV', budget_path(budget,format: :csv) %></td>
         </tr>
       <% end %>
     </tbody>
