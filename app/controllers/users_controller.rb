@@ -90,7 +90,6 @@ class UsersController < ApplicationController
                                  :team_id)
   end
 
-
   def user_create_params
     params.require(:user).permit(:name,
                                  :approved,

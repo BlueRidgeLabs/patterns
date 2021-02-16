@@ -4,19 +4,17 @@ class BudgetsController < ApplicationController
   before_action :admin_needed
   before_action :set_budget, only: %i[show edit update destroy]
   before_action :check_transaction_type, only: :create_transaction
-  
+
   # GET /budgets
   # GET /budgets.json
   def index
     @budgets = Budget.all
+    begin
+      @current_giftrocket_budget = DigitalGift.current_budget.to_s
+    rescue JSON::ParserError
+      @current_giftrocket_budget = 'Unknown'
+    end
 
-    res = DigitalGift.current_budget
-    @current_giftrocket_budget = case res
-                                 when nil
-                                   'Unknown'
-                                 else
-                                   res.to_s
-                                 end
     respond_to do |format|
       format.html
       format.csv do
@@ -124,7 +122,6 @@ class BudgetsController < ApplicationController
 
   private
 
-  
   def check_transaction_type
     @transaction_type = transaction_log_params[:transaction_type]
     %w[Transfer Topup].include? @transaction_typez

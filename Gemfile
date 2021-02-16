@@ -185,7 +185,7 @@ group :development do
   gem 'capistrano', '~> 2.15.4', require: false
   gem 'capistrano-sidekiq', require: false
   gem 'ed25519'
-  #gem 'heavens_door' # recording capybara tests
+  # gem 'heavens_door' # recording capybara tests
   gem 'lol_dba' # find columns that should have indices
   gem 'rbnacl', require: false
   gem 'rvm-capistrano', require: false

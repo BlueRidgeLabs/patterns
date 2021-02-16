@@ -5,10 +5,8 @@ class CartController < ApplicationController
   before_action :cart_init, except: %i[change_cart add_user delete_user]
   before_action :type_init
 
-
   def show
     current_user.current_cart = @cart
-
     @people = @cart.people.paginate(page: params[:page])
     @users = @cart.users
     @comment = Comment.new commentable: @cart

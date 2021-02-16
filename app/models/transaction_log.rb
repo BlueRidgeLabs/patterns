@@ -17,7 +17,7 @@
 #  updated_at       :datetime         not null
 #
 
-# should we have an opening balance, 
+# should we have an opening balance,
 # closing balance and remote balance?
 
 # all transactions in a log
@@ -75,19 +75,19 @@ class TransactionLog < ApplicationRecord
   end
 
   def self.csv_headers
-    ['id',
-     'transaction_type',
-     'from_id',
-     'from_type',
-     'from_name',
-     'recipient_id',
-     'recipient_type',
-     'recipient_name',
-     'amount_cents',
-     'amount',
-     'tremendous_order_id',
-     'created_at',
-     'accounting']
+    %w[id
+       transaction_type
+       from_id
+       from_type
+       from_name
+       recipient_id
+       recipient_type
+       recipient_name
+       amount_cents
+       amount
+       tremendous_order_id
+       created_at
+       accounting]
   end
 
   def to_csv_row
@@ -103,8 +103,7 @@ class TransactionLog < ApplicationRecord
      amount.to_s,
      recipient.instance_of?(DigitalGift) ? recipient.order_id : '',
      created_at,
-     external_accounting_value
-     ]
+     external_accounting_value]
   end
 
   def external_accounting_value
@@ -117,6 +116,7 @@ class TransactionLog < ApplicationRecord
       (amount * -1).to_s
     end
   end
+
   # is there sufficient budget for the transaction recipient go through
   # do we do this here?
   def sufficient_budget?
