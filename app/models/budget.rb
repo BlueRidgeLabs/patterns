@@ -29,6 +29,6 @@ class Budget < ApplicationRecord
            foreign_key: 'recipient_id'
 
   def transactions
-    TransactionLog.where(recipient_type: 'Budget', recipient_id: id).or(TransactionLog.where(from_type: 'Budget', from_id: id)).order(id: 'desc')
+    credits + debits
   end
 end

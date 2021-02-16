@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class BudgetsController < ApplicationController
+  before_action :admin_needed
   before_action :set_budget, only: %i[show edit update destroy]
   before_action :check_transaction_type, only: :create_transaction
+  
   # GET /budgets
   # GET /budgets.json
   def index
@@ -15,6 +17,12 @@ class BudgetsController < ApplicationController
                                  else
                                    res.to_s
                                  end
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data TransactionLog.all_csv, filename: 'transactions-all.csv'
+      end
+    end
   end
 
   # GET /budgets/1
@@ -22,6 +30,16 @@ class BudgetsController < ApplicationController
   def show
     @transaction_log = TransactionLog.new
     @transactions = @budget.transactions
+    respond_to do |format|
+      format.html
+      format.csv do
+        output = CSV.generate do |csv|
+          csv << TransactionLog.csv_headers
+          @transactions.each { |t| csv << t.to_csv_row }
+        end
+        send_data output, filename: "transactions-#{@budget.name}.csv"
+      end
+    end
   end
 
   # GET /budgets/new
@@ -106,6 +124,7 @@ class BudgetsController < ApplicationController
 
   private
 
+  
   def check_transaction_type
     @transaction_type = transaction_log_params[:transaction_type]
     %w[Transfer Topup].include? @transaction_typez

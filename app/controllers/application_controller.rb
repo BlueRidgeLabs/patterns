@@ -33,13 +33,26 @@ class ApplicationController < ActionController::Base
   end
 
   def user_needed
-    render json: { 'error' => 'authentication error' }, status: :unauthorized unless current_user
+    unless current_user
+      respond_to do |format|
+        format.json { render json: { error: 'authentication error' }.to_json, status: :unauthorized }
+        format.html do
+          flash[:warning] = 'Unathorized'
+          redirect_to root_url
+        end
+      end
+    end
   end
 
   def admin_needed
     unless current_user&.admin?
-      flash[:warning] = 'Unathorized'
-      render json: { 'error' => 'authentication error' }, status: :unauthorized
+      respond_to do |format|
+        format.json { render json: { error: 'authentication error' }.to_json, status: :unauthorized }
+        format.html do
+          flash[:warning] = 'Unathorized'
+          redirect_to root_url
+        end
+      end
     end
   end
 

@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
-  before_action :admin?
+  before_action :admin_needed
   # GET /users
   def index
     User.per_page = 100
@@ -90,9 +90,6 @@ class UsersController < ApplicationController
                                  :team_id)
   end
 
-  def admin?
-    redirect_to root_url unless current_user.admin?
-  end
 
   def user_create_params
     params.require(:user).permit(:name,

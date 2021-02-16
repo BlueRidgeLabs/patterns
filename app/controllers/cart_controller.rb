@@ -5,7 +5,7 @@ class CartController < ApplicationController
   before_action :cart_init, except: %i[change_cart add_user delete_user]
   before_action :type_init
 
-  # Index
+
   def show
     current_user.current_cart = @cart
 

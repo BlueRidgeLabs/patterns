@@ -17,7 +17,10 @@
 #  updated_at       :datetime         not null
 #
 
-# srecipientres all transactions in a log
+# should we have an opening balance, 
+# closing balance and remote balance?
+
+# all transactions in a log
 class TransactionLog < ApplicationRecord
   has_paper_trail
   monetize :amount_cents
@@ -29,6 +32,11 @@ class TransactionLog < ApplicationRecord
 
   validates :from_id, presence: true
   validates :from_type, presence: true
+
+  belongs_to :from, polymorphic: true
+  belongs_to :recipient, polymorphic: true
+
+  default_scope { includes(:recipient, :from) }
 
   validates :transaction_type, inclusion: { in: %w[DigitalGift Transfer Topup] }
 
@@ -59,16 +67,56 @@ class TransactionLog < ApplicationRecord
     end
   end
 
-  def from
-    @from ||= from_type.classify.constantize.find(from_id)
+  def self.all_csv
+    CSV.generate do |csv|
+      csv << TransactionLog.csv_headers
+      TransactionLog.all.find_each { |t| csv << t.to_csv_row }
+    end
   end
 
-  def recipient
-    return false if recipient_type.nil? || recipient_id.nil?
-
-    @recipient ||= recipient_type.classify.constantize.find(recipient_id)
+  def self.csv_headers
+    ['id',
+     'transaction_type',
+     'from_id',
+     'from_type',
+     'from_name',
+     'recipient_id',
+     'recipient_type',
+     'recipient_name',
+     'amount_cents',
+     'amount',
+     'tremendous_order_id',
+     'created_at',
+     'accounting']
   end
 
+  def to_csv_row
+    [id,
+     transaction_type,
+     from_id,
+     from_type,
+     from.name,
+     recipient_id,
+     recipient_type,
+     recipient&.name,
+     amount_cents,
+     amount.to_s,
+     recipient.instance_of?(DigitalGift) ? recipient.order_id : '',
+     created_at,
+     external_accounting_value
+     ]
+  end
+
+  def external_accounting_value
+    case transaction_type
+    when 'TopUp'
+      amount
+    when 'Transfer'
+      0
+    when 'DigitalGift'
+      (amount * -1).to_s
+    end
+  end
   # is there sufficient budget for the transaction recipient go through
   # do we do this here?
   def sufficient_budget?
