@@ -86,12 +86,19 @@ class ResearchSession < ApplicationRecord
     end
   end
 
+  def all_invitees_marked
+    return true unless can_reward?
+
+    marked = invitations.count { |i| i.attended? || i.missed? }
+    marked == invitations.size
+  end
+
   def reward_completion_percentage
     attended = invitations.attended.size
     if attended.positive?
       invitations.count { |i| i.rewards.size >= 1 } / attended
     else
-      0
+      1
     end
   end
 
@@ -100,14 +107,17 @@ class ResearchSession < ApplicationRecord
     if attended.positive?
       invitations.count { |i| i.person.consent_form.present? } / attended
     else
-      0
+      1
     end
   end
 
   def complete?
-    reward_completion_percentage == 1 && consent_form_completion_percentage == 1 && can_reward?
+    return true if invitations.size.zero? && can_reward? #empty and in past
+
+    # is everyone akk set?
+    reward_completion_percentage == 1 && consent_form_completion_percentage == 1 && can_reward? && all_invitees_marked
   end
-  
+
   def can_survey?
     tag_list.include? 'survey'
   end
@@ -117,16 +127,16 @@ class ResearchSession < ApplicationRecord
   end
 
   def is_invited?(person)
-    invitations.pluck(:person_id).include? person.id
+    invitations.find_by(person_id: person.id).present?
   end
 
   def rewards
     invitations.map(&:rewards).flatten
   end
 
-  def send_invitation_notifications
-    invitations.where(aasm_state: 'created').find_each(&:invite!)
-  end
+  # def send_invitation_notifications
+  #   invitations.where(aasm_state: 'created').find_each(&:invite!)
+  # end
 
   private
 

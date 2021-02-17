@@ -82,7 +82,7 @@ class ResearchSessionsController < ApplicationController
 
     tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
     @tags = ResearchSession.tag_counts.where(name: tags).to_a
-    @research_sessions = @s.result(distinct: true).includes({ invitations: :person }, :tags, :user).page(params[:page])
+    @research_sessions = @s.result(distinct: true).includes({ invitations: { person: [:consent_form_attachment,:taggings ], rewards: :rewardable } }, :tags, :user).page(params[:page])
   end
 
   def show

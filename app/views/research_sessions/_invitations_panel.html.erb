@@ -1,4 +1,14 @@
 <table class="table table-hover invitees" id='dynamic-invitation-panel' >
+<!--  <% unless @research_session.complete? %>
+    <div class="card card-body bg-light m-2">
+      <h5 class='text-danger'>Todo</h5>
+      <ul>
+      <% session_todo_list(@research_session).each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+    <% end %> -->
   <tbody>
     <tr>
       <th>Remove <%= content_tag :span,'?',class: 'badge badge-dark', data:{

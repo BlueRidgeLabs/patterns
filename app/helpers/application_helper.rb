@@ -49,9 +49,26 @@ module ApplicationHelper
     if session.complete?
       "fa-check text-success"
     elsif !session.can_reward?
-      "fa-calendar-times-o text-warning  "
+      "fa-calendar-times-o text-warning"
     elsif session.can_reward? && !session.complete?
       "fa-times-circle text-danger"
     end
+  end
+
+  def session_todo_list(session)
+    msgs = []
+
+    unless session.all_invitees_marked
+      msgs << 'Not all people are marked as Missed or Attended'
+    end
+
+    unless session.consent_form_completion_percentage == 1
+      msgs << "#{session.consent_form_completion_percentage * 100}% of consent forms signed"
+    end
+
+    unless session.reward_completion_percentage
+      msgs << "#{session.reward_completion_percentage * 100}% of attended people have a reward"
+    end
+    msgs
   end
 end

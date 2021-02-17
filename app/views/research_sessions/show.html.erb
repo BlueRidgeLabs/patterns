@@ -18,8 +18,6 @@ research_session_id = <%= @research_session.id%>;
   <div class="col-4">
     <div class="card card-body bg-light m-2">
       <dl>
-        <dt>Clone</dt>
-        <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-sm btn-primary' %></dd>
         <dt>Complete</dt>
         <dd><i class="fa <%= session_fontawesome_status(@research_session) %> fa-3x"></i></dd>
         <dt>Description</dt>
@@ -53,6 +51,8 @@ research_session_id = <%= @research_session.id%>;
         <dt>Add to Pool: <span class='current_cart'><%= current_cart.name %></span></dt>
         <dd><%= link_to "Add all to pool", add_person_cart_index_path(@research_session.people.map(&:id)), remote: true, class: 'btn btn-sm btn-primary' %></dd>
         <% end %>
+         <dt>Clone</dt>
+        <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-sm btn-primary' %></dd>
       </dl>
     </div>
     <h3>Tags</h3>
@@ -85,13 +85,13 @@ research_session_id = <%= @research_session.id%>;
             as: :comment %>
     </div>
   </div>
-  <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
   <div class="col-sm">
     <h3>Invitees</h3>
     <input id='invitees-typeahead' type="text" placeholder="People Search">
+    <!-- http://stackoverflow.com/questions/10539143/reloading-partial-in-an-rails-app -->
     <%= render partial: 'invitations_panel',
           locals: { invitations: @research_session.invitations } %>
-
+    
     <%= render partial: 'cart/mini_view', locals: {
         people: current_cart.people,
         current_session: @research_session
