@@ -2,7 +2,6 @@
 
 module InvitationHelper
   def invitation_action_name(name)
-    Rails.logger.info('foobar')
     r = { invite: 'invited?',
           remind: 'reminded?',
           confirm: 'confirmed?',

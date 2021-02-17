@@ -42,6 +42,8 @@ research_session_id = <%= @research_session.id%>;
         <% else %>
         <dd><%= @research_session.user.name %></dd>
         <% end %>
+        <dt>Reward Total</dt>
+        <dd>$<%= @research_session.rewards.sum(&:amount).to_s %>
         <dt>Invited</dt>
         <dd><%= @research_session.invitations.size %></dd>
         <dt>Attended</dt>
