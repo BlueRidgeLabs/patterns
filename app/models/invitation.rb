@@ -108,7 +108,7 @@ class Invitation < ApplicationRecord
       transitions from: %i[invited cancel reminded confirmed], to: :cancelled
     end
 
-    event :attend, guard: :in_past? do
+    event :attend, guard: :can_attend? do
       # can transition from anything to attended.
       transitions to: :attended
     end
@@ -156,6 +156,10 @@ class Invitation < ApplicationRecord
 
   def can_destroy?
     throw(:abort) unless rewards.empty? && %w[attended missed].exclude?(aasm_state)
+  end
+
+  def can_attend?
+    in_past? && !attended?
   end
 
   def can_miss?
