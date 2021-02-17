@@ -44,4 +44,14 @@ module ApplicationHelper
     direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
     link_to title, { sort: column, direction: direction }, class: css_class
   end
+
+  def session_fontawesome_status(session)
+    if session.complete?
+      "fa-check text-success"
+    elsif !session.can_reward?
+      "fa-calendar-times-o text-warning  "
+    elsif session.can_reward? && !session.complete?
+      "fa-times-circle text-danger"
+    end
+  end
 end

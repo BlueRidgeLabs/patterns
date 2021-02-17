@@ -53,7 +53,7 @@
       <tbody>
         <% @research_sessions.each do |sesh| %>
           <tr>
-            <td><i class="fa <%= sesh.complete? ? 'fa-check text-success' : 'fa-times-circle text-danger' %> fa-2x"></i></td>
+            <td><i class="fa <%= session_fontawesome_status(sesh) %> fa-2x"></i></td>
             <td><%= link_to sesh.title, sesh %></td>
             <td><%= sesh.description %></td>
             <td><%= sesh.location %></td>

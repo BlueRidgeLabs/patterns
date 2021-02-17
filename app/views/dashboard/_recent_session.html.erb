@@ -1,5 +1,5 @@
 <div class="recent_session card card-body bg-light m-2">
-  <span class="complete">Complete:<i class="fa <%= session.complete? ? 'fa-check text-success' : 'fa-times-circle text-danger' %>"></i></span>
+  <span class="complete">Complete:<i class="fa <%= session_fontawesome_status(session) %>"></i></span>
   <span class="session">Title:<%= link_to session.title, session %></span><br/>
   <span class="user">User: <%= session.user.name %></span><br/>
   <span class="start">Start:<%= session.start_datetime.to_s :short %></span><br/>

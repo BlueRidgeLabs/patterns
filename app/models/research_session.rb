@@ -103,9 +103,9 @@ class ResearchSession < ApplicationRecord
       0
     end
   end
-  
+
   def complete?
-    reward_completion_percentage == 1 && consent_form_completion_percentage == 1
+    reward_completion_percentage == 1 && consent_form_completion_percentage == 1 && can_reward?
   end
   
   def can_survey?
