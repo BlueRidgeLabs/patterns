@@ -86,6 +86,28 @@ class ResearchSession < ApplicationRecord
     end
   end
 
+  def reward_completion_percentage
+    attended = invitations.attended.size
+    if attended.positive?
+      invitations.count { |i| i.rewards.size >= 1 } / attended
+    else
+      0
+    end
+  end
+
+  def consent_form_completion_percentage
+    attended = invitations.attended.size
+    if attended.positive?
+      invitations.count { |i| i.person.consent_form.present? } / attended
+    else
+      0
+    end
+  end
+  
+  def complete?
+    reward_completion_percentage == 1 && consent_form_completion_percentage == 1
+  end
+  
   def can_survey?
     tag_list.include? 'survey'
   end

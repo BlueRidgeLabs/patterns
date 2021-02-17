@@ -285,7 +285,7 @@ describe 'research sessions' do
       invitation: invitation_1,
       action: 'attended?',
       new_state: 'attended',
-      new_actions: ['attended?']
+      new_actions: []
     )
     Timecop.return
     # uninvite person 1

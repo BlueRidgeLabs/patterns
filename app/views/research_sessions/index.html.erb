@@ -33,20 +33,27 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>Complete?</th>
           <th><%= sort_link(@q, :title) %></th>
           <th><%= sort_link(@q, :description) %></th>
           <th><%= sort_link(@q, :location) %></th>
           <th>Starts at</th>
           <th><%= sort_link(@q, :duration) %></th>
           <th><%= sort_link(@q, :created_by) %></th>
-          <th>Number Invited:</th>
-          <th>Attended</th>
+          <th>I | A | R<%= content_tag :span,'?',class: 'badge badge-dark', data:{
+          toggle: "popover", 
+          placement: "top", 
+          content: "Invited | Attended | Rewarded",
+          title: 'popover',
+          original_title:"Data"} %></th>
+          <th>Total $</th>
         </tr>
       </thead>
 
       <tbody>
         <% @research_sessions.each do |sesh| %>
           <tr>
+            <td><i class="fa <%= sesh.complete? ? 'fa-check text-success' : 'fa-times-circle text-danger' %> fa-2x"></i></td>
             <td><%= link_to sesh.title, sesh %></td>
             <td><%= sesh.description %></td>
             <td><%= sesh.location %></td>
@@ -57,9 +64,9 @@
             <% else %>
             <td><%= sesh.user.name %></td>
             <% end %>
-            <td><%= sesh.invitations.size %></td>
-            <td><%= sesh.invitations.where(aasm_state:'attended').size %></td>
-            <!-- probably link to the reservations for this event -->
+            <td><%= sesh.invitations.size %>|<%= sesh.invitations.where(aasm_state:'attended').size %>|<%= sesh.rewards.size %></td>
+            
+            <td>$<%=sesh.rewards.sum(&:amount).to_s %></td>
           </tr>
         <% end %>
       </tbody>

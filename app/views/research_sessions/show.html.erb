@@ -20,8 +20,9 @@ research_session_id = <%= @research_session.id%>;
       <dl>
         <dt>Clone</dt>
         <dd><%= link_to I18n.t("research_session.clone_btn"), research_session_clone_path(@research_session), class:'btn btn-sm btn-primary' %></dd>
+        <dt>Complete</dt>
+        <dd><i class="fa <%= @research_session.complete? ? 'fa-check text-success' : 'fa-times-circle text-danger' %> fa-3x"></i></dd>
         <dt>Description</dt>
-
         <dd><%= best_in_place @research_session, :description %>
         <!-- <dt>SMS Description</dt>
         <dd><%= @research_session.sms_description %> -->
