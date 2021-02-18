@@ -57,17 +57,15 @@ module ApplicationHelper
 
   def session_todo_list(session)
     msgs = []
+    msgs << I18n.t('research_session.not_all_invitees_marked') unless session.all_invitees_marked
 
-    unless session.all_invitees_marked
-      msgs << 'Not all people are marked as Missed or Attended'
+    unless session.consent_forms_needed_to_complete.zero?
+      msgs << I18n.t('research_session.consent_forms_not_signed', count: session.consent_forms_needed_to_complete)
     end
 
-    unless session.consent_form_completion_percentage == 1
-      msgs << "#{session.consent_form_completion_percentage * 100}% of consent forms signed"
-    end
-
-    unless session.reward_completion_percentage
-      msgs << "#{session.reward_completion_percentage * 100}% of attended people have a reward"
+    unless session.rewards_needed_to_complete.zero?
+      
+      msgs << I18n.t('research_session.invitees_not_rewarded', count: session.rewards_needed_to_complete)
     end
     msgs
   end

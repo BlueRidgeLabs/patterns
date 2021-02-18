@@ -93,29 +93,29 @@ class ResearchSession < ApplicationRecord
     marked == invitations.size
   end
 
-  def reward_completion_percentage
+  def rewards_needed_to_complete
     attended = invitations.attended.size
     if attended.positive?
-      invitations.count { |i| i.rewards.size >= 1 } / attended
+      attended - invitations.count { |i| i.rewards.size >= 1 }
     else
-      1
+      0
     end
   end
 
-  def consent_form_completion_percentage
+  def consent_forms_needed_to_complete
     attended = invitations.attended.size
     if attended.positive?
-      invitations.count { |i| i.person.consent_form.present? } / attended
+      attended - invitations.attended.count { |i| i.person.consent_form.present?} 
     else
-      1
+      0
     end
   end
 
   def complete?
     return true if invitations.size.zero? && can_reward? #empty and in past
 
-    # is everyone akk set?
-    reward_completion_percentage == 1 && consent_form_completion_percentage == 1 && can_reward? && all_invitees_marked
+    # is everyone all set?
+    rewards_needed_to_complete.zero? && consent_forms_needed_to_complete.zero? && can_reward? && all_invitees_marked
   end
 
   def can_survey?

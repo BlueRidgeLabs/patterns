@@ -154,6 +154,13 @@ class Invitation < ApplicationRecord
     end
   end
 
+  def complete?
+    (in_past? && attended? && rewards.size.positive? && person.consent_form.present?) || (in_past? && missed?)
+  end
+
+  def completion_tasks
+  end
+
   def can_destroy?
     throw(:abort) unless rewards.empty? && %w[attended missed].exclude?(aasm_state)
   end

@@ -20,6 +20,12 @@ research_session_id = <%= @research_session.id%>;
       <dl>
         <dt>Complete</dt>
         <dd><i class="fa <%= session_fontawesome_status(@research_session) %> fa-3x"></i></dd>
+        <% if !@research_session.complete? &&  @research_session.can_reward? %>
+          <dt class='text-danger'>Todo</dt>
+          <% session_todo_list(@research_session).each do |msg| %>
+            <dd><%= msg %></dd>
+          <% end %>
+        <% end %>
         <dt>Description</dt>
         <dd><%= best_in_place @research_session, :description %>
         <!-- <dt>SMS Description</dt>

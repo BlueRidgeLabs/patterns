@@ -31,6 +31,9 @@ en:
     add_invitee_success: "%{person_name} added to session!"
     remove_invitee_success: "%{person_name} removed from session!"
     clone_btn: Clone me
+    not_all_invitees_marked: Not all people are marked as Missed or Attended
+    consent_forms_not_signed: "%{count} consent forms missing"
+    invitees_not_rewarded: "%{count} reward(s) needed"
   invitation:
     event_success: "%{event} for %{person_name}"
   user:
