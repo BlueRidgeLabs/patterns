@@ -78,11 +78,17 @@ class ResearchSessionsController < ApplicationController
   end
 
   def index
-    @s = ResearchSession.ransack(params[:q])
-
-    tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
-    @tags = ResearchSession.tag_counts.where(name: tags).to_a
-    @research_sessions = @s.result(distinct: true).includes({ invitations: { person: [:consent_form_attachment,:taggings ], rewards: :rewardable } }, :tags, :user).page(params[:page])
+    if params[:q].present?
+      @s = ResearchSession.ransack(params[:q])
+      tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
+      @tags = ResearchSession.tag_counts.where(name: tags).to_a
+      @research_sessions = @s.result(distinct: true).includes({ invitations: :person }, :tags, :user).page(params[:page])
+    else
+      @s = ResearchSession.ransack
+      @tags = []
+      @research_sessions = ResearchSession.includes({ invitations: :person }, :tags, :user).where(user_id: current_user.id).page(params[:page])
+    end
+    redirect_to research_session_path(@research_sessions.first) if @research_sessions.size == 1
   end
 
   def show

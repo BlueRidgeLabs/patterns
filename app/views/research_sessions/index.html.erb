@@ -1,5 +1,7 @@
 <%= render partial: 'layouts/research_sessions_menu' %>
 <%= search_form_for @s, class:'form-group' do |f| %>
+  <%= f.label "Search" %>
+  <%= f.search_field :omni_search_cont, class:'form-control', value: params.dig(:q,:omni_search) %>
     <%= f.label "Tags" %>
     <%= f.text_field :ransack_tagged_with,
                               class: 'tokenfield form-control input-medium span4',
@@ -10,15 +12,6 @@
                                       pre_populate: @tags
                                     }
                             %>
-  <%= f.label "Title" %>
-  <%= f.search_field :title_or_description_cont, class:'form-control' %>
-  <%= f.label "Notes" %>
-  <%= f.search_field :comments_cont, class:'form-control' %>
-  <%= f.label "Person's Name" %>
-  <%= f.search_field :people_full_name_cont, class:'form-control' %>
-  <%= f.label "User" %>
-  <% selected_user = params.dig(:user_name_cont).blank? ? current_user.name : params.dig(:user_name_cont) %>
-  <%= f.select :user_name_cont, User.where(approved: true).map(&:name), { class:'form-control', selected: selected_user, include_blank: true}, class:'form-control' %>
   <%= f.submit 'Search', class: 'btn btn-sm btn-primary mt-2' %>
   <%= link_to "Clear", research_sessions_path, class: 'btn btn-sm btn-dark mt-2' %>
 <% end %>
@@ -37,7 +30,7 @@
           <th><%= sort_link(@q, :title) %></th>
           <th><%= sort_link(@q, :description) %></th>
           <th><%= sort_link(@q, :location) %></th>
-          <th>Starts at</th>
+          <th><%= sort_link(@q, :start_datetime)%></th>
           <th><%= sort_link(@q, :duration) %></th>
           <th><%= sort_link(@q, :created_by) %></th>
           <th>I | A | R<%= content_tag :span,'?',class: 'badge badge-dark', data:{

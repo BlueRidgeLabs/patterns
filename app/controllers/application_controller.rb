@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
           flash[:warning] = 'Unathorized'
           redirect_to root_url
         end
-        format.any { redirect_to root_url}
+        format.any { redirect_to root_url }
       end
     end
   end

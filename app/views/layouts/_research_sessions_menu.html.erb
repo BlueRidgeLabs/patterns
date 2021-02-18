@@ -1,8 +1,6 @@
-<% nav_bar('nav nav-tabs') do %>
-  <% nav_link('Calendar', calendar_path, class: 'presentation') %>
-  <% nav_link('New Session', new_research_session_path, class: 'presentation') %>
-  <% nav_link('Session List', research_sessions_path, class: 'presentation') %>
-  <% nav_link("People Pool <span class='badge badge-dark cart-size'>#{current_cart.people.size} </span>".html_safe, cart_path(current_cart.id), class: 'presentation')  %>
-<% end %>
 
-<!-- No output here. don't need this now. maybe later?  -->
+<%= nav_bar('nav nav-tabs') do %>
+  <%= nav_link('Create new Session', new_research_session_path) %>
+  <%= nav_link('Your Sessions List', research_sessions_path(yours: true)) %>
+  <%= nav_link('All Session Search', research_sessions_path(q: {all: true})) %>
+<% end %>

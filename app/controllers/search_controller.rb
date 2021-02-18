@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# https://techbrownbags.wordpress.com/2015/02/18/rails-save-ransack-search-queries/
 class SearchController < ApplicationController
-  before_action :admin_needed, only: [:export,:export_ransack]
+  before_action :admin_needed, only: %i[export export_ransack]
 
   include SearchHelper
   def index_ransack

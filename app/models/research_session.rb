@@ -75,6 +75,8 @@ class ResearchSession < ApplicationRecord
 
   ransack_alias :comments, :comments_content
 
+  ransack_alias :omni_search, :title_or_description_or_people_name_or_comments_content_or_user_name_or_people_phone_number_or_people_email_address
+
   def self.ransackable_scopes(_auth = nil)
     %i[ransack_tagged_with]
   end

@@ -35,7 +35,7 @@ describe 'admin page' do
     expect(page).to have_current_path(root_path, ignore_query: true)
     visit teams_path
     expect(page).to have_current_path(root_path, ignore_query: true)
-    
+
     visit new_team_path
     expect(page).to have_current_path(root_path, ignore_query: true)
     visit new_user_path
@@ -44,7 +44,6 @@ describe 'admin page' do
     # huh, wonder why this doesn't work.
     # visit sidekiq_web_path
     # expect(page).to have_current_path(root_path, ignore_query: true)
-
   end
 
   it 'view user' do
