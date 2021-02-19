@@ -163,6 +163,13 @@ TODO
   * every invitation that changes calls the front end update function
   * need to turn sessions into partials
 
+* Digital GiftCard Cancel
+  * should have an attribute on reward: active/cancelled or something that is default scope
+  * on cancel, through webhook, we:
+    * make reward inactive, thus hidden and make a transaction that reverses the prior.
+    * also make digital gift inactive/cancelled. Probably have a default scope there.
+    * sort of "acts as paranoid" style https://github.com/ActsAsParanoid/acts_as_paranoid
+    * perhaps use acts as paranoid?
 
 Hacking
 -------
