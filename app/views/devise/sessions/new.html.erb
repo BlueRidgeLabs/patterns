@@ -27,11 +27,20 @@
         <%= f.submit "Log in", class:"btn btn-primary" %>
       </div>
     <% end %>
+  </div>
 </div>
-<div class='container'>
+<div class='container mt-2'>
   <div class="col-md-6 col-sm-12">
     <h4>Sign In with a Magic Link</h4>
-    <%= link_to "Click here", new_magic_link_path, class: 'btn btn-primary' %>
+    <%= form_with(url: magic_link_path, method: :post) do %>
+      <div class="form-group">
+      <%= label_tag :email, "We'll email you a link to log in!" %>
+      <%= email_field_tag :email, nil, placeholder:"Your Email address", autofocus: true, autocomplete: "email", required: true, class: 'form-control' %>
+    </div>
+    <div class="actions pt-2">
+      <%= submit_tag "Send!", class:"btn btn-primary" %>
+    </div>
+    <% end %>
   </div>
 </div> 
 
