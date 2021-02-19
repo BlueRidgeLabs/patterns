@@ -51,6 +51,7 @@
       </thead>
 
       <tbody>
+        <!-- turn into a partial, both for actioncable and for hotwire/turbo -->
         <% @research_sessions.each do |sesh| %>
           <tr>
             <td><i class="fa <%= session_fontawesome_status(sesh) %> fa-2x"></i></td>

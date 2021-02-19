@@ -155,7 +155,10 @@ TODO
   * Show activity streams
   * contact info verification
   
-  
+* Research Session Completeness
+  * Background task that uses action cable to update the session
+  * every invitation that changes calls the front end update function
+  * need to turn sessions into partials
 
 
 Hacking
@@ -165,6 +168,8 @@ Main development occurs in the development branch. HEAD on production is always 
 
 We use Github Actions for continuous integration testing and linting.
 see: `.github/workflows` for details.
+
+Specs are, well, [heisenbuggish](https://en.wikipedia.org/wiki/Heisenbug). If they don't pass, try `rspec --only-failures` and they will. Why, I don't know.
 
 Development workflow:
 Install mysql & redis
@@ -177,7 +182,7 @@ bundle exec rails s
 ```
 
 Login with:
-  email: 'patterns@example.com',
+  email: 'admin@example.com',
   password: 'foobar123!01203$#$%R',
 
 Unit and Integration Tests
