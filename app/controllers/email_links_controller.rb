@@ -2,7 +2,9 @@
 
 class EmailLinksController < ApplicationController
   skip_before_action :authenticate_user!
-  def new; end
+  def new
+    redirect_to root_path if authenticate_user!
+  end
 
   def create
     @email_link = EmailLink.generate(params[:email])
