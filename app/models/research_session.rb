@@ -40,7 +40,7 @@ class ResearchSession < ApplicationRecord
   has_many :people, through: :invitations
   has_many :comments, as: :commentable, dependent: :destroy
   before_create :update_missing_attributes
-  
+
   after_save :update_frontend
 
   accepts_nested_attributes_for :invitations, reject_if: :all_blank, allow_destroy: true
@@ -109,14 +109,14 @@ class ResearchSession < ApplicationRecord
   def consent_forms_needed_to_complete
     attended = invitations.attended.size
     if attended.positive?
-      attended - invitations.attended.count { |i| i.person.consent_form.present?} 
+      attended - invitations.attended.count { |i| i.person.consent_form.present? }
     else
       0
     end
   end
 
   def complete?
-    return true if invitations.size.zero? && can_reward? #empty and in past
+    return true if invitations.size.zero? && can_reward? # empty and in past
 
     # is everyone all set? this is expensive.
     rewards_needed_to_complete.zero? && consent_forms_needed_to_complete.zero? && can_reward? && all_invitees_marked
@@ -147,7 +147,6 @@ class ResearchSession < ApplicationRecord
     # * invitation is updated
     # * person.consent_form attached. (this we'll have to think about)
   end
-
 
   private
 

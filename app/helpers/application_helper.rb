@@ -47,11 +47,11 @@ module ApplicationHelper
 
   def session_fontawesome_status(session)
     if session.complete?
-      "fa-check text-success"
+      'fa-check text-success'
     elsif !session.can_reward?
-      "fa-calendar-times-o text-warning"
+      'fa-calendar-times-o text-warning'
     elsif session.can_reward? && !session.complete?
-      "fa-times-circle text-danger"
+      'fa-times-circle text-danger'
     end
   end
 
@@ -59,14 +59,9 @@ module ApplicationHelper
     msgs = []
     msgs << I18n.t('research_session.not_all_invitees_marked') unless session.all_invitees_marked
 
-    unless session.consent_forms_needed_to_complete.zero?
-      msgs << I18n.t('research_session.consent_forms_not_signed', count: session.consent_forms_needed_to_complete)
-    end
+    msgs << I18n.t('research_session.consent_forms_not_signed', count: session.consent_forms_needed_to_complete) unless session.consent_forms_needed_to_complete.zero?
 
-    unless session.rewards_needed_to_complete.zero?
-      
-      msgs << I18n.t('research_session.invitees_not_rewarded', count: session.rewards_needed_to_complete)
-    end
+    msgs << I18n.t('research_session.invitees_not_rewarded', count: session.rewards_needed_to_complete) unless session.rewards_needed_to_complete.zero?
     msgs
   end
 end
