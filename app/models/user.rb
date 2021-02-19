@@ -80,6 +80,7 @@ class User < ApplicationRecord
 
   def approve!
     update(approved: true)
+    # EmailLink.generate(email) # not yet
     Rails.logger.info(I18n.t('user.approved', email: email))
   end
 
