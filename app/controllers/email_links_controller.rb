@@ -3,7 +3,9 @@
 class EmailLinksController < ApplicationController
   skip_before_action :authenticate_user!
   def new
-    redirect_to root_path if authenticate_user!
+    if current_user.present?
+      redirect_to root_path
+    end
   end
 
   def create
