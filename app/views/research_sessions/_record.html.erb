@@ -1,0 +1,15 @@
+<tr id='research-session-<%=sesh.id%>'>
+      <td><i class="fa <%= session_fontawesome_status(sesh) %> fa-2x"></i></td>
+      <td><%= link_to sesh.title, sesh %></td>
+      <td><%= sesh.description %></td>
+      <td><%= sesh.location %></td>
+      <td><%= sesh.start_datetime_human %></td>
+      <td><%= sesh.duration %></td>
+      <% if current_user.admin? %>
+      <td><%= link_to sesh.user.name, sesh.user %></td>
+      <% else %>
+      <td><%= sesh.user.name %></td>
+      <% end %>
+      <td><%= sesh.invitations.size %>|<%= sesh.invitations.where(aasm_state:'attended').size %>|<%= sesh.rewards.size %></td>
+      <td>$<%=sesh.rewards.sum(&:amount).to_s %></td>
+</tr>

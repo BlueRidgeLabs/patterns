@@ -31,6 +31,9 @@ class Invitation < ApplicationRecord
   # this is how we give rewards for sessions.
   has_many :rewards, as: :giftable, dependent: :destroy
 
+  # for frontend updating
+  after_save :research_session_update
+
   # one person can't have multiple invitations for the same event
   validates :person_id, uniqueness: { scope: :research_session_id }
 
@@ -127,9 +130,9 @@ class Invitation < ApplicationRecord
     end
   end
 
-  # def self.send_reminders
-  #   Invitation.upcoming(1).remindable.find_each(&:remind!)
-  # end
+  def research_session_update
+    research_session.update_frontend
+  end
 
   def owner_or_invitee?(person_or_user)
     # both people and users can own a invitation.

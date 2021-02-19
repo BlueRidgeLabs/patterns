@@ -40,6 +40,8 @@ class ResearchSession < ApplicationRecord
   has_many :people, through: :invitations
   has_many :comments, as: :commentable, dependent: :destroy
   before_create :update_missing_attributes
+  
+  after_save :update_frontend
 
   accepts_nested_attributes_for :invitations, reject_if: :all_blank, allow_destroy: true
 
@@ -114,7 +116,7 @@ class ResearchSession < ApplicationRecord
   def complete?
     return true if invitations.size.zero? && can_reward? #empty and in past
 
-    # is everyone all set?
+    # is everyone all set? this is expensive.
     rewards_needed_to_complete.zero? && consent_forms_needed_to_complete.zero? && can_reward? && all_invitees_marked
   end
 
@@ -134,9 +136,16 @@ class ResearchSession < ApplicationRecord
     invitations.map(&:rewards).flatten
   end
 
-  # def send_invitation_notifications
-  #   invitations.where(aasm_state: 'created').find_each(&:invite!)
-  # end
+  # this should happen in a background job.
+  def update_frontend
+    # set status to complete = true OR complete = false
+    # call actioncable to render some partials. research_session/record
+    # call actioncable to update the "todos" section of research_session/show
+    # should be called everytime:
+    # * invitation is updated
+    # * person.consent_form attached. (this we'll have to think about)
+  end
+
 
   private
 

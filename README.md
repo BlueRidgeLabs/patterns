@@ -156,7 +156,10 @@ TODO
   * contact info verification
   
 * Research Session Completeness
+  * Complete should be an attribute on Sessions.
+  * after save for both sessions, invitations, and people (if we add a consent form)
   * Background task that uses action cable to update the session
+  * update should be global.
   * every invitation that changes calls the front end update function
   * need to turn sessions into partials
 
