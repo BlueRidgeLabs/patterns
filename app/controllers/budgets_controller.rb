@@ -27,7 +27,7 @@ class BudgetsController < ApplicationController
   # GET /budgets/1.json
   def show
     @transaction_log = TransactionLog.new
-    @transactions = @budget.transactions
+    @transactions = @budget.transactions.paginate(page: params[:page])
     respond_to do |format|
       format.html
       format.csv do

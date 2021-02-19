@@ -14,7 +14,8 @@
 </div>
 <div class='row'>
   <div class='col-12'>
-    <h5> transactions</h5>
+    <%= will_paginate @transactions, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <h5> transactions</h5>`
     <table class='table table-striped'>
       <thead>
         <th>id</th>
@@ -25,7 +26,7 @@
         <th>Type</th>
       </thead>
       <tbody id='transaction_logs'>
-        <% @budget.transactions.each do |trans| %>
+        <% @transactions.each do |trans| %>
         <tr id='transaction_log_<%=trans.id %>'>
           <td><%= trans.id %></td>
           <td><%= humanized_money_with_symbol trans.amount %></td>
@@ -37,6 +38,7 @@
         <% end %>
       </tbody>
     </table>
+    <%= will_paginate @transactions, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 </div>
 <%= link_to 'Edit', edit_budget_path(@budget) %> |

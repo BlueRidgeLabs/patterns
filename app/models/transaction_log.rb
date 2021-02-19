@@ -22,6 +22,8 @@
 
 # all transactions in a log
 class TransactionLog < ApplicationRecord
+  page 50
+
   has_paper_trail
   monetize :amount_cents
   after_create :update_budgets
