@@ -12,7 +12,7 @@ class EmailLinksController < ApplicationController
     else
       flash[:alert] = 'There was an error, please try again!'
     end
-    redirect_to root_path
+    redirect_to new_magic_link_path
   end
 
   def validate
@@ -22,11 +22,12 @@ class EmailLinksController < ApplicationController
       flash[:notice] = 'Signed in!'
       sign_in(email_link.user)
       email_link.utilized!
+      redirect_to root_path
     else
       flash[:alert] = 'Invalid or expired token!'
       # should be a 401 for fail2ban etc.
       # need to make it so that this can't be bruteforced
+      redirect_to new_magic_link_path
     end
-    redirect_to root_path
   end
 end
