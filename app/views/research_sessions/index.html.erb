@@ -1,7 +1,7 @@
-<%= render partial: 'layouts/research_sessions_menu' %>
+
 <%= search_form_for @s, class:'form-group' do |f| %>
   <%= f.label "Search" %>
-  <%= f.search_field :omni_search_cont, class:'form-control', value: params.dig(:q,:omni_search) %>
+  <%= f.search_field :omni_search_i_cont, class:'form-control', value: params.dig(:q,:omni_search_i_cont) %>
     <%= f.label "Tags" %>
     <%= f.text_field :ransack_tagged_with,
                               class: 'tokenfield form-control input-medium span4',
@@ -9,9 +9,11 @@
                                       submit_id: 'tag-field',
                                       id: 'tag-field',
                                       submit_on_tag: true,
-                                      pre_populate: @tags
+                                      pre_populate: @tags.map(&:name).to_s
                                     }
                             %>
+  <%= f.label "User" %>
+  <%= f.select :user_name_cont, User.where(approved: true).map(&:name), { class:'form-control', selected: params.dig(:q,:user_name_cont), include_blank: true}, class:'form-control' %>
   <%= f.submit 'Search', class: 'btn btn-sm btn-primary mt-2' %>
   <%= link_to "Clear", research_sessions_path, class: 'btn btn-sm btn-dark mt-2' %>
 <% end %>
