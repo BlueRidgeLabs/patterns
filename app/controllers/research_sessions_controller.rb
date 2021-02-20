@@ -81,7 +81,7 @@ class ResearchSessionsController < ApplicationController
     @s = ResearchSession.ransack(params[:q])
     tags =  @s.ransack_tagged_with&.split(',')&.map { |t| t.delete(' ') } || []
     @tags = ResearchSession.tag_counts.where(name: tags).to_a
-    @research_sessions = @s.result(distinct: true).includes({ invitations: :person }, :tags, :user).page(params[:page])
+    @research_sessions = @s.result(distinct: true).includes({ invitations: [{ person: :consent_form_attachment }, :rewards] }, :tags, :user).page(params[:page])
     redirect_to research_session_path(@research_sessions.first) if @research_sessions.size == 1
   end
 
