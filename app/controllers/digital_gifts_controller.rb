@@ -24,8 +24,8 @@ class DigitalGiftsController < ApplicationController
   # in order for the webhook to validate.
   def webhook
     case params[:event]
-    when /^PAYOUT/
-      tremendous_id = params[:meta][:reward][:id]
+    when /^PAYOUTS/
+      tremendous_id = params[:payload][:meta][:reward][:id]
     when /^ORDER/
       tremendous_id = params[:payload][:resource][:id]
     else
