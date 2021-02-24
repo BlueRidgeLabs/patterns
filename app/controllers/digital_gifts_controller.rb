@@ -23,14 +23,13 @@ class DigitalGiftsController < ApplicationController
   # use the tremendous client to create a webhook, and then edit the rails credentials
   # in order for the webhook to validate.
   def webhook
-
     case params[:event]
     when /^PAYOUT/
       tremendous_id = params[:meta][:reward][:id]
     when /^ORDER/
       tremendous_id = params[:payload][:resource][:id]
     else
-      tremendous_id = ''
+      tremendous_id = params[:meta][:reward][:id] # possibly?
       Airbrake.notify("giftrocket event unknown: #{params}")
     end
 
