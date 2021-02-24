@@ -91,7 +91,7 @@ Team: #{user.team.name}
 People: #{invitations.size}
 Description:#{description}
 tags: #{cached_tag_list}
-$: #{rewards.sum(:amount).to_s}
+$: #{rewards.sum(&:amount)}
 Complete: #{complete?})
 
     else
