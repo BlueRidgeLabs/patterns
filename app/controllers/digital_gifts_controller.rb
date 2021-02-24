@@ -27,6 +27,7 @@ class DigitalGiftsController < ApplicationController
     @digital_gift = DigitalGift.where(order_id: tremendous_id).or(DigitalGift.where(gift_id: tremendous_id)).first
 
     if @digital_gift.nil?
+      Airbrake.notify("giftrocket params unknown: #{params}")
       render json: { success: false }
     else
       @digital_gift.giftrocket_status = params[:event]

@@ -90,7 +90,10 @@ module Calendarable
 Team: #{user.team.name}
 People: #{invitations.size}
 Description:#{description}
-tags: #{cached_tag_list})
+tags: #{cached_tag_list}
+$: #{rewards.sum(:amount).to_s}
+Complete: #{complete?})
+
     else
       description
     end
