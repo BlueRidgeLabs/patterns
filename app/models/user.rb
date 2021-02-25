@@ -129,10 +129,10 @@ class User < ApplicationRecord
   end
 
   def current_cart
-    CartsUser.find_by(user_id: id, current_cart: true).cart
+    CartsUser.includes(cart: :people).find_by(user_id: id, current_cart: true).cart
   rescue NoMethodError => _e
     # this is used for users created before multi-cart.
-    cart = Cart.find_by(user_id: id)
+    cart = Cart.includes(:people).find_by(user_id: id)
     cart.add_user(id)
     cart.assign_current_cart(id)
     cart.save

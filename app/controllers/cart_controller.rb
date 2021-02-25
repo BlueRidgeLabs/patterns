@@ -6,7 +6,6 @@ class CartController < ApplicationController
   before_action :type_init
 
   def show
-    current_user.current_cart = @cart
     @people = @cart.people.paginate(page: params[:page])
     @users = @cart.users
     @comment = Comment.new commentable: @cart
@@ -219,7 +218,7 @@ class CartController < ApplicationController
 
   def cart_init
     if cart_params[:id].present?
-      @cart = Cart.find(cart_params[:id])
+      @cart = Cart.includes(:people, :users).find(cart_params[:id])
       current_user.current_cart = @cart
     else
       @cart = current_user.current_cart
