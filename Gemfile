@@ -270,6 +270,7 @@ group :development, :test do
   gem 'byebug', '~> 11.0'
   gem 'concurrent-ruby'
   gem 'dotenv-rails'
+  gem 'gem-licenses', require: false
   gem 'factory_bot_rails', '4.10.0', require: false
   gem 'faker', require: false
   gem 'holder_rails'

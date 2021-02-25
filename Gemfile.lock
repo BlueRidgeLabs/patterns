@@ -255,6 +255,7 @@ GEM
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
     fuzzy_match (2.1.0)
+    gem-licenses (0.2.2)
     get_process_mem (0.2.7)
       ffi (~> 1.0)
     gibbon (3.3.4)
@@ -758,6 +759,7 @@ DEPENDENCIES
   font-awesome-rails (~> 4.7, >= 4.7.0.1)
   foreman
   fuzzy_match
+  gem-licenses
   gibbon
   glyphicons-rails
   groupdate
