@@ -29,7 +29,7 @@ class DigitalGiftsController < ApplicationController
     when /^ORDER/
       tremendous_id = params[:payload][:resource][:id]
     else
-      tremendous_id = params.dig(:payload,:meta,:reward,:id) || params.dig(:payload,:resource,:id) # possibly?
+      tremendous_id = params.dig(:payload, :meta, :reward, :id) || params.dig(:payload, :resource, :id) # possibly?
       Airbrake.notify("giftrocket event unknown: #{params}")
     end
 
