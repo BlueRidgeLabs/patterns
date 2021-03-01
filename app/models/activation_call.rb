@@ -76,7 +76,15 @@ class ActivationCall < ApplicationRecord
   end
 
   def call
-    @call ||= sid.nil? ? nil : @twilio.api.account.calls(sid).fetch
+    @call ||= if sid.nil?
+                return nil
+              else
+                begin
+                  return @twilio.api.account.calls(sid).fetch
+                rescue Twilio::REST::RestError
+                  return nil
+                end
+              end
   end
 
   def timeout_error?

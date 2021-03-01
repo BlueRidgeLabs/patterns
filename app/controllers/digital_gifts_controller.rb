@@ -24,14 +24,14 @@ class DigitalGiftsController < ApplicationController
   # in order for the webhook to validate.
   def webhook
     tremendous_id = case params[:event]
-    when /^PAYOUTS/
-      params[:payload][:meta][:reward][:id]
-    when /^ORDER/
-      params[:payload][:resource][:id]
-    else
-      params.dig(:payload, :meta, :reward, :id) || params.dig(:payload, :resource, :id) # possibly?
-      # Airbrake.notify("giftrocket event unknown: #{params}")
-    end
+                    when /^PAYOUTS/
+                      params[:payload][:meta][:reward][:id]
+                    when /^ORDER/
+                      params[:payload][:resource][:id]
+                    else
+                      params.dig(:payload, :meta, :reward, :id) || params.dig(:payload, :resource, :id) # possibly?
+                      # Airbrake.notify("giftrocket event unknown: #{params}")
+                    end
 
     @digital_gift = DigitalGift.where(order_id: tremendous_id).or(DigitalGift.where(gift_id: tremendous_id)).first
 
