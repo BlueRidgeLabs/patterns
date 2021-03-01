@@ -112,6 +112,7 @@ class GiftCard < ApplicationRecord
     state :check_started
     state :check_errored
     state :active
+    # state :expired # need this state to handle expired cards. 
 
     event :return_to_preloaded do
       transitions to: :preload
