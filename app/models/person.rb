@@ -105,7 +105,7 @@ class Person < ApplicationRecord
   has_many :carts, through: :carts_people
 
   has_secure_token :token
-  before_save { self.email_address = email_address.downcase }
+  before_save { self.email_address = email_address.downcase if email_address.present? }
 
   if Rails.env.production?
     if Rails.application.credentials.mailchimp[:api_key].present?
