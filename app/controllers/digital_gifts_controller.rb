@@ -297,6 +297,8 @@ class DigitalGiftsController < ApplicationController
   end
 
   def validate_tremendous_request
+    # we should also validate that we haven't seen the UUID in the past N days
+    # that means that we do somehting like @redis.get and then once processed, @redis.setex that uuid?
     signature_header = request.headers['Tremendous-Webhook-Signature']
     algorithm, received_signature = signature_header.split('=', 2)
 
