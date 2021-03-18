@@ -62,10 +62,7 @@
   <strong>Finance Code:</strong>
   <%= best_in_place @reward, :finance_code,
                       as: :select,
-                      collection: { 'BRL'=> 'BRL',
-                                    'CATA1'=>'CATA1',
-                                    'CATA2'=>'CATA2',
-                                    'FELL'=>'FELL'},
+                      collection: Team.finance_code_hash
                       ok_button: 'Save',
                       cancel_button: 'Cancel' %></dd>
 </p>

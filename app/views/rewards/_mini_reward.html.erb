@@ -24,7 +24,7 @@
                           :finance_code, 
                           place_holder: reward.finance_code, 
                           as: :select, 
-                          collection: %w[BRL CATA1 CATA2 FELL],
+                          collection: Team::FINANCE_CODES,
                           inner_class: 'select_auto' %>
     </td>
     <% end %>

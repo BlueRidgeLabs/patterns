@@ -21,7 +21,7 @@
             <td><%= team.users.size %></td>
             <td><%= best_in_place team, :finance_code,
                       as: :select,
-                      collection: {'BRL': 'BRL', 'CATA1':'CATA1','CATA2':'CATA2', 'FELL':'FELL'} %></td>
+                      collection: Team.finance_code_hash %></td>
             <td><%= humanized_money_with_symbol team.rewards_total %></td>
             <td><%= humanized_money_with_symbol team.budget.amount %></td>
             <td><%= link_to 'Show', team, class: 'btn btn-primary' %>

@@ -10,7 +10,7 @@
         <dt>Finance Code</dt>
         <dd><%= best_in_place @team, :finance_code,
                       as: :select,
-                      collection: {'BRL': 'BRL', 'CATA1':'CATA1','CATA2':'CATA2', 'FELL':'FELL'} %></dd>
+                      collection: Team.finance_code_hash %></dd>
         <dt>Description</dt>
         <dd><%= best_in_place @team, :description,
                       ok_button: 'Save',

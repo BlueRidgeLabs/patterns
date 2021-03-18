@@ -107,7 +107,7 @@ class CartController < ApplicationController
       end
     end
     @cart.save
-
+    @cart.reload # huh, hacky?
     respond_to do |format|
       format.js
       format.json { render json: @cart.to_json }

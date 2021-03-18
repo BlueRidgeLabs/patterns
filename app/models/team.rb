@@ -24,6 +24,9 @@ class Team < ApplicationRecord
   default_scope { includes(:rewards) }
 
   after_create :make_budget
+  def self.finance_code_hash
+    FINANCE_CODES.inject({}) { |acc,el| acc[el] = el; acc }
+  end
 
   def rewards_total(since = Time.zone.today.beginning_of_year - 1.day)
     raise ArgumentError if since.class != Date
