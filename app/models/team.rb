@@ -21,7 +21,7 @@ class Team < ApplicationRecord
   has_many :debits, through: :budget
   has_many :credits, through: :budget
   validates :finance_code, inclusion: { in: FINANCE_CODES }
-  default_scope { includes(:rewards) }
+  default_scope { includes(:rewards) } # this could get dicey.
 
   after_create :make_budget
   def self.finance_code_hash

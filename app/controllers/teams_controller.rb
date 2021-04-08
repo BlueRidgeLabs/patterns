@@ -6,6 +6,7 @@ class TeamsController < ApplicationController
   # GET /teams
   # GET /teams.json
   def index
+    # would love to sort this by active users.
     @teams = Team.all
   end
 
