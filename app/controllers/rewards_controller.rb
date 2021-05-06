@@ -18,11 +18,13 @@ class RewardsController < ApplicationController
         @rewards = @q_rewards.result.includes(:person, :rewardable, :giftable).order(id: :desc).page(params[:page])
         # @recent_signups = Person.no_signup_card.paginate(page: params[:page]).where('signup_at > :startdate', { startdate: 3.months.ago }).order('signup_at DESC')
       end
-      format.csv do
-        @rewards = @q_rewards.result.includes(:person, :rewardable, :giftable)
-        send_data @rewards.export_csv, filename: "Rewards-#{Time.zone.today}.csv"
-      end
     end
+  end
+
+  def send_report
+    ::UserMailer.reward_report(user_id: current_user.id).deliver_later
+    flash[:alert] = 'Check your inbox for a csv report'
+    render action: 'index'
   end
 
   # GET /recent_signups
