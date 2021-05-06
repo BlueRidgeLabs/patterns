@@ -89,7 +89,7 @@
           original_title:"Type of participation?"} %>
     </div>
   </div>
-  <% if @current_user.admin? %>
+  <% if current_user.admin? %>
   <div class="control-group">
     <%= f.label :active, :class => 'control-label' %>
     <div class="controls">

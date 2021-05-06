@@ -127,6 +127,7 @@ class RapidproUpdateJob
     else
       # Sidekiq.logger.info("[RapidProUpdate] sending delete job for id: #{id}")
       RapidproDeleteJob.perform_async(id)
+      true
     end
   end
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity

@@ -157,7 +157,7 @@ gem 'emoji'
 
 # auditing.
 gem 'paper_trail'
-gem 'paper_trail-association_tracking'
+#gem 'paper_trail-association_tracking'
 gem 'paper_trail-globalid'
 
 # webrick is slow, capybara will use puma instead
