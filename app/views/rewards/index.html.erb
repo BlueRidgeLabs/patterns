@@ -70,5 +70,5 @@
 <%= will_paginate @rewards, :renderer => WillPaginate::ActionView::BootstrapLinkRenderer %>
 <br>
 <% if current_user.admin? %>
-<%= button_to "Email CSV dump of all rewards", reward_report_rewards_path, method: :post, :class => "btn"  %>
+<%= button_to "Email CSV dump of all rewards", send_report_rewards_path, method: :post, :class => "btn"  %>
 <% end %>

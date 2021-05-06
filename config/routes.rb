@@ -94,7 +94,7 @@ Patterns::Application.routes.draw do
   resource :inbox, controller: 'inbox', only: %i[show create]
   resources :rewards do
     collection do
-      post 'reward_report', action: :reward_report, as: :reward_report
+      post 'send_report', action: :send_report, as: :send_report
       post 'assign', action: :assign, as: :assign
       get 'recent_signups', action: :recent_signups, as: :recent_signups
       get 'modal/:giftable_type/:giftable_id', action: :modal, as: :modal
