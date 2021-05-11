@@ -24,7 +24,7 @@ class RewardsController < ApplicationController
   def send_report
     ::UserMailer.reward_report(user_id: current_user.id).deliver_later
     flash[:alert] = 'Check your inbox for a csv report'
-    render action: 'index'
+    redirect_to action: 'index'
   end
 
   # GET /recent_signups
